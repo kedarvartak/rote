@@ -86,6 +86,7 @@ suite, or the thesis dies for the price of a 3-week experiment.
 | [Wedge benchmark](docs/03-wedge-benchmark.md) | "Run it twice" — task suite, metrics, kill thresholds |
 | [Market](docs/04-market.md) | Competitive map, steelmanned objections, buyers, why now |
 | [Roadmap](docs/05-roadmap.md) | Phased plan and open questions |
+| [Build plan](docs/06-build-plan.md) | Milestone-by-milestone execution detail: tasks, test suites, exit/kill gates |
 
 ## License
 
