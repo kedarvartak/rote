@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  # Every PR must touch CHANGELOG.md unless explicitly labeled skip-changelog.
+  # See CLAUDE.md -> Changelog.
+  changelog:
+    name: Changelog entry present
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check for CHANGELOG.md change or skip-changelog label
+        env:
+          LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if echo "$LABELS" | grep -q '"skip-changelog"'; then
+            echo "skip-changelog label present — check skipped."
+            exit 0
+          fi
+          if git diff --name-only "$BASE_SHA"...HEAD | grep -qx 'CHANGELOG.md'; then
+            echo "CHANGELOG.md updated."
+            exit 0
+          fi
+          echo "::error::No CHANGELOG.md entry. Add one under [Unreleased] or label the PR 'skip-changelog'."
+          exit 1
+
+  # Typecheck + lint + test. Skips gracefully until M0 lands a package.json,
+  # then becomes mandatory automatically — do not add per-package opt-outs.
+  test:
+    name: Typecheck, lint, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect Node project
+        id: detect
+        run: |
+          if [ -f package.json ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "No package.json yet (pre-M0) — skipping build steps."
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.present == 'true'
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install
+        if: steps.detect.outputs.present == 'true'
+        run: npm ci
+      - name: Typecheck
+        if: steps.detect.outputs.present == 'true'
+        run: npm run typecheck --if-present
+      - name: Lint
+        if: steps.detect.outputs.present == 'true'
+        run: npm run lint --if-present
+      - name: Test
+        if: steps.detect.outputs.present == 'true'
+        run: npm test --if-present
+
+  # Design docs are the constitution — broken internal links are bugs.
+  docs:
+    name: Docs internal links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check relative markdown links resolve
+        run: |
+          status=0
+          # Extract [text](target) links from all markdown files; verify relative targets exist.
+          while IFS='|' read -r file link; do
+            target="${link%%#*}"                       # strip anchors
+            [ -z "$target" ] && continue
+            case "$target" in http*|mailto:*) continue ;; esac
+            dir=$(dirname "$file")
+            if [ ! -e "$dir/$target" ]; then
+              echo "::error file=$file::Broken relative link: $link"
+              status=1
+            fi
+          done < <(grep -RoE --include='*.md' '\]\([^)]+\)' . | sed -E 's/:\]\(/|/; s/\)$//')
+          exit $status
