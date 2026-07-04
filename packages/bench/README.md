@@ -22,11 +22,30 @@ See `src/index.ts`. Highlights:
 - **`readRecordedRun` / `exportSuccessfulTrajectories`** — reads standard
   `.rote/runs/<run_id>` artifacts and exports raw JSONL trajectories for the
   reproducibility pack.
+- **`parseBenchmarkSpec` / `cellsFromSpec`** — loads a human-editable JSON spec
+  that names recorded run ids or explicit failed cells.
+- **`rote-bench report <spec.json>`** — renders a Markdown report from recorded
+  `.rote/runs/<run_id>` artifacts and can export raw JSONL alongside it.
+
+## Spec format
+
+```json
+{
+  "base_dir": ".rote",
+  "runs": [
+    { "task": { "id": "B1", "name": "download report" }, "phase": "cold", "repetition": 1, "run_id": "cold-b1-1" },
+    { "task": { "id": "B1", "name": "download report" }, "phase": "warm", "repetition": 1, "run_id": "warm-b1-1" },
+    { "task": { "id": "B2", "name": "vendor registration" }, "phase": "warm", "repetition": 2, "error": "fallback" }
+  ]
+}
+```
+
+```bash
+rote-bench report bench-spec.json --out report.md --export-jsonl raw-runs/
+```
 
 ## Known v1 limitations
 
-- No CLI yet: M3's first slice is the library surface and tests. A thin `rote
-  bench` command can wrap this once the live/frozen demo driver is wired.
 - Cache-adjusted baseline support is represented in the data model by phases and
   report comparisons, but the actual provider-cache control belongs to the live
   benchmark driver.
