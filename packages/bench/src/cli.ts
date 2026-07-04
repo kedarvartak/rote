@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { buildBenchReport } from './accounting.js';
 import { renderMarkdownReport } from './report.js';
 import { exportSuccessfulTrajectories } from './run-store.js';
@@ -18,8 +18,9 @@ export async function main(argv: string[]): Promise<string> {
   }
 
   const options = parseOptions(rest);
-  const spec = parseBenchmarkSpec(JSON.parse(await readFile(specPath, 'utf8')));
-  const cells = await cellsFromSpec(spec);
+  const resolvedSpecPath = resolve(specPath);
+  const spec = parseBenchmarkSpec(JSON.parse(await readFile(resolvedSpecPath, 'utf8')));
+  const cells = await cellsFromSpec(spec, { specDir: dirname(resolvedSpecPath) });
   const report = buildBenchReport(cells);
   const markdown = renderMarkdownReport(report);
 
