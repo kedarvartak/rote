@@ -43,9 +43,9 @@ describe('mergeWorldState', () => {
 
   it('merges input_values across steps rather than replacing wholesale', () => {
     let state = initialWorldState();
-    state = mergeWorldState(state, { input_values: { '#username': 'alice' } }, {});
-    state = mergeWorldState(state, { input_values: { '#password': 'hunter2' } }, {});
-    expect(state.input_values).toEqual({ '#username': 'alice', '#password': 'hunter2' });
+    state = mergeWorldState(state, { input_values: { '#first-name': 'alice' } }, {});
+    state = mergeWorldState(state, { input_values: { '#last-name': 'anderson' } }, {});
+    expect(state.input_values).toEqual({ '#first-name': 'alice', '#last-name': 'anderson' });
   });
 
   it('scopes last_json/last_output to the most recent step only', () => {
