@@ -131,13 +131,25 @@ export const PlaybookSchema = PlaybookShapeSchema.superRefine((playbook, ctx) =>
     });
   }
 
+  // A {{name}} reference is valid if it's a caller-supplied param OR a
+  // binding a step *produces* at replay time: a slot step's `llm_fill.into`
+  // or a judgment step's own id (its classification result) — see the
+  // executor (M2) for how those get bound. Both are legitimate template
+  // sources; only a name matching neither is genuinely undeclared.
   const declaredParams = new Set(playbook.params.map((p) => p.name));
+  const computedBindings = new Set(
+    playbook.steps.flatMap((step) => {
+      if (step.kind === 'slot') return [step.llm_fill.into];
+      if (step.kind === 'judgment') return [step.id];
+      return [];
+    }),
+  );
   const referenced = new Set([
     ...extractParamRefs(playbook.steps),
     ...extractParamRefs(playbook.verify),
   ]);
   for (const name of referenced) {
-    if (!declaredParams.has(name)) {
+    if (!declaredParams.has(name) && !computedBindings.has(name)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `Undeclared param "{{${name}}}" referenced in playbook`,

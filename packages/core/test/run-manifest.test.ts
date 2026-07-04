@@ -31,6 +31,13 @@ describe('RunManifestSchema', () => {
     expect(RunManifestSchema.safeParse(rest).success).toBe(true);
   });
 
+  it('accepts a judgment-sourced token usage entry (M2 playbook judgment steps)', () => {
+    const m = baseManifest({
+      token_usage: [{ source: 'judgment', input_tokens: 50, output_tokens: 5 }],
+    });
+    expect(RunManifestSchema.safeParse(m).success).toBe(true);
+  });
+
   it('rejects ended_at before started_at', () => {
     const m = baseManifest({ ended_at: '2025-01-01T00:00:00.000Z' });
     expect(RunManifestSchema.safeParse(m).success).toBe(false);
