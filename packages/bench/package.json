@@ -6,6 +6,9 @@
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
+  "bin": {
+    "rote-bench": "./bin/rote-bench.js"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -17,6 +20,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.6.3",
     "vitest": "^2.1.4"
   }
