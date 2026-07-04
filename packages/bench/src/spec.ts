@@ -1,5 +1,7 @@
+import { resolve } from 'node:path';
 import type { BenchCell, BenchPhase, BenchTask } from './types.js';
 import { readRecordedRun } from './run-store.js';
+import { readUsageSidecar } from './usage-sidecar.js';
 
 export interface BenchmarkSpecRun {
   task: BenchTask;
@@ -7,11 +9,17 @@ export interface BenchmarkSpecRun {
   repetition: number;
   run_id?: string;
   error?: string;
+  usage_file?: string;
 }
 
 export interface BenchmarkSpec {
   base_dir: string;
   runs: BenchmarkSpecRun[];
+}
+
+export interface CellsFromSpecOptions {
+  /** Directory used to resolve relative usage_file paths; the CLI passes the spec file's directory. */
+  specDir?: string;
 }
 
 /** Parses the JSON spec used by `rote-bench report`; intentionally small and explicit for human-editable benchmark manifests. */
@@ -28,7 +36,7 @@ export function parseBenchmarkSpec(raw: unknown): BenchmarkSpec {
 }
 
 /** Loads spec cells from the standard run store, preserving declared failures as failed cells. */
-export async function cellsFromSpec(spec: BenchmarkSpec): Promise<BenchCell[]> {
+export async function cellsFromSpec(spec: BenchmarkSpec, options: CellsFromSpecOptions = {}): Promise<BenchCell[]> {
   const cells: BenchCell[] = [];
   for (const run of spec.runs) {
     const input = { task: run.task, phase: run.phase, repetition: run.repetition };
@@ -38,6 +46,13 @@ export async function cellsFromSpec(spec: BenchmarkSpec): Promise<BenchCell[]> {
     }
     if (!run.run_id) throw new Error(`run ${run.task.id}/${run.phase}/${run.repetition} requires run_id or error`);
     const recorded = await readRecordedRun(spec.base_dir, run.run_id);
+    if (run.usage_file) {
+      const usagePath = resolve(options.specDir ?? process.cwd(), run.usage_file);
+      recorded.manifest = {
+        ...recorded.manifest,
+        token_usage: [...recorded.manifest.token_usage, ...(await readUsageSidecar(usagePath))],
+      };
+    }
     cells.push({ status: 'success', ...input, runId: run.run_id, ...recorded });
   }
   return cells;
@@ -51,10 +66,13 @@ function parseSpecRun(raw: unknown, index: number): BenchmarkSpecRun {
   if (typeof repetition !== 'number' || !Number.isInteger(repetition) || repetition < 1) throw new Error(`runs[${index}].repetition must be a positive integer`);
   const run_id = raw['run_id'];
   const error = raw['error'];
+  const usage_file = raw['usage_file'];
   if (run_id !== undefined && typeof run_id !== 'string') throw new Error(`runs[${index}].run_id must be a string`);
   if (error !== undefined && typeof error !== 'string') throw new Error(`runs[${index}].error must be a string`);
+  if (usage_file !== undefined && typeof usage_file !== 'string') throw new Error(`runs[${index}].usage_file must be a string`);
+  if (usage_file !== undefined && !run_id) throw new Error(`runs[${index}].usage_file requires run_id`);
   if ((run_id && error) || (!run_id && !error)) throw new Error(`runs[${index}] must set exactly one of run_id or error`);
-  return { task, phase, repetition, run_id, error };
+  return { task, phase, repetition, run_id, error, usage_file };
 }
 
 function parseTask(raw: unknown, index: number): BenchTask {

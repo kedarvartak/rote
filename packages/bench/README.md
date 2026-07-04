@@ -23,7 +23,9 @@ See `src/index.ts`. Highlights:
   `.rote/runs/<run_id>` artifacts and exports raw JSONL trajectories for the
   reproducibility pack.
 - **`parseBenchmarkSpec` / `cellsFromSpec`** — loads a human-editable JSON spec
-  that names recorded run ids or explicit failed cells.
+  that names recorded run ids, optional LLM usage sidecars, or explicit failed cells.
+- **`readUsageSidecar`** — validates benchmark usage sidecars, rejecting untagged
+  LLM calls before accounting.
 - **`rote-bench report <spec.json>`** — renders a Markdown report from recorded
   `.rote/runs/<run_id>` artifacts and can export raw JSONL alongside it.
 
@@ -33,8 +35,8 @@ See `src/index.ts`. Highlights:
 {
   "base_dir": ".rote",
   "runs": [
-    { "task": { "id": "B1", "name": "download report" }, "phase": "cold", "repetition": 1, "run_id": "cold-b1-1" },
-    { "task": { "id": "B1", "name": "download report" }, "phase": "warm", "repetition": 1, "run_id": "warm-b1-1" },
+    { "task": { "id": "B1", "name": "download report" }, "phase": "cold", "repetition": 1, "run_id": "cold-b1-1", "usage_file": "usage/cold-b1-1.json" },
+    { "task": { "id": "B1", "name": "download report" }, "phase": "warm", "repetition": 1, "run_id": "warm-b1-1", "usage_file": "usage/warm-b1-1.json" },
     { "task": { "id": "B2", "name": "vendor registration" }, "phase": "warm", "repetition": 2, "error": "fallback" }
   ]
 }

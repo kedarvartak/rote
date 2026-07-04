@@ -4,4 +4,5 @@ export * from './accounting.js';
 export * from './report.js';
 export * from './run-store.js';
 export * from './spec.js';
+export * from './usage-sidecar.js';
 export * from './cli.js';
