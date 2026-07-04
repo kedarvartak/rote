@@ -1,12 +1,11 @@
-<div align="center">
-
-```
-  ____   ___ _____ _____
- |  _ \ / _ \_   _| ____|
- | |_) | | | || | |  _|
- |  _ <| |_| || | | |___
- |_| \_\\___/ |_| |_____|
-```
+<div align="center"><pre>
+██████╗  ██████╗ ████████╗███████╗
+██╔══██╗██╔═══██╗╚══██╔══╝██╔════╝
+██████╔╝██║   ██║   ██║   █████╗
+██╔══██╗██║   ██║   ██║   ██╔══╝
+██║  ██║╚██████╔╝   ██║   ███████╗
+╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚══════╝
+</pre>
 
 **Trajectory memoization for agent harnesses.**
 Your agent solved this yesterday. Stop paying for it to figure it out again.
