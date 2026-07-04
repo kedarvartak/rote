@@ -1,0 +1,24 @@
+{
+  "name": "@rote/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Schemas and pure data-transformation logic for Rote's core data model",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "yaml": "^2.6.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "fast-check": "^3.23.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "rote",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Trajectory memoization for agent harnesses",
+  "workspaces": [
+    "packages/*"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "eslint": "^9.14.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.13.0"
+  }
+}

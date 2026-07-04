@@ -14,6 +14,21 @@ labeled `skip-changelog`.
   roadmap, and build plan with per-milestone test suites and kill gates (`docs/01`–`06`)
 - Architecture, run-lifecycle, and repair-ladder diagrams (`docs/diagrams/`)
 - Agent guidelines (`CLAUDE.md`), PR template, and CI pipeline with changelog enforcement
+- **M0**: monorepo scaffolding (npm workspaces, TypeScript strict/NodeNext, ESLint flat
+  config, Vitest) and the `@rote/core` package: Zod schemas for `TrajectoryEvent`,
+  `RunManifest`, `EnvFingerprint` (+ hash-based fingerprinting), `Playbook` (with
+  duplicate-id, cyclic-`depends_on`, undeclared-param, and judgment-step-cap
+  validation), `Patch`, and the closed Expect DSL; pure `template.ts`
+  (param extraction/rendering) and `digest.ts` (content digest + inline/blob storage
+  decision); JSONL and YAML serializers; 80 tests (unit + property-based); hand-authored
+  `fixtures/playbooks/b1-download-report.yaml`
+
+### Fixed
+- Fixed a flaky `TrajectoryEvent` round-trip property test: `fc.jsonValue()` can generate
+  `-0` inside `args`, but JSON has no negative zero (`JSON.stringify(-0) === "0"`), so the
+  test now normalizes through one JSON pass before the first `parse()` — matching what a
+  real recorder actually does — instead of asserting an in-memory JS value survives JSON
+  with float sign intact.
 
 ### Docs
 - Project named **Rote** (previously working name "Memo")

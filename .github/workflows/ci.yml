@@ -90,5 +90,5 @@ jobs:
               echo "::error file=$file::Broken relative link: $link"
               status=1
             fi
-          done < <(grep -RoE --include='*.md' '\]\([^)]+\)' . | sed -E 's/:\]\(/|/; s/\)$//')
+          done < <(grep -RoE --include='*.md' --exclude-dir={node_modules,dist,.git} '\]\([^)]+\)' . | sed -E 's/:\]\(/|/; s/\)$//')
           exit $status

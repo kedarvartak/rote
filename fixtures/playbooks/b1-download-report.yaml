@@ -1,0 +1,79 @@
+# Hand-authored fixture for task B1 (docs/03-wedge-benchmark.md) and the
+# M0/M2 exit gates (docs/06-build-plan.md). Log into a reports portal and
+# download the latest report. No Distiller involved — this playbook is the
+# baseline the machine-distilled version (M5) will later be diffed against.
+
+playbook: download-report
+version: 1
+
+task_signature:
+  intent_description: Log into the reports portal and download the latest report
+  env_fingerprint:
+    domain: reports.acme.com
+    tool_prefixes:
+      - browser.
+
+params:
+  - name: username
+    type: string
+  - name: password
+    type: string
+
+steps:
+  - id: open_login
+    kind: deterministic
+    tool: browser.navigate
+    args:
+      url: https://reports.acme.com/login
+    expect:
+      selector_visible: "#login-form"
+    on_fail: fallback
+
+  - id: fill_username
+    kind: deterministic
+    depends_on: [open_login]
+    tool: browser.fill
+    args:
+      selector: "#username"
+      value: "{{username}}"
+    expect:
+      input_value: "#username"
+      equals: "{{username}}"
+    on_fail: repair
+
+  - id: fill_password
+    kind: deterministic
+    depends_on: [fill_username]
+    tool: browser.fill
+    args:
+      selector: "#password"
+      value: "{{password}}"
+    expect:
+      input_value: "#password"
+      equals: "{{password}}"
+    on_fail: repair
+
+  - id: submit_login
+    kind: deterministic
+    depends_on: [fill_password]
+    tool: browser.click
+    args:
+      selector: "#login-submit"
+    expect:
+      selector_visible: "#dashboard"
+    on_fail: repair
+
+  - id: download_report
+    kind: deterministic
+    depends_on: [submit_login]
+    tool: browser.download_file
+    args:
+      selector: "#latest-report-download"
+    expect:
+      nonempty: true
+    on_fail: fallback
+
+verify:
+  - text_visible: "Download complete"
+
+confidence: 1
