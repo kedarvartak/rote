@@ -8,7 +8,7 @@
 
 | Path | What it is | Who owns it today |
 |------|-----------|-------------------|
-| **Read path** | Compressing what goes *into* context (tool outputs, logs, search results) | Headroom, LLMLingua, provider-side context editing — crowded |
+| **Read path** | Compressing what goes *into* context (tool outputs, logs, search results) | Compression proxies, LLMLingua, provider-side context editing — crowded |
 | **Write path** | Cross-session *semantic* memory ("the user prefers X", "the staging DB is Y") | Mem0, Zep, Letta/MemGPT, Cognee — crowded |
 | **Reuse path** | Replaying *how* the agent solved something so it never re-derives it | **Nobody. This is the gap.** |
 
@@ -35,7 +35,7 @@ Agents today have episodic amnesia not about facts (semantic memory solves that)
 - **Semantic memory (Mem0/Zep/Letta)** stores *facts*, then injects them into the prompt.
   The agent still runs the full LLM control loop every step; facts shave a few dead ends
   but the trajectory is re-planned token-by-token every time. Recall ≠ replay.
-- **Compression (Headroom)** is stateless per-request middleware at the LLM API boundary.
+- **Compression proxies** are stateless per-request middleware at the LLM API boundary.
   It shrinks what the model reads; it cannot prevent a step from running, because at the
   token-stream level "steps" don't exist.
 - **Workflow engines (Temporal, LangGraph graphs)** replay great — but a human has to

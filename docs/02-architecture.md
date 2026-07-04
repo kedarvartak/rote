@@ -15,18 +15,18 @@ broken steps.
 ## Where Rote sits (and why it's not a proxy)
 
 Rote is **harness middleware at the tool-call boundary** — a wrapper around the harness's
-tool dispatch layer — *not* a proxy at the LLM API boundary (Headroom's position).
+tool dispatch layer — *not* a proxy at the LLM API boundary (where compression middleware sits).
 
 This placement is the load-bearing decision:
 
 - At the tool-call boundary you see **structured steps**: tool name, arguments, result,
   timing, and which later steps consumed which earlier outputs. That structure is what makes
   a trajectory compilable into a DAG.
-- At the LLM API boundary you see a flat token stream. You can compress it (Headroom does),
-  but you cannot *not run* a step, because steps don't exist there.
-- Consequence: **Rote and Headroom compose.** Rote decides whether steps execute at all;
-  compression shrinks whatever still flows to the model. They are different layers, not
-  competitors.
+- At the LLM API boundary you see a flat token stream. You can compress it, but you cannot
+  *not run* a step, because steps don't exist there.
+- Consequence: **Rote composes with compression middleware.** Rote decides whether steps
+  execute at all; compression shrinks whatever still flows to the model. They are different
+  layers, not competitors.
 
 Integration surface, in order of shipping priority:
 
@@ -171,6 +171,6 @@ zero, because trusting an unverified replay is how you ship wrong answers.
   (But playbooks should *export* to human-readable YAML precisely so humans can audit them.)
 - **Not semantic memory** — Rote stores procedures, not facts. Pair it with Mem0/Zep if
   you want both; they inject knowledge, Rote removes work.
-- **Not compression** — pair with Headroom; orthogonal layers.
+- **Not compression** — pair with compression middleware at the LLM API boundary; orthogonal layers.
 
 Next: [03 — Wedge Benchmark](03-wedge-benchmark.md)

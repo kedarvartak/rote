@@ -62,3 +62,8 @@ labeled `skip-changelog`.
 
 ### Docs
 - Project named **Rote** (previously working name "Memo")
+- Removed named references to third-party compression tools from README and design docs
+  in favor of generic "compression proxy" language — those tools were a reference point
+  for the problem framing, not a competitor to name-check
+- Added an ASCII banner to the root README
+- Added `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md`; set GitHub repo topics

@@ -2,7 +2,7 @@
 
 ## Positioning in one line
 
-> **Headroom makes every token cheaper. Rote makes most tokens not exist.**
+> **Compression makes every token cheaper. Rote makes most tokens not exist.**
 > Compression is the read path; semantic memory is the write path; **Rote owns the reuse
 > path — procedural memory with deterministic replay.**
 
@@ -10,7 +10,7 @@
 
 | Player | Layer | What they do | Why they don't cover the reuse path |
 |---|---|---|---|
-| **Headroom** | LLM API boundary | Compress everything the model reads (70–95% ratios, CCR retrieval store) | Stateless, per-request, token-level. No step structure → cannot prevent a step from running. **Complement, not competitor.** |
+| **Context-compression proxies** | LLM API boundary | Compress everything the model reads (70–95% ratios, retrieval-backed stores) | Stateless, per-request, token-level. No step structure → cannot prevent a step from running. **Complement, not competitor.** |
 | **Mem0 / Zep** | Prompt injection | Semantic memory: extract + recall facts across sessions | Facts shave dead ends; the LLM still re-plans every step. Recall ≠ replay. No executor, no assertions, no repair. |
 | **Letta (MemGPT)** | Agent runtime | Self-editing memory hierarchy inside their agent framework | Memory is still *text the LLM reads*. Also a framework — teams with existing harnesses won't rebase; Rote wraps what they have. |
 | **Cognee / RAG-memory tools** | Retrieval | Knowledge graphs over past data | Same category error: knowledge, not procedure. |
@@ -29,8 +29,8 @@ Response:
 - Vendors build *within their walls*. Fleets are heterogeneous (a Claude Code dev agent, a
   LangGraph support agent, an in-house browser agent) — the playbook store that works
   *across* harnesses, with one audit surface, is a neutral-layer play vendors are poorly
-  positioned to own. Same structural reason Headroom can exist despite provider-side
-  prompt caching.
+  positioned to own. Same structural reason a neutral compression proxy can exist despite
+  provider-side prompt caching.
 - What vendors ship first is text-shaped (skills files) because it's easy. The executor +
   assertion + repair machinery is a real system with real engineering depth — a 12–18
   month head start is winnable.
@@ -67,15 +67,15 @@ token economics. Efficiency is the wedge; determinism is the durable value.
 
 Business model shape: open-source SDK + recorder (adoption), paid control plane —
 hosted playbook store, drift dashboard, cross-fleet sharing, audit/export (revenue).
-The Headroom-style "show a violent % number in the README" go-to-market applies directly.
+A concrete, reproducible "show the number in the README" go-to-market applies directly.
 
 ## Why now
 
 - Agent fleets crossed from demos to production in 2025 — repetition at scale now exists.
 - MCP standardized the tool-call boundary — a portable interception point that didn't
   exist two years ago is what makes a *neutral* reuse layer technically feasible.
-- The read path (Headroom) and write path (Mem0 et al.) getting funded and adopted has
-  educated the market that harness-level token layers are a category. The reuse path is
-  the obvious next shelf in that aisle — currently empty.
+- The read path (compression proxies) and write path (Mem0 et al.) getting funded and
+  adopted has educated the market that harness-level token layers are a category. The
+  reuse path is the obvious next shelf in that aisle — currently empty.
 
 Next: [05 — Roadmap](05-roadmap.md)
