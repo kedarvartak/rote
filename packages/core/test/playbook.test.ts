@@ -123,6 +123,30 @@ describe('PlaybookSchema', () => {
     expect(PlaybookSchema.safeParse(p).success).toBe(true);
   });
 
+  it('accepts a later step referencing a slot step\'s llm_fill.into as a computed binding', () => {
+    const p = basePlaybook({
+      params: [],
+      steps: [
+        { id: 'summarize', kind: 'slot', llm_fill: { prompt: 'summarize', max_tokens: 100, into: 'notes' } },
+        { id: 'save', kind: 'deterministic', depends_on: ['summarize'], tool: 'browser.fill', args: { value: '{{notes}}' } },
+      ],
+      verify: [{ nonempty: true }],
+    });
+    expect(PlaybookSchema.safeParse(p).success).toBe(true);
+  });
+
+  it("accepts a later step referencing a judgment step's own id as its bound classification", () => {
+    const p = basePlaybook({
+      params: [],
+      steps: [
+        { id: 'triage', kind: 'judgment', llm_judge: { prompt: 'classify', options: ['a', 'b'] } },
+        { id: 'route', kind: 'deterministic', depends_on: ['triage'], tool: 'browser.click', args: { selector: '{{triage}}' } },
+      ],
+      verify: [{ nonempty: true }],
+    });
+    expect(PlaybookSchema.safeParse(p).success).toBe(true);
+  });
+
   it('reports multiple simultaneous semantic issues rather than stopping at the first', () => {
     // Both checks below live in the same superRefine pass (unlike a base
     // shape failure such as an empty `verify`, which short-circuits before

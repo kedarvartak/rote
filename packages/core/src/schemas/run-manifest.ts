@@ -7,12 +7,16 @@ export type Outcome = z.infer<typeof OutcomeSchema>;
 /**
  * Every LLM call in the system must be tagged with one of these sources
  * (CLAUDE.md "every LLM call is tagged") so the benchmark harness (M3) can
- * attribute token spend to planner/matcher/slot/repair/verify/distill.
+ * attribute token spend to planner/matcher/slot/judgment/repair/verify/distill.
+ * `judgment` was added in M2: a playbook's constrained classification steps
+ * (docs/02-architecture.md "Judgment gate") are a distinct spend category
+ * from `slot`'s content fills, even though both are cheap, scoped calls.
  */
 export const TokenUsageSourceSchema = z.enum([
   'planner',
   'matcher',
   'slot',
+  'judgment',
   'repair',
   'verify',
   'distill',

@@ -1,0 +1,183 @@
+# Hand-authored fixture for task B2 (docs/03-wedge-benchmark.md): fill a
+# multi-page vendor/registration form (8 field values) plus one slot step —
+# "slot binding under param variation." Distilled by hand for M2's exit gate
+# per docs/06-build-plan.md; the machine-distilled version (M5) will later be
+# diffed against this one.
+
+playbook: submit-vendor-registration
+version: 1
+
+task_signature:
+  intent_description: Fill and submit the vendor registration form
+  env_fingerprint:
+    domain: vendors.acme.com
+    tool_prefixes:
+      - browser.
+
+params:
+  - name: company_name
+    type: string
+  - name: contact_email
+    type: string
+  - name: tax_id
+    type: string
+  - name: address_line1
+    type: string
+  - name: city
+    type: string
+  - name: postal_code
+    type: string
+  - name: country
+    type: string
+  - name: phone
+    type: string
+
+steps:
+  - id: open_registration
+    kind: deterministic
+    tool: browser.navigate
+    args:
+      url: https://vendors.acme.com/register
+    expect:
+      selector_visible: "#registration-form"
+    on_fail: fallback
+
+  - id: fill_company_name
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args:
+      selector: "#company-name"
+      value: "{{company_name}}"
+    expect:
+      input_value: "#company-name"
+      equals: "{{company_name}}"
+    on_fail: repair
+
+  - id: fill_contact_email
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args:
+      selector: "#contact-email"
+      value: "{{contact_email}}"
+    expect:
+      input_value: "#contact-email"
+      equals: "{{contact_email}}"
+    on_fail: repair
+
+  - id: fill_tax_id
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args:
+      selector: "#tax-id"
+      value: "{{tax_id}}"
+    expect:
+      input_value: "#tax-id"
+      equals: "{{tax_id}}"
+    on_fail: repair
+
+  - id: fill_address_line1
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args:
+      selector: "#address-line1"
+      value: "{{address_line1}}"
+    expect:
+      input_value: "#address-line1"
+      equals: "{{address_line1}}"
+    on_fail: repair
+
+  - id: fill_city
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args:
+      selector: "#city"
+      value: "{{city}}"
+    expect:
+      input_value: "#city"
+      equals: "{{city}}"
+    on_fail: repair
+
+  - id: fill_postal_code
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args:
+      selector: "#postal-code"
+      value: "{{postal_code}}"
+    expect:
+      input_value: "#postal-code"
+      equals: "{{postal_code}}"
+    on_fail: repair
+
+  - id: fill_country
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args:
+      selector: "#country"
+      value: "{{country}}"
+    expect:
+      input_value: "#country"
+      equals: "{{country}}"
+    on_fail: repair
+
+  - id: fill_phone
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args:
+      selector: "#phone"
+      value: "{{phone}}"
+    expect:
+      input_value: "#phone"
+      equals: "{{phone}}"
+    on_fail: repair
+
+  # Slot step: a scoped LLM fill for the free-text "internal notes" field —
+  # content, never control flow (docs/02-architecture.md "Slot step").
+  - id: draft_internal_note
+    kind: slot
+    depends_on: [fill_company_name, fill_tax_id]
+    llm_fill:
+      prompt: "Write a one-sentence internal review note for vendor {{company_name}} (tax id {{tax_id}})."
+      max_tokens: 60
+      into: internal_note
+
+  - id: fill_internal_note
+    kind: deterministic
+    depends_on: [draft_internal_note]
+    tool: browser.fill
+    args:
+      selector: "#internal-notes"
+      value: "{{internal_note}}"
+    expect:
+      input_value: "#internal-notes"
+      equals: "{{internal_note}}"
+    on_fail: repair
+
+  - id: submit_registration
+    kind: deterministic
+    depends_on:
+      - fill_contact_email
+      - fill_address_line1
+      - fill_city
+      - fill_postal_code
+      - fill_country
+      - fill_phone
+      - fill_internal_note
+    tool: browser.click
+    args:
+      selector: "#registration-submit"
+    expect:
+      selector_visible: "#registration-confirmation"
+    on_fail: fallback
+
+verify:
+  - text_visible: "Registration submitted"
+
+confidence: 1
