@@ -27,15 +27,17 @@ describe('rote-bench CLI', () => {
     const reportPath = join(root, 'report.md');
     const exportDir = join(root, 'raw');
     const specPath = join(root, 'spec.json');
+    const usagePath = join(root, 'usage.json');
     const paths = runPaths(baseDir, 'cold-1');
     await mkdir(dirname(paths.manifestPath), { recursive: true });
-    await writeFile(paths.manifestPath, `${JSON.stringify(manifest('cold-1', [{ source: 'planner', input_tokens: 10, output_tokens: 5 }]))}\n`, 'utf8');
+    await writeFile(paths.manifestPath, `${JSON.stringify(manifest('cold-1', []))}\n`, 'utf8');
     await writeFile(paths.trajectoryPath, writeTrajectoryJsonl([event('cold-1', 0)]), 'utf8');
+    await writeFile(usagePath, JSON.stringify([{ source: 'planner', input_tokens: 10, output_tokens: 5 }]), 'utf8');
     await writeFile(
       specPath,
       JSON.stringify({
         base_dir: baseDir,
-        runs: [{ task: { id: 'B1', name: 'one' }, phase: 'cold', repetition: 1, run_id: 'cold-1' }],
+        runs: [{ task: { id: 'B1', name: 'one' }, phase: 'cold', repetition: 1, run_id: 'cold-1', usage_file: 'usage.json' }],
       }),
       'utf8',
     );
