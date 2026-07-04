@@ -1,0 +1,23 @@
+{
+  "name": "@rote/bench",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Benchmark harness for Rote's M3 run-it-twice economics gate",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@rote/core": "*",
+    "@rote/recorder": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}
