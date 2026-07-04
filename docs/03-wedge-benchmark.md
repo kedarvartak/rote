@@ -75,7 +75,7 @@ prompt caching alone — we must beat that honestly, and report cache-adjusted n
 - Every run emits a JSONL trajectory (the Recorder's native format) → the benchmark
   harness and the product share one data model from day one.
 - Publish raw JSONL + analysis notebook. Credibility in this space comes from
-  reproducibility; Headroom's "87.6% fewer tokens" claims work because they're concrete.
+  reproducibility — a concrete, checkable number beats a vague percentage claim every time.
 
 ## Honest-loss scenarios (report these, don't hide them)
 

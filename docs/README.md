@@ -1,6 +1,6 @@
 # Rote — Trajectory Memoization for Agent Harnesses
 
-> **Headroom makes every token cheaper. Rote makes most tokens not exist.**
+> **Compression makes every token cheaper. Rote makes most tokens not exist.**
 
 Agents re-derive already-solved workflows on every run: 40 tool calls and 200K tokens to
 rediscover a procedure they executed successfully yesterday. Rote is harness middleware
@@ -25,7 +25,7 @@ binding parameters, filling content slots, and repairing broken steps.
 
 | Doc | Contents |
 |---|---|
-| [01 — Problem](01-problem.md) | The reuse-path gap: read path (Headroom) and write path (Mem0/Zep) are crowded; nobody owns replay |
+| [01 — Problem](01-problem.md) | The reuse-path gap: read path (compression) and write path (Mem0/Zep) are crowded; nobody owns replay |
 | [02 — Architecture](02-architecture.md) | Recorder → Distiller → Playbook Store → Matcher → Replay Executor → Repair ladder; failure-safety invariants |
 | [03 — Wedge Benchmark](03-wedge-benchmark.md) | "Run it twice": task suite, metrics, kill thresholds, 90-second demo script |
 | [04 — Market](04-market.md) | Competitive map, three steelmanned objections, buyers, why now |

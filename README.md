@@ -1,6 +1,13 @@
 <div align="center">
 
-# Rote
+```
+██████╗   ██████╗  ████████╗ ███████╗
+██╔══██╗ ██╔═══██╗ ╚══██╔══╝ ██╔════╝
+██████╔╝ ██║   ██║    ██║    █████╗
+██╔══██╗ ██║   ██║    ██║    ██╔══╝
+██║  ██║ ╚██████╔╝    ██║    ███████╗
+╚═╝  ╚═╝  ╚═════╝     ╚═╝    ╚══════╝
+```
 
 **Trajectory memoization for agent harnesses.**
 Your agent solved this yesterday. Stop paying for it to figure it out again.
@@ -11,7 +18,7 @@ Your agent solved this yesterday. Stop paying for it to figure it out again.
 
 ## The one-liner
 
-> **Headroom makes every token cheaper. Rote makes most tokens not exist.**
+> **Compression makes every token cheaper. Rote makes most tokens not exist.**
 
 Compression is the *read path*. Semantic memory (Mem0, Zep, Letta) is the *write path*.
 **Rote owns the reuse path** — it captures *how* an agent solved a task, then replays that
@@ -34,7 +41,7 @@ dashboard measures it.
 ## What Rote does
 
 Rote is harness middleware that sits at the **tool-call boundary** (not the LLM API boundary,
-so it composes with compression proxies like Headroom rather than competing):
+so it composes with compression proxies at that boundary rather than competing):
 
 1. **Record** — taps every tool call during a normal run. Always-on, cheap, no LLM.
 2. **Distill** — an offline LLM pass turns a *successful* trajectory into a **playbook**: a
@@ -73,9 +80,11 @@ applied to agent trajectories, with assertions + scoped repair in place of TTL i
 
 ## Status
 
-**Pre-code — design phase.** This repo currently holds the design dossier. Phase 0 is a
-kill-or-continue benchmark: prove ≥80% token reduction at success parity on a real task
-suite, or the thesis dies for the price of a 3-week experiment.
+**Early build — M0–M2 done.** Data model, the MCP recorder, and the replay executor are
+built and tested against fake-world fixtures. Next up is M3, the benchmark harness — the
+kill-or-continue gate: prove ≥80% token reduction at success parity on a real task suite,
+or the thesis dies for the price of a few weeks' work. See
+[the build plan](docs/06-build-plan.md) for milestone-by-milestone detail.
 
 ## Docs
 
@@ -87,6 +96,13 @@ suite, or the thesis dies for the price of a 3-week experiment.
 | [Market](docs/04-market.md) | Competitive map, steelmanned objections, buyers, why now |
 | [Roadmap](docs/05-roadmap.md) | Phased plan and open questions |
 | [Build plan](docs/06-build-plan.md) | Milestone-by-milestone execution detail: tasks, test suites, exit/kill gates |
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the dev workflow and PR conventions,
+and [CLAUDE.md](CLAUDE.md) for the full engineering ruleset. Please also read
+our [Code of Conduct](CODE_OF_CONDUCT.md). Found a security issue? See
+[SECURITY.md](SECURITY.md) — please don't file it as a public issue.
 
 ## License
 
