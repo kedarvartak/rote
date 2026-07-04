@@ -1,0 +1,27 @@
+{
+  "name": "@rote/cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "rote command-line interface (docs/06-build-plan.md)",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "bin": {
+    "rote": "./bin/rote.js"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@rote/core": "*",
+    "@rote/recorder": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}

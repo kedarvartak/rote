@@ -22,6 +22,16 @@ labeled `skip-changelog`.
   (param extraction/rendering) and `digest.ts` (content digest + inline/blob storage
   decision); JSONL and YAML serializers; 80 tests (unit + property-based); hand-authored
   `fixtures/playbooks/b1-download-report.yaml`
+- **M1**: `@rote/recorder` — a stdio MCP proxy that tees a downstream server's traffic
+  unmodified while recording `tools/call` round-trips as `TrajectoryEvent`s
+  (inline/blob storage by size) and writing a `RunManifest` at session end; env
+  fingerprint captured from the client's own first `tools/list` response; append-only,
+  fsync-per-event trajectory JSONL (sacred invariant test in
+  `test/invariants/append-only.test.ts`); 36 tests including a real fake-downstream
+  child process for fidelity, passthrough-on-failure, large-result blob spill,
+  concurrency, and proxy overhead. `@rote/cli` — read-only `rote runs ls` / `rote runs
+  show <run_id>`. Cross-package deep-import lint rule added now that a second package
+  exists (CLAUDE.md "Modularity rules")
 
 ### Fixed
 - Fixed a flaky `TrajectoryEvent` round-trip property test: `fc.jsonValue()` can generate
