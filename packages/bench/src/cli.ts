@@ -4,6 +4,7 @@ import { buildBenchReport } from './accounting.js';
 import { renderMarkdownReport } from './report.js';
 import { exportSuccessfulTrajectories } from './run-store.js';
 import { cellsFromSpec, parseBenchmarkSpec } from './spec.js';
+import { writeSyntheticBenchmarkPack } from './synthetic.js';
 
 interface ReportOptions {
   out?: string;
@@ -12,11 +13,17 @@ interface ReportOptions {
 
 /** CLI entrypoint for M3 report generation from recorded run artifacts. */
 export async function main(argv: string[]): Promise<string> {
-  const [command, specPath, ...rest] = argv;
-  if (command !== 'report' || !specPath) {
-    throw new Error('usage: rote-bench report <spec.json> [--out report.md] [--export-jsonl dir]');
+  const [command, subject, ...rest] = argv;
+  if (command === 'synthetic') {
+    if (!subject) throw new Error(usage());
+    const pack = await writeSyntheticBenchmarkPack({ outDir: subject });
+    return `wrote synthetic benchmark pack: ${pack.specPath} and ${pack.reportPath}`;
+  }
+  if (command !== 'report' || !subject) {
+    throw new Error(usage());
   }
 
+  const specPath = subject;
   const options = parseOptions(rest);
   const resolvedSpecPath = resolve(specPath);
   const spec = parseBenchmarkSpec(JSON.parse(await readFile(resolvedSpecPath, 'utf8')));
@@ -64,4 +71,8 @@ function parseOptions(args: string[]): ReportOptions {
     throw new Error(`unknown option: ${String(arg)}`);
   }
   return options;
+}
+
+function usage(): string {
+  return 'usage: rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench synthetic <out-dir>';
 }
