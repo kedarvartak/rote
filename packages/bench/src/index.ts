@@ -5,4 +5,5 @@ export * from './report.js';
 export * from './run-store.js';
 export * from './spec.js';
 export * from './usage-sidecar.js';
+export * from './synthetic.js';
 export * from './cli.js';

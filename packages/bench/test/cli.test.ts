@@ -21,6 +21,13 @@ afterEach(async () => {
 });
 
 describe('rote-bench CLI', () => {
+  it('writes a synthetic benchmark pack', async () => {
+    const root = await tempDir();
+
+    await expect(main(['synthetic', root])).resolves.toBe(`wrote synthetic benchmark pack: ${join(root, 'bench-spec.json')} and ${join(root, 'report.md')}`);
+    await expect(readFile(join(root, 'report.md'), 'utf8')).resolves.toContain('| B1 | 200000 | 18000 | 91.0% | 40 | 6 | 85.0% |');
+  });
+
   it('writes a report and raw JSONL export from a benchmark spec', async () => {
     const root = await tempDir();
     const baseDir = join(root, '.rote');

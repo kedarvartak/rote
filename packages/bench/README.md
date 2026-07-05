@@ -26,6 +26,9 @@ See `src/index.ts`. Highlights:
   that names recorded run ids, optional LLM usage sidecars, or explicit failed cells.
 - **`readUsageSidecar`** — validates benchmark usage sidecars, rejecting untagged
   LLM calls before accounting.
+- **`writeSyntheticBenchmarkPack`** — writes deterministic fake B1–B3 artifacts
+  (`.rote/runs`, usage sidecars, spec, report) so CI can exercise the full M3
+  reporting pipeline before a live browser driver exists.
 - **`rote-bench report <spec.json>`** — renders a Markdown report from recorded
   `.rote/runs/<run_id>` artifacts and can export raw JSONL alongside it.
 
@@ -45,6 +48,18 @@ See `src/index.ts`. Highlights:
 ```bash
 rote-bench report bench-spec.json --out report.md --export-jsonl raw-runs/
 ```
+
+## Synthetic pack
+
+```bash
+rote-bench synthetic /tmp/rote-synthetic-bench
+```
+
+This creates a deterministic fake pack with B1–B3 cold and warm runs, matching
+M3's illustrative economics (cold ≈ 40 calls / 200K tokens, warm ≈ 6 calls /
+18K tokens). It is not evidence for the thesis; it is a fake-world regression
+fixture that proves report generation, token accounting, sidecar loading, and
+raw artifact layout work end to end before live benchmark drivers are added.
 
 ## Known v1 limitations
 

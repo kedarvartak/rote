@@ -38,6 +38,7 @@ export function parseBenchmarkSpec(raw: unknown): BenchmarkSpec {
 /** Loads spec cells from the standard run store, preserving declared failures as failed cells. */
 export async function cellsFromSpec(spec: BenchmarkSpec, options: CellsFromSpecOptions = {}): Promise<BenchCell[]> {
   const cells: BenchCell[] = [];
+  const baseDir = resolve(options.specDir ?? process.cwd(), spec.base_dir);
   for (const run of spec.runs) {
     const input = { task: run.task, phase: run.phase, repetition: run.repetition };
     if (run.error) {
@@ -45,7 +46,7 @@ export async function cellsFromSpec(spec: BenchmarkSpec, options: CellsFromSpecO
       continue;
     }
     if (!run.run_id) throw new Error(`run ${run.task.id}/${run.phase}/${run.repetition} requires run_id or error`);
-    const recorded = await readRecordedRun(spec.base_dir, run.run_id);
+    const recorded = await readRecordedRun(baseDir, run.run_id);
     if (run.usage_file) {
       const usagePath = resolve(options.specDir ?? process.cwd(), run.usage_file);
       recorded.manifest = {
