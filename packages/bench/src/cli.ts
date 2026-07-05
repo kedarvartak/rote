@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { buildBenchReport } from './accounting.js';
+import { evaluateM3Gate, M3GateFailedError, renderM3GateResult } from './gate.js';
 import { renderMarkdownReport } from './report.js';
 import { exportSuccessfulTrajectories } from './run-store.js';
 import { cellsFromSpec, parseBenchmarkSpec } from './spec.js';
@@ -9,6 +10,7 @@ import { writeSyntheticBenchmarkPack } from './synthetic.js';
 interface ReportOptions {
   out?: string;
   exportJsonl?: string;
+  minTokenReductionRatio?: number;
 }
 
 /** CLI entrypoint for M3 report generation from recorded run artifacts. */
@@ -19,16 +21,19 @@ export async function main(argv: string[]): Promise<string> {
     const pack = await writeSyntheticBenchmarkPack({ outDir: subject });
     return `wrote synthetic benchmark pack: ${pack.specPath} and ${pack.reportPath}`;
   }
-  if (command !== 'report' || !subject) {
+  if ((command !== 'report' && command !== 'gate') || !subject) {
     throw new Error(usage());
   }
 
   const specPath = subject;
   const options = parseOptions(rest);
-  const resolvedSpecPath = resolve(specPath);
-  const spec = parseBenchmarkSpec(JSON.parse(await readFile(resolvedSpecPath, 'utf8')));
-  const cells = await cellsFromSpec(spec, { specDir: dirname(resolvedSpecPath) });
-  const report = buildBenchReport(cells);
+  const report = await reportFromSpec(specPath);
+  if (command === 'gate') {
+    const result = evaluateM3Gate(report, { minTokenReductionRatio: options.minTokenReductionRatio });
+    if (!result.passed) throw new M3GateFailedError(result);
+    return renderM3GateResult(result);
+  }
+
   const markdown = renderMarkdownReport(report);
 
   if (options.out) {
@@ -39,7 +44,7 @@ export async function main(argv: string[]): Promise<string> {
   if (options.exportJsonl) {
     await exportSuccessfulTrajectories(
       options.exportJsonl,
-      cells
+      (await cellsFromSpecAt(specPath))
         .filter((cell) => cell.status === 'success')
         .map((cell) => ({ runId: cell.runId, trajectory: cell.trajectory })),
     );
@@ -48,6 +53,16 @@ export async function main(argv: string[]): Promise<string> {
   if (options.out && options.exportJsonl) return `wrote ${options.out} and ${join(options.exportJsonl, '<run_id>.jsonl')}`;
   if (options.out) return `wrote ${options.out}`;
   return markdown;
+}
+
+async function reportFromSpec(specPath: string) {
+  return buildBenchReport(await cellsFromSpecAt(specPath));
+}
+
+async function cellsFromSpecAt(specPath: string) {
+  const resolvedSpecPath = resolve(specPath);
+  const spec = parseBenchmarkSpec(JSON.parse(await readFile(resolvedSpecPath, 'utf8')));
+  return cellsFromSpec(spec, { specDir: dirname(resolvedSpecPath) });
 }
 
 function parseOptions(args: string[]): ReportOptions {
@@ -68,11 +83,20 @@ function parseOptions(args: string[]): ReportOptions {
       i += 1;
       continue;
     }
+    if (arg === '--min-token-reduction') {
+      const value = args[i + 1];
+      if (!value) throw new Error('--min-token-reduction requires a number');
+      const parsed = Number(value);
+      if (!Number.isFinite(parsed) || parsed < 0 || parsed > 1) throw new Error('--min-token-reduction must be between 0 and 1');
+      options.minTokenReductionRatio = parsed;
+      i += 1;
+      continue;
+    }
     throw new Error(`unknown option: ${String(arg)}`);
   }
   return options;
 }
 
 function usage(): string {
-  return 'usage: rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench synthetic <out-dir>';
 }

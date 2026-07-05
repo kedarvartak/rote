@@ -21,11 +21,14 @@ afterEach(async () => {
 });
 
 describe('rote-bench CLI', () => {
-  it('writes a synthetic benchmark pack', async () => {
+  it('writes a synthetic benchmark pack and evaluates the M3 gate', async () => {
     const root = await tempDir();
+    const specPath = join(root, 'bench-spec.json');
 
-    await expect(main(['synthetic', root])).resolves.toBe(`wrote synthetic benchmark pack: ${join(root, 'bench-spec.json')} and ${join(root, 'report.md')}`);
+    await expect(main(['synthetic', root])).resolves.toBe(`wrote synthetic benchmark pack: ${specPath} and ${join(root, 'report.md')}`);
     await expect(readFile(join(root, 'report.md'), 'utf8')).resolves.toContain('| B1 | 200000 | 18000 | 91.0% | 40 | 6 | 85.0% |');
+    await expect(main(['gate', specPath])).resolves.toContain('M3 gate: PASS');
+    await expect(main(['gate', specPath, '--min-token-reduction', '0.95'])).rejects.toThrow('M3 gate: FAIL');
   });
 
   it('writes a report and raw JSONL export from a benchmark spec', async () => {

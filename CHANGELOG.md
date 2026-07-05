@@ -10,7 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
-- **M3**: `@rote/bench` package — deterministic benchmark matrix runner for `{task × phase × repetition}`, tagged token accounting from `RunManifest.token_usage` plus validated LLM usage sidecars, warm-vs-cold reduction summaries, byte-stable Markdown report rendering, JSON spec loading via recorded run ids, `rote-bench report` and `rote-bench synthetic` CLIs, synthetic B1–B3 fake-world pack generation, and raw JSONL export helpers for reproducibility. Failed driver runs are retained as failed matrix cells so benchmark reports cannot silently drop failures.
+- **M3**: `@rote/bench` package — deterministic benchmark matrix runner for `{task × phase × repetition}`, tagged token accounting from `RunManifest.token_usage` plus validated LLM usage sidecars, warm-vs-cold reduction summaries, M3 kill-gate evaluation, byte-stable Markdown report rendering, JSON spec loading via recorded run ids, `rote-bench report` / `rote-bench gate` / `rote-bench synthetic` CLIs, synthetic B1–B3 fake-world pack generation, and raw JSONL export helpers for reproducibility. Failed driver runs are retained as failed matrix cells so benchmark reports cannot silently drop failures.
 - Design dossier: problem framing, architecture, wedge benchmark, market analysis,
   roadmap, and build plan with per-milestone test suites and kill gates (`docs/01`–`06`)
 - Architecture, run-lifecycle, and repair-ladder diagrams (`docs/diagrams/`)

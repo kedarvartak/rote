@@ -29,6 +29,8 @@ See `src/index.ts`. Highlights:
 - **`writeSyntheticBenchmarkPack`** — writes deterministic fake B1–B3 artifacts
   (`.rote/runs`, usage sidecars, spec, report) so CI can exercise the full M3
   reporting pipeline before a live browser driver exists.
+- **`evaluateM3Gate` / `renderM3GateResult`** — checks the M3 kill gate:
+  warm-token reduction at or above threshold and no success-rate regression.
 - **`rote-bench report <spec.json>`** — renders a Markdown report from recorded
   `.rote/runs/<run_id>` artifacts and can export raw JSONL alongside it.
 
@@ -47,6 +49,7 @@ See `src/index.ts`. Highlights:
 
 ```bash
 rote-bench report bench-spec.json --out report.md --export-jsonl raw-runs/
+rote-bench gate bench-spec.json --min-token-reduction 0.8
 ```
 
 ## Synthetic pack
