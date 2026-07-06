@@ -1,0 +1,46 @@
+{
+  "runs": [
+    {
+      "task": { "id": "B1", "name": "download latest report" },
+      "phase": "cold",
+      "repetition": 1,
+      "command": "node",
+      "args": ["scripts/bench/run-b1-cold.mjs"]
+    },
+    {
+      "task": { "id": "B1", "name": "download latest report" },
+      "phase": "warm",
+      "repetition": 1,
+      "command": "node",
+      "args": ["scripts/bench/run-b1-warm.mjs"]
+    },
+    {
+      "task": { "id": "B2", "name": "vendor registration" },
+      "phase": "cold",
+      "repetition": 1,
+      "command": "node",
+      "args": ["scripts/bench/run-frozen-cold.mjs", "B2"]
+    },
+    {
+      "task": { "id": "B2", "name": "vendor registration" },
+      "phase": "warm",
+      "repetition": 1,
+      "command": "node",
+      "args": ["scripts/bench/run-frozen-warm.mjs", "B2"]
+    },
+    {
+      "task": { "id": "B3", "name": "catalog search extraction" },
+      "phase": "cold",
+      "repetition": 1,
+      "command": "node",
+      "args": ["scripts/bench/run-frozen-cold.mjs", "B3"]
+    },
+    {
+      "task": { "id": "B3", "name": "catalog search extraction" },
+      "phase": "warm",
+      "repetition": 1,
+      "command": "node",
+      "args": ["scripts/bench/run-frozen-warm.mjs", "B3"]
+    }
+  ]
+}

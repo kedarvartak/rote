@@ -1,0 +1,67 @@
+# Hand-authored fixture for task B3 (docs/03-wedge-benchmark.md): search a
+# catalog and extract top-N results to JSON. This is the deterministic smoke
+# fixture used by M3 before the Distiller can generate B3 automatically.
+
+playbook: catalog-search-extract
+version: 1
+
+task_signature:
+  intent_description: Search the catalog and extract the top results to JSON
+  env_fingerprint:
+    domain: catalog.acme.com
+    tool_prefixes:
+      - browser.
+
+params:
+  - name: query
+    type: string
+  - name: limit
+    type: number
+
+steps:
+  - id: open_catalog
+    kind: deterministic
+    tool: browser.navigate
+    args:
+      url: https://catalog.acme.com/search
+    expect:
+      selector_visible: "#search-form"
+    on_fail: fallback
+
+  - id: enter_query
+    kind: deterministic
+    depends_on: [open_catalog]
+    tool: browser.fill
+    args:
+      selector: "#catalog-query"
+      value: "{{query}}"
+    expect:
+      input_value: "#catalog-query"
+      equals: "{{query}}"
+    on_fail: repair
+
+  - id: submit_search
+    kind: deterministic
+    depends_on: [enter_query]
+    tool: browser.click
+    args:
+      selector: "#catalog-search-submit"
+    expect:
+      selector_visible: "#catalog-results"
+    on_fail: fallback
+
+  - id: extract_results
+    kind: deterministic
+    depends_on: [submit_search]
+    tool: browser.extract
+    args:
+      selector: "#catalog-results"
+      limit: "{{limit}}"
+    expect:
+      json_path_exists: "items[0].name"
+    on_fail: fallback
+
+verify:
+  - text_visible: "Search complete"
+
+confidence: 1
