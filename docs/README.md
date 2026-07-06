@@ -31,6 +31,7 @@ binding parameters, filling content slots, and repairing broken steps.
 | [04 — Market](04-market.md) | Competitive map, three steelmanned objections, buyers, why now |
 | [05 — Roadmap](05-roadmap.md) | Phase 0 gate → OSS release → control plane; open questions |
 | [06 — Build Plan](06-build-plan.md) | Milestone-by-milestone execution: tasks, automated + manual tests, exit/kill gates |
+| [07 — Where Rote Works Best](07-where-rote-works.md) | Fit guide: browser/ops sweet spots, coding-agent limits, weak-fit tasks |
 
 ## Diagrams
 

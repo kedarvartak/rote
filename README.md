@@ -93,6 +93,7 @@ or the thesis dies for the price of a few weeks' work. See
 | [Market](docs/04-market.md) | Competitive map, steelmanned objections, buyers, why now |
 | [Roadmap](docs/05-roadmap.md) | Phased plan and open questions |
 | [Build plan](docs/06-build-plan.md) | Milestone-by-milestone execution detail: tasks, test suites, exit/kill gates |
+| [Where Rote works](docs/07-where-rote-works.md) | Best-fit and weak-fit use cases, including coding-agent limits |
 
 ## Contributing
 
