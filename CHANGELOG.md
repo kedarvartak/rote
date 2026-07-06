@@ -64,7 +64,7 @@ labeled `skip-changelog`.
   with float sign intact.
 
 ### Docs
-- Added `docs/07-where-rote-works.md` to explain best-fit and weak-fit use cases, including why browser/ops workflows are the first wedge and coding agents are a secondary fit.
+- Added `docs/07-where-rote-works.md` to scope Rote as a browser-agent memoization layer, explaining where site memory/replay helps and where one-off browsing does not.
 - Project named **Rote** (previously working name "Memo")
 - Removed named references to third-party compression tools from README and design docs
   in favor of generic "compression proxy" language — those tools were a reference point

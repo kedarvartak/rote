@@ -1,205 +1,245 @@
-# 07 — Where Rote Works Best
+# 07 — Browser-Agent Fit: Where Rote Works
 
 ## One sentence
 
-**Rote works best when the task changes in parameters, but the procedure stays the same.**
+**Rote is a memoization layer for browser agents: as the agent uses a website over time, Rote learns the site's procedures, selectors, form semantics, and verification signals so future browser tasks need less exploration and fewer tokens.**
 
-It works poorly when every run needs a genuinely new plan.
+The narrow v1 benchmark uses repeated workflows because that is the cleanest way to prove savings. The broader product goal is not only “run the exact same flow again.” It is:
 
-## The fit test
+```text
+less browser exploration over time
+```
 
-Ask these questions before trying to memoize a workflow:
+## The product scope
 
-| Question | Good sign | Bad sign |
+Rote should be scoped first to browser agents.
+
+Not coding agents. Not generic creative agents. Not arbitrary web browsing.
+
+The target user is a team running browser agents against real websites, portals, admin tools, and SaaS apps. Those agents repeatedly spend tokens figuring out:
+
+- what page they are on
+- which field means what
+- which selector/button performs the action
+- what confirmation state proves success
+- which intermediate screens are dead ends
+- how the site changes after login, search, submit, or download
+
+Rote records this experience and turns it into reusable browser memory.
+
+## What “memoization” means here
+
+The first version of Rote memoizes full successful trajectories into playbooks:
+
+```text
+record successful browser run
+→ distill essential steps
+→ replay when safe
+→ verify each step
+→ repair/fallback on drift
+```
+
+But the long-term browser-agent value is broader:
+
+```text
+successful runs accumulate site knowledge
+→ future runs need less DOM/screenshot exploration
+→ stable parts replay or guide the agent
+→ uncertain parts remain agent-controlled
+```
+
+So the value can come from three levels:
+
+| Level | What Rote reuses | Example |
 |---|---|---|
-| Does this task recur? | Same class happens daily/weekly | One-off task |
-| Does the procedure stay stable? | Same screens, commands, APIs, checklist | New path each time |
-| Are inputs mostly parameters? | Different customer/vendor/report/query | Different goal/logic each time |
-| Can we verify success cheaply? | Confirmation text, exit code, file exists, JSON shape | Subjective/creative output only |
-| Is exploration expensive? | Browser DOM, screenshots, repo discovery, long logs | One or two cheap calls |
+| Whole playbook | Full workflow | “Register a vendor on this portal” |
+| Prefix/subflow | Stable setup/navigation | login → dashboard → vendor page |
+| Site memory | Selectors, form semantics, verification states | `#tax-id` means tax id; success text is “Registration submitted” |
 
-If most answers are in the good column, Rote is likely useful.
+The safest v1 starts with whole playbooks. Later versions should move toward subflows and site memory.
 
-## Best-fit use cases
+## Where Rote helps browser agents most
 
-### 1. Browser and portal automation
-
-This is the strongest first wedge.
+### 1. Repeated portal work
 
 Examples:
 
-- download a recurring report from a portal
-- submit an invoice
-- fill a vendor onboarding form
-- update a customer record
-- search a catalog and export top results
-- file a ticket in an internal admin UI
+- download reports
+- submit invoices
+- register vendors
+- update customer records
+- check claim/payment/shipment status
+- search a catalog and export results
 
-Why Rote helps:
+Why it helps:
 
-- the UI workflow repeats
-- values change, but the path stays similar
-- browser agents burn many tokens inspecting pages, DOM trees, screenshots, and retry states
-- assertions can catch drift, such as a selector changing
-- scoped repair can fix one broken step instead of re-exploring the whole portal
+- browser exploration is expensive
+- the same site has stable structure
+- the same actions recur with different values
+- success can be verified with page text, selectors, files, or JSON shape
 
-Good Rote shape:
+Good fit:
 
 ```text
-same portal + same workflow + new values = replayable playbook
+same website + similar task family + changing values
 ```
 
-### 2. Internal operations workflows
+### 2. High-volume operational browser agents
 
 Examples:
 
-- support-ticket triage
-- refund processing
-- compliance checklist execution
-- vendor/customer record updates
-- monthly report generation
-- routing requests between systems
+- support teams using agents in admin dashboards
+- finance teams using agents across vendor portals
+- procurement teams filling supplier forms
+- logistics teams checking shipment portals
+- healthcare/insurance teams checking eligibility or claim status
 
-Why Rote helps:
+Why it helps:
 
-- operations work is repetitive
-- the procedure is often auditable/checklist-like
-- teams care about deterministic behavior and logs
-- success can usually be verified with concrete checks
+- the agent fleet sees the same websites repeatedly
+- exact tasks may differ, but site knowledge compounds
+- even partial reuse can reduce exploration
 
-Good Rote shape:
+Good fit:
 
 ```text
-same business process + different case/customer = parameterized replay
+many tasks on the same websites over time
 ```
 
-### 3. Coding-agent repo rituals
+### 3. Browser agents with expensive observation loops
 
-Rote can help coding agents, but usually not by replaying an entire bug fix.
+Browser agents often inspect:
 
-Good coding-agent examples:
+- accessibility trees
+- screenshots
+- DOM snapshots
+- page text
+- available actions
+- retry/error states
 
-- discover and run this repo's test suite
-- reproduce a CI failure locally
-- run lint/typecheck/test validation
-- execute a release checklist
-- bump version, update changelog, tag a dry-run release
-- learn repo-specific setup commands and environment variables
+Those observations are token-heavy. If Rote can avoid even part of that repeated exploration, it saves cost and latency.
 
-Why Rote helps:
-
-- coding agents repeatedly rediscover repo rituals
-- each fresh session may grep `package.json`, docs, CI config, and test scripts again
-- Rote can remove the setup/discovery tax
-
-Good Rote shape:
+Good fit:
 
 ```text
-same repo + repeated validation/release/setup procedure = useful playbook
+agent spends lots of tokens figuring out where to click/fill/extract
 ```
 
-But Claude/Codex still handles the creative part: the actual code edit, debugging judgment, or design choice.
+## Where Rote is weaker
 
-## Weak-fit use cases
+### 1. One-off websites
 
-### 1. Novel debugging and feature work
+If every task is on a new website, Rote has little to reuse.
+
+Example:
+
+```text
+today: book a flight on site A
+tomorrow: research a product on site B
+next day: use a random government form on site C
+```
+
+Rote should mostly miss and let the browser agent explore.
+
+### 2. Open-ended browsing
 
 Examples:
 
-- fix a new race condition
-- design a new authentication architecture
-- debug a production incident with unknown cause
-- implement a novel billing rule
+- “research this topic”
+- “compare products across the web”
+- “find interesting companies”
+- “browse until you discover something useful”
 
-Why Rote is weaker:
+These tasks do not have stable procedures or cheap success checks.
 
-- the needed files, hypotheses, and edits differ per run
-- the most expensive part may be reasoning, not repeated navigation
-- a previous trajectory can be misleading
+### 3. Sites that change meaning, not just layout
 
-Rote may still help with validation steps, but should not force a full replay.
-
-### 2. Creative or open-ended tasks
-
-Examples:
-
-- write a strategy doc
-- design a landing page
-- brainstorm product ideas
-- perform open-ended research
-
-Why Rote is weaker:
-
-- output quality is subjective
-- there may be no stable procedure
-- success is hard to assert with cheap deterministic checks
-
-### 3. One-shot tasks
-
-If a task never repeats, memoization cannot amortize the cold run.
-
-Rote should miss and let the baseline agent run. The only cost should be small matcher overhead.
-
-## Coding agents: useful, but not the first wedge
-
-Coding agents are a secondary market because many coding tasks are unique-ish.
-
-Without Rote, a coding agent may repeatedly do:
+Rote can handle simple drift like moved buttons or renamed selectors. It is much harder when the site changes semantics:
 
 ```text
-ls
-cat package.json
-grep test
-read README
-inspect CI config
-try npm test
-try npm run test
-find env vars
-run lint/typecheck
+old field: amount
+new field: quantity
+same-looking UI, different meaning
 ```
 
-Rote can turn the stable part into a playbook:
+Assertions and final verification must catch this. If not, fallback is safer than replay.
+
+## Important distinction: not only exact repetition
+
+The strongest benchmark is repeated workflow replay because it gives a clear number:
 
 ```text
-run seed command
-run targeted test command
-read known failure output
-apply LLM-generated patch
-run targeted test
-run lint
-run typecheck
+cold run: explore everything
+warm run: replay verified procedure
 ```
 
-The benefit is removing repeated repo-discovery work. The agent still needs to reason about the code change.
+But the browser-agent product should not depend forever on exact repeats.
 
-So the coding-agent fit is:
+A more general browser-agent memory layer should eventually reuse:
 
-| Coding task | Fit |
-|---|---|
-| Run repo validation checklist | High |
-| Reproduce common CI failure flow | Medium/high |
-| Release checklist | High |
-| Fix arbitrary new bug | Medium/low |
-| Design new feature | Low |
+- login flows
+- navigation prefixes
+- known selectors
+- form-field meanings
+- extraction schemas
+- success/failure signals
+- common repair patches
 
-## What Rote should do on weak fits
+That means a future task can still benefit even if only part of the flow is familiar.
+
+Example:
+
+```text
+Run 1: register vendor
+Run 2: update vendor bank details
+```
+
+These are not the same workflow, but they may share:
+
+```text
+login → vendor dashboard → search vendor → open vendor profile
+```
+
+Rote v1 may treat them as separate playbooks. A stronger browser-agent Rote should learn and reuse the shared prefix.
+
+## Why browser agents are still the right wedge
+
+Browser tasks are the best place to prove Rote because:
+
+- exploration is visibly expensive
+- repeated site usage is common in business workflows
+- tool calls are structured (`navigate`, `click`, `fill`, `extract`)
+- assertions are natural (`selector_visible`, `text_visible`, `input_value`)
+- drift is testable by changing selectors or page structure
+
+This makes browser agents the clearest first use case for procedural memory.
+
+## What Rote should do on weak matches
 
 Rote should be conservative:
 
 ```text
-weak match → miss → baseline agent runs → recorder captures trajectory
+high-confidence match → replay verified steps
+partial/uncertain match → reuse only safe known context or miss
+weak match → baseline browser agent explores
 ```
 
-It should not replay a 60% similar playbook just because some steps overlap. Wrong replay is worse than no replay.
+Wrong browser automation is worse than no optimization.
 
-Later versions may support reusable sub-playbooks or prefix replay, but v1 treats whole-playbook false positives as the dangerous failure mode.
+The core invariant remains:
+
+```text
+never silently wrong
+```
+
+Every replayed step must be assertion-gated, and final verification must pass.
 
 ## Rule of thumb
 
-Rote is most valuable when the user says:
+Rote is useful when the browser agent is likely to revisit the same website or app over time.
 
-> “Do this same workflow again, but with different values.”
+Rote is not useful when every task is a totally new site, goal, and UI.
 
-Rote is least valuable when the user says:
+The simple promise:
 
-> “Figure out something genuinely new.”
+> The more your browser agent uses the same websites, the less it should need to explore them from scratch.
