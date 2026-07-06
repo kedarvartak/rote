@@ -1,0 +1,18 @@
+{
+  "runs": [
+    {
+      "task": { "id": "B1", "name": "download latest report" },
+      "phase": "cold",
+      "repetition": 1,
+      "command": "node",
+      "args": ["scripts/bench/run-b1-cold.mjs"]
+    },
+    {
+      "task": { "id": "B1", "name": "download latest report" },
+      "phase": "warm",
+      "repetition": 1,
+      "command": "node",
+      "args": ["scripts/bench/run-b1-warm.mjs"]
+    }
+  ]
+}
