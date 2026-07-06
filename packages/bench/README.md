@@ -26,6 +26,9 @@ See `src/index.ts`. Highlights:
   that names recorded run ids, optional LLM usage sidecars, or explicit failed cells.
 - **`readUsageSidecar`** — validates benchmark usage sidecars, rejecting untagged
   LLM calls before accounting.
+- **`runCommandBenchmarkPlan`** — runs a human-authored command plan for real or
+  frozen benchmark cells, validates each successful run wrote `.rote/runs`
+  artifacts, and emits `bench-spec.json` for report/gate commands.
 - **`writeSyntheticBenchmarkPack`** — writes deterministic fake B1–B3 artifacts
   (`.rote/runs`, usage sidecars, spec, report) so CI can exercise the full M3
   reporting pipeline before a live browser driver exists.
@@ -48,9 +51,38 @@ See `src/index.ts`. Highlights:
 ```
 
 ```bash
-rote-bench report bench-spec.json --out report.md --export-jsonl raw-runs/
-rote-bench gate bench-spec.json --min-token-reduction 0.8
+rote-bench run bench-plan.json --out bench-out/
+rote-bench report bench-out/bench-spec.json --out bench-out/report.md --export-jsonl bench-out/raw-runs/
+rote-bench gate bench-out/bench-spec.json --min-token-reduction 0.8
 ```
+
+## Command plan format
+
+`rote-bench run` is the bridge to real/frozen B1–B3 runs. Each command should
+invoke the baseline agent or replay executor while honoring the injected env:
+`ROTE_RUN_ID`, `ROTE_BASE_DIR`, `ROTE_TASK_SPEC`, and `ROTE_USAGE_FILE`.
+
+```json
+{
+  "runs": [
+    {
+      "task": { "id": "B1", "name": "download report" },
+      "phase": "cold",
+      "repetition": 1,
+      "command": "./scripts/run-b1-cold.sh"
+    },
+    {
+      "task": { "id": "B1", "name": "download report" },
+      "phase": "warm",
+      "repetition": 1,
+      "command": "./scripts/run-b1-warm.sh"
+    }
+  ]
+}
+```
+
+A command that exits non-zero becomes a failed benchmark cell. A command that
+exits zero but does not write its run artifacts is also recorded as failed.
 
 ## Synthetic pack
 
