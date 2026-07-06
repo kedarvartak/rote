@@ -1,0 +1,41 @@
+{
+  "base_dir": "/absolute/path/to/rote-live-bench/.rote",
+  "runs": [
+    {
+      "task": { "id": "B1", "name": "download latest report" },
+      "phase": "cold",
+      "repetition": 1,
+      "command": "/absolute/path/to/run-b1-cold-baseline.sh"
+    },
+    {
+      "task": { "id": "B1", "name": "download latest report" },
+      "phase": "warm",
+      "repetition": 1,
+      "command": "/absolute/path/to/run-b1-warm-replay.sh"
+    },
+    {
+      "task": { "id": "B2", "name": "vendor registration" },
+      "phase": "cold",
+      "repetition": 1,
+      "command": "/absolute/path/to/run-b2-cold-baseline.sh"
+    },
+    {
+      "task": { "id": "B2", "name": "vendor registration" },
+      "phase": "warm",
+      "repetition": 1,
+      "command": "/absolute/path/to/run-b2-warm-replay.sh"
+    },
+    {
+      "task": { "id": "B3", "name": "catalog search extraction" },
+      "phase": "cold",
+      "repetition": 1,
+      "command": "/absolute/path/to/run-b3-cold-baseline.sh"
+    },
+    {
+      "task": { "id": "B3", "name": "catalog search extraction" },
+      "phase": "warm",
+      "repetition": 1,
+      "command": "/absolute/path/to/run-b3-warm-replay.sh"
+    }
+  ]
+}
