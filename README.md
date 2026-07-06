@@ -89,8 +89,13 @@ executor, and benchmark harness. The current V1 work is the browser-agent harnes
 distillation, stable IDs, diff observations, budgeted context, and a reproducible
 head-to-head benchmark against incumbent browser agents.
 
-This branch starts that V1 path with `@rote/browser`, `@rote/perception`, and static B1–B3
-fixture pages.
+The current P1 foundation starts that V1 path with `@rote/browser`, `@rote/perception`,
+and static B1–B3 fixture pages.
+
+![Implemented and target package topology](docs/diagrams/package-map.svg)
+
+Solid packages exist today; dashed packages are the target composition described in
+[docs/16 — Harness Architecture](docs/16-harness-architecture.md).
 
 ## Docs
 

@@ -48,9 +48,14 @@ public benchmark.
 
 ## Diagrams
 
-- [`diagrams/architecture.svg`](diagrams/architecture.svg) — system overview
+- [`diagrams/architecture.svg`](diagrams/architecture.svg) — four-plane system overview, with implemented vs planned boundaries
+- [`diagrams/package-map.svg`](diagrams/package-map.svg) — current package dependency map and target harness composition
+- [`diagrams/perception-pipeline.svg`](diagrams/perception-pipeline.svg) — capture, distillation, diffing, budget, and vision escalation
 - [`diagrams/run-lifecycle.svg`](diagrams/run-lifecycle.svg) — cold / warm / drift economics
 - [`diagrams/repair-ladder.svg`](diagrams/repair-ladder.svg) — self-healing state machine
+
+Every SVG has a same-name editable `.excalidraw` source. Regenerate exports with
+`node docs/diagrams/generate.mjs` after changing the source model.
 
 ## Design invariants (the short list)
 

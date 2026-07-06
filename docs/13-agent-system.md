@@ -39,32 +39,11 @@ Everything in the system belongs to one of four planes. (Full component detail:
 [16 — Harness Architecture](16-harness-architecture.md); the complete optimization
 inventory each plane implements: [14 — Optimization Catalog](14-optimization-catalog.md).)
 
-```text
-┌─ PERCEPTION PLANE ────────────────────────────────────────────────────────────┐
-│ CDP-level page capture → semantic distillation (interactive-element tree +    │
-│ stable node IDs) → task-focused filtering → DIFF ENCODING vs last observation │
-│ → token-budgeted rendering. Selective vision (screenshot + set-of-marks) only │
-│ when structure is missing or a check demands it.                              │
-└──────────────────────────────┬────────────────────────────────────────────────┘
-┌─ DECISION PLANE ─────────────▼────────────────────────────────────────────────┐
-│ Model router: frontier model for planning/recovery; small grounded model      │
-│ (Fara-class) for routine next-actions; NO model at all when memory predicts   │
-│ with high confidence (speculation, doc 11) or a verified playbook replays     │
-│ (doc 02). Cache-locality-aware context layout: stable prefix, volatile tail.  │
-└──────────────────────────────┬────────────────────────────────────────────────┘
-┌─ ACTION PLANE ───────────────▼────────────────────────────────────────────────┐
-│ Typed action space over CDP; settledness detection (when is the page actually │
-│ done); self-healing element resolution (semantic descriptor → selector);      │
-│ speculative pre-execution in shadow contexts with promote/discard commit;     │
-│ per-step expect assertions (the Expect DSL) as the safety floor.              │
-└──────────────────────────────┬────────────────────────────────────────────────┘
-┌─ LEARNING PLANE ─────────────▼────────────────────────────────────────────────┐
-│ Always-on trajectory recording (built, M1) → distillation into playbooks,     │
-│ subflows, site memory, transition models (docs 02/08) → served back as        │
-│ replay, speculation predictions, site briefs, and reclassified action safety. │
-│ Every run makes the next one cheaper. Confidence/drift tracking throughout.   │
-└───────────────────────────────────────────────────────────────────────────────┘
-```
+![Four-plane Rote architecture](diagrams/architecture.svg)
+
+Solid borders identify the implemented foundation. Dashed borders identify target
+harness capabilities; this distinction prevents the design direction from being read as
+the current package surface.
 
 The efficiency thesis, restated per plane:
 

@@ -9,6 +9,11 @@
 
 ## Package layout (target)
 
+![Current and target package topology](diagrams/package-map.svg)
+
+The upper half is the implemented repository. The lower half is the planned composition;
+dashed borders are not yet shipped packages.
+
 ```text
 packages/core        schemas + pure logic (exists; grows: Action, Observation,
                      StableNodeId, Prediction, SafetyClass, SessionState — Zod-first)
@@ -135,15 +140,11 @@ Notes the pseudocode compresses:
 
 ## Perception pipeline (packages/perception)
 
-```text
-CDP events ─▶ capture (DOM+a11y+layout+listeners)          [A1, A2]
-          ─▶ distill: DistilledNode tree, stable IDs        [A1, A3]
-          ─▶ (WebMCP present? use site tools as source)     [A9]
-          ─▶ filter: task-relevance ranking (P1)            [A5]
-          ─▶ diff vs session snapshot store                 [A4]
-          ─▶ render within ctx.budget, degrade full→diff→summary  [A8]
-          ─▶ vision escalation: screenshot + SoM aligned to stable IDs, on demand [A7]
-```
+![Perception pipeline](diagrams/perception-pipeline.svg)
+
+WebMCP, when present, becomes a higher-priority structured source before browser capture.
+Filtering and diffing operate on the distilled snapshot; selective vision is an on-demand
+escalation rather than the default observation path.
 
 Pure center: `distill`, `diffTrees`, `render` are dependency-free functions over
 captured data (property-tested: diff+base reconstructs full; render never exceeds
