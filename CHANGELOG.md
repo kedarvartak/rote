@@ -64,6 +64,9 @@ labeled `skip-changelog`.
   with float sign intact.
 
 ### Docs
+- Build plans for the agent system: the six-week V1 launch plan with weekly gates and
+  the no-number-no-launch rule (`docs/17`), and the full P0–P5 product roadmap with
+  per-phase workstreams, exit/kill gates, dependency spine, and scope fences (`docs/18`)
 - Direction of record: Rote is a full efficiency-first browser-agent system. New docs:
   the four-plane system design and positioning (`docs/13`), a researched catalog of
   every optimization the system needs with evidence, incumbents, and P0–P2 priorities

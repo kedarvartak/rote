@@ -41,6 +41,8 @@ binding parameters, filling content slots, and repairing broken steps.
 | [14 — Optimization Catalog](14-optimization-catalog.md) | The master inventory: every optimization an efficient browser-agent system needs, with evidence, incumbents, and P0–P2 tiers |
 | [15 — Competitor Teardown](15-competitor-teardown.md) | Per-competitor analysis (Browser Use, Stagehand, Skyvern, Magnitude, labs, infra) and the capability matrix |
 | [16 — Harness Architecture](16-harness-architecture.md) | Component-level design: packages, type spine, the control loop, perception pipeline, routing, build order H1–H8 |
+| [17 — V1 Launch Plan](17-v1-launch-plan.md) | The six-week launchable subset: in/out scope, weekly gates, the launch number, checklist |
+| [18 — Product Roadmap](18-product-roadmap.md) | The full timeline P0–P5: phase goals, workstreams, exit/kill gates, dependency spine, scope fences |
 
 ## Diagrams
 

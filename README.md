@@ -112,6 +112,8 @@ efficiency-first browser-agent harness, built by the H1–H8 plan in
 | [Optimization catalog](docs/14-optimization-catalog.md) | Every optimization the system needs — evidence, incumbents, priorities |
 | [Competitor teardown](docs/15-competitor-teardown.md) | The 2026 field, per player, with a capability matrix |
 | [Harness architecture](docs/16-harness-architecture.md) | Components, interfaces, control loop, and build order |
+| [V1 launch plan](docs/17-v1-launch-plan.md) | The six-week launchable subset and its gates |
+| [Product roadmap](docs/18-product-roadmap.md) | The full timeline: phases P0–P5 with exit and kill gates |
 
 ## Contributing
 
