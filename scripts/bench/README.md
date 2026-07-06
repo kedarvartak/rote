@@ -1,7 +1,11 @@
-# Frozen benchmark scripts
+# Benchmark scripts
 
-Local, deterministic M3 smoke scripts that exercise the real Recorder and Replay
-Executor CLIs before the live browser demo environment exists.
+Local, deterministic M3 smoke scripts plus the live-run contract for producing
+the real M3 gate report.
+
+For real frozen browser-agent runs, start with
+[`run-live-benchmark.md`](run-live-benchmark.md) and
+[`live-b1-b3-plan.example.json`](live-b1-b3-plan.example.json).
 
 ## B1 smoke
 
