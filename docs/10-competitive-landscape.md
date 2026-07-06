@@ -1,5 +1,9 @@
 # 10 — Competitive Landscape: Who Memoizes Browser Agents Today
 
+> **Superseded (2026-07)** by [15 — Competitor Teardown](15-competitor-teardown.md),
+> which covers the full harness/infra/model field now that Rote is a complete agent
+> system. Kept for the memoization-specific analysis.
+>
 > Status: survey, 2026-07. Extends [04 — Market](04-market.md) with the
 > browser-agent-specific question: *are browser-agent vendors already doing memoization?*
 > Short answer: **yes, at the exact-repetition tier, inside their own harnesses — and

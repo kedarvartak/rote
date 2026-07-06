@@ -4,6 +4,11 @@
 > what we already have, what it becomes, and in what order. Milestones here supersede
 > doc 06's M4–M7 ordering; M0–M3 are history (built). Doc 06 remains the reference for
 > the M0–M3 gates and for the testing discipline every milestone below inherits.
+>
+> **Update (2026-07):** with the full agent system as direction of record
+> ([13](13-agent-system.md)), M4 (predictor) and M5 (proxy/session groundwork) stand
+> as written; M6 onward is re-scoped into the H1–H8 build order in
+> [16 — Harness Architecture](16-harness-architecture.md).
 
 ## Inventory: what exists today and what it becomes
 

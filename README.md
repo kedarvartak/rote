@@ -37,8 +37,11 @@ dashboard measures it.
 
 ## What Rote does
 
-Rote is harness middleware that sits at the **tool-call boundary** (not the LLM API boundary,
-so it composes with compression proxies at that boundary rather than competing):
+Rote is an **efficiency-first browser-agent system**: a complete harness whose
+architecture is built around spending the fewest tokens and the least wall-clock per
+task at success parity — with a second entry point that exposes the same machinery
+over MCP so other agents can use it as a layer (see
+[docs/13](docs/13-agent-system.md)). Its core moves:
 
 1. **Record** — taps every tool call during a normal run. Always-on, cheap, no LLM.
 2. **Distill** — an offline LLM pass turns a *successful* trajectory into a **playbook**: a
@@ -81,11 +84,13 @@ applied to agent trajectories, with assertions + scoped repair in place of TTL i
 
 ## Status
 
-**Early build — M0–M2 done.** Data model, the MCP recorder, and the replay executor are
-built and tested against fake-world fixtures. Next up is M3, the benchmark harness — the
-kill-or-continue gate: prove ≥80% token reduction at success parity on a real task suite,
-or the thesis dies for the price of a few weeks' work. See
-[the build plan](docs/06-build-plan.md) for milestone-by-milestone detail.
+**Early build — M0–M3 done, direction set on the full agent system.** Data model, the
+MCP recorder, the replay executor, and the benchmark harness are built and tested
+against fake-world fixtures. The direction of record is
+[docs/13 — the Rote agent system](docs/13-agent-system.md): a complete
+efficiency-first browser-agent harness, built by the H1–H8 plan in
+[docs/16](docs/16-harness-architecture.md), with every optimization inventoried in
+[docs/14](docs/14-optimization-catalog.md).
 
 ## Docs
 
@@ -103,6 +108,10 @@ or the thesis dies for the price of a few weeks' work. See
 | [Competitive landscape](docs/10-competitive-landscape.md) | Who memoizes browser agents today and where the gaps are |
 | [Speculative execution](docs/11-speculative-execution.md) | Overlapping model thinking with browser acting — memory as a branch predictor |
 | [Implementation path](docs/12-implementation-path.md) | How the existing packages evolve into the speculative pipeline |
+| [The Rote agent system](docs/13-agent-system.md) | Direction of record: a full efficiency-first browser-agent system |
+| [Optimization catalog](docs/14-optimization-catalog.md) | Every optimization the system needs — evidence, incumbents, priorities |
+| [Competitor teardown](docs/15-competitor-teardown.md) | The 2026 field, per player, with a capability matrix |
+| [Harness architecture](docs/16-harness-architecture.md) | Components, interfaces, control loop, and build order |
 
 ## Contributing
 

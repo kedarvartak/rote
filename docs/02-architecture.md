@@ -12,6 +12,12 @@ procedure gets compiled into a deterministic, replayable artifact; the LLM is in
 where genuine judgment is needed — binding parameters, filling content slots, and repairing
 broken steps.
 
+> **Direction update (2026-07):** the "Full runtime (later)" option below is now the
+> plan of record — Rote is being built as a complete browser-agent system with this
+> doc's components as subsystems. See [13 — The Rote Agent System](13-agent-system.md)
+> and [16 — Harness Architecture](16-harness-architecture.md). The component designs,
+> playbook spec, and invariants in this doc remain authoritative.
+
 ## Where Rote sits (and why it's not a proxy)
 
 Rote is **harness middleware at the tool-call boundary** — a wrapper around the harness's

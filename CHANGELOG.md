@@ -64,6 +64,13 @@ labeled `skip-changelog`.
   with float sign intact.
 
 ### Docs
+- Direction of record: Rote is a full efficiency-first browser-agent system. New docs:
+  the four-plane system design and positioning (`docs/13`), a researched catalog of
+  every optimization the system needs with evidence, incumbents, and P0–P2 priorities
+  (`docs/14`), a per-competitor teardown of harnesses/infra/models with a capability
+  matrix (`docs/15`), and the component-level harness architecture with the control
+  loop, type spine, and H1–H8 build order (`docs/16`); docs 02/10/12 and the README
+  updated to point at the new direction
 - Speculative execution design: overlap model think time with browser acting using
   recorded trajectories as the action predictor — predictor/classifier/session-virtualizer
   architecture with lossless commit gates and an effect boundary (`docs/11`), plus the
