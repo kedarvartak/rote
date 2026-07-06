@@ -1,0 +1,127 @@
+# B2 frozen benchmark smoke playbook: deterministic variant of
+# fixtures/playbooks/b2-vendor-registration.yaml. The production B2 fixture
+# includes a slot step; this smoke keeps the benchmark path offline/no-LLM while
+# still replaying the same form-fill procedure against the fake browser server.
+
+playbook: submit-vendor-registration-smoke
+version: 1
+
+task_signature:
+  intent_description: Fill and submit the vendor registration form
+  env_fingerprint:
+    domain: vendors.acme.com
+    tool_prefixes:
+      - browser.
+
+params:
+  - name: company_name
+    type: string
+  - name: contact_email
+    type: string
+  - name: tax_id
+    type: string
+  - name: address_line1
+    type: string
+  - name: city
+    type: string
+  - name: postal_code
+    type: string
+  - name: country
+    type: string
+  - name: phone
+    type: string
+
+steps:
+  - id: open_registration
+    kind: deterministic
+    tool: browser.navigate
+    args:
+      url: https://vendors.acme.com/register
+    expect:
+      selector_visible: "#registration-form"
+    on_fail: fallback
+
+  - id: fill_company_name
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args: {selector: "#company-name", value: "{{company_name}}"}
+    expect: {input_value: "#company-name", equals: "{{company_name}}"}
+    on_fail: repair
+
+  - id: fill_contact_email
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args: {selector: "#contact-email", value: "{{contact_email}}"}
+    expect: {input_value: "#contact-email", equals: "{{contact_email}}"}
+    on_fail: repair
+
+  - id: fill_tax_id
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args: {selector: "#tax-id", value: "{{tax_id}}"}
+    expect: {input_value: "#tax-id", equals: "{{tax_id}}"}
+    on_fail: repair
+
+  - id: fill_address_line1
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args: {selector: "#address-line1", value: "{{address_line1}}"}
+    expect: {input_value: "#address-line1", equals: "{{address_line1}}"}
+    on_fail: repair
+
+  - id: fill_city
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args: {selector: "#city", value: "{{city}}"}
+    expect: {input_value: "#city", equals: "{{city}}"}
+    on_fail: repair
+
+  - id: fill_postal_code
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args: {selector: "#postal-code", value: "{{postal_code}}"}
+    expect: {input_value: "#postal-code", equals: "{{postal_code}}"}
+    on_fail: repair
+
+  - id: fill_country
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args: {selector: "#country", value: "{{country}}"}
+    expect: {input_value: "#country", equals: "{{country}}"}
+    on_fail: repair
+
+  - id: fill_phone
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args: {selector: "#phone", value: "{{phone}}"}
+    expect: {input_value: "#phone", equals: "{{phone}}"}
+    on_fail: repair
+
+  - id: submit_registration
+    kind: deterministic
+    depends_on:
+      - fill_contact_email
+      - fill_address_line1
+      - fill_city
+      - fill_postal_code
+      - fill_country
+      - fill_phone
+    tool: browser.click
+    args:
+      selector: "#registration-submit"
+    expect:
+      selector_visible: "#registration-confirmation"
+    on_fail: fallback
+
+verify:
+  - text_visible: "Registration submitted"
+
+confidence: 1

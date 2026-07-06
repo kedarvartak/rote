@@ -12,15 +12,28 @@ node packages/bench/bin/rote-bench.js report /tmp/rote-b1-bench/bench-spec.json 
 node packages/bench/bin/rote-bench.js gate /tmp/rote-b1-bench/bench-spec.json
 ```
 
+## B1–B3 smoke
+
+```bash
+rm -rf /tmp/rote-b1-b3-bench
+node packages/bench/bin/rote-bench.js run scripts/bench/frozen-b1-b3-plan.json --out /tmp/rote-b1-b3-bench
+node packages/bench/bin/rote-bench.js report /tmp/rote-b1-b3-bench/bench-spec.json --out /tmp/rote-b1-b3-bench/report.md
+node packages/bench/bin/rote-bench.js gate /tmp/rote-b1-b3-bench/bench-spec.json
+```
+
 What it runs:
 
-- `run-b1-cold.mjs` drives the Recorder around the fake browser MCP downstream
-  with 40 tool calls: 35 deliberate exploratory dead ends plus the 5 essential
-  B1 calls.
-- `run-b1-warm.mjs` drives `rote-replay` against
-  `fixtures/playbooks/b1-download-report.yaml` and the same fake downstream.
-- Both write usage sidecars so the normal `rote-bench report` and `gate` paths
-  are exercised.
+- B1 cold drives the Recorder around the fake browser MCP downstream with 40
+  tool calls: 35 deliberate exploratory dead ends plus the 5 essential B1 calls.
+- B1 warm drives `rote-replay` against
+  `fixtures/playbooks/b1-download-report.yaml`.
+- B2 cold records vendor-registration exploration and form-fill calls; B2 warm
+  replays `playbooks/b2-vendor-registration-smoke.yaml`, a deterministic
+  no-LLM variant of the production B2 fixture so the smoke stays offline.
+- B3 cold records catalog-search exploration and extraction calls; B3 warm
+  replays `fixtures/playbooks/b3-catalog-search.yaml`.
+- All runs write usage sidecars so the normal `rote-bench report` and `gate`
+  paths are exercised.
 
 This is still **not** the M3 thesis number: it uses a fake downstream and fake
 token sidecars. It proves that real Rote CLIs integrate with the benchmark
