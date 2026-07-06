@@ -65,6 +65,7 @@ labeled `skip-changelog`.
   with float sign intact.
 
 ### Docs
+- Rebuilt all five architecture visuals through the official Excalidraw MCP and checked in the MCP scene definitions, editable Excalidraw documents, and hand-drawn SVG exports.
 - Replaced the outdated architecture, run-lifecycle, and repair-ladder diagrams; added current-vs-target package topology and perception-pipeline diagrams. All five ship as rendered SVG plus editable Excalidraw source, with implementation status marked explicitly in the visuals.
 - Updated the root README, docs index, and new P1 package READMEs to describe Rote as an efficiency-first browser-agent harness with compact perception and browser memory.
 - Build plans for the agent system: the six-week V1 launch plan with weekly gates and

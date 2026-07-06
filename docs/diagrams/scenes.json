@@ -1,0 +1,1702 @@
+{
+  "architecture": [
+    {
+      "type": "cameraUpdate",
+      "width": 1200,
+      "height": 900,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "text",
+      "id": "at",
+      "x": 220,
+      "y": 35,
+      "text": "Rote: efficiency compounds across every browser run",
+      "fontSize": 28
+    },
+    {
+      "type": "text",
+      "id": "as",
+      "x": 300,
+      "y": 75,
+      "text": "Solid = implemented foundation     Dashed = planned harness",
+      "fontSize": 16,
+      "strokeColor": "#757575"
+    },
+    {
+      "type": "rectangle",
+      "id": "a_entry",
+      "x": 60,
+      "y": 140,
+      "width": 220,
+      "height": 80,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "CLI  |  SDK  |  MCP",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "a_agent",
+      "x": 390,
+      "y": 125,
+      "width": 420,
+      "height": 110,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "AGENT CONTROL LOOP\nfingerprint -> replay -> observe -> decide -> act -> verify",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "rectangle",
+      "id": "a_browser",
+      "x": 920,
+      "y": 140,
+      "width": 220,
+      "height": 80,
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Browser sessions\nlocal CDP or hosted",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a_ea",
+      "x": 280,
+      "y": 180,
+      "width": 110,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          110,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#4a9eed"
+    },
+    {
+      "type": "arrow",
+      "id": "a_ab",
+      "x": 810,
+      "y": 180,
+      "width": 110,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          110,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b"
+    },
+    {
+      "type": "rectangle",
+      "id": "a_per",
+      "x": 45,
+      "y": 340,
+      "width": 245,
+      "height": 165,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "PERCEPTION\ncapture + distill\nstable IDs + token budget",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "a_dec",
+      "x": 330,
+      "y": 340,
+      "width": 245,
+      "height": 165,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "DECISION\ncache-stable context\nroute or skip the model",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "rectangle",
+      "id": "a_act",
+      "x": 615,
+      "y": 340,
+      "width": 245,
+      "height": 165,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "ACTION\ntyped browser tools\nsettledness + assertions",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "rectangle",
+      "id": "a_learn",
+      "x": 900,
+      "y": 340,
+      "width": 245,
+      "height": 165,
+      "backgroundColor": "#c3fae8",
+      "fillStyle": "solid",
+      "strokeColor": "#06b6d4",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "LEARNING\nrecord every run\nmemory + prediction + drift",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "arrow",
+      "id": "a_p1",
+      "x": 290,
+      "y": 422,
+      "width": 40,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e"
+    },
+    {
+      "type": "arrow",
+      "id": "a_p2",
+      "x": 575,
+      "y": 422,
+      "width": 40,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#8b5cf6"
+    },
+    {
+      "type": "arrow",
+      "id": "a_p3",
+      "x": 860,
+      "y": 422,
+      "width": 40,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b"
+    },
+    {
+      "type": "arrow",
+      "id": "a_fb",
+      "x": 1020,
+      "y": 340,
+      "width": -350,
+      "height": -105,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -350,
+          -105
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#06b6d4",
+      "strokeStyle": "dashed",
+      "label": {
+        "text": "memory warms the next run",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "a_i1",
+      "x": 60,
+      "y": 640,
+      "width": 245,
+      "height": 85,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/browser\n@rote/perception",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "a_i2",
+      "x": 340,
+      "y": 640,
+      "width": 245,
+      "height": 85,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/core\nschemas + pure logic",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "a_i3",
+      "x": 620,
+      "y": 640,
+      "width": 245,
+      "height": 85,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/recorder\n@rote/executor",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "a_i4",
+      "x": 900,
+      "y": 640,
+      "width": 245,
+      "height": 85,
+      "backgroundColor": "#eebefa",
+      "fillStyle": "solid",
+      "strokeColor": "#ec4899",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/bench\n@rote/cli",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "text",
+      "id": "a_safe",
+      "x": 155,
+      "y": 790,
+      "text": "Safety floor: expect gates | final verification | environment fingerprints | append-only versions",
+      "fontSize": 18
+    }
+  ],
+  "package-map": [
+    {
+      "type": "cameraUpdate",
+      "width": 1200,
+      "height": 900,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "text",
+      "id": "pt",
+      "x": 220,
+      "y": 35,
+      "text": "Rote package topology: shipped foundation to target harness",
+      "fontSize": 28
+    },
+    {
+      "type": "text",
+      "id": "ps",
+      "x": 300,
+      "y": 75,
+      "text": "Dependencies converge on @rote/core; @rote/agent composes the loop",
+      "fontSize": 16,
+      "strokeColor": "#757575"
+    },
+    {
+      "type": "rectangle",
+      "id": "p_core",
+      "x": 440,
+      "y": 145,
+      "width": 320,
+      "height": 90,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/core\nZod schemas | transforms | serialization",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "p_browser",
+      "x": 55,
+      "y": 300,
+      "width": 230,
+      "height": 85,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/browser\ncapture boundary",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "p_per",
+      "x": 330,
+      "y": 300,
+      "width": 230,
+      "height": 85,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/perception\ndistill | IDs | render",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "p_rec",
+      "x": 640,
+      "y": 300,
+      "width": 230,
+      "height": 85,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/recorder\nMCP proxy | artifacts",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "p_exec",
+      "x": 915,
+      "y": 300,
+      "width": 230,
+      "height": 85,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/executor\nverified replay",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "p_a1",
+      "x": 170,
+      "y": 300,
+      "width": 320,
+      "height": -65,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          320,
+          -65
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e"
+    },
+    {
+      "type": "arrow",
+      "id": "p_a2",
+      "x": 445,
+      "y": 300,
+      "width": 100,
+      "height": -65,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          100,
+          -65
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e"
+    },
+    {
+      "type": "arrow",
+      "id": "p_a3",
+      "x": 755,
+      "y": 300,
+      "width": -70,
+      "height": -65,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -70,
+          -65
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b"
+    },
+    {
+      "type": "arrow",
+      "id": "p_a4",
+      "x": 1030,
+      "y": 300,
+      "width": -320,
+      "height": -65,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -320,
+          -65
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b"
+    },
+    {
+      "type": "rectangle",
+      "id": "p_cli",
+      "x": 330,
+      "y": 445,
+      "width": 230,
+      "height": 70,
+      "backgroundColor": "#eebefa",
+      "fillStyle": "solid",
+      "strokeColor": "#ec4899",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/cli\ninspect recorded runs",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "p_bench",
+      "x": 640,
+      "y": 445,
+      "width": 230,
+      "height": 70,
+      "backgroundColor": "#eebefa",
+      "fillStyle": "solid",
+      "strokeColor": "#ec4899",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/bench\nrun | report | gate",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "p_a5",
+      "x": 560,
+      "y": 480,
+      "width": 80,
+      "height": -95,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          80,
+          -95
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#ec4899"
+    },
+    {
+      "type": "arrow",
+      "id": "p_a6",
+      "x": 755,
+      "y": 445,
+      "width": 0,
+      "height": -60,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -60
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#ec4899"
+    },
+    {
+      "type": "text",
+      "id": "p_target",
+      "x": 55,
+      "y": 585,
+      "text": "TARGET COMPOSITION",
+      "fontSize": 20,
+      "strokeColor": "#6d28d9"
+    },
+    {
+      "type": "rectangle",
+      "id": "p_support",
+      "x": 55,
+      "y": 650,
+      "width": 710,
+      "height": 130,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "decision       action       memory       predictor\npure policy centers with I/O at their edges",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "rectangle",
+      "id": "p_agent",
+      "x": 825,
+      "y": 630,
+      "width": 190,
+      "height": 165,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "@rote/agent\ncontrol loop\n+ recovery",
+        "fontSize": 20
+      },
+      "strokeStyle": "dashed",
+      "fontSize": 20
+    },
+    {
+      "type": "rectangle",
+      "id": "p_mcp",
+      "x": 1055,
+      "y": 670,
+      "width": 100,
+      "height": 85,
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "MCP\nserver",
+        "fontSize": 16
+      },
+      "strokeStyle": "dashed",
+      "fontSize": 16
+    },
+    {
+      "type": "arrow",
+      "id": "p_a7",
+      "x": 765,
+      "y": 715,
+      "width": 60,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#8b5cf6",
+      "label": {
+        "text": "compose",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "p_a8",
+      "x": 1015,
+      "y": 715,
+      "width": 40,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b"
+    }
+  ],
+  "perception-pipeline": [
+    {
+      "type": "cameraUpdate",
+      "width": 1200,
+      "height": 900,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "text",
+      "id": "vt",
+      "x": 220,
+      "y": 35,
+      "text": "Perception pipeline: pay tokens only for relevant change",
+      "fontSize": 28
+    },
+    {
+      "type": "text",
+      "id": "vs",
+      "x": 300,
+      "y": 75,
+      "text": "Solid = P1 foundation     Dashed = planned optimization",
+      "fontSize": 16,
+      "strokeColor": "#757575"
+    },
+    {
+      "type": "rectangle",
+      "id": "v_browser",
+      "x": 40,
+      "y": 260,
+      "width": 150,
+      "height": 110,
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Browser\nDOM + a11y\nlayout",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "v_capture",
+      "x": 235,
+      "y": 260,
+      "width": 160,
+      "height": 110,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Capture\nnormalized page\nsnapshot",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "v_distill",
+      "x": 440,
+      "y": 260,
+      "width": 160,
+      "height": 110,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Distill\ninteractive tree\n+ stable IDs",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "v_diff",
+      "x": 645,
+      "y": 260,
+      "width": 160,
+      "height": 110,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Filter + diff\ntask relevance\nvs prior state",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "rectangle",
+      "id": "v_render",
+      "x": 850,
+      "y": 260,
+      "width": 160,
+      "height": 110,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Budget render\nfull -> diff\n-> summary",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "rectangle",
+      "id": "v_ctx",
+      "x": 1055,
+      "y": 270,
+      "width": 100,
+      "height": 90,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Agent\ncontext",
+        "fontSize": 16
+      },
+      "strokeStyle": "dashed",
+      "fontSize": 16
+    },
+    {
+      "type": "arrow",
+      "id": "v_a1",
+      "x": 190,
+      "y": 315,
+      "width": 45,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          45,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "v_a2",
+      "x": 395,
+      "y": 315,
+      "width": 45,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          45,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "v_a3",
+      "x": 600,
+      "y": 315,
+      "width": 45,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          45,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "v_a4",
+      "x": 805,
+      "y": 315,
+      "width": 45,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          45,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "v_a5",
+      "x": 1010,
+      "y": 315,
+      "width": 45,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          45,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "rectangle",
+      "id": "v_events",
+      "x": 90,
+      "y": 565,
+      "width": 270,
+      "height": 110,
+      "backgroundColor": "#c3fae8",
+      "fillStyle": "solid",
+      "strokeColor": "#06b6d4",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Network + mutation events\ninvalidate snapshots\nand drive settledness",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "rectangle",
+      "id": "v_vision",
+      "x": 465,
+      "y": 565,
+      "width": 270,
+      "height": 110,
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "strokeColor": "#ef4444",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Selective vision\nscreenshot + set-of-marks\nonly when needed",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "rectangle",
+      "id": "v_webmcp",
+      "x": 840,
+      "y": 565,
+      "width": 270,
+      "height": 110,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "WebMCP first\nwhen the site exposes\nstructured tools",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "arrow",
+      "id": "v_a6",
+      "x": 225,
+      "y": 565,
+      "width": 90,
+      "height": -195,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          90,
+          -195
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#06b6d4",
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "arrow",
+      "id": "v_a7",
+      "x": 600,
+      "y": 565,
+      "width": 330,
+      "height": -195,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          330,
+          -195
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#ef4444",
+      "strokeStyle": "dashed",
+      "label": {
+        "text": "on demand",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "v_a8",
+      "x": 975,
+      "y": 565,
+      "width": -660,
+      "height": -195,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -660,
+          -195
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b",
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "text",
+      "id": "v_pure",
+      "x": 210,
+      "y": 760,
+      "text": "Pure center: distill, diff, and render are deterministic; capture stays at the I/O edge.",
+      "fontSize": 18
+    }
+  ],
+  "run-lifecycle": [
+    {
+      "type": "cameraUpdate",
+      "width": 1200,
+      "height": 900,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "text",
+      "id": "lt",
+      "x": 220,
+      "y": 35,
+      "text": "Run lifecycle: exploration becomes verified browser memory",
+      "fontSize": 28
+    },
+    {
+      "type": "text",
+      "id": "ls",
+      "x": 300,
+      "y": 75,
+      "text": "Efficiency is measured at success parity; verification is the irreducible floor",
+      "fontSize": 16,
+      "strokeColor": "#757575"
+    },
+    {
+      "type": "rectangle",
+      "id": "l_cold",
+      "x": 55,
+      "y": 185,
+      "width": 330,
+      "height": 350,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "COLD | RUN 1\n\nFrontier agent explores\nRecorder captures all calls\nSuccessful run is distilled\n\ntrajectory -> playbook v1",
+        "fontSize": 20
+      },
+      "fontSize": 20
+    },
+    {
+      "type": "rectangle",
+      "id": "l_warm",
+      "x": 435,
+      "y": 185,
+      "width": 330,
+      "height": 350,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "WARM | RUN N\n\nFingerprint + task match\nReplay essential DAG\nExpect + verify gates run\n\nappend confidence observation",
+        "fontSize": 20
+      },
+      "fontSize": 20
+    },
+    {
+      "type": "rectangle",
+      "id": "l_drift",
+      "x": 815,
+      "y": 185,
+      "width": 330,
+      "height": 350,
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "DRIFT | RUN N+k\n\nAssertion detects change\nRetry or scoped repair\nFallback re-explores if needed\n\npatch -> playbook vN+1",
+        "fontSize": 20
+      },
+      "fontSize": 20
+    },
+    {
+      "type": "arrow",
+      "id": "l_a1",
+      "x": 385,
+      "y": 360,
+      "width": 50,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          50,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#4a9eed",
+      "label": {
+        "text": "learn",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "l_a2",
+      "x": 765,
+      "y": 360,
+      "width": 50,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          50,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b",
+      "label": {
+        "text": "site changes",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "l_fb",
+      "x": 980,
+      "y": 535,
+      "width": -760,
+      "height": 130,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -100,
+          100
+        ],
+        [
+          -660,
+          100
+        ],
+        [
+          -760,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#06b6d4",
+      "strokeStyle": "dashed",
+      "label": {
+        "text": "versioned memory warms future runs",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "l_floor",
+      "x": 180,
+      "y": 740,
+      "width": 840,
+      "height": 85,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Cost trends toward match + essential actions + verification\nNever toward unverified zero",
+        "fontSize": 20
+      },
+      "fontSize": 20
+    }
+  ],
+  "repair-ladder": [
+    {
+      "type": "cameraUpdate",
+      "width": 1200,
+      "height": 900,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "text",
+      "id": "rt",
+      "x": 220,
+      "y": 35,
+      "text": "Recovery ladder: escalate narrowly, never report false success",
+      "fontSize": 28
+    },
+    {
+      "type": "text",
+      "id": "rs",
+      "x": 300,
+      "y": 75,
+      "text": "Solid = executor now     Dashed = planned scoped repair + patching",
+      "fontSize": 16,
+      "strokeColor": "#757575"
+    },
+    {
+      "type": "rectangle",
+      "id": "r_exec",
+      "x": 45,
+      "y": 160,
+      "width": 190,
+      "height": 85,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Execute step k",
+        "fontSize": 20
+      },
+      "fontSize": 20
+    },
+    {
+      "type": "diamond",
+      "id": "r_expect",
+      "x": 300,
+      "y": 140,
+      "width": 180,
+      "height": 125,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "label": {
+        "text": "expect\npasses?",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "r_cont",
+      "x": 545,
+      "y": 160,
+      "width": 190,
+      "height": 85,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Continue DAG",
+        "fontSize": 20
+      },
+      "fontSize": 20
+    },
+    {
+      "type": "diamond",
+      "id": "r_verify",
+      "x": 800,
+      "y": 140,
+      "width": 180,
+      "height": 125,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "label": {
+        "text": "final verify[]\npasses?",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "r_success",
+      "x": 1025,
+      "y": 160,
+      "width": 130,
+      "height": 85,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "SUCCESS",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "r_a1",
+      "x": 235,
+      "y": 202,
+      "width": 65,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          65,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "r_a2",
+      "x": 480,
+      "y": 202,
+      "width": 65,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          65,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e",
+      "label": {
+        "text": "yes",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "r_a3",
+      "x": 735,
+      "y": 202,
+      "width": 65,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          65,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "r_a4",
+      "x": 980,
+      "y": 202,
+      "width": 45,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          45,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e",
+      "label": {
+        "text": "yes",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "r_retry",
+      "x": 270,
+      "y": 350,
+      "width": 240,
+      "height": 95,
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "1. RETRY\ntransient failure\nfixed attempt policy",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "r_a5",
+      "x": 390,
+      "y": 265,
+      "width": 0,
+      "height": 85,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          85
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#ef4444",
+      "label": {
+        "text": "no",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "r_scope",
+      "x": 270,
+      "y": 520,
+      "width": 240,
+      "height": 110,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "2. SCOPED REPAIR\nnarrow failure context\npatch only step k",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "arrow",
+      "id": "r_a6",
+      "x": 390,
+      "y": 445,
+      "width": 0,
+      "height": 75,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          75
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#8b5cf6",
+      "label": {
+        "text": "still fails",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "r_fallback",
+      "x": 650,
+      "y": 520,
+      "width": 270,
+      "height": 110,
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "strokeColor": "#ef4444",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "3. FULL-AGENT FALLBACK\nfresh run on original task\nrecord replacement trajectory",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "r_a7",
+      "x": 510,
+      "y": 575,
+      "width": 140,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          140,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#ef4444",
+      "label": {
+        "text": "repair fails",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "r_a8",
+      "x": 890,
+      "y": 265,
+      "width": -105,
+      "height": 255,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -105,
+          255
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#ef4444",
+      "label": {
+        "text": "verify fails",
+        "fontSize": 14
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "r_redistill",
+      "x": 650,
+      "y": 700,
+      "width": 270,
+      "height": 80,
+      "backgroundColor": "#c3fae8",
+      "fillStyle": "solid",
+      "strokeColor": "#06b6d4",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Re-distill + append vN+1\nresume from verified state",
+        "fontSize": 18
+      },
+      "strokeStyle": "dashed"
+    },
+    {
+      "type": "arrow",
+      "id": "r_a9",
+      "x": 785,
+      "y": 630,
+      "width": 0,
+      "height": 70,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          70
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#06b6d4"
+    },
+    {
+      "type": "rectangle",
+      "id": "r_inv",
+      "x": 150,
+      "y": 815,
+      "width": 900,
+      "height": 55,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "roundness": {
+        "type": 3
+      },
+      "label": {
+        "text": "Invariant: failed expectation or final verification can never become success.",
+        "fontSize": 20
+      },
+      "fontSize": 20
+    }
+  ]
+}

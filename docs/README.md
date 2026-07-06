@@ -54,8 +54,9 @@ public benchmark.
 - [`diagrams/run-lifecycle.svg`](diagrams/run-lifecycle.svg) — cold / warm / drift economics
 - [`diagrams/repair-ladder.svg`](diagrams/repair-ladder.svg) — self-healing state machine
 
-Every SVG has a same-name editable `.excalidraw` source. Regenerate exports with
-`node docs/diagrams/generate.mjs` after changing the source model.
+Every SVG has a same-name editable `.excalidraw` source. The MCP-authored element
+definitions live in `diagrams/scenes.json`; regenerate both formats with
+`node docs/diagrams/generate.mjs`.
 
 ## Design invariants (the short list)
 
