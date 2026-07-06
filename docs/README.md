@@ -31,6 +31,18 @@ binding parameters, filling content slots, and repairing broken steps.
 | [04 — Market](04-market.md) | Competitive map, three steelmanned objections, buyers, why now |
 | [05 — Roadmap](05-roadmap.md) | Phase 0 gate → OSS release → control plane; open questions |
 | [06 — Build Plan](06-build-plan.md) | Milestone-by-milestone execution: tasks, automated + manual tests, exit/kill gates |
+| [07 — Browser-Agent Fit](07-where-rote-works.md) | Browser-agent fit guide: site memory, replay, weak-fit browsing tasks |
+| [08 — Browser Memory Architecture](08-browser-memory-architecture.md) | Three memory tiers (playbook / subflow / site memory), replay vs advisory modes, build order |
+| [09 — Generalization Evaluation](09-generalization-evaluation.md) | Learning-curve benchmark, transfer matrix T0–T5, kill gates for the generalization thesis |
+| [10 — Competitive Landscape](10-competitive-landscape.md) | Who memoizes browser agents today (Stagehand, Skyvern, workflow-use, AWM) and the gaps Rote targets |
+| [11 — Speculative Execution](11-speculative-execution.md) | Overlapping model thinking with browser acting: memory-driven prediction, shadow sessions, commit gates, observation diffs |
+| [12 — Implementation Path](12-implementation-path.md) | How the existing packages become the doc-11 design: reuse map, proxy refactor, milestones M4–M9 with kill gates |
+| [13 — The Rote Agent System](13-agent-system.md) | Direction of record: Rote as a full efficiency-first browser-agent system; the four-plane architecture; positioning |
+| [14 — Optimization Catalog](14-optimization-catalog.md) | The master inventory: every optimization an efficient browser-agent system needs, with evidence, incumbents, and P0–P2 tiers |
+| [15 — Competitor Teardown](15-competitor-teardown.md) | Per-competitor analysis (Browser Use, Stagehand, Skyvern, Magnitude, labs, infra) and the capability matrix |
+| [16 — Harness Architecture](16-harness-architecture.md) | Component-level design: packages, type spine, the control loop, perception pipeline, routing, build order H1–H8 |
+| [17 — V1 Launch Plan](17-v1-launch-plan.md) | The six-week launchable subset: in/out scope, weekly gates, the launch number, checklist |
+| [18 — Product Roadmap](18-product-roadmap.md) | The full timeline P0–P5: phase goals, workstreams, exit/kill gates, dependency spine, scope fences |
 
 ## Diagrams
 

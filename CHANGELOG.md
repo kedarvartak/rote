@@ -64,6 +64,27 @@ labeled `skip-changelog`.
   with float sign intact.
 
 ### Docs
+- Build plans for the agent system: the six-week V1 launch plan with weekly gates and
+  the no-number-no-launch rule (`docs/17`), and the full P0–P5 product roadmap with
+  per-phase workstreams, exit/kill gates, dependency spine, and scope fences (`docs/18`)
+- Direction of record: Rote is a full efficiency-first browser-agent system. New docs:
+  the four-plane system design and positioning (`docs/13`), a researched catalog of
+  every optimization the system needs with evidence, incumbents, and P0–P2 priorities
+  (`docs/14`), a per-competitor teardown of harnesses/infra/models with a capability
+  matrix (`docs/15`), and the component-level harness architecture with the control
+  loop, type spine, and H1–H8 build order (`docs/16`); docs 02/10/12 and the README
+  updated to point at the new direction
+- Speculative execution design: overlap model think time with browser acting using
+  recorded trajectories as the action predictor — predictor/classifier/session-virtualizer
+  architecture with lossless commit gates and an effect boundary (`docs/11`), plus the
+  reuse map and M4–M9 milestone sequence taking the existing packages there (`docs/12`);
+  doc 06 M4+ sequencing superseded accordingly
+- Browser-agent memory plan: three-tier memory architecture (playbook / subflow / site
+  memory) with replay vs advisory consumption modes (`docs/08`), a generalization
+  benchmark with a T0–T5 transfer matrix and kill gates (`docs/09`), and a survey of
+  browser-agent memoization incumbents — Stagehand/Skyvern/workflow-use caching vs the
+  generalization and harness-agnosticism gaps Rote targets (`docs/10`)
+- Added `docs/07-where-rote-works.md` to scope Rote as a browser-agent memoization layer, explaining where site memory/replay helps and where one-off browsing does not.
 - Project named **Rote** (previously working name "Memo")
 - Removed named references to third-party compression tools from README and design docs
   in favor of generic "compression proxy" language — those tools were a reference point

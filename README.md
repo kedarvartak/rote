@@ -37,8 +37,11 @@ dashboard measures it.
 
 ## What Rote does
 
-Rote is harness middleware that sits at the **tool-call boundary** (not the LLM API boundary,
-so it composes with compression proxies at that boundary rather than competing):
+Rote is an **efficiency-first browser-agent system**: a complete harness whose
+architecture is built around spending the fewest tokens and the least wall-clock per
+task at success parity — with a second entry point that exposes the same machinery
+over MCP so other agents can use it as a layer (see
+[docs/13](docs/13-agent-system.md)). Its core moves:
 
 1. **Record** — taps every tool call during a normal run. Always-on, cheap, no LLM.
 2. **Distill** — an offline LLM pass turns a *successful* trajectory into a **playbook**: a
@@ -48,6 +51,10 @@ so it composes with compression proxies at that boundary rather than competing):
    LLM planner is out of the control loop; it's invoked only to fill content slots.
 4. **Self-heal** — when the world drifts (a selector moved, a flag renamed), the failing step
    is repaired in isolation and saved as a versioned patch — never a full re-exploration.
+5. **Speculate** — even when no full playbook matches, recorded experience predicts the
+   agent's next action, and Rote executes it *while the model is still thinking* — a correct
+   prediction collapses the step to a confirmation; a wrong one is discarded losslessly.
+   See [docs/11](docs/11-speculative-execution.md).
 
 ```
 Cold (run 1) ──▶ Warm (run N) ──▶ Drift (run N+k)
@@ -77,11 +84,13 @@ applied to agent trajectories, with assertions + scoped repair in place of TTL i
 
 ## Status
 
-**Early build — M0–M2 done.** Data model, the MCP recorder, and the replay executor are
-built and tested against fake-world fixtures. Next up is M3, the benchmark harness — the
-kill-or-continue gate: prove ≥80% token reduction at success parity on a real task suite,
-or the thesis dies for the price of a few weeks' work. See
-[the build plan](docs/06-build-plan.md) for milestone-by-milestone detail.
+**Early build — M0–M3 done, direction set on the full agent system.** Data model, the
+MCP recorder, the replay executor, and the benchmark harness are built and tested
+against fake-world fixtures. The direction of record is
+[docs/13 — the Rote agent system](docs/13-agent-system.md): a complete
+efficiency-first browser-agent harness, built by the H1–H8 plan in
+[docs/16](docs/16-harness-architecture.md), with every optimization inventoried in
+[docs/14](docs/14-optimization-catalog.md).
 
 ## Docs
 
@@ -93,6 +102,18 @@ or the thesis dies for the price of a few weeks' work. See
 | [Market](docs/04-market.md) | Competitive map, steelmanned objections, buyers, why now |
 | [Roadmap](docs/05-roadmap.md) | Phased plan and open questions |
 | [Build plan](docs/06-build-plan.md) | Milestone-by-milestone execution detail: tasks, test suites, exit/kill gates |
+| [Where Rote works](docs/07-where-rote-works.md) | Browser-agent fit guide: where site memory and replay help or do not help |
+| [Browser memory architecture](docs/08-browser-memory-architecture.md) | Memory tiers, replay vs advisory modes, build order |
+| [Generalization evaluation](docs/09-generalization-evaluation.md) | How the memory tiers get benchmarked beyond exact repeats |
+| [Competitive landscape](docs/10-competitive-landscape.md) | Who memoizes browser agents today and where the gaps are |
+| [Speculative execution](docs/11-speculative-execution.md) | Overlapping model thinking with browser acting — memory as a branch predictor |
+| [Implementation path](docs/12-implementation-path.md) | How the existing packages evolve into the speculative pipeline |
+| [The Rote agent system](docs/13-agent-system.md) | Direction of record: a full efficiency-first browser-agent system |
+| [Optimization catalog](docs/14-optimization-catalog.md) | Every optimization the system needs — evidence, incumbents, priorities |
+| [Competitor teardown](docs/15-competitor-teardown.md) | The 2026 field, per player, with a capability matrix |
+| [Harness architecture](docs/16-harness-architecture.md) | Components, interfaces, control loop, and build order |
+| [V1 launch plan](docs/17-v1-launch-plan.md) | The six-week launchable subset and its gates |
+| [Product roadmap](docs/18-product-roadmap.md) | The full timeline: phases P0–P5 with exit and kill gates |
 
 ## Contributing
 

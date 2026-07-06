@@ -14,6 +14,12 @@ schemas — chosen because the interception surface is MCP-native and the MCP TS
 reference implementation. The trajectory/playbook formats are language-neutral
 (JSONL/YAML), so a Python port later costs nothing architecturally.
 
+**Sequencing update (2026-07):** M0–M3 below are built/authoritative. From M4 onward the
+milestone sequence is superseded by [12 — Implementation Path](12-implementation-path.md)
+(speculative execution, per [11 — Speculative Execution](11-speculative-execution.md));
+the original M4–M7 sections are kept below because their component designs (matcher,
+distiller, repair) fold into that sequence rather than disappearing.
+
 ---
 
 ## Milestone 0 — Data model & repo scaffolding (2–3 days)
