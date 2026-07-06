@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { buildBenchReport } from './accounting.js';
+import { runCommandBenchmarkPlan } from './command-driver.js';
 import { evaluateM3Gate, M3GateFailedError, renderM3GateResult } from './gate.js';
 import { renderMarkdownReport } from './report.js';
 import { exportSuccessfulTrajectories } from './run-store.js';
@@ -20,6 +21,13 @@ export async function main(argv: string[]): Promise<string> {
     if (!subject) throw new Error(usage());
     const pack = await writeSyntheticBenchmarkPack({ outDir: subject });
     return `wrote synthetic benchmark pack: ${pack.specPath} and ${pack.reportPath}`;
+  }
+  if (command === 'run') {
+    if (!subject) throw new Error(usage());
+    const options = parseOptions(rest);
+    const outDir = options.out ?? 'bench-out';
+    const result = await runCommandBenchmarkPlan({ planPath: subject, outDir });
+    return `wrote ${result.specPath}`;
   }
   if ((command !== 'report' && command !== 'gate') || !subject) {
     throw new Error(usage());
@@ -98,5 +106,5 @@ function parseOptions(args: string[]): ReportOptions {
 }
 
 function usage(): string {
-  return 'usage: rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench synthetic <out-dir>';
 }
