@@ -32,9 +32,11 @@ binding parameters, filling content slots, and repairing broken steps.
 | [05 — Roadmap](05-roadmap.md) | Phase 0 gate → OSS release → control plane; open questions |
 | [06 — Build Plan](06-build-plan.md) | Milestone-by-milestone execution: tasks, automated + manual tests, exit/kill gates |
 | [07 — Browser-Agent Fit](07-where-rote-works.md) | Browser-agent fit guide: site memory, replay, weak-fit browsing tasks |
-| [08 — Browser Memory Architecture](08-browser-memory-architecture.md) | Pivot plan: three memory tiers (playbook / subflow / site memory), replay vs advisory modes, build order |
+| [08 — Browser Memory Architecture](08-browser-memory-architecture.md) | Three memory tiers (playbook / subflow / site memory), replay vs advisory modes, build order |
 | [09 — Generalization Evaluation](09-generalization-evaluation.md) | Learning-curve benchmark, transfer matrix T0–T5, kill gates for the generalization thesis |
 | [10 — Competitive Landscape](10-competitive-landscape.md) | Who memoizes browser agents today (Stagehand, Skyvern, workflow-use, AWM) and the gaps Rote targets |
+| [11 — Speculative Execution](11-speculative-execution.md) | Overlapping model thinking with browser acting: memory-driven prediction, shadow sessions, commit gates, observation diffs |
+| [12 — Implementation Path](12-implementation-path.md) | How the existing packages become the doc-11 design: reuse map, proxy refactor, milestones M4–M9 with kill gates |
 
 ## Diagrams
 

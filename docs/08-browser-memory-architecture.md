@@ -1,6 +1,6 @@
 # 08 — Browser Memory Architecture: From Workflow Replay to Site Memory
 
-> Status: **pivot plan**. This doc extends [02 — Architecture](02-architecture.md) for the
+> Status: design. This doc extends [02 — Architecture](02-architecture.md) for the
 > browser-agent scope defined in [07 — Where Rote Works](07-where-rote-works.md). Nothing
 > here invalidates M0–M2; it defines what gets built *on top* of them and in what order.
 
@@ -10,7 +10,7 @@ Rote v1 (docs 01–06) is **workflow memoization**: record a successful trajecto
 a playbook, replay it when the *same task* recurs. That is the cleanest thing to benchmark,
 but it only pays when tasks repeat exactly (same site + same workflow + new params).
 
-The pivot: Rote is a **memoization layer for browser agents** whose promise is
+The goal: Rote is a **memoization layer for browser agents** whose promise is
 
 ```text
 the more your browser agent uses a website, the less it explores it
@@ -45,7 +45,11 @@ still gains 8.9–14.0 absolute points. Nobody has productized this.
 | 2. Subflow | Shared trajectory fragment (login, navigate-to-section, search-and-open) | A *different* task starts with a known prefix | **Replay prefix, then hand off** — agent takes over warm, mid-site | 30–60% (the prefix's share of exploration) | Medium — gated like tier 1, plus a clean hand-off contract |
 | 3. Site memory | Per-site knowledge: page graph, selector map, form semantics, success signals | *Any* task touches a known site | **Advise** — memory never acts; it shrinks the agent's observation and guides its choices | 20–50% (fewer/cheaper observations, fewer dead ends) | Lowest — a wrong hint wastes tokens but the agent still observes and verifies |
 
-Tier 1 is M0–M2, built. Tiers 2–3 are the pivot.
+Tier 1 is M0–M2, built. Tiers 2–3 are the roadmap. And all three tiers have a second
+consumer beyond replay/advice: they are the knowledge sources for the **predictor** that
+drives speculative execution ([11 — Speculative Execution](11-speculative-execution.md)) —
+memory that is only *partially* right still pays there, because a predicted step that
+confirms saves latency even when no full playbook matches.
 
 ### Tier 3 is the generalization engine
 
@@ -80,7 +84,7 @@ is the accumulation of that spend.
 
 ## Consumption modes: replay vs advise
 
-This is the load-bearing architectural change. v1 had one mode (replay). The pivot adds a
+This is the load-bearing architectural change. v1 had one mode (replay). This design adds a
 second that works on novel tasks:
 
 ### Replay mode (tiers 1–2) — unchanged contract
@@ -120,7 +124,7 @@ benchmark metric, not a hope (see [09 — Evaluation](09-generalization-evaluati
 
 ## Component changes vs doc 02
 
-| Component | v1 (doc 02) | Pivot |
+| Component | v1 (doc 02) | Target |
 |---|---|---|
 | Recorder | Records trajectories | Unchanged — already captures everything the fact extractor needs |
 | Distiller | Trajectory → playbook | Adds two outputs: **subflow mining** (frequent-prefix/fragment detection across playbooks of one fingerprint) and **fact extraction** (selectors, form semantics, page transitions, signals → site memory). Both offline, batchable |

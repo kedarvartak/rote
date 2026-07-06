@@ -48,6 +48,10 @@ so it composes with compression proxies at that boundary rather than competing):
    LLM planner is out of the control loop; it's invoked only to fill content slots.
 4. **Self-heal** — when the world drifts (a selector moved, a flag renamed), the failing step
    is repaired in isolation and saved as a versioned patch — never a full re-exploration.
+5. **Speculate** — even when no full playbook matches, recorded experience predicts the
+   agent's next action, and Rote executes it *while the model is still thinking* — a correct
+   prediction collapses the step to a confirmation; a wrong one is discarded losslessly.
+   See [docs/11](docs/11-speculative-execution.md).
 
 ```
 Cold (run 1) ──▶ Warm (run N) ──▶ Drift (run N+k)
@@ -94,9 +98,11 @@ or the thesis dies for the price of a few weeks' work. See
 | [Roadmap](docs/05-roadmap.md) | Phased plan and open questions |
 | [Build plan](docs/06-build-plan.md) | Milestone-by-milestone execution detail: tasks, test suites, exit/kill gates |
 | [Where Rote works](docs/07-where-rote-works.md) | Browser-agent fit guide: where site memory and replay help or do not help |
-| [Browser memory architecture](docs/08-browser-memory-architecture.md) | Pivot plan: memory tiers, replay vs advisory modes, build order |
+| [Browser memory architecture](docs/08-browser-memory-architecture.md) | Memory tiers, replay vs advisory modes, build order |
 | [Generalization evaluation](docs/09-generalization-evaluation.md) | How the memory tiers get benchmarked beyond exact repeats |
 | [Competitive landscape](docs/10-competitive-landscape.md) | Who memoizes browser agents today and where the gaps are |
+| [Speculative execution](docs/11-speculative-execution.md) | Overlapping model thinking with browser acting — memory as a branch predictor |
+| [Implementation path](docs/12-implementation-path.md) | How the existing packages evolve into the speculative pipeline |
 
 ## Contributing
 

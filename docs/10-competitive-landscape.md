@@ -1,6 +1,6 @@
 # 10 — Competitive Landscape: Who Memoizes Browser Agents Today
 
-> Status: **pivot plan**, surveyed 2026-07. Extends [04 — Market](04-market.md) with the
+> Status: survey, 2026-07. Extends [04 — Market](04-market.md) with the
 > browser-agent-specific question: *are browser-agent vendors already doing memoization?*
 > Short answer: **yes, at the exact-repetition tier, inside their own harnesses — and
 > nobody at the generalization tier or across harnesses.** That reshapes where Rote can
@@ -18,6 +18,7 @@
 | **Mem0 / Zep / Letta / Cognee** | Facts and conversational/semantic memory | Facts | N/A — wrong memory type (semantic, not procedural) | Yes |
 | **Acontext** | "Skill files" — markdown learnings auto-captured from agent runs | Prose skills | Loosely — prose hints, no verification | Yes, but not browser-native |
 | **Agent Workflow Memory (CMU, arXiv 2409.07429)** | Induced reusable workflows from trajectories, injected as context | Workflow fragments | **Yes** — +8.9–14.0 points cross-task/-site | Research code, not a product |
+| **Speculative Actions (arXiv 2510.04371) / PASTE (arXiv 2603.18897)** | Nothing — accelerates rather than memoizes: a draft LLM predicts the next action and pre-executes it during model think time (~55% accuracy, ~20% latency gain) | Next action | N/A — no memory; blind prediction | Research only; not browser-native. Rote's recorded trajectories are exactly the strong predictor these frameworks lack — see [11 — Speculative Execution](11-speculative-execution.md) |
 
 Sources: [Stagehand caching blog](https://www.browserbase.com/blog/stagehand-caching),
 [Stagehand caching docs](https://docs.stagehand.dev/examples/caching),
@@ -41,7 +42,7 @@ acknowledged by every serious player. Rote does not need to argue the problem ex
 1. **Generalization.** Every shipping cache is keyed on *sameness* — same action, same
    workflow, same URL+goal. None accumulates *site knowledge* that helps a task the
    harness has never seen on that site. The only demonstration of that is academic (AWM),
-   with strong numbers and no product. This is Rote tier 3 (doc 08) — the pivot's core bet.
+   with strong numbers and no product. This is Rote tier 3 (doc 08) — a core bet.
 2. **Harness-agnosticism.** Each vendor's cache is a retention feature for *their* SDK.
    A team running mixed harnesses (or migrating between them) loses all memoization at
    the boundary. Rote at the MCP proxy layer serves any MCP-speaking harness and the

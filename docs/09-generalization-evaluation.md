@@ -1,6 +1,6 @@
 # 09 — Evaluating Generalization: Beyond "Run It Twice"
 
-> Status: **pivot plan**. Extends [03 — Wedge Benchmark](03-wedge-benchmark.md). Doc 03's
+> Status: design. Extends [03 — Wedge Benchmark](03-wedge-benchmark.md). Doc 03's
 > exact-repeat benchmark remains the M3 kill gate; this doc defines how the *generalizing*
 > memory tiers ([08 — Architecture](08-browser-memory-architecture.md)) get evaluated
 > afterward.
@@ -8,7 +8,7 @@
 ## What changes about the question
 
 Doc 03 asks: *"the same agent, given the same task class twice, should not pay twice."*
-That measures tier 1 only. The pivot's promise is broader:
+That measures tier 1 only. The broader promise is:
 
 > **Tokens per task should fall as a function of the agent's accumulated experience with a
 > site — even for tasks it has never done on that site.**

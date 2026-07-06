@@ -64,7 +64,12 @@ labeled `skip-changelog`.
   with float sign intact.
 
 ### Docs
-- Browser-agent pivot plan: three-tier memory architecture (playbook / subflow / site
+- Speculative execution design: overlap model think time with browser acting using
+  recorded trajectories as the action predictor — predictor/classifier/session-virtualizer
+  architecture with lossless commit gates and an effect boundary (`docs/11`), plus the
+  reuse map and M4–M9 milestone sequence taking the existing packages there (`docs/12`);
+  doc 06 M4+ sequencing superseded accordingly
+- Browser-agent memory plan: three-tier memory architecture (playbook / subflow / site
   memory) with replay vs advisory consumption modes (`docs/08`), a generalization
   benchmark with a T0–T5 transfer matrix and kill gates (`docs/09`), and a survey of
   browser-agent memoization incumbents — Stagehand/Skyvern/workflow-use caching vs the
