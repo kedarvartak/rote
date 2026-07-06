@@ -94,6 +94,9 @@ or the thesis dies for the price of a few weeks' work. See
 | [Roadmap](docs/05-roadmap.md) | Phased plan and open questions |
 | [Build plan](docs/06-build-plan.md) | Milestone-by-milestone execution detail: tasks, test suites, exit/kill gates |
 | [Where Rote works](docs/07-where-rote-works.md) | Browser-agent fit guide: where site memory and replay help or do not help |
+| [Browser memory architecture](docs/08-browser-memory-architecture.md) | Pivot plan: memory tiers, replay vs advisory modes, build order |
+| [Generalization evaluation](docs/09-generalization-evaluation.md) | How the memory tiers get benchmarked beyond exact repeats |
+| [Competitive landscape](docs/10-competitive-landscape.md) | Who memoizes browser agents today and where the gaps are |
 
 ## Contributing
 

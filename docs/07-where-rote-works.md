@@ -243,3 +243,7 @@ Rote is not useful when every task is a totally new site, goal, and UI.
 The simple promise:
 
 > The more your browser agent uses the same websites, the less it should need to explore them from scratch.
+
+Next: [08 — Browser Memory Architecture](08-browser-memory-architecture.md) — how the
+subflow and site-memory levels sketched above become concrete components, an evaluation
+plan, and a competitive map.

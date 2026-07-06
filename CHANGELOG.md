@@ -64,6 +64,11 @@ labeled `skip-changelog`.
   with float sign intact.
 
 ### Docs
+- Browser-agent pivot plan: three-tier memory architecture (playbook / subflow / site
+  memory) with replay vs advisory consumption modes (`docs/08`), a generalization
+  benchmark with a T0–T5 transfer matrix and kill gates (`docs/09`), and a survey of
+  browser-agent memoization incumbents — Stagehand/Skyvern/workflow-use caching vs the
+  generalization and harness-agnosticism gaps Rote targets (`docs/10`)
 - Added `docs/07-where-rote-works.md` to scope Rote as a browser-agent memoization layer, explaining where site memory/replay helps and where one-off browsing does not.
 - Project named **Rote** (previously working name "Memo")
 - Removed named references to third-party compression tools from README and design docs
