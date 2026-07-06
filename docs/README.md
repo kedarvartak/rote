@@ -1,25 +1,27 @@
-# Rote — Trajectory Memoization for Agent Harnesses
+# Rote — Efficiency-First Browser Agent
 
-> **Compression makes every token cheaper. Rote makes most tokens not exist.**
+> **The browser agent that gets cheaper as it learns a site.**
 
-Agents re-derive already-solved workflows on every run: 40 tool calls and 200K tokens to
-rediscover a procedure they executed successfully yesterday. Rote is harness middleware
-that **captures** a successful trajectory once, **distills** it into a parameterized,
-assertion-gated playbook, **replays** it deterministically for a fraction of the cost, and
-**self-heals** it when the environment drifts.
+Rote is a browser-agent harness built around efficiency: compact observations, stable
+element IDs, diff-based perception, cache-friendly context, verified replay, and a
+learning plane that turns prior runs into site memory. The original record/replay system
+remains the safety foundation; the current product direction is the full agent system in
+[13 — The Rote Agent System](13-agent-system.md).
 
 ![Architecture](diagrams/architecture.svg)
 
-## The economics in one table
+## The efficiency stack in one table
 
-| | Cold (run 1) | Warm (run N) | Drift (run N+k) |
-|---|---|---|---|
-| LLM in control loop | every step | never | one step |
-| Tool calls | ~40 | ~6 | ~8 |
-| Tokens | ~210K | ~18K (−91%) | ~31K (−85%) |
+| Plane | Baseline browser-agent cost | Rote's answer |
+|---|---|---|
+| Perception | Large DOM/a11y/screenshot observations every step | distilled trees, stable IDs, diffs, hard budgets |
+| Decision | frontier model on every step | cache-local context, routing, no-model replay where safe |
+| Action | serialized think → act → observe loop | settledness, self-healing resolution, speculative execution later |
+| Learning | every run starts cold | recorded trajectories → playbooks, site memory, transition models |
 
-Control flow becomes deterministic; the LLM is reserved for what actually needs judgment —
-binding parameters, filling content slots, and repairing broken steps.
+V1 launches on the deterministic pieces — cheaper observations, context layout, recording,
+and verified replay — with speculation and learned site memory following after the first
+public benchmark.
 
 ## Docs
 

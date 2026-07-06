@@ -6,8 +6,8 @@
 |_| \_\___/  \__\___|
 </pre>
 
-**Trajectory memoization for agent harnesses.**
-Your agent solved this yesterday. Stop paying for it to figure it out again.
+**An efficiency-first browser-agent system.**
+Fewer observation tokens, lower latency, and browser memory that compounds with every run.
 
 </div>
 
@@ -15,52 +15,51 @@ Your agent solved this yesterday. Stop paying for it to figure it out again.
 
 ## The one-liner
 
-> **Compression makes every token cheaper. Rote makes most tokens not exist.**
+> **Rote is the browser agent that gets cheaper as it learns a site.**
 
-Compression is the *read path*. Semantic memory (Mem0, Zep, Letta) is the *write path*.
-**Rote owns the reuse path** — it captures *how* an agent solved a task, then replays that
-procedure deterministically instead of re-deriving it from scratch every run.
+Browser agents spend most of their budget repeatedly observing pages, grounding elements,
+waiting for UI state, and rediscovering workflows. Rote treats efficiency as the harness
+architecture: compact perception, cache-friendly context, verified replay, and a learning
+plane that turns past runs into browser memory.
 
 ## The problem
 
-Watch any coding / browser / ops agent run the same class of task twice:
+A typical browser agent loop is expensive and serialized:
 
-- **Run 1** — 40 tool calls, ~200K tokens spent discovering how to run the tests, where the
-  config lives, which selectors matter, what the deploy sequence is. It succeeds.
-- **Run 2** (fresh context, next day) — **the entire thing again, from zero.** Same greps,
-  same dead ends, same tokens, same wall-clock.
+```text
+observe page → model thinks → act → wait → observe again
+```
 
-The harness threw away the single most valuable thing it produced: the **procedure**.
-Agents have episodic amnesia — not about *facts* (semantic memory handles those), but about
-**skills**. That re-derivation is the biggest hidden cost in production agent fleets, and no
-dashboard measures it.
+On real portals, every observation can mean thousands of DOM/accessibility/screenshot
+tokens. Across repeated use of the same sites, agents keep paying to rediscover:
+
+- which fields and buttons matter
+- which selectors are stable
+- what confirms success or failure
+- which navigation prefixes are common
+- which observations changed and which stayed the same
+
+Rote's goal is simple: **the more your browser agent uses a website, the less it should
+need to explore that website from scratch.**
 
 ## What Rote does
 
-Rote is an **efficiency-first browser-agent system**: a complete harness whose
-architecture is built around spending the fewest tokens and the least wall-clock per
-task at success parity — with a second entry point that exposes the same machinery
-over MCP so other agents can use it as a layer (see
-[docs/13](docs/13-agent-system.md)). Its core moves:
+Rote is a complete browser-agent harness with four efficiency planes (see
+[docs/13](docs/13-agent-system.md)):
 
-1. **Record** — taps every tool call during a normal run. Always-on, cheap, no LLM.
-2. **Distill** — an offline LLM pass turns a *successful* trajectory into a **playbook**: a
-   parameterized step DAG with per-step assertions and typed content slots. Dead-end
-   exploration is pruned; task inputs become parameters.
-3. **Replay** — on the next matching task, Rote executes the playbook deterministically. The
-   LLM planner is out of the control loop; it's invoked only to fill content slots.
-4. **Self-heal** — when the world drifts (a selector moved, a flag renamed), the failing step
-   is repaired in isolation and saved as a versioned patch — never a full re-exploration.
-5. **Speculate** — even when no full playbook matches, recorded experience predicts the
-   agent's next action, and Rote executes it *while the model is still thinking* — a correct
-   prediction collapses the step to a confirmation; a wrong one is discarded losslessly.
-   See [docs/11](docs/11-speculative-execution.md).
+1. **Perception** — capture pages through CDP, distill them into compact interactive trees,
+   assign stable element IDs, and send diffs instead of full page dumps when possible.
+2. **Decision** — own the context layout, route routine steps to cheaper models, and skip
+   model calls entirely when memory/replay can safely act.
+3. **Action** — use typed browser actions, settledness detection, self-healing element
+   resolution, per-step assertions, and later speculative pre-execution.
+4. **Learning** — record every run, learn playbooks/site memory/transition models, and feed
+   that knowledge back into replay, hints, resolution, and prediction.
 
-```
-Cold (run 1) ──▶ Warm (run N) ──▶ Drift (run N+k)
-  ~40 calls        ~6 calls          ~8 calls
-  ~210K tok        ~18K tok (-91%)   ~31K tok (-85%)
-  LLM every step   LLM never         LLM one step
+The first launch target is intentionally narrow and measurable:
+
+```text
+same browser tasks as Browser Use → fewer tokens → success parity → raw benchmark data
 ```
 
 ![Architecture](docs/diagrams/architecture.svg)
@@ -78,19 +77,20 @@ Cold (run 1) ──▶ Warm (run N) ──▶ Drift (run N+k)
 
 ## Why "Rote"
 
-*Rote*: doing something from memory, by repetition, without re-deriving it. That's the whole
-thesis in one word — and it's memoization (caching an expensive computation keyed by inputs)
-applied to agent trajectories, with assertions + scoped repair in place of TTL invalidation.
+*Rote*: doing something from memory, by repetition, without re-deriving it. For browser
+agents, that means the harness remembers how sites behave — observations, stable elements,
+procedures, and verification signals — so the next run starts warmer.
 
 ## Status
 
-**Early build — M0–M3 done, direction set on the full agent system.** Data model, the
-MCP recorder, the replay executor, and the benchmark harness are built and tested
-against fake-world fixtures. The direction of record is
-[docs/13 — the Rote agent system](docs/13-agent-system.md): a complete
-efficiency-first browser-agent harness, built by the H1–H8 plan in
-[docs/16](docs/16-harness-architecture.md), with every optimization inventoried in
-[docs/14](docs/14-optimization-catalog.md).
+**Early build.** The original foundations are built: data model, recorder, verified replay
+executor, and benchmark harness. The current V1 work is the browser-agent harness from
+[docs/17 — V1 launch plan](docs/17-v1-launch-plan.md): browser capture, perception
+distillation, stable IDs, diff observations, budgeted context, and a reproducible
+head-to-head benchmark against incumbent browser agents.
+
+This branch starts that V1 path with `@rote/browser`, `@rote/perception`, and static B1–B3
+fixture pages.
 
 ## Docs
 

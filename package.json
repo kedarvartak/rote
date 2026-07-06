@@ -2,7 +2,7 @@
   "name": "rote",
   "private": true,
   "version": "0.0.0",
-  "description": "Trajectory memoization for agent harnesses",
+  "description": "Efficiency-first browser-agent harness with compact perception and compounding browser memory",
   "workspaces": [
     "packages/*"
   ],
