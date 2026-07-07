@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 const OUT = dirname(fileURLToPath(import.meta.url));
 const scenes = JSON.parse(await readFile(join(OUT, 'scenes.json'), 'utf8'));
 const BG = '#ffffff';
+const EXCALIDRAW_FONT_FAMILY = 5;
+const SVG_FONT_STACK = 'Inter, Avenir Next, Segoe UI, Helvetica, Arial, sans-serif';
 
 function esc(value) {
   return String(value)
@@ -90,7 +92,7 @@ function toExcalidraw(scene) {
         text: source.text,
         originalText: source.text,
         fontSize,
-        fontFamily: 5,
+        fontFamily: EXCALIDRAW_FONT_FAMILY,
         textAlign: 'left',
         verticalAlign: 'top',
         containerId: null,
@@ -136,7 +138,7 @@ function toExcalidraw(scene) {
         text: metrics.lines.join('\n'),
         originalText: source.label.text,
         fontSize,
-        fontFamily: 5,
+        fontFamily: EXCALIDRAW_FONT_FAMILY,
         textAlign: 'center',
         verticalAlign: 'middle',
         containerId: source.id,
@@ -162,7 +164,7 @@ function svgText(x, y, width, height, value, fontSize, color = '#1e1e1e', center
     : y + fontSize;
   const textX = centered ? x + width / 2 : x;
   const anchor = centered ? 'middle' : 'start';
-  return `<text x="${textX}" y="${startY}" text-anchor="${anchor}" fill="${color}" font-family="Virgil, Segoe Print, cursive" font-size="${fontSize}" font-weight="600">${lines.map((line, i) => `<tspan x="${textX}" dy="${i ? lineHeight : 0}">${esc(line)}</tspan>`).join('')}</text>`;
+  return `<text x="${textX}" y="${startY}" text-anchor="${anchor}" fill="${color}" font-family="${SVG_FONT_STACK}" font-size="${fontSize}" font-weight="600">${lines.map((line, i) => `<tspan x="${textX}" dy="${i ? lineHeight : 0}">${esc(line)}</tspan>`).join('')}</text>`;
 }
 
 function svgShape(element) {
