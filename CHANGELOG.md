@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: Stateful CDP page sessions with navigation, capture, fill, select, and click actions for the V1 browser-agent loop.
 - **P1**: CDP fixture coverage for B1–B3, an exported local `FixtureSiteServer`, and opt-in CDP-to-perception distillation tests for the V1 browser-agent harness.
 - **P1**: `@rote/browser` and `@rote/perception` foundation packages with deterministic fixture capture, minimal local Chrome/CDP page capture, compact interactive-node distillation, stable node IDs, budgeted observation rendering, and B1–B3 static HTML fixture pages for the V1 browser-agent harness.
 - **M3**: live benchmark runbook, example B1–B3 command plan, and usage-sidecar JSON schema under `scripts/bench/` so real frozen browser-agent runs can plug into `rote-bench run` / `report` / `gate`.
