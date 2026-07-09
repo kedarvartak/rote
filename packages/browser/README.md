@@ -14,7 +14,8 @@ comes in here, then `@rote/perception` turns it into compact observations for th
 - `CapturedPage` / `CapturedElement` — Zod-backed page capture records.
 - `StaticHtmlBackend` / `captureStaticHtml` — fixture backend used by P1 tests.
 - `CdpBrowserBackend` — captures from an existing CDP HTTP endpoint.
-- `LaunchingCdpBrowserBackend` — launches local Chrome/Chromium with CDP enabled, captures a page, and closes cleanly.
+- `LaunchingCdpBrowserBackend` — launches local Chrome/Chromium with CDP enabled, captures a page, opens stateful action sessions, and closes cleanly.
+- `CdpPage` — stateful CDP page session with `navigate`, `capture`, `fill`, `select`, `click`, and `evaluate`.
 - `FixtureSiteServer` — serves static fixture pages from a local directory for deterministic CDP tests.
 
 `LaunchingCdpBrowserBackend` uses `CHROME_PATH` when set, otherwise probes common local

@@ -3,9 +3,8 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawn, type ChildProcess } from 'node:child_process';
-import { captureStaticHtml } from './static-backend.js';
 import type { BrowserCaptureBackend, CapturedPage } from './types.js';
-import { CdpClient, createCdpTarget } from './cdp-client.js';
+import { CdpPage } from './cdp-page.js';
 
 export interface CdpBrowserBackendOptions {
   /** Existing CDP HTTP endpoint, e.g. http://127.0.0.1:9222. */
@@ -17,28 +16,17 @@ export interface LaunchingCdpBrowserBackendOptions {
   headless?: boolean;
 }
 
-interface RuntimeEvaluateResult {
-  result: { value?: unknown };
-}
-
 /** Captures live pages from an existing Chrome DevTools Protocol endpoint. */
 export class CdpBrowserBackend implements BrowserCaptureBackend {
   constructor(private readonly options: CdpBrowserBackendOptions) {}
 
   async capture(url: string): Promise<CapturedPage> {
-    const target = await createCdpTarget(this.options.endpoint);
-    if (!target.webSocketDebuggerUrl) throw new Error('CDP endpoint did not create a page target');
-    const client = await CdpClient.connect({ webSocketDebuggerUrl: target.webSocketDebuggerUrl });
+    const page = await CdpPage.open({ endpoint: this.options.endpoint });
     try {
-      await client.send('Page.enable');
-      const loaded = client.waitForEvent('Page.loadEventFired');
-      await client.send('Page.navigate', { url });
-      await loaded;
-      const html = await evaluateString(client, 'document.documentElement.outerHTML');
-      const capturedUrl = await evaluateString(client, 'location.href');
-      return captureStaticHtml(capturedUrl, html);
+      await page.navigate(url);
+      return await page.capture();
     } finally {
-      client.close();
+      page.close();
     }
   }
 }
@@ -52,9 +40,20 @@ export class LaunchingCdpBrowserBackend implements BrowserCaptureBackend {
   constructor(private readonly options: LaunchingCdpBrowserBackendOptions = {}) {}
 
   async capture(url: string): Promise<CapturedPage> {
+    const page = await this.openPage();
+    try {
+      await page.navigate(url);
+      return await page.capture();
+    } finally {
+      page.close();
+    }
+  }
+
+  /** Opens a stateful page session for browser-agent actions. */
+  async openPage(): Promise<CdpPage> {
     await this.ensureStarted();
     if (!this.endpoint) throw new Error('Chrome did not start with a CDP endpoint');
-    return new CdpBrowserBackend({ endpoint: this.endpoint }).capture(url);
+    return CdpPage.open({ endpoint: this.endpoint });
   }
 
   async close(): Promise<void> {
@@ -91,12 +90,6 @@ export function findChromeExecutable(): string | undefined {
       '/usr/bin/chromium-browser',
       '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     ]);
-}
-
-async function evaluateString(client: CdpClient, expression: string): Promise<string> {
-  const result = await client.send<RuntimeEvaluateResult>('Runtime.evaluate', { expression, returnByValue: true });
-  if (typeof result.result.value !== 'string') throw new Error(`CDP expression did not return a string: ${expression}`);
-  return result.result.value;
 }
 
 function waitForDevtoolsEndpoint(child: ChildProcess): Promise<string> {
