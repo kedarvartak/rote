@@ -10,7 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
-- **P1**: `@rote/browser` and `@rote/perception` foundation packages with deterministic fixture capture, compact interactive-node distillation, stable node IDs, budgeted observation rendering, and B1–B3 static HTML fixture pages for the V1 browser-agent harness.
+- **P1**: `@rote/browser` and `@rote/perception` foundation packages with deterministic fixture capture, minimal local Chrome/CDP page capture, compact interactive-node distillation, stable node IDs, budgeted observation rendering, and B1–B3 static HTML fixture pages for the V1 browser-agent harness.
 - **M3**: live benchmark runbook, example B1–B3 command plan, and usage-sidecar JSON schema under `scripts/bench/` so real frozen browser-agent runs can plug into `rote-bench run` / `report` / `gate`.
 - **M3**: frozen B1–B3 benchmark smoke scripts under `scripts/bench/` that drive the real Recorder and Replay Executor CLIs against the fake browser MCP downstream, then feed their artifacts through `rote-bench report` and `rote-bench gate`.
 - **M3**: `@rote/bench` package — deterministic benchmark matrix runner for `{task × phase × repetition}`, command-plan driver for real/frozen benchmark runs, tagged token accounting from `RunManifest.token_usage` plus validated LLM usage sidecars, warm-vs-cold reduction summaries, M3 kill-gate evaluation, byte-stable Markdown report rendering, JSON spec loading via recorded run ids, `rote-bench run` / `report` / `gate` / `synthetic` CLIs, synthetic B1–B3 fake-world pack generation, and raw JSONL export helpers for reproducibility. Failed driver runs are retained as failed matrix cells so benchmark reports cannot silently drop failures.
