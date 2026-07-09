@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: `@rote/agent` compact-observation browser-agent loop that source-tags planner calls and applies navigate/fill/select/click/done actions against a page session.
 - **P1**: Stateful CDP page sessions with navigation, capture, fill, select, and click actions for the V1 browser-agent loop.
 - **P1**: CDP fixture coverage for B1–B3, an exported local `FixtureSiteServer`, and opt-in CDP-to-perception distillation tests for the V1 browser-agent harness.
 - **P1**: `@rote/browser` and `@rote/perception` foundation packages with deterministic fixture capture, minimal local Chrome/CDP page capture, compact interactive-node distillation, stable node IDs, budgeted observation rendering, and B1–B3 static HTML fixture pages for the V1 browser-agent harness.
