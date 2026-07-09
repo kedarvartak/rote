@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: Opt-in CDP fixture smoke for `@rote/agent` that drives B1–B3 pages through the compact observe-plan-act loop.
 - **P1**: `@rote/agent` compact-observation browser-agent loop that source-tags planner calls and applies navigate/fill/select/click/done actions against a page session.
 - **P1**: Stateful CDP page sessions with navigation, capture, fill, select, and click actions for the V1 browser-agent loop.
 - **P1**: CDP fixture coverage for B1–B3, an exported local `FixtureSiteServer`, and opt-in CDP-to-perception distillation tests for the V1 browser-agent harness.
