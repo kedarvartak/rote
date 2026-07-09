@@ -17,8 +17,12 @@ comes in here, then `@rote/perception` turns it into compact observations for th
 - `LaunchingCdpBrowserBackend` — launches local Chrome/Chromium with CDP enabled, captures a page, and closes cleanly.
 
 `LaunchingCdpBrowserBackend` uses `CHROME_PATH` when set, otherwise probes common local
-Chrome/Chromium paths. The CDP integration test skips itself when no browser executable is
-available.
+Chrome/Chromium paths. The CDP integration test is opt-in because hosted CI images may
+ship Chrome variants that do not expose DevTools reliably:
+
+```bash
+ROTE_RUN_CDP_TESTS=1 npm test --workspace @rote/browser
+```
 
 ## Running tests
 

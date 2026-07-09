@@ -16,6 +16,7 @@ afterEach(async () => {
 
 describe('LaunchingCdpBrowserBackend', () => {
   it('captures a live local fixture page through Chrome DevTools Protocol', async () => {
+    if (process.env['ROTE_RUN_CDP_TESTS'] !== '1') return;
     const chromePath = findChromeExecutable();
     if (!chromePath) return;
     const origin = await serveFixture('b1-report.html');
