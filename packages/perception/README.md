@@ -2,7 +2,7 @@
 
 Pure perception logic for Rote's V1 browser-agent harness: captured pages become
 stable, compact observations the agent can consume cheaply. The package has no
-browser I/O; capture lives in `@rote/browser` and the future CDP backend.
+browser I/O; capture lives in `@rote/browser`.
 
 This is the first piece of the V1 efficiency claim: avoid handing the model a raw page
 dump when a compact tree of actionable elements is enough.
@@ -19,4 +19,10 @@ dump when a compact tree of actionable elements is enough.
 
 ```bash
 npm test --workspace @rote/perception
+```
+
+Run the live local CDP distillation coverage when Chrome/Chromium is available:
+
+```bash
+ROTE_RUN_CDP_TESTS=1 npm test --workspace @rote/perception
 ```

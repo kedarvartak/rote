@@ -15,6 +15,7 @@ comes in here, then `@rote/perception` turns it into compact observations for th
 - `StaticHtmlBackend` / `captureStaticHtml` — fixture backend used by P1 tests.
 - `CdpBrowserBackend` — captures from an existing CDP HTTP endpoint.
 - `LaunchingCdpBrowserBackend` — launches local Chrome/Chromium with CDP enabled, captures a page, and closes cleanly.
+- `FixtureSiteServer` — serves static fixture pages from a local directory for deterministic CDP tests.
 
 `LaunchingCdpBrowserBackend` uses `CHROME_PATH` when set, otherwise probes common local
 Chrome/Chromium paths. The CDP integration test is opt-in because hosted CI images may
@@ -28,4 +29,10 @@ ROTE_RUN_CDP_TESTS=1 npm test --workspace @rote/browser
 
 ```bash
 npm test --workspace @rote/browser
+```
+
+Run the live local CDP fixture coverage when Chrome/Chromium is available:
+
+```bash
+ROTE_RUN_CDP_TESTS=1 npm test --workspace @rote/browser
 ```
