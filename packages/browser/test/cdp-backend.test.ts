@@ -1,53 +1,61 @@
-import { createServer, type Server } from 'node:http';
-import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { findChromeExecutable, LaunchingCdpBrowserBackend } from '../src/index.js';
+import { CapturedPageSchema, findChromeExecutable, FixtureSiteServer, LaunchingCdpBrowserBackend } from '../src/index.js';
 
-let servers: Server[] = [];
+let servers: FixtureSiteServer[] = [];
 let backends: LaunchingCdpBrowserBackend[] = [];
 
 afterEach(async () => {
   await Promise.all(backends.map((backend) => backend.close()));
   backends = [];
-  await Promise.all(servers.map((server) => new Promise<void>((resolveClose) => server.close(() => resolveClose()))));
+  await Promise.all(servers.map((server) => server.close()));
   servers = [];
 });
 
 describe('LaunchingCdpBrowserBackend', () => {
-  it('captures a live local fixture page through Chrome DevTools Protocol', async () => {
+  it('captures B1-B3 fixture pages through Chrome DevTools Protocol', async () => {
     if (process.env['ROTE_RUN_CDP_TESTS'] !== '1') return;
     const chromePath = findChromeExecutable();
     if (!chromePath) return;
-    const origin = await serveFixture('b1-report.html');
+    const server = await serveFixtures();
     const backend = new LaunchingCdpBrowserBackend({ chromePath });
     backends.push(backend);
 
-    const page = await backend.capture(`${origin}/b1-report.html`);
+    const pages = await Promise.all([
+      backend.capture(server.url('b1-report.html')),
+      backend.capture(server.url('b2-vendor-form.html')),
+      backend.capture(server.url('b3-catalog.html')),
+    ]);
 
-    expect(page.url).toBe(`${origin}/b1-report.html`);
-    expect(page.title).toBe('Reports Portal');
-    expect(page.elements).toEqual(
+    for (const page of pages) expect(CapturedPageSchema.parse(page)).toEqual(page);
+    expect(pages[0]).toEqual(
+      expect.objectContaining({
+        url: server.url('b1-report.html'),
+        title: 'Reports Portal',
+        elements: expect.arrayContaining([
+          expect.objectContaining({ tag: 'input', attributes: expect.objectContaining({ id: 'username' }) }),
+          expect.objectContaining({ tag: 'button', attributes: expect.objectContaining({ id: 'latest-report-download' }) }),
+        ]),
+      }),
+    );
+    expect(pages[1]?.elements).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ tag: 'input', attributes: expect.objectContaining({ id: 'username' }) }),
-        expect.objectContaining({ tag: 'button', attributes: expect.objectContaining({ id: 'latest-report-download' }) }),
+        expect.objectContaining({ tag: 'input', attributes: expect.objectContaining({ id: 'company-name' }) }),
+        expect.objectContaining({ tag: 'select', attributes: expect.objectContaining({ id: 'country' }) }),
       ]),
     );
-  }, 20000);
+    expect(pages[2]?.elements).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tag: 'input', attributes: expect.objectContaining({ id: 'catalog-query' }) }),
+        expect.objectContaining({ tag: 'button', attributes: expect.objectContaining({ id: 'catalog-search-submit' }) }),
+      ]),
+    );
+  }, 30000);
 });
 
-async function serveFixture(fileName: string): Promise<string> {
-  const html = await readFile(resolve('../../fixtures/sites', fileName), 'utf8');
-  const server = createServer((req, res) => {
-    if (req.url !== `/${fileName}`) {
-      res.writeHead(404).end();
-      return;
-    }
-    res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' }).end(html);
-  });
+async function serveFixtures(): Promise<FixtureSiteServer> {
+  const server = new FixtureSiteServer({ rootDir: resolve('../../fixtures/sites') });
   servers.push(server);
-  await new Promise<void>((resolveListen) => server.listen(0, '127.0.0.1', () => resolveListen()));
-  const address = server.address();
-  if (!address || typeof address === 'string') throw new Error('test server did not bind to a TCP port');
-  return `http://127.0.0.1:${address.port}`;
+  await server.start();
+  return server;
 }
