@@ -90,7 +90,7 @@ distillation, stable IDs, diff observations, budgeted context, and a reproducibl
 head-to-head benchmark against incumbent browser agents.
 
 The current P1 foundation starts that V1 path with `@rote/browser`, `@rote/perception`,
-and static B1–B3 fixture pages.
+`@rote/agent`, and static B1–B3 fixture pages.
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)
 
