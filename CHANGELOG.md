@@ -73,6 +73,7 @@ labeled `skip-changelog`.
   with float sign intact.
 
 ### Docs
+- Redraw all design diagrams with the Excalidraw MCP in the base Excalidraw hand-drawn font, add competitor-vs-Rote architecture diagrams (Browser Use, Stagehand, Skyvern, capability landscape) embedded in `docs/15`, and retire the `scenes.json`/`generate.mjs` diagram pipeline (#26)
 - Document the shared source-tagged `packages/llm` provider boundary in the harness package layout.
 - Rebuilt all five architecture visuals through the official Excalidraw MCP and checked in the MCP scene definitions, editable Excalidraw documents, and hand-drawn SVG exports.
 - Replaced the outdated architecture, run-lifecycle, and repair-ladder diagrams; added current-vs-target package topology and perception-pipeline diagrams. All five ship as rendered SVG plus editable Excalidraw source, with implementation status marked explicitly in the visuals.
