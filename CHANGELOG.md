@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: Cache-stable browser planner context assembly that keeps instructions, task, and action schemas ahead of volatile compact observations and action history.
 - **P1**: Opt-in CDP fixture smoke for `@rote/agent` that drives B1–B3 pages through the compact observe-plan-act loop.
 - **P1**: `@rote/agent` compact-observation browser-agent loop that source-tags planner calls and applies navigate/fill/select/click/done actions against a page session.
 - **P1**: Stateful CDP page sessions with navigation, capture, fill, select, and click actions for the V1 browser-agent loop.

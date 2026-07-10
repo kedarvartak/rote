@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { CapturedPage } from '@rote/browser';
 import type { TokenUsageSource } from '@rote/core';
-import type { DistilledNode, RenderedObservation } from '@rote/perception';
+import type { RenderedObservation } from '@rote/perception';
 
 export const BrowserActionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('navigate'), url: z.string().min(1) }),
@@ -20,13 +20,20 @@ export interface BrowserPageSession {
   click(selector: string): Promise<void>;
 }
 
+export interface PlannerContext {
+  /** Cache-stable instructions, task, and action schema. */
+  stablePrefix: string;
+  /** Per-step page state, action history, and compact observation. */
+  volatileSuffix: string;
+}
+
 export interface BrowserPlannerRequest {
   task: string;
   step: number;
-  page: CapturedPage;
-  nodes: readonly DistilledNode[];
+  page: { url: string; title: string };
   observation: RenderedObservation;
   previousActions: readonly BrowserAction[];
+  context: PlannerContext;
 }
 
 export interface BrowserPlannerResponse {

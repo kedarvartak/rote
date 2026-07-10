@@ -1,4 +1,5 @@
 import { distillPage, renderObservation } from '@rote/perception';
+import { assemblePlannerContext } from './context.js';
 import { BrowserActionSchema, type BrowserAction, type BrowserAgentResult, type BrowserAgentStep, type RunBrowserAgentOptions } from './types.js';
 
 /** Runs the compact-observation browser-agent loop until the planner returns `done`. */
@@ -11,14 +12,21 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
     const page = await options.page.capture();
     const nodes = distillPage(page);
     const observation = renderObservation(nodes, { maxChars: options.observationMaxChars });
+    const pageState = { url: page.url, title: page.title };
+    const context = assemblePlannerContext({
+      task: options.task,
+      page: pageState,
+      observation: observation.text,
+      previousActions,
+    });
     // INVARIANT: planner calls are always source-tagged for benchmark accounting.
     const planned = await options.planner.plan('planner', {
       task: options.task,
       step,
-      page,
-      nodes,
+      page: pageState,
       observation,
       previousActions,
+      context,
     });
     const action = BrowserActionSchema.parse(planned.action);
     steps.push({ step, action, observation });
