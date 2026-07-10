@@ -15,6 +15,7 @@ behind `BrowserPlannerClient`, while tests use deterministic scripted planners.
 - `assemblePlannerContext(options)` — separates cache-stable instructions/task/action schemas from volatile page observations and action history.
 - `BrowserPageSession` — minimal page-action surface required by the loop.
 - `BrowserAction` — Zod-backed action union: `navigate`, `fill`, `select`, `click`, `done`.
+- `FileBrowserAgentRunRecorder` — writes browser decisions/actions to append-only trajectory JSONL and a benchmark-compatible run manifest with planner usage.
 
 ## Running tests
 
