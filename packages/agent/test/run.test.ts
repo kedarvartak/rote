@@ -74,6 +74,8 @@ describe('runBrowserAgent', () => {
     expect(planner.sources).toEqual(['planner', 'planner', 'planner', 'planner', 'planner']);
     expect(planner.requests[1]?.observation.text).toContain('#company-name');
     expect(planner.requests[1]?.observation.approxTokens).toBeGreaterThan(0);
+    expect(planner.requests[1]?.context.volatileSuffix).not.toContain('<form>');
+    expect(planner.requests[1]?.context.stablePrefix).toBe(planner.requests[0]?.context.stablePrefix);
   });
 
   it('fails closed when the planner exceeds the step budget', async () => {
