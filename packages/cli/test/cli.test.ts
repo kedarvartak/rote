@@ -17,6 +17,7 @@ describe('rote run', () => {
       '--max-steps', '12',
       '--chrome-path', '/usr/bin/chrome',
       '--verify-text', 'Download complete',
+      '--settle-timeout-ms', '7000',
     ], '/tmp/rote-test', deps);
 
     expect(deps.runBrowserTask).toHaveBeenCalledWith({
@@ -28,6 +29,7 @@ describe('rote run', () => {
       chromePath: '/usr/bin/chrome',
       verifyText: 'Download complete',
       verifyUrlContains: undefined,
+      settleTimeoutMs: 7000,
     });
     expect(output).toContain('success: report downloaded');
     expect(output).toContain('tokens: 120 input + 20 output');

@@ -14,11 +14,21 @@ export class CdpClient {
   private readonly socket: WebSocket;
   private nextId = 1;
   private readonly pending = new Map<number, PendingCommand>();
+  private readonly eventListeners = new Map<string, Set<(params: Record<string, unknown>) => void>>();
 
   private constructor(socket: WebSocket) {
     this.socket = socket;
     this.socket.addEventListener('message', (event) => {
-      const msg = JSON.parse(String(event.data)) as { id?: number; result?: unknown; error?: { message?: string } };
+      const msg = JSON.parse(String(event.data)) as {
+        id?: number;
+        method?: string;
+        params?: Record<string, unknown>;
+        result?: unknown;
+        error?: { message?: string };
+      };
+      if (msg.method) {
+        for (const listener of this.eventListeners.get(msg.method) ?? []) listener(msg.params ?? {});
+      }
       if (typeof msg.id !== 'number') return;
       const pending = this.pending.get(msg.id);
       if (!pending) return;
@@ -51,6 +61,17 @@ export class CdpClient {
     });
     this.socket.send(JSON.stringify({ id, method, params }));
     return (await response) as T;
+  }
+
+  /** Subscribes to one CDP event and returns an unsubscribe function. */
+  onEvent(method: string, listener: (params: Record<string, unknown>) => void): () => void {
+    const listeners = this.eventListeners.get(method) ?? new Set();
+    listeners.add(listener);
+    this.eventListeners.set(method, listeners);
+    return () => {
+      listeners.delete(listener);
+      if (listeners.size === 0) this.eventListeners.delete(method);
+    };
   }
 
   /** Resolves once a CDP event with `method` arrives. */

@@ -1,3 +1,4 @@
+import { SettledBrowserPageSession, type SettleableBrowserPage } from '@rote/action';
 import { sha256Hex, buildEnvFingerprint } from '@rote/core';
 import { FileBrowserAgentRunRecorder, runBrowserAgent, TaggedLlmBrowserPlanner, type BrowserPageSession, type BrowserPlannerClient } from '@rote/agent';
 import { LaunchingCdpBrowserBackend } from '@rote/browser';
@@ -12,6 +13,7 @@ export interface RunBrowserTaskOptions {
   chromePath?: string;
   verifyText?: string;
   verifyUrlContains?: string;
+  settleTimeoutMs?: number;
 }
 
 export interface BrowserTaskResult {
@@ -59,15 +61,18 @@ export async function runBrowserTask(
     envFingerprint: fingerprint,
     baseDir: options.baseDir,
   });
-  let page: BrowserPageSession | undefined;
+  let rawPage: BrowserPageSession | undefined;
   try {
     try {
-      page = await backend.openPage();
+      rawPage = await backend.openPage();
     } catch (error) {
       const failure = asError(error);
       await recorder.finish('failure', failure.message, []);
       throw failure;
     }
+    const page = isSettleable(rawPage)
+      ? new SettledBrowserPageSession(rawPage, { timeoutMs: options.settleTimeoutMs })
+      : rawPage;
     try {
       await page.navigate(target.toString());
     } catch (error) {
@@ -106,10 +111,14 @@ export async function runBrowserTask(
       outputTokens: result.tokenUsage.reduce((sum, usage) => sum + usage.output_tokens, 0),
     };
   } finally {
-    const closeable = page as (BrowserPageSession & { close?: () => void }) | undefined;
+    const closeable = rawPage as (BrowserPageSession & { close?: () => void }) | undefined;
     closeable?.close?.();
     await backend.close();
   }
+}
+
+function isSettleable(page: BrowserPageSession): page is BrowserPageSession & SettleableBrowserPage {
+  return 'sampleActivity' in page && typeof page.sampleActivity === 'function';
 }
 
 function browserToolInventory(): Array<{ name: string; schema_hash: string }> {

@@ -12,9 +12,25 @@ interface RuntimeEvaluateResult {
   exceptionDetails?: { text?: string };
 }
 
-/** Stateful CDP page session for browser-agent navigation, capture, and basic actions. */
+export interface CdpActivitySample {
+  pendingRequests: number;
+  mutationVersion: number;
+}
+
+/** Stateful CDP page session for browser-agent navigation, capture, actions, and activity probes. */
 export class CdpPage {
-  private constructor(private readonly client: CdpClient) {}
+  private readonly pendingRequests = new Set<string>();
+  private readonly unsubscribe: Array<() => void> = [];
+
+  private constructor(private readonly client: CdpClient) {
+    this.unsubscribe.push(
+      client.onEvent('Network.requestWillBeSent', (params) => {
+        if (typeof params['requestId'] === 'string') this.pendingRequests.add(params['requestId']);
+      }),
+      client.onEvent('Network.loadingFinished', (params) => this.finishRequest(params)),
+      client.onEvent('Network.loadingFailed', (params) => this.finishRequest(params)),
+    );
+  }
 
   /** Opens a new page target against an existing CDP endpoint. */
   static async open(options: CdpPageOptions): Promise<CdpPage> {
@@ -23,6 +39,7 @@ export class CdpPage {
     const client = await CdpClient.connect({ webSocketDebuggerUrl: target.webSocketDebuggerUrl });
     await client.send('Page.enable');
     await client.send('Runtime.enable');
+    await client.send('Network.enable');
     return new CdpPage(client);
   }
 
@@ -73,6 +90,21 @@ export class CdpPage {
     })()`);
   }
 
+  /** Samples pending network requests and a monotonic DOM mutation version. */
+  async sampleActivity(): Promise<CdpActivitySample> {
+    const mutationVersion = await this.evaluate<number>(`(() => {
+      if (!globalThis.__roteMutationState) {
+        const state = { version: 0 };
+        new MutationObserver(() => { state.version += 1; }).observe(document, {
+          subtree: true, childList: true, attributes: true, characterData: true
+        });
+        globalThis.__roteMutationState = state;
+      }
+      return globalThis.__roteMutationState.version;
+    })()`);
+    return { pendingRequests: this.pendingRequests.size, mutationVersion };
+  }
+
   /** Evaluates an expression and returns a JSON-serializable result for tests and probes. */
   async evaluate<T>(expression: string): Promise<T> {
     return await evaluate<T>(this.client, expression);
@@ -80,7 +112,12 @@ export class CdpPage {
 
   /** Closes the page's CDP socket; safe to call after the owning browser closes. */
   close(): void {
+    for (const unsubscribe of this.unsubscribe) unsubscribe();
     this.client.close();
+  }
+
+  private finishRequest(params: Record<string, unknown>): void {
+    if (typeof params['requestId'] === 'string') this.pendingRequests.delete(params['requestId']);
   }
 
   private async evaluateString(expression: string): Promise<string> {

@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: `@rote/action` settledness detection using CDP network activity plus DOM mutation quiet windows, automatically applied after browser actions in `rote run`.
 - **P1**: `rote run` cold browser-task command that launches Chrome, uses the tagged planner, requires explicit text/URL verification, records artifacts, and reports token usage.
 - **P1**: Browser-agent run recording with append-only action trajectories, benchmark-compatible manifests, planner token usage, and failure-safe action error recording.
 - **P1**: Shared `@rote/llm` source-tagged provider boundary and a strict `TaggedLlmBrowserPlanner` that parses typed actions and retains per-step planner token usage.

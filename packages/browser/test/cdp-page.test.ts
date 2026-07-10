@@ -27,6 +27,11 @@ describe('CdpPage', () => {
     pages.push(page);
 
     await page.navigate(server.url('b2-vendor-form.html'));
+    const initialActivity = await page.sampleActivity();
+    await page.evaluate<void>('document.body.append(document.createElement("aside"))');
+    const changedActivity = await page.sampleActivity();
+    expect(initialActivity.pendingRequests).toBe(0);
+    expect(changedActivity.mutationVersion).toBeGreaterThan(initialActivity.mutationVersion);
     await page.fill('#company-name', 'Acme Tools');
     await page.fill('#contact-email', 'ops@example.com');
     await page.select('#country', 'US');
