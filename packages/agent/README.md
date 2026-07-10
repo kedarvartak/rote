@@ -9,7 +9,7 @@ behind `BrowserPlannerClient`, while tests use deterministic scripted planners.
 
 ## Public API
 
-- `runBrowserAgent(options)` — observe → plan → act loop until `done` or the step budget is exhausted.
+- `runBrowserAgent(options)` — observe → plan → act loop until `done` or the step budget is exhausted; planner-declared success is gated by an injected verifier.
 - `BrowserPlannerClient` — planner interface; calls are always tagged with `source: 'planner'`.
 - `TaggedLlmBrowserPlanner` — production planner adapter over `@rote/llm`; strictly parses one typed action and returns provider token usage.
 - `assemblePlannerContext(options)` — separates cache-stable instructions/task/action schemas from volatile page observations and action history.
