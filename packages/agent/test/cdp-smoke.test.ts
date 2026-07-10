@@ -26,25 +26,25 @@ describe('browser-agent CDP fixture smoke', () => {
     backends.push(backend);
 
     await expect(runFixtureTask(backend, server.url('b1-report.html'), [
-      { kind: 'fill', selector: '#username', value: 'analyst' },
-      { kind: 'fill', selector: '#password', value: 'secret' },
-      { kind: 'click', selector: '#login-submit' },
-      { kind: 'click', selector: '#latest-report-download' },
+      { kind: 'fill', selector: '#username', value: 'analyst', expect: { input_value: '#username', equals: 'analyst' } },
+      { kind: 'fill', selector: '#password', value: 'secret', expect: { input_value: '#password', equals: 'secret' } },
+      { kind: 'click', selector: '#login-submit', expect: { selector_visible: '#login-submit' } },
+      { kind: 'click', selector: '#latest-report-download', expect: { selector_visible: '#latest-report-download' } },
       { kind: 'done', success: true, summary: 'download requested' },
     ], '#latest-report-download')).resolves.toBe('download requested');
 
     await expect(runFixtureTask(backend, server.url('b2-vendor-form.html'), [
-      { kind: 'fill', selector: '#company-name', value: 'Acme Tools' },
-      { kind: 'fill', selector: '#contact-email', value: 'ops@example.com' },
-      { kind: 'select', selector: '#country', value: 'US' },
-      { kind: 'click', selector: '#registration-submit' },
+      { kind: 'fill', selector: '#company-name', value: 'Acme Tools', expect: { input_value: '#company-name', equals: 'Acme Tools' } },
+      { kind: 'fill', selector: '#contact-email', value: 'ops@example.com', expect: { input_value: '#contact-email', equals: 'ops@example.com' } },
+      { kind: 'select', selector: '#country', value: 'US', expect: { input_value: '#country', equals: 'US' } },
+      { kind: 'click', selector: '#registration-submit', expect: { selector_visible: '#registration-submit' } },
       { kind: 'done', success: true, summary: 'vendor submitted' },
     ], '#registration-submit')).resolves.toBe('vendor submitted');
 
     await expect(runFixtureTask(backend, server.url('b3-catalog.html'), [
-      { kind: 'fill', selector: '#catalog-query', value: 'alpha' },
-      { kind: 'click', selector: '#catalog-search-submit' },
-      { kind: 'click', selector: '#open-alpha' },
+      { kind: 'fill', selector: '#catalog-query', value: 'alpha', expect: { input_value: '#catalog-query', equals: 'alpha' } },
+      { kind: 'click', selector: '#catalog-search-submit', expect: { selector_visible: '#catalog-search-submit' } },
+      { kind: 'click', selector: '#open-alpha', expect: { selector_visible: '#open-alpha' } },
       { kind: 'done', success: true, summary: 'alpha opened' },
     ], '#open-alpha')).resolves.toBe('alpha opened');
   }, 45000);

@@ -13,7 +13,7 @@ describe('assemblePlannerContext', () => {
       task: 'Register Acme as a vendor',
       page: { url: 'https://portal.test/form', title: 'Vendor Form' },
       observation: 'textbox "Company" selector=#company',
-      previousActions: [{ kind: 'click', selector: '#continue' }],
+      previousActions: [{ kind: 'click', selector: '#continue', expect: { selector_visible: '#continue' } }],
     });
 
     expect(second.stablePrefix).toBe(first.stablePrefix);

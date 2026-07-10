@@ -17,8 +17,8 @@ class FakePage implements BrowserPageSession {
       title: 'Fake Browser Page',
       html: '<form><input id="company-name" /><select id="country"><option>US</option></select><button id="registration-submit">Submit registration</button></form>',
       elements: [
-        { tag: 'input', attributes: { id: 'company-name', name: 'company_name' }, text: '', depth: 1 },
-        { tag: 'select', attributes: { id: 'country', name: 'country' }, text: 'US', depth: 1 },
+        { tag: 'input', attributes: { id: 'company-name', name: 'company_name', value: this.values.get('#company-name') ?? '' }, text: '', depth: 1 },
+        { tag: 'select', attributes: { id: 'country', name: 'country', value: this.values.get('#country') ?? 'US' }, text: 'US', depth: 1 },
         { tag: 'button', attributes: { id: 'registration-submit' }, text: 'Submit registration', depth: 1 },
       ],
     };
@@ -62,10 +62,10 @@ describe('runBrowserAgent', () => {
   it('feeds compact observations to the planner and applies browser actions', async () => {
     const page = new FakePage();
     const planner = new ScriptedPlanner([
-      { kind: 'navigate', url: 'mem://vendor' },
-      { kind: 'fill', selector: '#company-name', value: 'Acme Tools' },
-      { kind: 'select', selector: '#country', value: 'US' },
-      { kind: 'click', selector: '#registration-submit' },
+      { kind: 'navigate', url: 'mem://vendor', expect: { url_contains: 'mem://vendor' } },
+      { kind: 'fill', selector: '#company-name', value: 'Acme Tools', expect: { input_value: '#company-name', equals: 'Acme Tools' } },
+      { kind: 'select', selector: '#country', value: 'US', expect: { input_value: '#country', equals: 'US' } },
+      { kind: 'click', selector: '#registration-submit', expect: { selector_visible: '#registration-submit' } },
       { kind: 'done', success: true, summary: 'submitted registration' },
     ]);
 
@@ -94,6 +94,7 @@ describe('runBrowserAgent', () => {
         selector: '#stale-submit',
         role: 'button',
         name: 'Submit registration',
+        expect: { selector_visible: '#stale-submit' },
       },
       { kind: 'done', success: true, summary: 'submitted' },
     ]);
@@ -124,8 +125,8 @@ describe('runBrowserAgent', () => {
 
   it('fails closed when the planner exceeds the step budget', async () => {
     const planner = new ScriptedPlanner([
-      { kind: 'click', selector: '#registration-submit' },
-      { kind: 'click', selector: '#registration-submit' },
+      { kind: 'click', selector: '#registration-submit', expect: { selector_visible: '#registration-submit' } },
+      { kind: 'click', selector: '#registration-submit', expect: { selector_visible: '#registration-submit' } },
     ]);
 
     const result = await runBrowserAgent({ task: 'loop forever', page: new FakePage(), planner, verifier: passVerifier, maxSteps: 2 });

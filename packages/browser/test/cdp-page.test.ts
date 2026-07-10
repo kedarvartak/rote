@@ -44,7 +44,10 @@ describe('CdpPage', () => {
     expect(captured.url).toBe(server.url('b2-vendor-form.html'));
     expect(captured.elements).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ tag: 'input', attributes: expect.objectContaining({ id: 'company-name' }) }),
+        expect.objectContaining({
+          tag: 'input',
+          attributes: expect.objectContaining({ id: 'company-name', value: 'Acme Tools' }),
+        }),
       ]),
     );
 

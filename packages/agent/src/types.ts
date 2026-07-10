@@ -1,14 +1,14 @@
 import { z } from 'zod';
 import type { ElementResolutionResult } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
-import type { TokenUsage, TokenUsageSource } from '@rote/core';
+import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
 import type { RenderedObservation } from '@rote/perception';
 
 export const BrowserActionSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('navigate'), url: z.string().min(1) }),
-  z.object({ kind: z.literal('fill'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string() }),
-  z.object({ kind: z.literal('select'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string() }),
-  z.object({ kind: z.literal('click'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional() }),
+  z.object({ kind: z.literal('navigate'), url: z.string().min(1), expect: BrowserExpectSchema }),
+  z.object({ kind: z.literal('fill'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema }),
+  z.object({ kind: z.literal('select'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema }),
+  z.object({ kind: z.literal('click'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), expect: BrowserExpectSchema }),
   z.object({ kind: z.literal('done'), success: z.boolean(), summary: z.string().default('') }),
 ]);
 export type BrowserAction = z.infer<typeof BrowserActionSchema>;

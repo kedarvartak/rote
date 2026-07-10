@@ -52,7 +52,24 @@ export class CdpPage {
 
   /** Captures the current page into Rote's normalized page shape. */
   async capture(): Promise<CapturedPage> {
-    const html = await this.evaluateString('document.documentElement.outerHTML');
+    const html = await this.evaluateString(`(() => {
+      const clone = document.documentElement.cloneNode(true);
+      const liveControls = document.querySelectorAll('input, textarea, select');
+      const clonedControls = clone.querySelectorAll('input, textarea, select');
+      liveControls.forEach((live, index) => {
+        const copied = clonedControls[index];
+        if (!copied) return;
+        copied.setAttribute('value', live.value);
+        if (copied.tagName === 'TEXTAREA') copied.textContent = live.value;
+        if (copied.tagName === 'SELECT') {
+          Array.from(copied.options).forEach((option) => {
+            if (option.value === live.value) option.setAttribute('selected', 'selected');
+            else option.removeAttribute('selected');
+          });
+        }
+      });
+      return clone.outerHTML;
+    })()`);
     const url = await this.evaluateString('location.href');
     return captureStaticHtml(url, html);
   }

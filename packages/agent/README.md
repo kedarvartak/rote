@@ -14,7 +14,7 @@ behind `BrowserPlannerClient`, while tests use deterministic scripted planners.
 - `TaggedLlmBrowserPlanner` — production planner adapter over `@rote/llm`; strictly parses one typed action and returns provider token usage.
 - `assemblePlannerContext(options)` — separates cache-stable instructions/task/action schemas from volatile page observations and action history.
 - `BrowserPageSession` — minimal page-action surface required by the loop.
-- `BrowserAction` — Zod-backed action union: `navigate`, `fill`, `select`, `click`, `done`; element actions may carry stable ID, role/name, and text identity for resilient resolution.
+- `BrowserAction` — Zod-backed action union: `navigate`, `fill`, `select`, `click`, `done`; every mutating action requires a closed browser `expect` postcondition, and element actions may carry semantic identity for resilient resolution.
 - `FileBrowserAgentRunRecorder` — writes browser decisions/actions to append-only trajectory JSONL and a benchmark-compatible run manifest with planner usage.
 
 ## Running tests
