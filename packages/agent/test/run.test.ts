@@ -86,6 +86,27 @@ describe('runBrowserAgent', () => {
     expect(result.tokenUsage.every((usage) => usage.source === 'planner')).toBe(true);
   });
 
+  it('resolves a stale selector through role and name before dispatch', async () => {
+    const page = new FakePage();
+    const planner = new ScriptedPlanner([
+      {
+        kind: 'click',
+        selector: '#stale-submit',
+        role: 'button',
+        name: 'Submit registration',
+      },
+      { kind: 'done', success: true, summary: 'submitted' },
+    ]);
+
+    const result = await runBrowserAgent({ task: 'Submit', page, planner, verifier: passVerifier });
+
+    expect(page.clicks).toEqual(['#registration-submit']);
+    expect(result.steps[0]?.resolution).toEqual(expect.objectContaining({
+      selector: '#registration-submit',
+      strategy: 'role-name',
+    }));
+  });
+
   it('rejects planner usage attributed to another source', async () => {
     const planner: BrowserPlannerClient = {
       async plan() {

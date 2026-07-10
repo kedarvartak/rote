@@ -32,9 +32,9 @@ describe('distillPage', () => {
     );
   });
 
-  it('keeps stable IDs across irrelevant attribute changes', () => {
+  it('keeps stable IDs across selector and irrelevant attribute changes', () => {
     const base = captureStaticHtml('mem://base', '<button id="submit" class="a">Submit</button>');
-    const changed = captureStaticHtml('mem://base', '<button id="submit" class="b" data-random="1">Submit</button>');
+    const changed = captureStaticHtml('mem://base', '<button id="submit-v2" class="b" data-random="1">Submit</button>');
 
     expect(distillPage(changed)[0]?.id).toEqual(distillPage(base)[0]?.id);
   });

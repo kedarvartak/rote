@@ -34,6 +34,7 @@ describe('FileBrowserAgentRunRecorder', () => {
       observation: { text: 'button Open Alpha', truncated: false, approxTokens: 4 },
       usage,
       durationMs: 15,
+      resolution: { selector: '#open-alpha', strategy: 'stable-id', stableId: 'aaaaaaaaaaaaaaaa' },
     });
     await recorder.finish('success', 'alpha opened', [usage]);
 
@@ -42,6 +43,12 @@ describe('FileBrowserAgentRunRecorder', () => {
     const manifest = RunManifestSchema.parse(JSON.parse(await readFile(join(runDir, 'manifest.json'), 'utf8')));
     expect(events).toHaveLength(1);
     expect(events[0]).toEqual(expect.objectContaining({ seq: 0, tool: 'browser.click', duration_ms: 15 }));
+    expect(events[0]?.result_ref).toEqual(expect.objectContaining({
+      kind: 'inline',
+      value: expect.objectContaining({
+        resolution: { selector: '#open-alpha', strategy: 'stable-id', stableId: 'aaaaaaaaaaaaaaaa' },
+      }),
+    }));
     expect(manifest).toEqual(expect.objectContaining({
       run_id: 'success-run',
       task_spec: 'Open Alpha',
