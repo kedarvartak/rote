@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: Browser-agent run recording with append-only action trajectories, benchmark-compatible manifests, planner token usage, and failure-safe action error recording.
 - **P1**: Shared `@rote/llm` source-tagged provider boundary and a strict `TaggedLlmBrowserPlanner` that parses typed actions and retains per-step planner token usage.
 - **P1**: Cache-stable browser planner context assembly that keeps instructions, task, and action schemas ahead of volatile compact observations and action history.
 - **P1**: Opt-in CDP fixture smoke for `@rote/agent` that drives B1–B3 pages through the compact observe-plan-act loop.
