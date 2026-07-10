@@ -2,9 +2,9 @@ import type { BrowserAction, PlannerContext } from './types.js';
 
 const ACTION_SCHEMA = `Actions (return exactly one JSON object):
 - {"kind":"navigate","url":"https://..."}
-- {"kind":"fill","selector":"#id","value":"text"}
-- {"kind":"select","selector":"#id","value":"option-value"}
-- {"kind":"click","selector":"#id"}
+- {"kind":"fill","selector":"#id","stableId":"0123456789abcdef","role":"textbox","name":"Field name","value":"text"}
+- {"kind":"select","selector":"#id","stableId":"0123456789abcdef","role":"combobox","name":"Field name","value":"option-value"}
+- {"kind":"click","selector":"#id","stableId":"0123456789abcdef","role":"button","name":"Button text","text":"Button text"}
 - {"kind":"done","success":true|false,"summary":"result"}`;
 
 export interface AssemblePlannerContextOptions {

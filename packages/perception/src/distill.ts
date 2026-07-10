@@ -62,7 +62,8 @@ function selectorHint(element: CapturedElement): string | undefined {
 }
 
 function stableId(element: CapturedElement, role: string, name: string): StableNodeId {
-  const selector = selectorHint(element) ?? '';
   const ancestryBucket = Math.floor(element.depth / 2);
-  return { hash: sha256Hex(`${role}\u0000${name}\u0000${selector}\u0000${ancestryBucket}`).slice(0, 16) };
+  // Selector hints are deliberately excluded: IDs must survive an id/name attribute rename
+  // so the action resolver can recover through the semantic fallback chain (docs/16 C2).
+  return { hash: sha256Hex(`${role}\u0000${name}\u0000${ancestryBucket}`).slice(0, 16) };
 }

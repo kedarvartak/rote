@@ -39,6 +39,7 @@ export class FileBrowserAgentRunRecorder implements BrowserAgentRunRecorder {
       result: {
         observation_tokens: step.observation.approxTokens,
         planner_usage: step.usage,
+        resolution: step.resolution,
       },
       duration_ms: step.durationMs,
       error: step.error ? { message: step.error } : undefined,

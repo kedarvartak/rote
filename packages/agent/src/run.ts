@@ -1,4 +1,5 @@
-import { distillPage, renderObservation } from '@rote/perception';
+import { resolveElementTarget, type ElementResolutionResult } from '@rote/action';
+import { distillPage, renderObservation, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext } from './context.js';
 import { BrowserActionSchema, type BrowserAction, type BrowserAgentResult, type BrowserAgentStep, type RunBrowserAgentOptions } from './types.js';
 
@@ -37,9 +38,11 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       if (planned.usage.source !== 'planner') throw new Error(`planner returned usage tagged ${planned.usage.source}`);
 
       let actionError: Error | undefined;
+      let resolution: ElementResolutionResult | undefined;
       if (action.kind !== 'done') {
         try {
-          await applyAction(options.page, action);
+          resolution = resolveAction(action, nodes);
+          await applyAction(options.page, action, resolution?.selector);
           previousActions.push(action);
         } catch (error) {
           actionError = asError(error);
@@ -52,6 +55,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         usage: planned.usage,
         durationMs: Math.max(0, clock() - startedAt),
         ...(actionError ? { error: actionError.message } : {}),
+        ...(resolution ? { resolution } : {}),
       };
       steps.push(recordedStep);
       await options.recorder?.recordStep(recordedStep);
@@ -92,19 +96,28 @@ function resultFromSteps(success: boolean, summary: string, steps: BrowserAgentS
   return { success, summary, steps, tokenUsage: steps.map((entry) => entry.usage) };
 }
 
-async function applyAction(page: RunBrowserAgentOptions['page'], action: BrowserAction): Promise<void> {
+function resolveAction(action: BrowserAction, nodes: readonly DistilledNode[]): ElementResolutionResult | undefined {
+  if (action.kind === 'navigate' || action.kind === 'done') return undefined;
+  return resolveElementTarget(nodes, action);
+}
+
+async function applyAction(
+  page: RunBrowserAgentOptions['page'],
+  action: BrowserAction,
+  resolvedSelector?: string,
+): Promise<void> {
   switch (action.kind) {
     case 'navigate':
       await page.navigate(action.url);
       return;
     case 'fill':
-      await page.fill(action.selector, action.value);
+      await page.fill(resolvedSelector ?? action.selector, action.value);
       return;
     case 'select':
-      await page.select(action.selector, action.value);
+      await page.select(resolvedSelector ?? action.selector, action.value);
       return;
     case 'click':
-      await page.click(action.selector);
+      await page.click(resolvedSelector ?? action.selector);
       return;
     case 'done':
       return;
