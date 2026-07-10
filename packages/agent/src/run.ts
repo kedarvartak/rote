@@ -58,9 +58,17 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       if (actionError) throw actionError;
 
       if (action.kind === 'done') {
-        const result = resultFromSteps(action.success, action.summary, steps);
+        let success = action.success;
+        let summary = action.summary;
+        if (success) {
+          const verification = await options.verifier.verify(await options.page.capture(), options.task, action.summary);
+          success = verification.success;
+          summary = verification.summary;
+        }
+        // INVARIANT: planner-declared completion is never success until an independent verifier passes.
+        const result = resultFromSteps(success, summary, steps);
         finished = true;
-        await options.recorder?.finish(action.success ? 'success' : 'failure', action.summary, result.tokenUsage);
+        await options.recorder?.finish(success ? 'success' : 'failure', summary, result.tokenUsage);
         return result;
       }
     }

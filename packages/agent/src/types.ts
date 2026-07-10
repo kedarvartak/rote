@@ -45,6 +45,15 @@ export interface BrowserPlannerClient {
   plan(source: Extract<TokenUsageSource, 'planner'>, request: BrowserPlannerRequest): Promise<BrowserPlannerResponse>;
 }
 
+export interface BrowserAgentVerification {
+  success: boolean;
+  summary: string;
+}
+
+export interface BrowserAgentVerifier {
+  verify(page: CapturedPage, task: string, plannerSummary: string): Promise<BrowserAgentVerification>;
+}
+
 export interface BrowserAgentRunRecorder {
   recordStep(step: BrowserAgentStep): Promise<void>;
   finish(outcome: 'success' | 'failure', summary: string, tokenUsage: readonly TokenUsage[]): Promise<void>;
@@ -54,6 +63,7 @@ export interface RunBrowserAgentOptions {
   task: string;
   page: BrowserPageSession;
   planner: BrowserPlannerClient;
+  verifier: BrowserAgentVerifier;
   recorder?: BrowserAgentRunRecorder;
   maxSteps?: number;
   observationMaxChars?: number;

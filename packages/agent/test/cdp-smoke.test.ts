@@ -63,7 +63,13 @@ async function runFixtureTask(
   const actionCount = actions.length;
   const planner = new ScriptedPlanner(actions);
 
-  const result = await runBrowserAgent({ task: `Smoke task for ${url}`, page, planner, maxSteps: 8 });
+  const result = await runBrowserAgent({
+    task: `Smoke task for ${url}`,
+    page,
+    planner,
+    verifier: { async verify(_captured, _task, summary) { return { success: true, summary }; } },
+    maxSteps: 8,
+  });
 
   expect(result.success).toBe(true);
   expect(planner.sources).toEqual(Array.from({ length: actionCount }, () => 'planner'));

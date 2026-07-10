@@ -39,6 +39,7 @@ describe('browser agent recording: never reports success on a failed action', ()
       task: 'Submit the form',
       page: failingPage(),
       planner,
+      verifier: { async verify() { return { success: true, summary: 'unreachable' }; } },
       recorder,
       clock: () => 100,
     })).rejects.toThrow('button detached');
@@ -51,9 +52,48 @@ describe('browser agent recording: never reports success on a failed action', ()
     expect(event.tool).toBe('browser.click');
     expect(event.error?.message).toBe('button detached');
   });
+
+  it('records failure when the planner declares success but verification fails', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-agent-verify-invariant-'));
+    const recorder = new FileBrowserAgentRunRecorder({
+      task: 'Download report',
+      envFingerprint: buildEnvFingerprint({
+        tool_inventory: [],
+        target_identity: 'fixture.test',
+        surface_versions: {},
+      }),
+      baseDir,
+      runId: 'failed-verify-run',
+      clock: sequenceClock(),
+    });
+    const planner: BrowserPlannerClient = {
+      async plan(source) {
+        return {
+          action: { kind: 'done', success: true, summary: 'I think it worked' },
+          usage: { source, input_tokens: 8, output_tokens: 2 },
+        };
+      },
+    };
+
+    const result = await runBrowserAgent({
+      task: 'Download report',
+      page: failingPage(false),
+      planner,
+      verifier: { async verify() { return { success: false, summary: 'download confirmation absent' }; } },
+      recorder,
+      clock: () => 100,
+    });
+
+    const manifest = RunManifestSchema.parse(JSON.parse(
+      await readFile(join(baseDir, 'runs', 'failed-verify-run', 'manifest.json'), 'utf8'),
+    ));
+    expect(result.success).toBe(false);
+    expect(result.summary).toBe('download confirmation absent');
+    expect(manifest.outcome).toBe('failure');
+  });
 });
 
-function failingPage(): BrowserPageSession {
+function failingPage(failClick = true): BrowserPageSession {
   return {
     async navigate() {},
     async capture() {
@@ -67,7 +107,7 @@ function failingPage(): BrowserPageSession {
     async fill() {},
     async select() {},
     async click() {
-      throw new Error('button detached');
+      if (failClick) throw new Error('button detached');
     },
   };
 }

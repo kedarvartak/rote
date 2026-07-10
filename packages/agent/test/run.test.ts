@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { CapturedPage } from '@rote/browser';
-import { runBrowserAgent, type BrowserAction, type BrowserPageSession, type BrowserPlannerClient, type BrowserPlannerRequest } from '../src/index.js';
+import { runBrowserAgent, type BrowserAction, type BrowserAgentVerifier, type BrowserPageSession, type BrowserPlannerClient, type BrowserPlannerRequest } from '../src/index.js';
 
 class FakePage implements BrowserPageSession {
   url = 'mem://blank';
@@ -52,6 +52,12 @@ class ScriptedPlanner implements BrowserPlannerClient {
   }
 }
 
+const passVerifier: BrowserAgentVerifier = {
+  async verify(_page, _task, plannerSummary) {
+    return { success: true, summary: plannerSummary };
+  },
+};
+
 describe('runBrowserAgent', () => {
   it('feeds compact observations to the planner and applies browser actions', async () => {
     const page = new FakePage();
@@ -63,7 +69,7 @@ describe('runBrowserAgent', () => {
       { kind: 'done', success: true, summary: 'submitted registration' },
     ]);
 
-    const result = await runBrowserAgent({ task: 'Register Acme Tools as a vendor', page, planner, maxSteps: 8 });
+    const result = await runBrowserAgent({ task: 'Register Acme Tools as a vendor', page, planner, verifier: passVerifier, maxSteps: 8 });
 
     expect(result.success).toBe(true);
     expect(result.summary).toBe('submitted registration');
@@ -90,7 +96,7 @@ describe('runBrowserAgent', () => {
       },
     };
 
-    await expect(runBrowserAgent({ task: 'submit', page: new FakePage(), planner })).rejects.toThrow(
+    await expect(runBrowserAgent({ task: 'submit', page: new FakePage(), planner, verifier: passVerifier })).rejects.toThrow(
       'planner returned usage tagged matcher',
     );
   });
@@ -101,7 +107,7 @@ describe('runBrowserAgent', () => {
       { kind: 'click', selector: '#registration-submit' },
     ]);
 
-    const result = await runBrowserAgent({ task: 'loop forever', page: new FakePage(), planner, maxSteps: 2 });
+    const result = await runBrowserAgent({ task: 'loop forever', page: new FakePage(), planner, verifier: passVerifier, maxSteps: 2 });
 
     expect(result).toEqual(expect.objectContaining({ success: false, summary: 'planner exceeded maxSteps=2' }));
   });
