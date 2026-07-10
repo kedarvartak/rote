@@ -53,10 +53,14 @@ public benchmark.
 - [`diagrams/perception-pipeline.svg`](diagrams/perception-pipeline.svg) — capture, distillation, diffing, budget, and vision escalation
 - [`diagrams/run-lifecycle.svg`](diagrams/run-lifecycle.svg) — cold / warm / drift economics
 - [`diagrams/repair-ladder.svg`](diagrams/repair-ladder.svg) — self-healing state machine
+- [`diagrams/vs-browser-use.svg`](diagrams/vs-browser-use.svg) — loop architecture, Browser Use vs Rote, and why Rote's is cheaper
+- [`diagrams/vs-stagehand.svg`](diagrams/vs-stagehand.svg) — per-action cache vs whole-loop verified, portable memory
+- [`diagrams/vs-skyvern.svg`](diagrams/vs-skyvern.svg) — vision-first vs a11y-first perception and learning economics
+- [`diagrams/competitive-landscape.svg`](diagrams/competitive-landscape.svg) — the capability matrix rows no incumbent ships
 
-Every SVG has a same-name editable `.excalidraw` source. The MCP-authored element
-definitions live in `diagrams/scenes.json`; regenerate both formats with
-`node docs/diagrams/generate.mjs`.
+All diagrams are rendered with the Excalidraw MCP (`create_excalidraw_diagram`) in the
+base Excalidraw hand-drawn font — no generator scripts. To change one, re-render it
+through the MCP and overwrite the SVG; don't hand-edit the SVG output.
 
 ## Design invariants (the short list)
 

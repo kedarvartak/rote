@@ -34,6 +34,8 @@ stratum 4, and adopts stratum 3.
   architecture doesn't attempt. Their mindshare is the real moat — the counter is a
   reproducible head-to-head cost benchmark (F4/G1).
 
+![Loop architecture: Browser Use vs Rote](diagrams/vs-browser-use.svg)
+
 ### Stagehand (Browserbase) — the SDK play
 - **What it is**: TS SDK (`act`/`extract`/`observe`/`agent`), the developer-friendly
   wrapper over Browserbase infra; v3 with computer-use agent support.
@@ -47,6 +49,8 @@ stratum 4, and adopts stratum 3.
 - **Rote vs**: their per-action cache is a special case of D3/D4; Rote's memory is
   whole-loop and infra-portable (E2 — including running *on* Browserbase). Expect them
   to move toward memory; speed matters.
+
+![Memory architecture: Stagehand vs Rote](diagrams/vs-stagehand.svg)
 
 ### Skyvern — the vision-first workflow product
 - **What it is**: OSS + commercial; vision-heavy planning (screenshots + prompts),
@@ -63,6 +67,8 @@ stratum 4, and adopts stratum 3.
 - **Rote vs**: cheaper cold loop (a11y-first A1–A8, vision elective), finer-grained
   learning (D3/D4 below workflow granularity), verification contracts (C6/F1) they
   lack, speculation (C3) nobody has.
+
+![Perception and learning economics: Skyvern vs Rote](diagrams/vs-skyvern.svg)
 
 ### Magnitude — the vision-native challenger
 - **What it is**: OSS TS harness, vision-native (pixel coordinates, works on any
@@ -147,6 +153,8 @@ P0 set.)
 The matrix's empty columns are the strategy: **A4, C3, B3, D3/D4, and C6-as-invariant
 have no incumbent.** Everything with a ● in a competitor column is table stakes to
 match, not differentiation to chase.
+
+![Capability landscape: the uncontested rows](diagrams/competitive-landscape.svg)
 
 ## Honest steelman (what could make this analysis wrong)
 
