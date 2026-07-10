@@ -6,7 +6,7 @@ replay selection, distillation, status, and diff commands.
 
 ## Public API
 
-- **`rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>)`** — launches Chrome, runs the compact tagged planner loop, verifies completion, records the trajectory/manifest, and prints token usage. Optional: `--model`, `--max-steps`, `--chrome-path`.
+- **`rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>)`** — launches Chrome, runs the compact tagged planner loop, waits for network/DOM settledness after actions, verifies completion, records the trajectory/manifest, and prints token usage. Optional: `--model`, `--max-steps`, `--chrome-path`, `--settle-timeout-ms`.
 - **`rote runs ls`** — lists every run under `.rote/runs`, one per line,
   with outcome and task spec. A run with no `manifest.json` yet (still in
   progress, or abandoned by a kill) is listed as `in-progress` rather than

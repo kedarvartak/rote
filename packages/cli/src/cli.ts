@@ -53,8 +53,13 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
   if (maxSteps !== undefined && (!Number.isInteger(maxSteps) || maxSteps < 1)) {
     throw new Error('--max-steps must be a positive integer');
   }
+  const settleTimeoutText = values.get('--settle-timeout-ms');
+  const settleTimeoutMs = settleTimeoutText === undefined ? undefined : Number.parseInt(settleTimeoutText, 10);
+  if (settleTimeoutMs !== undefined && (!Number.isInteger(settleTimeoutMs) || settleTimeoutMs < 1)) {
+    throw new Error('--settle-timeout-ms must be a positive integer');
+  }
   const knownFlags = new Set([
-    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains',
+    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--settle-timeout-ms',
   ]);
   for (const flag of values.keys()) if (!knownFlags.has(flag)) throw new Error(`unknown option: ${flag}`);
   if (!values.has('--verify-text') && !values.has('--verify-url-contains')) throw new Error(runUsage());
@@ -67,9 +72,10 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     chromePath: values.get('--chrome-path'),
     verifyText: values.get('--verify-text'),
     verifyUrlContains: values.get('--verify-url-contains'),
+    settleTimeoutMs,
   };
 }
 
 function runUsage(): string {
-  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--model <model>] [--max-steps <n>] [--chrome-path <path>]';
+  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>]';
 }
