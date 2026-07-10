@@ -11,6 +11,7 @@ behind `BrowserPlannerClient`, while tests use deterministic scripted planners.
 
 - `runBrowserAgent(options)` — observe → plan → act loop until `done` or the step budget is exhausted.
 - `BrowserPlannerClient` — planner interface; calls are always tagged with `source: 'planner'`.
+- `TaggedLlmBrowserPlanner` — production planner adapter over `@rote/llm`; strictly parses one typed action and returns provider token usage.
 - `assemblePlannerContext(options)` — separates cache-stable instructions/task/action schemas from volatile page observations and action history.
 - `BrowserPageSession` — minimal page-action surface required by the loop.
 - `BrowserAction` — Zod-backed action union: `navigate`, `fill`, `select`, `click`, `done`.

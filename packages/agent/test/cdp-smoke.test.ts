@@ -99,6 +99,6 @@ class ScriptedPlanner implements BrowserPlannerClient {
     this.requests.push(request);
     const action = this.actions.shift();
     if (!action) throw new Error('script exhausted');
-    return { action };
+    return { action, usage: { source, input_tokens: 10, output_tokens: 2 } };
   }
 }

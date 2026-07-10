@@ -46,6 +46,7 @@ describe('runPlaybook: never reports success on a failed verify', () => {
 
     expect(result.outcome).toBe('failure');
     expect(result.outcome).not.toBe('success');
+    expect(result.reason).toBe('text "Download complete" not visible');
     expect(result.completedStepIds).toEqual(['download']); // every step really did pass
   });
 });

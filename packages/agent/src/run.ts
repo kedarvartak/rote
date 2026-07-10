@@ -29,17 +29,24 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       context,
     });
     const action = BrowserActionSchema.parse(planned.action);
-    steps.push({ step, action, observation });
+    // INVARIANT: usage returned by a planner cannot be relabeled as another source.
+    if (planned.usage.source !== 'planner') throw new Error(`planner returned usage tagged ${planned.usage.source}`);
+    steps.push({ step, action, observation, usage: planned.usage });
 
     if (action.kind === 'done') {
-      return { success: action.success, summary: action.summary, steps };
+      return { success: action.success, summary: action.summary, steps, tokenUsage: steps.map((entry) => entry.usage) };
     }
 
     await applyAction(options.page, action);
     previousActions.push(action);
   }
 
-  return { success: false, summary: `planner exceeded maxSteps=${maxSteps}`, steps };
+  return {
+    success: false,
+    summary: `planner exceeded maxSteps=${maxSteps}`,
+    steps,
+    tokenUsage: steps.map((entry) => entry.usage),
+  };
 }
 
 async function applyAction(page: RunBrowserAgentOptions['page'], action: BrowserAction): Promise<void> {

@@ -55,10 +55,8 @@ See `src/index.ts`. Highlights:
   handshake, matching the recorder's same simplification.
 - **`AnthropicLlmClient` has no retry/backoff of its own** for transient API
   errors — the executor's own `on_fail: retry` policy is the only retry
-  layer in v1. A dedicated shared LLM client wrapper (CLAUDE.md's "every
-  LLM call is tagged" requirement) is deferred to whichever milestone next
-  needs a second real LLM call site (likely M3's bench harness or M4's
-  Matcher) rather than generalized speculatively here.
+  layer in v1. Provider calls now delegate to the shared source-tagged
+  `@rote/llm` boundary.
 
 ## Running tests
 
