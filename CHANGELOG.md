@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: Shared `@rote/llm` source-tagged provider boundary and a strict `TaggedLlmBrowserPlanner` that parses typed actions and retains per-step planner token usage.
 - **P1**: Cache-stable browser planner context assembly that keeps instructions, task, and action schemas ahead of volatile compact observations and action history.
 - **P1**: Opt-in CDP fixture smoke for `@rote/agent` that drives B1–B3 pages through the compact observe-plan-act loop.
 - **P1**: `@rote/agent` compact-observation browser-agent loop that source-tags planner calls and applies navigate/fill/select/click/done actions against a page session.
@@ -70,6 +71,7 @@ labeled `skip-changelog`.
   with float sign intact.
 
 ### Docs
+- Document the shared source-tagged `packages/llm` provider boundary in the harness package layout.
 - Rebuilt all five architecture visuals through the official Excalidraw MCP and checked in the MCP scene definitions, editable Excalidraw documents, and hand-drawn SVG exports.
 - Replaced the outdated architecture, run-lifecycle, and repair-ladder diagrams; added current-vs-target package topology and perception-pipeline diagrams. All five ship as rendered SVG plus editable Excalidraw source, with implementation status marked explicitly in the visuals.
 - Updated the root README, docs index, and new P1 package READMEs to describe Rote as an efficiency-first browser-agent harness with compact perception and browser memory.

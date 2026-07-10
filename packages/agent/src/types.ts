@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { CapturedPage } from '@rote/browser';
-import type { TokenUsageSource } from '@rote/core';
+import type { TokenUsage, TokenUsageSource } from '@rote/core';
 import type { RenderedObservation } from '@rote/perception';
 
 export const BrowserActionSchema = z.discriminatedUnion('kind', [
@@ -38,6 +38,7 @@ export interface BrowserPlannerRequest {
 
 export interface BrowserPlannerResponse {
   action: BrowserAction;
+  usage: TokenUsage;
 }
 
 export interface BrowserPlannerClient {
@@ -56,10 +57,12 @@ export interface BrowserAgentStep {
   step: number;
   action: BrowserAction;
   observation: RenderedObservation;
+  usage: TokenUsage;
 }
 
 export interface BrowserAgentResult {
   success: boolean;
   summary: string;
   steps: readonly BrowserAgentStep[];
+  tokenUsage: readonly TokenUsage[];
 }

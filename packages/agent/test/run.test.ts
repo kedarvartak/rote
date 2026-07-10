@@ -48,7 +48,7 @@ class ScriptedPlanner implements BrowserPlannerClient {
     this.requests.push(request);
     const action = this.actions.shift();
     if (!action) throw new Error('script exhausted');
-    return { action };
+    return { action, usage: { source, input_tokens: 10, output_tokens: 2 } };
   }
 }
 
@@ -76,6 +76,23 @@ describe('runBrowserAgent', () => {
     expect(planner.requests[1]?.observation.approxTokens).toBeGreaterThan(0);
     expect(planner.requests[1]?.context.volatileSuffix).not.toContain('<form>');
     expect(planner.requests[1]?.context.stablePrefix).toBe(planner.requests[0]?.context.stablePrefix);
+    expect(result.tokenUsage).toHaveLength(5);
+    expect(result.tokenUsage.every((usage) => usage.source === 'planner')).toBe(true);
+  });
+
+  it('rejects planner usage attributed to another source', async () => {
+    const planner: BrowserPlannerClient = {
+      async plan() {
+        return {
+          action: { kind: 'done', success: true, summary: 'wrongly tagged' },
+          usage: { source: 'matcher', input_tokens: 1, output_tokens: 1 },
+        };
+      },
+    };
+
+    await expect(runBrowserAgent({ task: 'submit', page: new FakePage(), planner })).rejects.toThrow(
+      'planner returned usage tagged matcher',
+    );
   });
 
   it('fails closed when the planner exceeds the step budget', async () => {

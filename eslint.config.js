@@ -31,7 +31,19 @@ export default tseslint.config(
       // index.ts only — deep imports across @rote packages are banned.
       'no-restricted-imports': [
         'error',
-        { patterns: [{ group: ['@rote/*/*'], message: 'Import from a package\'s public index (e.g. "@rote/core"), not a deep path.' }] },
+        { patterns: [
+          { group: ['@rote/*/*'], message: 'Import from a package\'s public index (e.g. "@rote/core"), not a deep path.' },
+          { group: ['@anthropic-ai/sdk'], message: 'Provider SDK calls belong in the shared @rote/llm package.' },
+        ] },
+      ],
+    },
+  },
+  {
+    files: ['packages/llm/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [{ group: ['@rote/*/*'], message: 'Import from a package\'s public index, not a deep path.' }] },
       ],
     },
   },

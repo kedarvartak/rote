@@ -1,8 +1,8 @@
 {
-  "name": "@rote/agent",
+  "name": "@rote/llm",
   "version": "0.0.0",
   "private": true,
-  "description": "Compact-observation browser-agent control loop for Rote's V1 harness",
+  "description": "Shared source-tagged LLM client boundary for Rote",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -12,11 +12,8 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@rote/browser": "*",
-    "@rote/core": "*",
-    "@rote/llm": "*",
-    "@rote/perception": "*",
-    "zod": "^3.23.8"
+    "@anthropic-ai/sdk": "^0.110.0",
+    "@rote/core": "*"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",

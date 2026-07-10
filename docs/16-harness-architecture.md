@@ -32,6 +32,8 @@ packages/recorder    lossless trajectory recording (exists; records the harness'
                      own loop now, not just proxied traffic)          [D1]
 packages/agent       the control loop that composes all of the above; task API;
                      recovery ladder                                  [F2]
+packages/llm         shared source-tagged provider boundary used by every plane
+                     that makes model calls                            [B5, G1]
 packages/bench       benchmark matrix + latency + competitor harness adapters
                      (exists; grows)                                  [F4, G1, G2]
 packages/cli         rote run / serve / runs / simulate / report
@@ -39,8 +41,8 @@ packages/mcp-server  Rote's tools exposed over MCP (the harness as a layer for
                      other agents — the doc 13 dual entry point)
 ```
 
-Dependency direction unchanged: everything → `core`; `agent` composes; `cli`/`mcp-server`
-on top. `perception`, `decision`, `action` stay pure at their centers (rendering,
+Dependency direction: everything → `core`; model-calling packages → `llm`; `agent`
+composes; `cli`/`mcp-server` on top. `perception`, `decision`, `action` stay pure at their centers (rendering,
 routing policy, resolution ranking are dependency-free functions) with I/O at the edges.
 
 ## Core type spine (Zod-first, abbreviated)
