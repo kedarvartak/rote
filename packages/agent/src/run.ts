@@ -1,4 +1,5 @@
-import { resolveElementTarget, type ElementResolutionResult } from '@rote/action';
+import { assertBrowserExpect, resolveElementTarget, type ElementResolutionResult } from '@rote/action';
+import type { BrowserExpect } from '@rote/core';
 import { distillPage, renderObservation, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext } from './context.js';
 import { BrowserActionSchema, type BrowserAction, type BrowserAgentResult, type BrowserAgentStep, type RunBrowserAgentOptions } from './types.js';
@@ -43,6 +44,8 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         try {
           resolution = resolveAction(action, nodes);
           await applyAction(options.page, action, resolution?.selector);
+          const liveExpect = resolvedExpect(action.expect, action.kind === 'navigate' ? undefined : action.selector, resolution?.selector);
+          assertBrowserExpect(liveExpect, await options.page.capture());
           previousActions.push(action);
         } catch (error) {
           actionError = asError(error);
@@ -94,6 +97,20 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
 
 function resultFromSteps(success: boolean, summary: string, steps: BrowserAgentStep[]): BrowserAgentResult {
   return { success, summary, steps, tokenUsage: steps.map((entry) => entry.usage) };
+}
+
+function resolvedExpect(expect: BrowserExpect, originalSelector?: string, resolvedSelector?: string): BrowserExpect {
+  if (!originalSelector || !resolvedSelector || originalSelector === resolvedSelector) return expect;
+  if ('selector_visible' in expect && expect.selector_visible === originalSelector) {
+    return { selector_visible: resolvedSelector };
+  }
+  if ('selector_absent' in expect && expect.selector_absent === originalSelector) {
+    return { selector_absent: resolvedSelector };
+  }
+  if ('input_value' in expect && expect.input_value === originalSelector) {
+    return { input_value: resolvedSelector, equals: expect.equals };
+  }
+  return expect;
 }
 
 function resolveAction(action: BrowserAction, nodes: readonly DistilledNode[]): ElementResolutionResult | undefined {

@@ -1,10 +1,10 @@
 import type { BrowserAction, PlannerContext } from './types.js';
 
 const ACTION_SCHEMA = `Actions (return exactly one JSON object):
-- {"kind":"navigate","url":"https://..."}
-- {"kind":"fill","selector":"#id","stableId":"0123456789abcdef","role":"textbox","name":"Field name","value":"text"}
-- {"kind":"select","selector":"#id","stableId":"0123456789abcdef","role":"combobox","name":"Field name","value":"option-value"}
-- {"kind":"click","selector":"#id","stableId":"0123456789abcdef","role":"button","name":"Button text","text":"Button text"}
+- {"kind":"navigate","url":"https://...","expect":{"url_contains":"/expected"}}
+- {"kind":"fill","selector":"#id","stableId":"0123456789abcdef","role":"textbox","name":"Field name","value":"text","expect":{"input_value":"#id","equals":"text"}}
+- {"kind":"select","selector":"#id","stableId":"0123456789abcdef","role":"combobox","name":"Field name","value":"option-value","expect":{"input_value":"#id","equals":"option-value"}}
+- {"kind":"click","selector":"#id","stableId":"0123456789abcdef","role":"button","name":"Button text","text":"Button text","expect":{"text_visible":"Expected result"}}
 - {"kind":"done","success":true|false,"summary":"result"}`;
 
 export interface AssemblePlannerContextOptions {

@@ -31,6 +31,16 @@ export const ExpectSchema = z.union([
 ]);
 export type Expect = z.infer<typeof ExpectSchema>;
 
+/** Browser-observable subset of the Expect DSL used for live action postconditions. */
+export const BrowserExpectSchema = z.union([
+  SelectorVisible,
+  SelectorAbsent,
+  InputValue,
+  UrlContains,
+  TextVisible,
+]);
+export type BrowserExpect = z.infer<typeof BrowserExpectSchema>;
+
 export const EXPECT_PRIMITIVE_NAMES = [
   'exit_code',
   'selector_visible',

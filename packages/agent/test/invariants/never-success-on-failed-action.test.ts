@@ -29,7 +29,7 @@ describe('browser agent recording: never reports success on a failed action', ()
     const planner: BrowserPlannerClient = {
       async plan(source) {
         return {
-          action: { kind: 'click', selector: '#submit' },
+          action: { kind: 'click', selector: '#submit', expect: { selector_visible: '#submit' } },
           usage: { source, input_tokens: 12, output_tokens: 3 },
         };
       },
@@ -51,6 +51,40 @@ describe('browser agent recording: never reports success on a failed action', ()
     expect(manifest.token_usage).toEqual([{ source: 'planner', input_tokens: 12, output_tokens: 3 }]);
     expect(event.tool).toBe('browser.click');
     expect(event.error?.message).toBe('button detached');
+  });
+
+  it('records failure when an action postcondition fails', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-agent-expect-invariant-'));
+    const recorder = new FileBrowserAgentRunRecorder({
+      task: 'Remove submit button',
+      envFingerprint: buildEnvFingerprint({ tool_inventory: [], target_identity: 'fixture.test', surface_versions: {} }),
+      baseDir,
+      runId: 'failed-expect-run',
+      clock: sequenceClock(),
+    });
+    const planner: BrowserPlannerClient = {
+      async plan(source) {
+        return {
+          action: { kind: 'click', selector: '#submit', expect: { selector_absent: '#submit' } },
+          usage: { source, input_tokens: 8, output_tokens: 2 },
+        };
+      },
+    };
+
+    await expect(runBrowserAgent({
+      task: 'Remove submit button',
+      page: failingPage(false),
+      planner,
+      verifier: { async verify() { return { success: true, summary: 'unreachable' }; } },
+      recorder,
+      clock: () => 100,
+    })).rejects.toThrow('selector "#submit" still visible');
+
+    const runDir = join(baseDir, 'runs', 'failed-expect-run');
+    const manifest = RunManifestSchema.parse(JSON.parse(await readFile(join(runDir, 'manifest.json'), 'utf8')));
+    const event = TrajectoryEventSchema.parse(JSON.parse((await readFile(join(runDir, 'trajectory.jsonl'), 'utf8')).trim()));
+    expect(manifest.outcome).toBe('failure');
+    expect(event.error?.message).toBe('selector "#submit" still visible');
   });
 
   it('records failure when the planner declares success but verification fails', async () => {

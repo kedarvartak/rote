@@ -30,7 +30,7 @@ describe('FileBrowserAgentRunRecorder', () => {
 
     await recorder.recordStep({
       step: 0,
-      action: { kind: 'click', selector: '#open-alpha' },
+      action: { kind: 'click', selector: '#open-alpha', expect: { selector_visible: '#open-alpha' } },
       observation: { text: 'button Open Alpha', truncated: false, approxTokens: 4 },
       usage,
       durationMs: 15,

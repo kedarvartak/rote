@@ -10,6 +10,8 @@ and resilient semantic element resolution before dispatch.
 - `SettledBrowserPageSession` — wraps `navigate`, `fill`, `select`, and `click` with post-action settledness gates.
 - `resolveElementTarget(nodes, target)` — resolves unique stable ID → unique role+name → unambiguous text proximity; selector-only legacy actions use their supplied selector.
 - `ElementResolutionError` — typed failure when no actionable selector can be resolved.
+- `evaluateBrowserExpect` / `assertBrowserExpect` — live checks for visible/absent selectors, input values, URL substrings, and visible text.
+- `BrowserExpectationError` — typed postcondition failure carrying the assertion and page URL.
 
 Defaults: 250 ms quiet window, 50 ms polling, 5,000 ms timeout. `rote run` exposes the
 timeout through `--settle-timeout-ms`.

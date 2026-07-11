@@ -18,13 +18,13 @@ class FakeTaggedClient implements TaggedLlmClient {
 
 describe('TaggedLlmBrowserPlanner', () => {
   it('sends split context through the tagged client and parses an action', async () => {
-    const client = new FakeTaggedClient('{"kind":"click","selector":"#submit"}');
+    const client = new FakeTaggedClient('{"kind":"click","selector":"#submit","expect":{"selector_visible":"#submit"}}');
     const planner = new TaggedLlmBrowserPlanner(client);
 
     const response = await planner.plan('planner', request());
 
     expect(response).toEqual({
-      action: { kind: 'click', selector: '#submit' },
+      action: { kind: 'click', selector: '#submit', expect: { selector_visible: '#submit' } },
       usage: { source: 'planner', input_tokens: 42, output_tokens: 8 },
     });
     expect(client.requests).toEqual([{

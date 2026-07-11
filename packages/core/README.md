@@ -16,7 +16,7 @@ See `src/index.ts` for the full export list. Highlights:
 
 - **Schemas & types** — `TrajectoryEventSchema`, `RunManifestSchema`,
   `EnvFingerprintSchema`, `EnvFingerprintPatternSchema`, `PlaybookSchema`,
-  `PatchSchema`, `ExpectSchema` — and their inferred TS types.
+  `PatchSchema`, `ExpectSchema`, `BrowserExpectSchema` — and their inferred TS types.
 - **Fingerprinting** — `buildEnvFingerprint`, `canonicalStringify`, `sha256Hex`.
 - **Digests** — `computeResultDigest`, `decideStorage`, `verifyInlineResultRef`.
 - **Templating** — `extractParamRefs`, `renderTemplate` (throws

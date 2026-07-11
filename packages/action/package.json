@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@rote/browser": "*",
+    "@rote/core": "*",
     "@rote/perception": "*"
   },
   "devDependencies": {
