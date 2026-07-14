@@ -1,7 +1,7 @@
 # @rote/agent
 
 Compact-observation browser-agent control loop for Rote's V1 harness. It connects a
-stateful browser page from `@rote/browser` to perception distillation from
+stateful browser page from `@rote/browser` to adaptive full/diff/summary perception from
 `@rote/perception`, then asks a source-tagged planner for the next browser action.
 
 This package is deliberately planner-client agnostic: production LLM providers plug in

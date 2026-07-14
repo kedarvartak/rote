@@ -11,8 +11,9 @@ dump when a compact tree of actionable elements is enough.
 
 - `distillPage(page)` — keep interactive/content-bearing nodes, assign roles,
   names, selector hints, and stable IDs.
-- `renderObservation(nodes, { maxChars })` — render a compact, budgeted text
-  observation.
+- `renderObservation(nodes, { maxChars })` — render a compact, budgeted full observation.
+- `diffObservations(base, current)` / `applyObservationDiff(base, diff)` — ordered stable-ID diffs with exact reconstruction and malformed-diff rejection.
+- `renderAdaptiveObservation(nodes, options)` — degrade full → diff → summary under a hard character budget.
 - `estimateTokens(text)` — approximate token count for budget tests.
 
 ## Running tests

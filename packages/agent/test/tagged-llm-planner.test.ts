@@ -53,7 +53,7 @@ function request(): BrowserPlannerRequest {
     task: 'Submit the form',
     step: 0,
     page: { url: 'https://portal.test', title: 'Portal' },
-    observation: { text: 'button selector=#submit', truncated: false, approxTokens: 5 },
+    observation: { text: 'button selector=#submit', truncated: false, approxTokens: 5, mode: 'full' },
     previousActions: [],
     context: { stablePrefix: 'stable instructions', volatileSuffix: 'volatile observation' },
   };

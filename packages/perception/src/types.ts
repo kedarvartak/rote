@@ -23,3 +23,23 @@ export interface RenderedObservation {
   truncated: boolean;
   approxTokens: number;
 }
+
+export const ObservationDiffSchema = z.object({
+  added: z.array(DistilledNodeSchema),
+  updated: z.array(DistilledNodeSchema),
+  removed: z.array(z.string().length(16)),
+  order: z.array(z.string().length(16)),
+});
+export type ObservationDiff = z.infer<typeof ObservationDiffSchema>;
+
+export const AdaptiveObservationModeSchema = z.enum(['full', 'diff', 'summary']);
+export type AdaptiveObservationMode = z.infer<typeof AdaptiveObservationModeSchema>;
+
+export const AdaptiveRenderedObservationSchema = z.object({
+  text: z.string(),
+  truncated: z.boolean(),
+  approxTokens: z.number().int().nonnegative(),
+  mode: AdaptiveObservationModeSchema,
+  diff: ObservationDiffSchema.optional(),
+});
+export type AdaptiveRenderedObservation = z.infer<typeof AdaptiveRenderedObservationSchema>;

@@ -86,6 +86,24 @@ describe('runBrowserAgent', () => {
     expect(result.tokenUsage.every((usage) => usage.source === 'planner')).toBe(true);
   });
 
+  it('sends a diff after the first over-budget full observation', async () => {
+    const planner = new ScriptedPlanner([
+      { kind: 'click', selector: '#registration-submit', expect: { selector_visible: '#registration-submit' } },
+      { kind: 'done', success: true, summary: 'done' },
+    ]);
+
+    await runBrowserAgent({
+      task: 'Submit',
+      page: new FakePage(),
+      planner,
+      verifier: passVerifier,
+      observationMaxChars: 80,
+    });
+
+    expect(planner.requests.map((request) => request.observation.mode)).toEqual(['summary', 'diff']);
+    expect(planner.requests[1]?.observation.text).toBe('(no observation changes)');
+  });
+
   it('resolves a stale selector through role and name before dispatch', async () => {
     const page = new FakePage();
     const planner = new ScriptedPlanner([
