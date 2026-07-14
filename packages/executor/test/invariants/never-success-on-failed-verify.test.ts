@@ -1,8 +1,8 @@
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import type { Step } from '@rote/core';
+import { RunManifestSchema, type Step } from '@rote/core';
 import { runPlaybook } from '../../src/executor.js';
 import { completion, FakeLlmClient } from '../helpers/fake-llm-client.js';
 import { ok, FakeToolCaller } from '../helpers/fake-tool-caller.js';
@@ -48,5 +48,9 @@ describe('runPlaybook: never reports success on a failed verify', () => {
     expect(result.outcome).not.toBe('success');
     expect(result.reason).toBe('text "Download complete" not visible');
     expect(result.completedStepIds).toEqual(['download']); // every step really did pass
+    const manifest = RunManifestSchema.parse(JSON.parse(
+      await readFile(join(baseDir, 'runs', result.runId, 'manifest.json'), 'utf8'),
+    ));
+    expect(manifest.outcome).toBe('failure');
   });
 });

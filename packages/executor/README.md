@@ -21,7 +21,8 @@ See `src/index.ts`. Highlights:
 - **`observationFromResult` / `mergeWorldState`** — pure: the tool-agnostic
   convention this package reads a result through (see "Known v1 limitations").
 - **`ToolCaller` / `LlmClient`** — the two injected boundaries; `McpToolCaller`
-  and `AnthropicLlmClient` are the real implementations, used by the CLI.
+  and `AnthropicLlmClient` back MCP replay, while `BrowserToolCaller` adapts a
+  stateful CDP page for verified browser replay.
 - **`rote-replay <playbook.yaml> --params '{...}'`** bin — reads
   `ROTE_DOWNSTREAM_COMMAND`/`ROTE_DOWNSTREAM_ARGS`, `ROTE_TARGET_IDENTITY`,
   `ROTE_TASK_SPEC`, `ROTE_BASE_DIR` from the environment; requires
@@ -57,6 +58,10 @@ See `src/index.ts`. Highlights:
   errors — the executor's own `on_fail: retry` policy is the only retry
   layer in v1. Provider calls now delegate to the shared source-tagged
   `@rote/llm` boundary.
+
+The stateful fixture browser playbooks live at
+`fixtures/playbooks/browser-b1-stateful.yaml` and `browser-b2-stateful.yaml`; both replay
+through real local Chrome with zero LLM calls in the opt-in CDP suite.
 
 ## Running tests
 
