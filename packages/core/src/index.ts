@@ -7,5 +7,6 @@ export * from './schemas/trajectory-event.js';
 export * from './schemas/run-manifest.js';
 export * from './schemas/playbook.js';
 export * from './schemas/patch.js';
+export * from './schemas/browser-replay-candidate.js';
 export * from './serialize/trajectory-jsonl.js';
 export * from './serialize/playbook-yaml.js';

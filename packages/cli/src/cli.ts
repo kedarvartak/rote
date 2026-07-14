@@ -31,6 +31,8 @@ export async function main(
     return [
       `success: ${result.summary}`,
       `run: ${result.runId}`,
+      `phase: ${result.phase}`,
+      ...(result.fallbackReason ? [`fallback: ${result.fallbackReason}`] : []),
       `steps: ${result.steps}`,
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,
     ].join('\n');
@@ -59,7 +61,7 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     throw new Error('--settle-timeout-ms must be a positive integer');
   }
   const knownFlags = new Set([
-    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--settle-timeout-ms',
+    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--settle-timeout-ms', '--replay-candidate',
   ]);
   for (const flag of values.keys()) if (!knownFlags.has(flag)) throw new Error(`unknown option: ${flag}`);
   if (!values.has('--verify-text') && !values.has('--verify-url-contains')) throw new Error(runUsage());
@@ -73,9 +75,10 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     verifyText: values.get('--verify-text'),
     verifyUrlContains: values.get('--verify-url-contains'),
     settleTimeoutMs,
+    replayCandidatePath: values.get('--replay-candidate'),
   };
 }
 
 function runUsage(): string {
-  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>]';
+  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>] [--replay-candidate <candidate.json>]';
 }
