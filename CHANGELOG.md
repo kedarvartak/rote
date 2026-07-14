@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: Reproducible Rote-vs-Browser-Use serializer report/gate on identical fixtures, failing per fixture and explicitly labeling approximate token counts.
 - **P1**: Accessibility-aware perception names from labels/ARIA plus pruning for computed-hidden controls, hidden inputs, empty content, duplicate static text, and option noise.
 - **P1**: Ordered stable-ID observation diffs with exact reconstruction property tests and adaptive full → diff → summary rendering under hard context budgets.
 - **P1**: Frozen B2 drift suite covering selector renames, wrapper insertion, ambiguous controls, stale-selector decoys, hidden replacements, and delayed SPA state without silent wrong actions.

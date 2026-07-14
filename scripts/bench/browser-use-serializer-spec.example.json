@@ -1,0 +1,19 @@
+{
+  "fixtures": [
+    {
+      "id": "B1",
+      "html_path": "../../fixtures/sites/b1-report.html",
+      "browser_use_observation_path": "browser-use-observations/b1.txt"
+    },
+    {
+      "id": "B2",
+      "html_path": "../../fixtures/sites/b2-vendor-form.html",
+      "browser_use_observation_path": "browser-use-observations/b2.txt"
+    },
+    {
+      "id": "B3",
+      "html_path": "../../fixtures/sites/b3-catalog.html",
+      "browser_use_observation_path": "browser-use-observations/b3.txt"
+    }
+  ]
+}
