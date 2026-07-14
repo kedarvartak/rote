@@ -13,6 +13,9 @@ and resilient semantic element resolution before dispatch.
 - `evaluateBrowserExpect` / `assertBrowserExpect` — live checks for visible/absent selectors, input values, URL substrings, and visible text.
 - `BrowserExpectationError` — typed postcondition failure carrying the assertion and page URL.
 
+The frozen B2 drift suite covers selector renames, wrapper insertion, ambiguity,
+stale-selector decoys, hidden replacements, and delayed SPA state.
+
 Defaults: 250 ms quiet window, 50 ms polling, 5,000 ms timeout. `rote run` exposes the
 timeout through `--settle-timeout-ms`.
 
