@@ -1,0 +1,57 @@
+playbook: browser-b1-stateful
+version: 1
+
+task_signature:
+  intent_description: Log into the frozen reports portal and download the latest report
+  env_fingerprint:
+    domain: 127.0.0.1
+    tool_prefixes: [browser.]
+
+params:
+  - name: base_url
+    type: string
+  - name: username
+    type: string
+  - name: password
+    type: string
+
+steps:
+  - id: open_reports
+    kind: deterministic
+    tool: browser.navigate
+    args: { url: "{{base_url}}/b1-report.html" }
+    expect: { selector_visible: "#login-form" }
+    on_fail: fallback
+  - id: fill_username
+    kind: deterministic
+    depends_on: [open_reports]
+    tool: browser.fill
+    args: { selector: "#username", value: "{{username}}" }
+    expect: { input_value: "#username", equals: "{{username}}" }
+    on_fail: fallback
+  - id: fill_password
+    kind: deterministic
+    depends_on: [fill_username]
+    tool: browser.fill
+    args: { selector: "#password", value: "{{password}}" }
+    expect: { input_value: "#password", equals: "{{password}}" }
+    on_fail: fallback
+  - id: submit_login
+    kind: deterministic
+    depends_on: [fill_password]
+    tool: browser.click
+    args: { selector: "#login-submit" }
+    expect: { text_visible: "Signed in to Reports Portal" }
+    on_fail: fallback
+  - id: download_report
+    kind: deterministic
+    depends_on: [submit_login]
+    tool: browser.download_file
+    args: { selector: "#latest-report-download" }
+    expect: { text_visible: "Report download complete" }
+    on_fail: fallback
+
+verify:
+  - text_visible: "quarterly-report.pdf"
+
+confidence: 1

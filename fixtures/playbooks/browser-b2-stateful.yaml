@@ -1,0 +1,60 @@
+playbook: browser-b2-stateful
+version: 1
+
+task_signature:
+  intent_description: Submit the frozen vendor registration form
+  env_fingerprint:
+    domain: 127.0.0.1
+    tool_prefixes: [browser.]
+
+params:
+  - name: base_url
+    type: string
+  - name: company_name
+    type: string
+  - name: contact_email
+    type: string
+  - name: country
+    type: string
+
+steps:
+  - id: open_registration
+    kind: deterministic
+    tool: browser.navigate
+    args: { url: "{{base_url}}/b2-vendor-form.html" }
+    expect: { selector_visible: "#registration-form" }
+    on_fail: fallback
+  - id: fill_company
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args: { selector: "#company-name", value: "{{company_name}}" }
+    expect: { input_value: "#company-name", equals: "{{company_name}}" }
+    on_fail: fallback
+  - id: fill_email
+    kind: deterministic
+    depends_on: [fill_company]
+    tool: browser.fill
+    args: { selector: "#contact-email", value: "{{contact_email}}" }
+    expect: { input_value: "#contact-email", equals: "{{contact_email}}" }
+    on_fail: fallback
+  - id: select_country
+    kind: deterministic
+    depends_on: [fill_email]
+    tool: browser.select
+    args: { selector: "#country", value: "{{country}}" }
+    expect: { input_value: "#country", equals: "{{country}}" }
+    on_fail: fallback
+  - id: submit_registration
+    kind: deterministic
+    depends_on: [select_country]
+    tool: browser.click
+    args: { selector: "#registration-submit" }
+    expect: { text_visible: "Vendor registration complete" }
+    on_fail: fallback
+
+verify:
+  - text_visible: "Company: {{company_name}}"
+  - text_visible: "Email: {{contact_email}}"
+
+confidence: 1
