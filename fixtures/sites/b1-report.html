@@ -2,7 +2,7 @@
 <html>
   <head><title>Reports Portal</title></head>
   <body>
-    <nav><a href="/dashboard" id="dashboard-link">Dashboard</a></nav>
+    <nav><a href="#dashboard" id="dashboard-link">Dashboard</a></nav>
     <main>
       <h1>Reports Portal</h1>
       <form id="login-form">
@@ -12,7 +12,25 @@
         <input id="password" name="password" type="password" placeholder="Password" />
         <button id="login-submit" type="submit">Sign in</button>
       </form>
-      <button id="latest-report-download">Download latest report</button>
+      <section id="report-panel" hidden>
+        <p id="login-confirmation" role="status" hidden>Signed in to Reports Portal</p>
+        <button id="latest-report-download" hidden>Download latest report</button>
+        <p id="download-confirmation" role="status" hidden>Report download complete: quarterly-report.pdf</p>
+      </section>
     </main>
+    <script>
+      document.querySelector('#login-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        document.querySelector('#login-form').hidden = true;
+        document.querySelector('#report-panel').hidden = false;
+        document.querySelector('#login-confirmation').hidden = false;
+        document.querySelector('#latest-report-download').hidden = false;
+        history.replaceState({}, '', '#dashboard');
+      });
+      document.querySelector('#latest-report-download').addEventListener('click', () => {
+        document.querySelector('#download-confirmation').hidden = false;
+        document.body.dataset.downloadedArtifact = 'quarterly-report.pdf';
+      });
+    </script>
   </body>
 </html>
