@@ -7,6 +7,8 @@ import { renderMarkdownReport } from './report.js';
 import { exportSuccessfulTrajectories } from './run-store.js';
 import { cellsFromSpec, parseBenchmarkSpec } from './spec.js';
 import { writeSyntheticBenchmarkPack } from './synthetic.js';
+import { renderSerializerComparison, SerializerParityGateError } from './serializer-comparison.js';
+import { compareSerializersFromSpec } from './serializer-spec.js';
 
 interface ReportOptions {
   out?: string;
@@ -28,6 +30,17 @@ export async function main(argv: string[]): Promise<string> {
     const outDir = options.out ?? 'bench-out';
     const result = await runCommandBenchmarkPlan({ planPath: subject, outDir });
     return `wrote ${result.specPath}`;
+  }
+  if ((command === 'serializer-report' || command === 'serializer-gate') && subject) {
+    const options = parseSerializerOptions(rest);
+    const result = await compareSerializersFromSpec(subject);
+    const markdown = renderSerializerComparison(result);
+    if (options.out) {
+      await mkdir(dirname(options.out), { recursive: true });
+      await writeFile(options.out, markdown, 'utf8');
+    }
+    if (command === 'serializer-gate' && !result.passed) throw new SerializerParityGateError(result);
+    return options.out ? `wrote ${options.out}` : markdown;
   }
   if ((command !== 'report' && command !== 'gate') || !subject) {
     throw new Error(usage());
@@ -73,6 +86,12 @@ async function cellsFromSpecAt(specPath: string) {
   return cellsFromSpec(spec, { specDir: dirname(resolvedSpecPath) });
 }
 
+function parseSerializerOptions(args: string[]): Pick<ReportOptions, 'out'> {
+  if (args.length === 0) return {};
+  if (args.length === 2 && args[0] === '--out' && args[1]) return { out: args[1] };
+  throw new Error('serializer comparison accepts only --out <report.md>');
+}
+
 function parseOptions(args: string[]): ReportOptions {
   const options: ReportOptions = {};
   for (let i = 0; i < args.length; i += 1) {
@@ -106,5 +125,5 @@ function parseOptions(args: string[]): ReportOptions {
 }
 
 function usage(): string {
-  return 'usage: rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench synthetic <out-dir>';
 }

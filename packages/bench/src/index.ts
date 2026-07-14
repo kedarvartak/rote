@@ -9,3 +9,5 @@ export * from './spec.js';
 export * from './usage-sidecar.js';
 export * from './synthetic.js';
 export * from './cli.js';
+export * from './serializer-comparison.js';
+export * from './serializer-spec.js';

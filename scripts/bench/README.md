@@ -39,6 +39,19 @@ What it runs:
 - All runs write usage sidecars so the normal `rote-bench report` and `gate`
   paths are exercised.
 
+## Perception serializer parity
+
+Capture Browser Use's exact model-facing observation text as described in
+[`browser-use-observations/README.md`](browser-use-observations/README.md), then run:
+
+```bash
+node packages/bench/bin/rote-bench.js serializer-report scripts/bench/browser-use-serializer-spec.example.json --out /tmp/rote-serializer-report.md
+node packages/bench/bin/rote-bench.js serializer-gate scripts/bench/browser-use-serializer-spec.example.json
+```
+
+The gate requires Rote to be no larger on every fixture, not merely in aggregate. Counts
+are explicitly approximate (`ceil(chars / 4)`); provider-billed tokens belong to W5.
+
 This is still **not** the M3 thesis number: it uses a fake downstream and fake
 token sidecars. It proves that real Rote CLIs integrate with the benchmark
 harness end to end. The remaining M3 work is replacing these fake commands with

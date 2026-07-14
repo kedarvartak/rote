@@ -105,6 +105,13 @@ raw artifact layout work end to end before live benchmark drivers are added.
   semantically equivalent remains the injected driver's responsibility until the
   real B1–B3 demo environment exists.
 
+## Serializer parity gate
+
+`rote-bench serializer-report <spec.json>` compares Rote's full compact observation with
+captured Browser Use model-facing text on identical HTML fixtures. `serializer-gate`
+fails if any fixture is larger; reports label the shared `ceil(chars / 4)` token estimate
+explicitly so it cannot be mistaken for provider billing.
+
 ## Running tests
 
 ```bash

@@ -15,8 +15,11 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@rote/browser": "*",
     "@rote/core": "*",
-    "@rote/recorder": "*"
+    "@rote/perception": "*",
+    "@rote/recorder": "*",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",

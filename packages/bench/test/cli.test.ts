@@ -31,6 +31,26 @@ describe('rote-bench CLI', () => {
     await expect(main(['gate', specPath, '--min-token-reduction', '0.95'])).rejects.toThrow('M3 gate: FAIL');
   });
 
+  it('reports and gates serializer parity from captured Browser Use observations', async () => {
+    const root = await tempDir();
+    const htmlPath = join(root, 'page.html');
+    const baselinePath = join(root, 'browser-use.txt');
+    const specPath = join(root, 'serializer-spec.json');
+    const reportPath = join(root, 'serializer-report.md');
+    await writeFile(htmlPath, '<label for="query">Search</label><input id="query" />', 'utf8');
+    await writeFile(baselinePath, 'browser use observation '.repeat(20), 'utf8');
+    await writeFile(specPath, JSON.stringify({
+      fixtures: [{ id: 'B3', html_path: 'page.html', browser_use_observation_path: 'browser-use.txt' }],
+    }), 'utf8');
+
+    await expect(main(['serializer-report', specPath, '--out', reportPath])).resolves.toBe(`wrote ${reportPath}`);
+    await expect(readFile(reportPath, 'utf8')).resolves.toContain('Overall: PASS');
+    await expect(main(['serializer-gate', specPath])).resolves.toContain('Overall: PASS');
+
+    await writeFile(baselinePath, 'x', 'utf8');
+    await expect(main(['serializer-gate', specPath])).rejects.toThrow('serializer parity gate failed: B3');
+  });
+
   it('writes a report and raw JSONL export from a benchmark spec', async () => {
     const root = await tempDir();
     const baseDir = join(root, '.rote');
