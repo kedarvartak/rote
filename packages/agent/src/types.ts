@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { ElementResolutionResult } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
 import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
-import type { RenderedObservation } from '@rote/perception';
+import type { AdaptiveRenderedObservation } from '@rote/perception';
 
 export const BrowserActionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('navigate'), url: z.string().min(1), expect: BrowserExpectSchema }),
@@ -32,7 +32,7 @@ export interface BrowserPlannerRequest {
   task: string;
   step: number;
   page: { url: string; title: string };
-  observation: RenderedObservation;
+  observation: AdaptiveRenderedObservation;
   previousActions: readonly BrowserAction[];
   context: PlannerContext;
 }
@@ -74,7 +74,7 @@ export interface RunBrowserAgentOptions {
 export interface BrowserAgentStep {
   step: number;
   action: BrowserAction;
-  observation: RenderedObservation;
+  observation: AdaptiveRenderedObservation;
   usage: TokenUsage;
   durationMs: number;
   error?: string;

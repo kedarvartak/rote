@@ -25,7 +25,8 @@ export function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
 }
 
-function renderNodeLine(node: DistilledNode): string {
+/** Renders one distilled node in the compact planner-observation format. */
+export function renderNodeLine(node: DistilledNode): string {
   const selector = node.selectorHint ? ` ${node.selectorHint}` : '';
   const marker = node.interactive ? '*' : '-';
   return `${marker} [${node.id.hash}] ${node.role}${selector}${node.name ? ` "${node.name}"` : ''}`;

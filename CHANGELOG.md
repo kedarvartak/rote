@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: Ordered stable-ID observation diffs with exact reconstruction property tests and adaptive full → diff → summary rendering under hard context budgets.
 - **P1**: Frozen B2 drift suite covering selector renames, wrapper insertion, ambiguous controls, stale-selector decoys, hidden replacements, and delayed SPA state without silent wrong actions.
 - **P1**: Mandatory live browser action postconditions for selector visibility/absence, input values, URL substrings, and visible text; failed checks record an errored action and failure manifest.
 - **P1**: Resilient browser element resolution using unique stable ID, role+name, and unambiguous text proximity, with each chosen strategy recorded and ambiguous matches rejected.

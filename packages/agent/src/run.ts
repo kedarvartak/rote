@@ -1,6 +1,6 @@
 import { assertBrowserExpect, resolveElementTarget, type ElementResolutionResult } from '@rote/action';
 import type { BrowserExpect } from '@rote/core';
-import { distillPage, renderObservation, type DistilledNode } from '@rote/perception';
+import { distillPage, renderAdaptiveObservation, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext } from './context.js';
 import { BrowserActionSchema, type BrowserAction, type BrowserAgentResult, type BrowserAgentStep, type RunBrowserAgentOptions } from './types.js';
 
@@ -10,6 +10,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
   const clock = options.clock ?? Date.now;
   const previousActions: BrowserAction[] = [];
   const steps: BrowserAgentStep[] = [];
+  let previousNodes: DistilledNode[] | undefined;
   let finished = false;
 
   try {
@@ -17,12 +18,17 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       const startedAt = clock();
       const page = await options.page.capture();
       const nodes = distillPage(page);
-      const observation = renderObservation(nodes, { maxChars: options.observationMaxChars });
+      const observation = renderAdaptiveObservation(nodes, {
+        maxChars: options.observationMaxChars,
+        previousNodes,
+      });
+      previousNodes = nodes;
       const pageState = { url: page.url, title: page.title };
       const context = assemblePlannerContext({
         task: options.task,
         page: pageState,
         observation: observation.text,
+        observationMode: observation.mode,
         previousActions,
       });
       // INVARIANT: planner calls are always source-tagged for benchmark accounting.

@@ -1,3 +1,4 @@
+import type { AdaptiveObservationMode } from '@rote/perception';
 import type { BrowserAction, PlannerContext } from './types.js';
 
 const ACTION_SCHEMA = `Actions (return exactly one JSON object):
@@ -11,6 +12,7 @@ export interface AssemblePlannerContextOptions {
   task: string;
   page: { url: string; title: string };
   observation: string;
+  observationMode: AdaptiveObservationMode;
   previousActions: readonly BrowserAction[];
 }
 
@@ -35,7 +37,7 @@ ${options.page.title} | ${options.page.url}
 Previous actions:
 ${actionHistory}
 
-Compact observation:
+Compact observation (${options.observationMode}):
 ${options.observation}`;
   return { stablePrefix, volatileSuffix };
 }
