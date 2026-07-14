@@ -3,7 +3,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { main } from '../src/cli.js';
-import { runCommandBenchmarkPlan } from '../src/command-driver.js';
+import { parseCommandBenchmarkPlan, runCommandBenchmarkPlan } from '../src/command-driver.js';
+import { parseBenchmarkSpec, cellsFromSpec } from '../src/spec.js';
+import { roteRecordsFromCells } from '../src/competitor.js';
 
 let dirs: string[] = [];
 
@@ -60,6 +62,59 @@ describe('command benchmark driver', () => {
     );
 
     await expect(main(['run', planPath, '--out', outDir])).resolves.toBe(`wrote ${join(outDir, 'bench-spec.json')}`);
+  });
+});
+
+describe('repetition fan-out', () => {
+  const template = { task: { id: 'B1', name: 'download report' }, phase: 'cold', command: 'node' };
+
+  it('expands a repetitions entry into N concrete runs with 1..N indices and auto-derived ids', () => {
+    const plan = parseCommandBenchmarkPlan({ runs: [{ ...template, repetitions: 3 }] });
+    expect(plan.runs).toHaveLength(3);
+    expect(plan.runs.map((r) => r.repetition)).toEqual([1, 2, 3]);
+    expect(plan.runs.every((r) => r.run_id === undefined && r.usage_file === undefined)).toBe(true);
+  });
+
+  it('preserves single-repetition entries and mixes them with fan-out entries', () => {
+    const plan = parseCommandBenchmarkPlan({
+      runs: [
+        { ...template, repetition: 1 },
+        { task: { id: 'B2', name: 'vendor form' }, phase: 'cold', command: 'node', repetitions: 2 },
+      ],
+    });
+    expect(plan.runs.map((r) => `${r.task.id}-${r.repetition}`)).toEqual(['B1-1', 'B2-1', 'B2-2']);
+  });
+
+  it('rejects contradictory or ambiguous fan-out specs', () => {
+    expect(() => parseCommandBenchmarkPlan({ runs: [{ ...template, repetition: 1, repetitions: 3 }] })).toThrow(/only one of repetition or repetitions/);
+    expect(() => parseCommandBenchmarkPlan({ runs: [{ ...template, repetitions: 0 }] })).toThrow(/repetitions must be a positive integer/);
+    expect(() => parseCommandBenchmarkPlan({ runs: [{ ...template, repetitions: 2, run_id: 'x' }] })).toThrow(/run_id is not allowed with repetitions/);
+    expect(() => parseCommandBenchmarkPlan({ runs: [{ ...template, repetitions: 2, usage_file: 'u.json' }] })).toThrow(/usage_file is not allowed with repetitions/);
+  });
+
+  it('drives one command per repetition and yields enough Rote records for the launch gate', async () => {
+    const root = await tempDir();
+    const script = await writeFakeRunScript(root);
+    const planPath = join(root, 'plan.json');
+    const outDir = join(root, 'out');
+    await writeFile(
+      planPath,
+      JSON.stringify({
+        runs: [{ task: { id: 'B1', name: 'download report' }, phase: 'cold', command: process.execPath, args: [script], repetitions: 16 }],
+      }),
+      'utf8',
+    );
+
+    const result = await runCommandBenchmarkPlan({ planPath, outDir });
+    expect(result.spec.runs).toHaveLength(16);
+    expect(result.spec.runs.map((r) => (r as { run_id?: string }).run_id)).toContain('b1-cold-16');
+
+    // The emitted spec feeds the head-to-head assembler bridge without hand-editing.
+    const spec = parseBenchmarkSpec(JSON.parse(await readFile(result.specPath, 'utf8')));
+    const cells = await cellsFromSpec(spec, { specDir: outDir });
+    const records = roteRecordsFromCells(cells, { model: 'claude-opus-4-8', cacheAdjusted: true });
+    expect(records).toHaveLength(16);
+    expect(records.every((r) => r.harness === 'rote' && r.outcome === 'success')).toBe(true);
   });
 });
 

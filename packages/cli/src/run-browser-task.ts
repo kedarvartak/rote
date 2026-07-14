@@ -25,6 +25,12 @@ export interface RunBrowserTaskOptions {
   verifyUrlContains?: string;
   settleTimeoutMs?: number;
   replayCandidatePath?: string;
+  /**
+   * Fixed run id for the recorded artifacts. The benchmark command driver sets
+   * this (via `ROTE_RUN_ID`) so it can address the run it just produced; omitted
+   * for normal use, where a random id is assigned (see #40 / docs/17 W5).
+   */
+  runId?: string;
 }
 
 export interface BrowserTaskResult {
@@ -89,6 +95,7 @@ export async function runBrowserTask(
     task: options.task,
     envFingerprint: fingerprint,
     baseDir: options.baseDir,
+    runId: options.runId,
   });
   let rawPage: BrowserPageSession | undefined;
   try {
@@ -137,7 +144,7 @@ async function runColdBrowserTask(
   const planner = injectedPlanner ?? new TaggedLlmBrowserPlanner(
     createTaggedLlmClientFromEnv({ model: options.model }),
   );
-  const recorder = new FileBrowserAgentRunRecorder({ task: options.task, envFingerprint: fingerprint, baseDir: options.baseDir });
+  const recorder = new FileBrowserAgentRunRecorder({ task: options.task, envFingerprint: fingerprint, baseDir: options.baseDir, runId: options.runId });
   try {
     await page.navigate(target.toString());
   } catch (error) {

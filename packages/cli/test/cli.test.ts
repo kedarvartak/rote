@@ -38,6 +38,31 @@ describe('rote run', () => {
     expect(output).toContain('tokens: 120 input + 20 output');
   });
 
+  it('pins the run id from ROTE_RUN_ID so the benchmark driver can address the run', async () => {
+    const deps = dependencies();
+    const previous = process.env['ROTE_RUN_ID'];
+    process.env['ROTE_RUN_ID'] = 'b1-cold-7';
+    try {
+      await main(['run', 'Do the task', '--url', 'https://portal.test', '--verify-text', 'ok'], '.rote', deps);
+    } finally {
+      if (previous === undefined) delete process.env['ROTE_RUN_ID'];
+      else process.env['ROTE_RUN_ID'] = previous;
+    }
+    expect(deps.runBrowserTask).toHaveBeenCalledWith(expect.objectContaining({ runId: 'b1-cold-7' }));
+  });
+
+  it('assigns no fixed run id when ROTE_RUN_ID is unset', async () => {
+    const deps = dependencies();
+    const previous = process.env['ROTE_RUN_ID'];
+    delete process.env['ROTE_RUN_ID'];
+    try {
+      await main(['run', 'Do the task', '--url', 'https://portal.test', '--verify-text', 'ok'], '.rote', deps);
+    } finally {
+      if (previous !== undefined) process.env['ROTE_RUN_ID'] = previous;
+    }
+    expect(deps.runBrowserTask.mock.calls[0]?.[0]).not.toHaveProperty('runId');
+  });
+
   it('requires a starting URL', async () => {
     await expect(main(['run', 'Do the task'], '.rote', dependencies())).rejects.toThrow(
       'rote run <task> --url <url>',
