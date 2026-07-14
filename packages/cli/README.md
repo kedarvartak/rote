@@ -22,6 +22,18 @@ replay selection, distillation, status, and diff commands.
 planner-declared success alone is never accepted. A matching zero-LLM replay does not
 construct a provider client. Candidate paths are relative to the candidate JSON file.
 
+Create a candidate without calculating hashes by hand:
+
+```bash
+rote candidate create fixtures/playbooks/browser-b1-stateful.yaml \
+  --url http://127.0.0.1:4321/b1-report.html \
+  --params '{"username":"analyst","password":"secret"}' \
+  --out .rote/candidates/b1-v1.json
+```
+
+The command validates the playbook, computes the environment fingerprint, stores a
+portable relative playbook path, and refuses to overwrite an existing candidate.
+
 Replay candidate format:
 
 ```json

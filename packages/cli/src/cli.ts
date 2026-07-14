@@ -1,6 +1,7 @@
 import { formatRunDetail, formatRunsList } from './format.js';
 import { listRuns, showRun } from './runs.js';
 import { runBrowserTask, type BrowserTaskResult, type RunBrowserTaskOptions } from './run-browser-task.js';
+import { createReplayCandidate } from './create-replay-candidate.js';
 
 export interface CliDependencies {
   runBrowserTask: (options: RunBrowserTaskOptions) => Promise<BrowserTaskResult>;
@@ -23,6 +24,13 @@ export async function main(
     if (!runId) throw new Error('usage: rote runs show <run_id>');
     return formatRunDetail(await showRun(baseDir, runId));
   }
+  if (group === 'candidate' && subcommand === 'create') {
+    const playbookPath = rest[0];
+    if (!playbookPath) throw new Error(candidateUsage());
+    const options = parseCandidateOptions(rest.slice(1));
+    const created = await createReplayCandidate({ playbookPath, ...options });
+    return `wrote ${created.path}\nfingerprint: ${created.candidate.fingerprint_hash}`;
+  }
   if (group === 'run') {
     if (!subcommand) throw new Error(runUsage());
     const options = parseRunOptions(subcommand, rest, baseDir);
@@ -37,7 +45,34 @@ export async function main(
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,
     ].join('\n');
   }
-  throw new Error(`usage: rote runs ls | rote runs show <run_id> | ${runUsage()}`);
+  throw new Error(`usage: rote runs ls | rote runs show <run_id> | ${runUsage()} | ${candidateUsage()}`);
+}
+
+function parseCandidateOptions(args: string[]): { url: string; params: Record<string, unknown>; outPath: string } {
+  const values = new Map<string, string>();
+  for (let index = 0; index < args.length; index += 2) {
+    const flag = args[index];
+    const value = args[index + 1];
+    if (!flag?.startsWith('--') || value === undefined) throw new Error(candidateUsage());
+    values.set(flag, value);
+  }
+  for (const flag of values.keys()) {
+    if (!['--url', '--params', '--out'].includes(flag)) throw new Error(`unknown option: ${flag}`);
+  }
+  const url = values.get('--url');
+  const paramsText = values.get('--params');
+  const outPath = values.get('--out');
+  if (!url || !paramsText || !outPath) throw new Error(candidateUsage());
+  let params: unknown;
+  try {
+    params = JSON.parse(paramsText);
+  } catch {
+    throw new Error('--params must be a JSON object');
+  }
+  if (typeof params !== 'object' || params === null || Array.isArray(params)) {
+    throw new Error('--params must be a JSON object');
+  }
+  return { url, params: params as Record<string, unknown>, outPath };
 }
 
 function parseRunOptions(task: string, args: string[], baseDir: string): RunBrowserTaskOptions {
@@ -77,6 +112,10 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     settleTimeoutMs,
     replayCandidatePath: values.get('--replay-candidate'),
   };
+}
+
+function candidateUsage(): string {
+  return 'rote candidate create <playbook.yaml> --url <url> --params <json-object> --out <candidate.json>';
 }
 
 function runUsage(): string {
