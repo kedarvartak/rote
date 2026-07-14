@@ -18,7 +18,7 @@ export function captureStaticHtml(url: string, html: string): CapturedPage {
     url,
     title,
     html,
-    elements: parseElements(html),
+    elements: enrichAccessibility(parseElements(html)),
   };
 }
 
@@ -41,6 +41,28 @@ function parseElements(html: string): CapturedElement[] {
     }
   }
   return elements;
+}
+
+function enrichAccessibility(elements: CapturedElement[]): CapturedElement[] {
+  const textById = new Map<string, string>();
+  const labelByTarget = new Map<string, string>();
+  for (const element of elements) {
+    const id = element.attributes['id'];
+    if (id && element.text) textById.set(id, element.text);
+    const target = element.tag === 'label' ? element.attributes['for'] : undefined;
+    if (target && element.text) labelByTarget.set(target, element.text);
+  }
+  return elements.map((element) => {
+    const id = element.attributes['id'];
+    const labelledBy = element.attributes['aria-labelledby']
+      ?.split(/\s+/)
+      .map((labelId) => textById.get(labelId))
+      .filter((text): text is string => Boolean(text))
+      .join(' ');
+    const accessibleName = element.attributes['aria-label'] ?? labelledBy ?? (id ? labelByTarget.get(id) : undefined);
+    if (!accessibleName) return element;
+    return { ...element, attributes: { ...element.attributes, 'data-rote-name': accessibleName } };
+  });
 }
 
 function parseAttributes(raw: string): Record<string, string> {

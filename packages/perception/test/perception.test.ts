@@ -25,11 +25,39 @@ describe('distillPage', () => {
 
     expect(nodes).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ role: 'textbox', name: 'company_name', selectorHint: '#company-name', interactive: true }),
-        expect.objectContaining({ role: 'combobox', name: 'country', selectorHint: '#country', interactive: true }),
+        expect.objectContaining({ role: 'textbox', name: 'Company name', selectorHint: '#company-name', interactive: true }),
+        expect.objectContaining({ role: 'combobox', name: 'Country', selectorHint: '#country', interactive: true }),
         expect.objectContaining({ role: 'button', name: 'Submit registration', selectorHint: '#registration-submit', interactive: true }),
       ]),
     );
+  });
+
+  it('uses associated labels and aria-labelledby before machine-oriented names', () => {
+    const page = captureStaticHtml('mem://labels', `
+      <label for="email">Contact email</label><input id="email" name="contact_email" />
+      <span id="save-label">Save vendor</span><button id="save" aria-labelledby="save-label">Save</button>
+    `);
+    const nodes = distillPage(page);
+
+    expect(nodes).toEqual(expect.arrayContaining([
+      expect.objectContaining({ selectorHint: '#email', name: 'Contact email' }),
+      expect.objectContaining({ selectorHint: '#save', name: 'Save vendor' }),
+    ]));
+    expect(nodes.filter((node) => node.name === 'Contact email')).toHaveLength(1);
+  });
+
+  it('prunes hidden controls, empty content, and duplicate non-interactive text', () => {
+    const nodes = distillPage(captureStaticHtml('mem://noise', `
+      <button id="hidden" style="display:none">Danger</button>
+      <input id="secret" type="hidden" value="token" />
+      <label></label><p>Repeated help</p><p>Repeated help</p>
+      <button id="visible">Continue</button>
+    `));
+
+    expect(nodes.some((node) => node.selectorHint === '#hidden')).toBe(false);
+    expect(nodes.some((node) => node.selectorHint === '#secret')).toBe(false);
+    expect(nodes.filter((node) => node.name === 'Repeated help')).toHaveLength(1);
+    expect(nodes.some((node) => node.selectorHint === '#visible')).toBe(true);
   });
 
   it('keeps stable IDs across selector and irrelevant attribute changes', () => {
@@ -53,7 +81,7 @@ describe('distillPage', () => {
 
     expect(nodes).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ role: 'textbox', selectorHint: '#company-name', interactive: true }),
+        expect.objectContaining({ role: 'textbox', name: 'Company name', selectorHint: '#company-name', interactive: true }),
         expect.objectContaining({ role: 'button', selectorHint: '#registration-submit', interactive: true }),
       ]),
     );
