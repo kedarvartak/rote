@@ -54,6 +54,15 @@ export class CdpPage {
   async capture(): Promise<CapturedPage> {
     const html = await this.evaluateString(`(() => {
       const clone = document.documentElement.cloneNode(true);
+      const liveElements = document.querySelectorAll('*');
+      const clonedElements = clone.querySelectorAll('*');
+      liveElements.forEach((live, index) => {
+        const copied = clonedElements[index];
+        if (!copied) return;
+        const style = getComputedStyle(live);
+        const visible = !live.hidden && style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0' && live.getClientRects().length > 0;
+        copied.setAttribute('data-rote-visible', visible ? 'true' : 'false');
+      });
       const liveControls = document.querySelectorAll('input, textarea, select');
       const clonedControls = clone.querySelectorAll('input, textarea, select');
       liveControls.forEach((live, index) => {

@@ -12,7 +12,7 @@ comes in here, then `@rote/perception` turns it into compact observations for th
 
 - `BrowserCaptureBackend` — minimal capture interface.
 - `CapturedPage` / `CapturedElement` — Zod-backed page capture records.
-- `StaticHtmlBackend` / `captureStaticHtml` — fixture backend used by P1 tests.
+- `StaticHtmlBackend` / `captureStaticHtml` — fixture backend with associated-label/`aria-labelledby` accessibility enrichment.
 - `CdpBrowserBackend` — captures from an existing CDP HTTP endpoint.
 - `LaunchingCdpBrowserBackend` — launches local Chrome/Chromium with CDP enabled, captures a page, opens stateful action sessions, and closes cleanly.
 - `CdpPage` — stateful CDP page session with navigation/actions, live form-value capture, and network/DOM activity sampling for settledness.
