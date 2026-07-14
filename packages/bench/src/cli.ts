@@ -9,11 +9,16 @@ import { cellsFromSpec, parseBenchmarkSpec } from './spec.js';
 import { writeSyntheticBenchmarkPack } from './synthetic.js';
 import { renderSerializerComparison, SerializerParityGateError } from './serializer-comparison.js';
 import { compareSerializersFromSpec } from './serializer-spec.js';
+import { buildHeadToHead, readCompetitorRecords, renderHeadToHeadReport } from './competitor.js';
+import { evaluateLaunchGate, LaunchGateFailedError, renderLaunchGateResult } from './competitor-gate.js';
+import { assembleHeadToHeadRecords } from './headhead-assembler.js';
 
 interface ReportOptions {
   out?: string;
   exportJsonl?: string;
   minTokenReductionRatio?: number;
+  minRuns?: number;
+  subject?: string;
 }
 
 /** CLI entrypoint for M3 report generation from recorded run artifacts. */
@@ -41,6 +46,37 @@ export async function main(argv: string[]): Promise<string> {
     }
     if (command === 'serializer-gate' && !result.passed) throw new SerializerParityGateError(result);
     return options.out ? `wrote ${options.out}` : markdown;
+  }
+  if (command === 'records' && subject) {
+    const options = parseOptions(rest);
+    const records = await assembleHeadToHeadRecords(resolve(subject));
+    const json = `${JSON.stringify(records, null, 2)}\n`;
+    if (options.out) {
+      await mkdir(dirname(options.out), { recursive: true });
+      await writeFile(options.out, json, 'utf8');
+      return `wrote ${options.out} (${records.length} records)`;
+    }
+    return json;
+  }
+  if ((command === 'headhead' || command === 'launch-gate') && subject) {
+    const options = parseOptions(rest);
+    const records = await readCompetitorRecords(resolve(subject));
+    const result = buildHeadToHead(records, { subject: options.subject });
+    if (command === 'launch-gate') {
+      const gate = evaluateLaunchGate(result, {
+        minTokenReductionRatio: options.minTokenReductionRatio,
+        minRuns: options.minRuns,
+      });
+      if (!gate.passed) throw new LaunchGateFailedError(gate);
+      return renderLaunchGateResult(gate);
+    }
+    const markdown = renderHeadToHeadReport(result);
+    if (options.out) {
+      await mkdir(dirname(options.out), { recursive: true });
+      await writeFile(options.out, markdown, 'utf8');
+      return `wrote ${options.out}`;
+    }
+    return markdown;
   }
   if ((command !== 'report' && command !== 'gate') || !subject) {
     throw new Error(usage());
@@ -110,6 +146,22 @@ function parseOptions(args: string[]): ReportOptions {
       i += 1;
       continue;
     }
+    if (arg === '--min-runs') {
+      const value = args[i + 1];
+      if (!value) throw new Error('--min-runs requires a number');
+      const parsed = Number(value);
+      if (!Number.isInteger(parsed) || parsed < 1) throw new Error('--min-runs must be a positive integer');
+      options.minRuns = parsed;
+      i += 1;
+      continue;
+    }
+    if (arg === '--subject') {
+      const value = args[i + 1];
+      if (!value) throw new Error('--subject requires a harness id');
+      options.subject = value;
+      i += 1;
+      continue;
+    }
     if (arg === '--min-token-reduction') {
       const value = args[i + 1];
       if (!value) throw new Error('--min-token-reduction requires a number');
@@ -125,5 +177,5 @@ function parseOptions(args: string[]): ReportOptions {
 }
 
 function usage(): string {
-  return 'usage: rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
 }

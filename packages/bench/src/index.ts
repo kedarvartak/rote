@@ -11,3 +11,6 @@ export * from './synthetic.js';
 export * from './cli.js';
 export * from './serializer-comparison.js';
 export * from './serializer-spec.js';
+export * from './competitor.js';
+export * from './competitor-gate.js';
+export * from './headhead-assembler.js';
