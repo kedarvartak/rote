@@ -33,7 +33,7 @@ export default tseslint.config(
         'error',
         { patterns: [
           { group: ['@rote/*/*'], message: 'Import from a package\'s public index (e.g. "@rote/core"), not a deep path.' },
-          { group: ['@anthropic-ai/sdk'], message: 'Provider SDK calls belong in the shared @rote/llm package.' },
+          { group: ['@anthropic-ai/sdk', 'openai'], message: 'Provider SDK calls belong in the shared @rote/llm package.' },
         ] },
       ],
     },

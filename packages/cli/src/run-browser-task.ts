@@ -12,7 +12,7 @@ import {
 import { FileBrowserAgentRunRecorder, runBrowserAgent, TaggedLlmBrowserPlanner, type BrowserPageSession, type BrowserPlannerClient } from '@rote/agent';
 import { LaunchingCdpBrowserBackend } from '@rote/browser';
 import { BrowserToolCaller, runPlaybook } from '@rote/executor';
-import { AnthropicTaggedLlmClient } from '@rote/llm';
+import { createTaggedLlmClientFromEnv } from '@rote/llm';
 
 export interface RunBrowserTaskOptions {
   task: string;
@@ -135,7 +135,7 @@ async function runColdBrowserTask(
   injectedPlanner?: BrowserPlannerClient,
 ): Promise<BrowserTaskResult> {
   const planner = injectedPlanner ?? new TaggedLlmBrowserPlanner(
-    new AnthropicTaggedLlmClient({ model: options.model }),
+    createTaggedLlmClientFromEnv({ model: options.model }),
   );
   const recorder = new FileBrowserAgentRunRecorder({ task: options.task, envFingerprint: fingerprint, baseDir: options.baseDir });
   try {

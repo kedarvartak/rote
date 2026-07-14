@@ -17,10 +17,12 @@ replay selection, distillation, status, and diff commands.
   `formatRunDetail` (`src/format.ts`) are exported separately so formatting
   is unit-testable without spawning the CLI.
 
-`ROTE_BASE_DIR` (default `.rote`) selects the run store. `rote run` requires
-`ANTHROPIC_API_KEY` for the cold path and at least one explicit verification condition;
-planner-declared success alone is never accepted. A matching zero-LLM replay does not
-construct a provider client. Candidate paths are relative to the candidate JSON file.
+`ROTE_BASE_DIR` (default `.rote`) selects the run store. The cold path selects its
+provider with `ROTE_LLM_PROVIDER=openai|anthropic` (default: `anthropic`) and reads the
+matching `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`. At least one explicit verification
+condition is required; planner-declared success alone is never accepted. A matching
+zero-LLM replay does not construct any provider client. Candidate paths are relative to
+the candidate JSON file.
 
 Create a candidate without calculating hashes by hand:
 

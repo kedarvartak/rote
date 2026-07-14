@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
-    "@rote/core": "*"
+    "@rote/core": "*",
+    "openai": "^6.46.0"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
