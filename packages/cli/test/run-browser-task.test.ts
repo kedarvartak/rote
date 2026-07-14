@@ -1,10 +1,10 @@
-import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { RunManifestSchema } from '@rote/core';
 import type { BrowserPageSession, BrowserPlannerClient } from '@rote/agent';
-import { runBrowserTask, type BrowserTaskBackend } from '../src/index.js';
+import { browserEnvironmentFingerprint, runBrowserTask, selectBrowserExecution, type BrowserTaskBackend } from '../src/index.js';
 
 let baseDir: string | undefined;
 
@@ -49,6 +49,70 @@ describe('runBrowserTask', () => {
     ));
     expect(manifest.outcome).toBe('success');
     expect(manifest.env_fingerprint.target_identity).toBe('portal.test');
+  });
+
+  it('runs exact-fingerprint replay without constructing or calling a cold planner', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-browser-task-warm-'));
+    const candidatePath = join(baseDir, 'candidate.json');
+    const fingerprint = browserEnvironmentFingerprint(new URL('https://portal.test/start'));
+    await writeFile(candidatePath, JSON.stringify({
+      playbook_path: 'playbook.yaml',
+      fingerprint_hash: fingerprint.fingerprint_hash,
+      params: {},
+    }));
+    const replay = vi.fn(async () => ({
+      runId: 'warm-1', success: true, summary: 'verified replay', steps: 4,
+      inputTokens: 0, outputTokens: 0, phase: 'warm' as const,
+    }));
+
+    const result = await runBrowserTask({
+      task: 'Known task',
+      url: 'https://portal.test/start',
+      baseDir,
+      verifyText: 'Done',
+      replayCandidatePath: candidatePath,
+    }, { backend: new FakeBackend(new FakePage()), runReplay: replay });
+
+    expect(result.phase).toBe('warm');
+    expect(result.inputTokens).toBe(0);
+    expect(replay).toHaveBeenCalledOnce();
+  });
+
+  it('short-circuits a fingerprint mismatch to a classified cold fallback', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-browser-task-mismatch-'));
+    const candidatePath = join(baseDir, 'candidate.json');
+    await writeFile(candidatePath, JSON.stringify({
+      playbook_path: 'playbook.yaml', fingerprint_hash: 'a'.repeat(64), params: {},
+    }));
+    const replay = vi.fn();
+    const planner: BrowserPlannerClient = {
+      async plan(source) {
+        return {
+          action: { kind: 'done', success: true, summary: 'cold complete' },
+          usage: { source, input_tokens: 10, output_tokens: 2 },
+        };
+      },
+    };
+
+    const result = await runBrowserTask({
+      task: 'Known task',
+      url: 'https://portal.test/start',
+      baseDir,
+      verifyText: 'Done',
+      replayCandidatePath: candidatePath,
+    }, { backend: new FakeBackend(new FakePage()), planner, runReplay: replay });
+
+    expect(result.phase).toBe('cold');
+    expect(result.fallbackReason).toBe('fingerprint_mismatch');
+    expect(replay).not.toHaveBeenCalled();
+  });
+
+  it('selects replay only on exact fingerprint equality', () => {
+    const candidate = { playbook_path: 'p.yaml', fingerprint_hash: 'a'.repeat(64), params: {} };
+    expect(selectBrowserExecution('a'.repeat(64), candidate)).toEqual({ phase: 'warm' });
+    expect(selectBrowserExecution('b'.repeat(64), candidate)).toEqual({
+      phase: 'cold', fallbackReason: 'fingerprint_mismatch',
+    });
   });
 
   it('records failure and closes the browser when initial navigation fails', async () => {

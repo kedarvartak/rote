@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: Exact-fingerprint browser replay selection in `rote run`, with zero-LLM warm execution on match and classified clean cold fallback before replay on mismatch.
 - **P1**: `BrowserToolCaller` and stateful B1/B2 browser playbooks for verified local-CDP replay with zero LLM calls and benchmark-compatible executor recording.
 - **P1**: Stateful B1–B3 browser fixtures with login/download, vendor-submission, and catalog/product confirmation states for meaningful action expects and final verification.
 - **P1**: Reproducible Rote-vs-Browser-Use serializer report/gate on identical fixtures, failing per fixture and explicitly labeling approximate token counts.

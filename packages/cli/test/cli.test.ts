@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { main, type CliDependencies } from '../src/index.js';
 
-function dependencies(result = { runId: 'run-1', success: true, summary: 'report downloaded', steps: 4, inputTokens: 120, outputTokens: 20 }) {
+function dependencies(result = { runId: 'run-1', success: true, summary: 'report downloaded', steps: 4, inputTokens: 120, outputTokens: 20, phase: 'cold' as const }) {
   return { runBrowserTask: vi.fn(async () => result) } satisfies CliDependencies;
 }
 
@@ -18,6 +18,7 @@ describe('rote run', () => {
       '--chrome-path', '/usr/bin/chrome',
       '--verify-text', 'Download complete',
       '--settle-timeout-ms', '7000',
+      '--replay-candidate', 'candidate.json',
     ], '/tmp/rote-test', deps);
 
     expect(deps.runBrowserTask).toHaveBeenCalledWith({
@@ -30,8 +31,10 @@ describe('rote run', () => {
       verifyText: 'Download complete',
       verifyUrlContains: undefined,
       settleTimeoutMs: 7000,
+      replayCandidatePath: 'candidate.json',
     });
     expect(output).toContain('success: report downloaded');
+    expect(output).toContain('phase: cold');
     expect(output).toContain('tokens: 120 input + 20 output');
   });
 
@@ -49,6 +52,7 @@ describe('rote run', () => {
       steps: 2,
       inputTokens: 50,
       outputTokens: 10,
+      phase: 'cold' as const,
     });
 
     await expect(main([
