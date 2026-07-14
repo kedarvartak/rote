@@ -6,9 +6,9 @@
       <h1>Vendor Registration</h1>
       <form id="registration-form">
         <label for="company-name">Company name</label>
-        <input id="company-name" name="company_name" />
+        <input id="company-name" name="company_name" required />
         <label for="contact-email">Contact email</label>
-        <input id="contact-email" name="contact_email" type="email" />
+        <input id="contact-email" name="contact_email" type="email" required />
         <label for="tax-id">Tax ID</label>
         <input id="tax-id" name="tax_id" />
         <label for="address-line1">Address line 1</label>
@@ -18,11 +18,32 @@
         <label for="postal-code">Postal code</label>
         <input id="postal-code" name="postal_code" />
         <label for="country">Country</label>
-        <select id="country" name="country"><option>US</option></select>
+        <select id="country" name="country"><option value="US">US</option><option value="CA">Canada</option></select>
         <label for="phone">Phone</label>
         <input id="phone" name="phone" />
         <button id="registration-submit" type="submit">Submit registration</button>
       </form>
+      <section id="registration-confirmation" role="status" hidden>
+        <h2 id="registration-complete-heading" hidden>Vendor registration complete</h2>
+        <p id="registered-company" hidden></p>
+        <p id="registered-email" hidden></p>
+      </section>
     </main>
+    <script>
+      document.querySelector('#registration-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const company = document.querySelector('#company-name').value;
+        const email = document.querySelector('#contact-email').value;
+        if (!company || !email) return;
+        document.querySelector('#registered-company').textContent = `Company: ${company}`;
+        document.querySelector('#registered-email').textContent = `Email: ${email}`;
+        document.querySelector('#registration-form').hidden = true;
+        document.querySelector('#registration-confirmation').hidden = false;
+        document.querySelector('#registration-complete-heading').hidden = false;
+        document.querySelector('#registered-company').hidden = false;
+        document.querySelector('#registered-email').hidden = false;
+        history.replaceState({}, '', '#complete');
+      });
+    </script>
   </body>
 </html>

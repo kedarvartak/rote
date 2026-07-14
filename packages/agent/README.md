@@ -23,7 +23,7 @@ behind `BrowserPlannerClient`, while tests use deterministic scripted planners.
 npm test --workspace @rote/agent
 ```
 
-Run the live local CDP fixture smoke when Chrome/Chromium is available:
+Run the live local CDP fixture smoke against the stateful B1–B3 confirmation flows when Chrome/Chromium is available:
 
 ```bash
 ROTE_RUN_CDP_TESTS=1 npm test --workspace @rote/agent

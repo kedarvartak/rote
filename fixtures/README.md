@@ -7,6 +7,6 @@ Golden test data shared across packages and milestones.
   (B1/B2 initially, B3 added for the M3 catalog-search smoke).
 - `trajectories/` — recorded TrajectoryEvent JSONL files used as Distiller (M5)
   input fixtures. Populated starting in M1 once the Recorder exists.
-- `sites/` — frozen B1–B3 HTML pages for browser/perception tests.
+- `sites/` — frozen stateful B1–B3 HTML pages: login/download confirmation, vendor submission confirmation, and query-driven catalog/product states.
 - `sites/drift/` — B2 mutations covering selector renames, wrapper insertion,
   ambiguous controls, stale-selector decoys, and hidden replacements.

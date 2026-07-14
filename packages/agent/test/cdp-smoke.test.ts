@@ -28,25 +28,25 @@ describe('browser-agent CDP fixture smoke', () => {
     await expect(runFixtureTask(backend, server.url('b1-report.html'), [
       { kind: 'fill', selector: '#username', value: 'analyst', expect: { input_value: '#username', equals: 'analyst' } },
       { kind: 'fill', selector: '#password', value: 'secret', expect: { input_value: '#password', equals: 'secret' } },
-      { kind: 'click', selector: '#login-submit', expect: { selector_visible: '#login-submit' } },
-      { kind: 'click', selector: '#latest-report-download', expect: { selector_visible: '#latest-report-download' } },
+      { kind: 'click', selector: '#login-submit', expect: { text_visible: 'Signed in to Reports Portal' } },
+      { kind: 'click', selector: '#latest-report-download', expect: { text_visible: 'Report download complete' } },
       { kind: 'done', success: true, summary: 'download requested' },
-    ], '#latest-report-download')).resolves.toBe('download requested');
+    ], '#username', 'Report download complete')).resolves.toBe('download requested');
 
     await expect(runFixtureTask(backend, server.url('b2-vendor-form.html'), [
       { kind: 'fill', selector: '#company-name', value: 'Acme Tools', expect: { input_value: '#company-name', equals: 'Acme Tools' } },
       { kind: 'fill', selector: '#contact-email', value: 'ops@example.com', expect: { input_value: '#contact-email', equals: 'ops@example.com' } },
       { kind: 'select', selector: '#country', value: 'US', expect: { input_value: '#country', equals: 'US' } },
-      { kind: 'click', selector: '#registration-submit', expect: { selector_visible: '#registration-submit' } },
+      { kind: 'click', selector: '#registration-submit', expect: { text_visible: 'Vendor registration complete' } },
       { kind: 'done', success: true, summary: 'vendor submitted' },
-    ], '#registration-submit')).resolves.toBe('vendor submitted');
+    ], '#registration-submit', 'Vendor registration complete')).resolves.toBe('vendor submitted');
 
     await expect(runFixtureTask(backend, server.url('b3-catalog.html'), [
       { kind: 'fill', selector: '#catalog-query', value: 'alpha', expect: { input_value: '#catalog-query', equals: 'alpha' } },
-      { kind: 'click', selector: '#catalog-search-submit', expect: { selector_visible: '#catalog-search-submit' } },
-      { kind: 'click', selector: '#open-alpha', expect: { selector_visible: '#open-alpha' } },
+      { kind: 'click', selector: '#catalog-search-submit', expect: { selector_visible: '#open-alpha' } },
+      { kind: 'click', selector: '#open-alpha', expect: { text_visible: 'Alpha product opened' } },
       { kind: 'done', success: true, summary: 'alpha opened' },
-    ], '#open-alpha')).resolves.toBe('alpha opened');
+    ], '#catalog-query', 'Alpha product opened')).resolves.toBe('alpha opened');
   }, 45000);
 });
 
@@ -55,11 +55,11 @@ async function runFixtureTask(
   url: string,
   actions: BrowserAction[],
   expectedSelectorInObservation: string,
+  finalVerificationText: string,
 ): Promise<string> {
   const page = await backend.openPage();
   pages.push(page);
   await page.navigate(url);
-  await preventFormNavigation(page);
   const actionCount = actions.length;
   const planner = new ScriptedPlanner(actions);
 
@@ -67,7 +67,14 @@ async function runFixtureTask(
     task: `Smoke task for ${url}`,
     page,
     planner,
-    verifier: { async verify(_captured, _task, summary) { return { success: true, summary }; } },
+    verifier: {
+      async verify(captured, _task, summary) {
+        const text = [captured.title, ...captured.elements.map((element) => element.text)].join(' ');
+        return text.includes(finalVerificationText)
+          ? { success: true, summary }
+          : { success: false, summary: `missing final text: ${finalVerificationText}` };
+      },
+    },
     maxSteps: 8,
   });
 
@@ -76,15 +83,6 @@ async function runFixtureTask(
   expect(planner.requests[0]?.observation.text).toContain(expectedSelectorInObservation);
   expect(planner.requests.every((request) => request.observation.approxTokens > 0)).toBe(true);
   return result.summary;
-}
-
-async function preventFormNavigation(page: CdpPage): Promise<void> {
-  await page.evaluate<void>(`Array.from(document.querySelectorAll('form')).forEach((form) => {
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      document.body.dataset.roteSubmitted = form.id || 'submitted';
-    });
-  })`);
 }
 
 async function serveFixtures(): Promise<FixtureSiteServer> {

@@ -9,10 +9,42 @@
         <input id="catalog-query" name="query" placeholder="Search products" />
         <button id="catalog-search-submit" type="submit">Search</button>
       </form>
-      <section id="catalog-results" aria-label="Catalog results">
-        <article><h2>Alpha result</h2><button id="open-alpha">Open Alpha</button></article>
-        <article><h2>Beta result</h2><button id="open-beta">Open Beta</button></article>
+      <section id="catalog-results" aria-label="Catalog results" hidden>
+        <article id="alpha-result" hidden><h2 hidden>Alpha result</h2><button id="open-alpha" hidden>Open Alpha</button></article>
+        <article id="beta-result" hidden><h2 hidden>Beta result</h2><button id="open-beta" hidden>Open Beta</button></article>
+      </section>
+      <section id="product-detail" role="status" hidden>
+        <h2 id="product-detail-heading" hidden></h2>
       </section>
     </main>
+    <script>
+      document.querySelector('#search-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const query = document.querySelector('#catalog-query').value.toLowerCase();
+        const showAlpha = query.includes('alpha');
+        const showBeta = query.includes('beta');
+        document.querySelector('#catalog-results').hidden = false;
+        document.querySelector('#alpha-result').hidden = !showAlpha;
+        document.querySelector('#alpha-result h2').hidden = !showAlpha;
+        document.querySelector('#open-alpha').hidden = !showAlpha;
+        document.querySelector('#beta-result').hidden = !showBeta;
+        document.querySelector('#beta-result h2').hidden = !showBeta;
+        document.querySelector('#open-beta').hidden = !showBeta;
+      });
+      document.querySelector('#open-alpha').addEventListener('click', () => {
+        document.querySelector('#product-detail').hidden = false;
+        const heading = document.querySelector('#product-detail-heading');
+        heading.textContent = 'Alpha product opened';
+        heading.hidden = false;
+        history.replaceState({}, '', '#product/alpha');
+      });
+      document.querySelector('#open-beta').addEventListener('click', () => {
+        document.querySelector('#product-detail').hidden = false;
+        const heading = document.querySelector('#product-detail-heading');
+        heading.textContent = 'Beta product opened';
+        heading.hidden = false;
+        history.replaceState({}, '', '#product/beta');
+      });
+    </script>
   </body>
 </html>
