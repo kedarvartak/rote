@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: OpenAI Responses API support through the shared tagged LLM boundary, selected with `ROTE_LLM_PROVIDER=openai|anthropic` and preserving provider token accounting.
 - **P1**: Append-only `rote candidate create` workflow that validates a browser playbook, computes its exact environment fingerprint, and writes a portable replay candidate.
 - **P1**: Exact-fingerprint browser replay selection in `rote run`, with zero-LLM warm execution on match and classified clean cold fallback before replay on mismatch.
 - **P1**: `BrowserToolCaller` and stateful B1/B2 browser playbooks for verified local-CDP replay with zero LLM calls and benchmark-compatible executor recording.
