@@ -21,10 +21,14 @@ every adapter is held to the same mapping.
 
 ## 0. Preconditions
 
-- `ANTHROPIC_API_KEY` set, Chrome installed, Python ≥ 3.11.
-- **Same model on both sides.** The `--model` you pass the runner must equal the
-  `--model` the Rote runs use; the record schema records it either way, so a
-  mismatch is auditable after the fact — but it is not a fair comparison.
+- Credentials and Chrome path configured — copy `.env.example` to `.env`, fill it
+  in, then `set -a; source .env; set +a` (nothing auto-loads `.env`).
+- Python ≥ 3.11 for the competitor runner.
+- **Same model on both sides.** `tasks.json`'s `model` is the single source of
+  truth: `rote-plan.json` pins it with `--model` (a test asserts they agree), and
+  you pass the same value to the Python runner's `--model`. Do not rely on either
+  harness's default — an unpinned run silently uses the SDK default while the
+  records still declare the model you wrote in `sources.json`.
 - Decide honestly whether the counts are cache-adjusted (see *Cache adjustment*).
 
 ## 1. Serve the frozen fixtures

@@ -1,7 +1,10 @@
 {
   "runs": [
     {
-      "task": { "id": "B1", "name": "download latest report" },
+      "task": {
+        "id": "B1",
+        "name": "download latest report"
+      },
       "phase": "cold",
       "command": "node",
       "args": [
@@ -11,12 +14,17 @@
         "--url",
         "http://127.0.0.1:8080/b1-report.html",
         "--verify-text",
-        "Report download complete: quarterly-report.pdf"
+        "Report download complete: quarterly-report.pdf",
+        "--model",
+        "claude-opus-4-8"
       ],
       "repetitions": 18
     },
     {
-      "task": { "id": "B2", "name": "vendor registration" },
+      "task": {
+        "id": "B2",
+        "name": "vendor registration"
+      },
       "phase": "cold",
       "command": "node",
       "args": [
@@ -26,12 +34,17 @@
         "--url",
         "http://127.0.0.1:8080/b2-vendor-form.html",
         "--verify-text",
-        "Vendor registration complete"
+        "Vendor registration complete",
+        "--model",
+        "claude-opus-4-8"
       ],
       "repetitions": 18
     },
     {
-      "task": { "id": "B3", "name": "catalog search extraction" },
+      "task": {
+        "id": "B3",
+        "name": "catalog search extraction"
+      },
       "phase": "cold",
       "command": "node",
       "args": [
@@ -41,7 +54,9 @@
         "--url",
         "http://127.0.0.1:8080/b3-catalog.html",
         "--verify-text",
-        "Alpha product opened"
+        "Alpha product opened",
+        "--model",
+        "claude-opus-4-8"
       ],
       "repetitions": 18
     }
