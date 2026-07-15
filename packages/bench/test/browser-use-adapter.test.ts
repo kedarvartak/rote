@@ -97,6 +97,7 @@ describe('browser-use adapter ingestion', () => {
 describe('head-to-head task parity', () => {
   it('gives Rote and Browser Use identical prompts, URLs and verification text', async () => {
     const config = JSON.parse(await readFile(headhead('tasks.json'), 'utf8')) as {
+      model: string;
       fixture_port: number;
       repetitions: number;
       tasks: Array<{ id: string; name: string; path: string; prompt: string; verify_text: string }>;
@@ -119,5 +120,21 @@ describe('head-to-head task parity', () => {
   it('plans enough repetitions per task for the launch gate to certify a win', async () => {
     const config = JSON.parse(await readFile(headhead('tasks.json'), 'utf8')) as { repetitions: number };
     expect(config.repetitions).toBeGreaterThanOrEqual(15);
+  });
+
+  // Regression: the plan originally omitted --model, so every Rote run silently
+  // used the SDK's default model while the records still declared the model from
+  // sources.json — a record asserting a run it did not make. The competitor
+  // runner takes --model explicitly, so only the Rote side could drift.
+  it('pins the model on every Rote run so it cannot fall back to the SDK default', async () => {
+    const config = JSON.parse(await readFile(headhead('tasks.json'), 'utf8')) as { model: string };
+    const plan = JSON.parse(await readFile(headhead('rote-plan.json'), 'utf8')) as {
+      runs: Array<{ args: string[] }>;
+    };
+
+    expect(config.model).toBeTruthy();
+    for (const run of plan.runs) {
+      expect(run.args[run.args.indexOf('--model') + 1]).toBe(config.model);
+    }
   });
 });

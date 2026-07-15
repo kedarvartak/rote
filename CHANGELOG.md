@@ -9,6 +9,12 @@ labeled `skip-changelog`.
 
 ## [Unreleased]
 
+### Added
+- **P1**: `.env.example` documenting every environment variable the harness reads (provider selection, API keys, Chrome path, run artifacts, opt-in CDP tests), with the driver-injected benchmark variables called out as not-to-be-set.
+
+### Fixed
+- **P1**: Pin the model on every Rote run in the head-to-head plan. The plan omitted `--model`, so runs silently used the SDK default while the records still declared the model from `sources.json` — a record asserting a run it did not make, and a head-to-head that could compare two different models.
+
 ### Changed
 - **P1**: Head-to-head report is now the docs/17 W5 G1 report — latency (avg/p50/p95 ms) and \$-per-task columns alongside tokens, priced from a dated overridable table (`--prices`) that labels an unpriced model rather than reporting it as \$0 (#42).
 
