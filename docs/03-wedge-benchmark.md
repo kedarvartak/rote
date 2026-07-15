@@ -53,6 +53,27 @@ Baseline control: the plain agent runs *every* phase without Rote. The headline 
 Rote-warm vs baseline-run-N, not vs baseline-run-1 (agents get mildly cheaper on rerun via
 prompt caching alone — we must beat that honestly, and report cache-adjusted numbers).
 
+## Grading a competitor (symmetric verification)
+
+We are not trying to be better *by comparison*; we are trying to be better *by function*.
+A benchmark only tells us whether the function is better if it is built to be indifferent
+to who wins, so a competitor is graded by the exact rule Rote applies to itself:
+
+> A run counts as **success** only if the agent concluded it was done **and** the final
+> live page shows the same verification text Rote's own run must see.
+
+Taking a competitor's self-report ("the agent says it finished") while Rote must prove it
+would hold the two to different standards, and the success-parity metric below — the only
+thing preventing Rote from "winning" by being cheap and wrong — would stop meaning
+anything. An agent that never concluded (e.g. hit its step ceiling) is **abandoned**;
+Rote's own agent loop yields the same in that situation.
+
+**A missing measurement is never scored.** Non-success outcomes stay in the success-rate
+denominator, so a run we could not verify because *our* probe broke would silently cost
+the competitor success rate; unreadable token usage recorded as `0` would fabricate a Rote
+win outright. Both must fail loudly on the first run instead. This is invariant 1 ("never
+silently wrong") applied to the benchmark: a number we cannot substantiate is not a number.
+
 ## Metrics
 
 | Metric | Definition | Kill / pass thresholds |

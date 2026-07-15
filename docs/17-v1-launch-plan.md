@@ -83,13 +83,28 @@ Weeks assume full-time focus; slip the calendar, not the gates.
 
 ### W5 — benchmark + numbers
 - `packages/bench` adapters: run Browser Use (and Stagehand-agent if time permits) on
-  the same fixture tasks + a small live-site sample, same model, same task specs.
+  the same fixture tasks + a small live-site sample, same model, same task specs. Both
+  harnesses read one task file, so "same task specs" is checked, not asserted in prose.
 - Fairness rules from doc 03 apply to competitors: best-effort configuration, their
-  defaults documented, cache-adjusted token counts, success parity reported per task.
+  defaults documented, cache-adjusted token counts, success parity reported per task,
+  and competitors graded by doc 03's symmetric-verification rule — never their own
+  self-report while Rote must prove it.
 - G1 report: tokens (per source), latency (per phase), $ per task.
 - **Gate (the launch gate, doc 16 H7 honesty rule)**: Rote wins tokens-per-task at
-  success parity by a margin that survives variance (×5 runs). If it doesn't, we fix
-  or we don't launch on efficiency claims. No number, no launch.
+  success parity by a margin that survives variance. If it doesn't, we fix or we don't
+  launch on efficiency claims. No number, no launch.
+
+**Variance rule.** One agent run is noisy — a retry moves the token count — so the gate
+trusts neither a single run nor a mean. Each task runs **≥15 times per harness**, and the
+reduction is reported as a **seeded-bootstrap confidence range**; the gate passes only when
+the range's *lower bound* clears the floor. The publishable claim is that lower bound, not
+the mean: *"38% fewer tokens (95% CI: 31–44%)"*. Fewer than 15 successful runs is not a
+certifiable win, by design.
+
+> Superseded: an earlier draft of this gate said "×5 runs". At n=5 no test can be both
+> rigorous and tolerant of overlap (a Mann-Whitney U at n=5 needs near-total separation),
+> which forced a choice between a brittle gate and a meaningless one. More runs plus a
+> conservative interval resolves it and yields a range we can publish.
 
 ### W6 — launch package
 - README rewrite around the number; 90-second demo recording (doc 03's script,

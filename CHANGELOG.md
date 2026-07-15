@@ -9,6 +9,9 @@ labeled `skip-changelog`.
 
 ## [Unreleased]
 
+### Docs
+- **P1**: Record the head-to-head grading rule in `docs/03` (competitors are graded by the same symmetric verification Rote applies to itself; a missing measurement is never scored) and replace `docs/17` W5's superseded "×5 runs" variance rule with the shipped ≥15-runs bootstrap lower bound.
+
 ### Added
 - **P1**: Reproducible Browser Use competitor runner (`scripts/bench/headhead/`) plus a `rote-bench competitor-records` mapping step that stamps required fairness provenance onto raw adapter output, so both harnesses run the same fixture tasks from one task file into the head-to-head gate (docs/17 W5, #41).
 - **P1**: Repetition fan-out (`repetitions: N`) in the `rote-bench run` command plan, and `rote run` now honors `ROTE_RUN_ID`, so one plan drives ≥15 real recorded Rote runs per task straight into the head-to-head assembler (docs/17 W5, #40).
