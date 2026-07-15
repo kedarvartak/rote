@@ -1,70 +1,67 @@
-# Rote — Efficiency-First Browser Agent
+# Rote — design docs
 
 > **The browser agent that gets cheaper as it learns a site.**
 
 Rote is a browser-agent harness built around efficiency: compact observations, stable
 element IDs, diff-based perception, cache-friendly context, verified replay, and a
-learning plane that turns prior runs into site memory. The original record/replay system
-remains the safety foundation; the current product direction is the full agent system in
-[13 — The Rote Agent System](13-agent-system.md).
+learning plane that turns prior runs into site memory.
 
 ![Architecture](diagrams/architecture.svg)
 
-## The efficiency stack in one table
+## Read this first: design vs reality
 
-| Plane | Baseline browser-agent cost | Rote's answer |
-|---|---|---|
-| Perception | Large DOM/a11y/screenshot observations every step | distilled trees, stable IDs, diffs, hard budgets |
-| Decision | frontier model on every step | cache-local context, routing, no-model replay where safe |
-| Action | serialized think → act → observe loop | settledness, self-healing resolution, speculative execution later |
-| Learning | every run starts cold | recorded trajectories → playbooks, site memory, transition models |
+These are **design docs**. Much of what they describe is planned, not built. Every doc
+marks status; the authoritative table is [02 §Status](02-architecture.md).
 
-V1 launches on the deterministic pieces — cheaper observations, context layout, recording,
-and verified replay — with speculation and learned site memory following after the first
-public benchmark.
+| | |
+|---|---|
+| **Built** | core schemas + Expect DSL · recorder · verified replay executor · CDP backend · perception (distill → stable IDs → diff → budget) · agent loop · context assembler · tagged LLM client · benchmark + accounting + head-to-head gate |
+| **Not built** | playbook distiller (V1 replays hand-written playbooks) · matcher · site memory · model routing · speculation |
+| **Known broken** | the live-agent `expect` design — [T1](testing/T1-openai-dry-run.md), [#49](https://github.com/kedarvartak/rote/issues/49) |
 
-## Docs
+We are in **P1 (V1)**. The launch gate — a measured tokens-per-task win at success parity
+— **has not been run yet**, and is blocked on #49. No number, no launch.
+
+## The docs
 
 | Doc | Contents |
 |---|---|
-| [01 — Problem](01-problem.md) | The reuse-path gap: read path (compression) and write path (Mem0/Zep) are crowded; nobody owns replay |
-| [02 — Architecture](02-architecture.md) | Recorder → Distiller → Playbook Store → Matcher → Replay Executor → Repair ladder; failure-safety invariants |
-| [03 — Wedge Benchmark](03-wedge-benchmark.md) | "Run it twice": task suite, metrics, kill thresholds, 90-second demo script |
-| [04 — Market](04-market.md) | Competitive map, three steelmanned objections, buyers, why now |
-| [05 — Roadmap](05-roadmap.md) | Phase 0 gate → OSS release → control plane; open questions |
-| [06 — Build Plan](06-build-plan.md) | Milestone-by-milestone execution: tasks, automated + manual tests, exit/kill gates |
-| [07 — Browser-Agent Fit](07-where-rote-works.md) | Browser-agent fit guide: site memory, replay, weak-fit browsing tasks |
-| [08 — Browser Memory Architecture](08-browser-memory-architecture.md) | Three memory tiers (playbook / subflow / site memory), replay vs advisory modes, build order |
-| [09 — Generalization Evaluation](09-generalization-evaluation.md) | Learning-curve benchmark, transfer matrix T0–T5, kill gates for the generalization thesis |
-| [10 — Competitive Landscape](10-competitive-landscape.md) | Who memoizes browser agents today (Stagehand, Skyvern, workflow-use, AWM) and the gaps Rote targets |
-| [11 — Speculative Execution](11-speculative-execution.md) | Overlapping model thinking with browser acting: memory-driven prediction, shadow sessions, commit gates, observation diffs |
-| [12 — Implementation Path](12-implementation-path.md) | How the existing packages become the doc-11 design: reuse map, proxy refactor, milestones M4–M9 with kill gates |
-| [13 — The Rote Agent System](13-agent-system.md) | Direction of record: Rote as a full efficiency-first browser-agent system; the four-plane architecture; positioning |
-| [14 — Optimization Catalog](14-optimization-catalog.md) | The master inventory: every optimization an efficient browser-agent system needs, with evidence, incumbents, and P0–P2 tiers |
-| [15 — Competitor Teardown](15-competitor-teardown.md) | Per-competitor analysis (Browser Use, Stagehand, Skyvern, Magnitude, labs, infra) and the capability matrix |
-| [16 — Harness Architecture](16-harness-architecture.md) | Component-level design: packages, type spine, the control loop, perception pipeline, routing, build order H1–H8 |
-| [17 — V1 Launch Plan](17-v1-launch-plan.md) | The six-week launchable subset: in/out scope, weekly gates, the launch number, checklist |
-| [18 — Product Roadmap](18-product-roadmap.md) | The full timeline P0–P5: phase goals, workstreams, exit/kill gates, dependency spine, scope fences |
+| [01 — Problem](01-problem.md) | Why agents re-derive everything; the reuse-path gap; where Rote fits and where it doesn't |
+| [02 — Architecture](02-architecture.md) | **What is built vs designed**; four planes; the control loop; type spine; playbooks; repair ladder; memory tiers; speculation; invariants |
+| [03 — Benchmark](03-benchmark.md) | How we measure: task suite, metrics, fairness rules, symmetric grading, the variance rule, the launch gate, generalization (T0–T5) |
+| [04 — Competition](04-competition.md) | The field in four strata; per-competitor teardown; capability matrix; the steelmanned objections |
+| [05 — Roadmap](05-roadmap.md) | Where we are; V1 scope and gates; P0–P5; open questions |
+| [06 — Optimizations](06-optimizations.md) | The master catalog: every optimization, its tier, its status, and the evidence |
+| [testing/](testing/) | Numbered records of tests against **real** Rote — live browser, live model, live key |
 
 ## Diagrams
 
-- [`diagrams/architecture.svg`](diagrams/architecture.svg) — four-plane system overview, with implemented vs planned boundaries
-- [`diagrams/package-map.svg`](diagrams/package-map.svg) — current package dependency map and target harness composition
-- [`diagrams/perception-pipeline.svg`](diagrams/perception-pipeline.svg) — capture, distillation, diffing, budget, and vision escalation
-- [`diagrams/run-lifecycle.svg`](diagrams/run-lifecycle.svg) — cold / warm / drift economics
-- [`diagrams/repair-ladder.svg`](diagrams/repair-ladder.svg) — self-healing state machine
-- [`diagrams/vs-browser-use.svg`](diagrams/vs-browser-use.svg) — loop architecture, Browser Use vs Rote, and why Rote's is cheaper
-- [`diagrams/vs-stagehand.svg`](diagrams/vs-stagehand.svg) — per-action cache vs whole-loop verified, portable memory
-- [`diagrams/vs-skyvern.svg`](diagrams/vs-skyvern.svg) — vision-first vs a11y-first perception and learning economics
-- [`diagrams/competitive-landscape.svg`](diagrams/competitive-landscape.svg) — the capability matrix rows no incumbent ships
+Rendered with the Excalidraw MCP in the base hand-drawn font — no generator scripts. To
+change one, re-render through the MCP and overwrite the SVG; don't hand-edit the output.
 
-All diagrams are rendered with the Excalidraw MCP (`create_excalidraw_diagram`) in the
-base Excalidraw hand-drawn font — no generator scripts. To change one, re-render it
-through the MCP and overwrite the SVG; don't hand-edit the SVG output.
+`architecture` · `package-map` · `perception-pipeline` · `run-lifecycle` · `repair-ladder`
+· `vs-browser-use` · `vs-stagehand` · `vs-skyvern` · `competitive-landscape` ·
+`t1-b2-false-negative`
 
-## Design invariants (the short list)
+## The invariants
 
-1. **Never silently wrong** — every replayed step is assertion-gated.
-2. **Never worse than baseline** — full-agent fallback always exists.
-3. **Never cross environments** — structural fingerprints are a hard gate.
-4. **Everything versioned** — playbooks and repair patches are append-only, auditable, diffable.
+Non-negotiable. Enforced in `CLAUDE.md` and the sacred invariant suites.
+
+1. **Never silently wrong** — every replayed step is assertion-gated; no path reports
+   success on a failed check.
+2. **Never worse than baseline** — full-agent fallback always reachable, and it logs *why*.
+3. **Never cross environments** — structural fingerprint is a hard gate.
+4. **Everything versioned** — playbooks and patches are append-only, with rollback.
+5. **Every model call is tagged** — through one client wrapper, or lint fails.
+
+## A note on these docs
+
+A stale design doc is a bug. If the implementation diverges, the doc changes in the same
+PR (`CLAUDE.md` → Docs practices).
+
+This set was consolidated on 2026-07-15 from 18 documents down to 6. The originals had
+accreted in layers — a middleware-era design, a browser-memory extension, a speculation
+design, then a harness redesign — each superseding the last without removing it. The
+result was four overlapping build plans, three competitor docs, two roadmaps, and a
+confident description of four packages that don't exist. The technical substance was
+preserved; the archaeology was not. Git history has the originals.

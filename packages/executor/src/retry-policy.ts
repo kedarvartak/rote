@@ -3,7 +3,7 @@
  * (`OnFailSchema` in `@rote/core` is a bare `retry | repair | fallback`
  * enum with no attempt count — see packages/executor/README.md "Known v1
  * limitations"). `maxAttempts` counts the *total* tries including the
- * first, matching docs/06-build-plan.md M2's retry test: "fails twice,
+ * first, matching docs/05-roadmap.md M2's retry test: "fails twice,
  * succeeds third -> success with 3 attempts recorded."
  */
 export interface RetryPolicy {

@@ -20,17 +20,18 @@ labeled `skip-changelog`.
 
 ### Changed
 - **P1**: Browser Use runner takes `--provider anthropic|openai` (defaulting to `ROTE_LLM_PROVIDER`) instead of hardcoding `ChatAnthropic`, and `--model` now defaults to the model `tasks.json` pins for both harnesses — so running it with no flags is the fair comparison.
-- **P1**: Head-to-head report is now the docs/17 W5 G1 report — latency (avg/p50/p95 ms) and \$-per-task columns alongside tokens, priced from a dated overridable table (`--prices`) that labels an unpriced model rather than reporting it as \$0 (#42).
+- **P1**: Head-to-head report is now the docs/05 W5 G1 report — latency (avg/p50/p95 ms) and \$-per-task columns alongside tokens, priced from a dated overridable table (`--prices`) that labels an unpriced model rather than reporting it as \$0 (#42).
 
 ### Docs
+- **P1**: Consolidate the design docs from 18 documents to 6 (~27k → ~9k words). The set had accreted in layers — a middleware-era design, a browser-memory extension, a speculation design, then a harness redesign — each superseding the last without removing it, leaving four overlapping build plans, three competitor docs, two roadmaps, and a confident description of four packages that don't exist. Technical substance preserved (playbook spec, type spine, transfer matrix, optimization catalog with evidence); every doc now marks built vs designed, with `docs/02` §Status authoritative. All ~100 references across code, tests, and CLAUDE.md repointed.
 - **P1**: Add `docs/testing/` — a numbered log of tests run against real Rote (live browser, live model, live key), starting with T1: the first OpenAI dry run of the B1–B3 fixtures. B1/B3 pass; B2 fails 0/7 on a design flaw where mandatory action `expect` asks the model to predict unseen page text (#49, #50, #51, #52).
-- **P1**: Record the head-to-head grading rule in `docs/03` (competitors are graded by the same symmetric verification Rote applies to itself; a missing measurement is never scored) and replace `docs/17` W5's superseded "×5 runs" variance rule with the shipped ≥15-runs bootstrap lower bound.
+- **P1**: Record the head-to-head grading rule in `docs/03` (competitors are graded by the same symmetric verification Rote applies to itself; a missing measurement is never scored) and replace `docs/05` W5's superseded "×5 runs" variance rule with the shipped ≥15-runs bootstrap lower bound.
 
 ### Added
-- **P1**: Reproducible Browser Use competitor runner (`scripts/bench/headhead/`) plus a `rote-bench competitor-records` mapping step that stamps required fairness provenance onto raw adapter output, so both harnesses run the same fixture tasks from one task file into the head-to-head gate (docs/17 W5, #41).
-- **P1**: Repetition fan-out (`repetitions: N`) in the `rote-bench run` command plan, and `rote run` now honors `ROTE_RUN_ID`, so one plan drives ≥15 real recorded Rote runs per task straight into the head-to-head assembler (docs/17 W5, #40).
-- **P1**: `rote-bench records` head-to-head assembler that builds the comparison records from *real* recorded Rote run artifacts (summed from `.rote/runs` manifests, never hand-typed) merged with competitor sidecars, plus a generic `competitorRecordsFromRaw` adapter contract and a harness-label integrity check (docs/17 W5).
-- **P1**: Head-to-head competitor benchmark adapter in `@rote/bench` — a harness-neutral run record, a Rote-cells-to-record bridge, per-task subject-vs-baseline aggregation, and a `rote-bench launch-gate` that passes only at success parity, with ≥15 successful runs per harness, and a seeded-bootstrap token-reduction confidence range whose lower bound clears the floor (docs/17 W5).
+- **P1**: Reproducible Browser Use competitor runner (`scripts/bench/headhead/`) plus a `rote-bench competitor-records` mapping step that stamps required fairness provenance onto raw adapter output, so both harnesses run the same fixture tasks from one task file into the head-to-head gate (docs/05 W5, #41).
+- **P1**: Repetition fan-out (`repetitions: N`) in the `rote-bench run` command plan, and `rote run` now honors `ROTE_RUN_ID`, so one plan drives ≥15 real recorded Rote runs per task straight into the head-to-head assembler (docs/05 W5, #40).
+- **P1**: `rote-bench records` head-to-head assembler that builds the comparison records from *real* recorded Rote run artifacts (summed from `.rote/runs` manifests, never hand-typed) merged with competitor sidecars, plus a generic `competitorRecordsFromRaw` adapter contract and a harness-label integrity check (docs/05 W5).
+- **P1**: Head-to-head competitor benchmark adapter in `@rote/bench` — a harness-neutral run record, a Rote-cells-to-record bridge, per-task subject-vs-baseline aggregation, and a `rote-bench launch-gate` that passes only at success parity, with ≥15 successful runs per harness, and a seeded-bootstrap token-reduction confidence range whose lower bound clears the floor (docs/05 W5).
 - **P1**: OpenAI Responses API support through the shared tagged LLM boundary, selected with `ROTE_LLM_PROVIDER=openai|anthropic` and preserving provider token accounting.
 - **P1**: Append-only `rote candidate create` workflow that validates a browser playbook, computes its exact environment fingerprint, and writes a portable replay candidate.
 - **P1**: Exact-fingerprint browser replay selection in `rote run`, with zero-LLM warm execution on match and classified clean cold fallback before replay on mismatch.
@@ -106,32 +107,32 @@ labeled `skip-changelog`.
   with float sign intact.
 
 ### Docs
-- Redraw all design diagrams with the Excalidraw MCP in the base Excalidraw hand-drawn font, add competitor-vs-Rote architecture diagrams (Browser Use, Stagehand, Skyvern, capability landscape) embedded in `docs/15`, and retire the `scenes.json`/`generate.mjs` diagram pipeline (#26)
+- Redraw all design diagrams with the Excalidraw MCP in the base Excalidraw hand-drawn font, add competitor-vs-Rote architecture diagrams (Browser Use, Stagehand, Skyvern, capability landscape) embedded in `docs/04`, and retire the `scenes.json`/`generate.mjs` diagram pipeline (#26)
 - Document the shared source-tagged `packages/llm` provider boundary in the harness package layout.
 - Rebuilt all five architecture visuals through the official Excalidraw MCP and checked in the MCP scene definitions, editable Excalidraw documents, and hand-drawn SVG exports.
 - Replaced the outdated architecture, run-lifecycle, and repair-ladder diagrams; added current-vs-target package topology and perception-pipeline diagrams. All five ship as rendered SVG plus editable Excalidraw source, with implementation status marked explicitly in the visuals.
 - Updated the root README, docs index, and new P1 package READMEs to describe Rote as an efficiency-first browser-agent harness with compact perception and browser memory.
 - Build plans for the agent system: the six-week V1 launch plan with weekly gates and
-  the no-number-no-launch rule (`docs/17`), and the full P0–P5 product roadmap with
-  per-phase workstreams, exit/kill gates, dependency spine, and scope fences (`docs/18`)
+  the no-number-no-launch rule (`docs/05`), and the full P0–P5 product roadmap with
+  per-phase workstreams, exit/kill gates, dependency spine, and scope fences (`docs/05`)
 - Direction of record: Rote is a full efficiency-first browser-agent system. New docs:
-  the four-plane system design and positioning (`docs/13`), a researched catalog of
+  the four-plane system design and positioning (`docs/02`), a researched catalog of
   every optimization the system needs with evidence, incumbents, and P0–P2 priorities
-  (`docs/14`), a per-competitor teardown of harnesses/infra/models with a capability
-  matrix (`docs/15`), and the component-level harness architecture with the control
-  loop, type spine, and H1–H8 build order (`docs/16`); docs 02/10/12 and the README
+  (`docs/05`), a per-competitor teardown of harnesses/infra/models with a capability
+  matrix (`docs/04`), and the component-level harness architecture with the control
+  loop, type spine, and H1–H8 build order (`docs/02`); docs 02/10/12 and the README
   updated to point at the new direction
 - Speculative execution design: overlap model think time with browser acting using
   recorded trajectories as the action predictor — predictor/classifier/session-virtualizer
-  architecture with lossless commit gates and an effect boundary (`docs/11`), plus the
-  reuse map and M4–M9 milestone sequence taking the existing packages there (`docs/12`);
-  doc 06 M4+ sequencing superseded accordingly
+  architecture with lossless commit gates and an effect boundary (`docs/02`), plus the
+  reuse map and M4–M9 milestone sequence taking the existing packages there (`docs/05`);
+  doc 05 M4+ sequencing superseded accordingly
 - Browser-agent memory plan: three-tier memory architecture (playbook / subflow / site
-  memory) with replay vs advisory consumption modes (`docs/08`), a generalization
-  benchmark with a T0–T5 transfer matrix and kill gates (`docs/09`), and a survey of
+  memory) with replay vs advisory consumption modes (`docs/02`), a generalization
+  benchmark with a T0–T5 transfer matrix and kill gates (`docs/03`), and a survey of
   browser-agent memoization incumbents — Stagehand/Skyvern/workflow-use caching vs the
-  generalization and harness-agnosticism gaps Rote targets (`docs/10`)
-- Added `docs/07-where-rote-works.md` to scope Rote as a browser-agent memoization layer, explaining where site memory/replay helps and where one-off browsing does not.
+  generalization and harness-agnosticism gaps Rote targets (`docs/04`)
+- Added `docs/01-problem.md` to scope Rote as a browser-agent memoization layer, explaining where site memory/replay helps and where one-off browsing does not.
 - Project named **Rote** (previously working name "Memo")
 - Removed named references to third-party compression tools from README and design docs
   in favor of generic "compression proxy" language — those tools were a reference point

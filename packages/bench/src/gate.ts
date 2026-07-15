@@ -1,7 +1,7 @@
 import type { BenchReport, BenchSummaryRow, WarmComparison } from './types.js';
 
 export interface M3GateOptions {
-  /** docs/06-build-plan.md M3 kill gate: warm replay must cut tokens by at least 80%. */
+  /** docs/05-roadmap.md M3 kill gate: warm replay must cut tokens by at least 80%. */
   minTokenReductionRatio?: number;
 }
 
@@ -28,7 +28,7 @@ export class M3GateFailedError extends Error {
   }
 }
 
-/** Evaluates docs/06-build-plan.md M3's kill gate: token cut plus success parity for every cold/warm task. */
+/** Evaluates docs/05-roadmap.md M3's kill gate: token cut plus success parity for every cold/warm task. */
 export function evaluateM3Gate(report: BenchReport, options: M3GateOptions = {}): M3GateResult {
   const minTokenReductionRatio = options.minTokenReductionRatio ?? 0.8;
   const tasks = report.comparisons.map((comparison) => evaluateTask(report.rows, comparison, minTokenReductionRatio));

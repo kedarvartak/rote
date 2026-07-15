@@ -21,7 +21,7 @@ export type EnvFingerprintInput = Omit<EnvFingerprint, 'fingerprint_hash'>;
  * Builds a full EnvFingerprint, computing fingerprint_hash from the other
  * fields. tool_inventory is sorted by name before hashing so key/array
  * ordering never changes the hash — only actual content does. See
- * docs/06-build-plan.md M0 "Fingerprint stability".
+ * docs/05-roadmap.md M0 "Fingerprint stability".
  */
 export function buildEnvFingerprint(input: EnvFingerprintInput): EnvFingerprint {
   const sortedInventory = [...input.tool_inventory].sort((a, b) => a.name.localeCompare(b.name));

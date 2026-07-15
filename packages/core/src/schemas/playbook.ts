@@ -86,7 +86,7 @@ export type Playbook = z.infer<typeof PlaybookShapeSchema>;
 /**
  * Full playbook validation: structural shape (above) plus the semantic
  * invariants that make a playbook safe to compile and replay — see
- * docs/06-build-plan.md M0 "Rejection" tests.
+ * docs/05-roadmap.md M0 "Rejection" tests.
  */
 export const PlaybookSchema = PlaybookShapeSchema.superRefine((playbook, ctx) => {
   const seenIds = new Set<string>();

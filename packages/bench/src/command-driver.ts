@@ -38,7 +38,7 @@ export interface CommandBenchmarkResult {
  *
  * An entry may fan out with `repetitions: N` instead of a single `repetition`:
  * the head-to-head launch gate needs ≥15 successful runs per harness (see #40 /
- * docs/17 W5), and hand-authoring one entry per repetition is error-prone. A
+ * docs/05 W5), and hand-authoring one entry per repetition is error-prone. A
  * fan-out entry expands to N concrete runs with `repetition` 1..N and auto-derived
  * per-run ids, so everything downstream (`runCommandBenchmarkPlan`) is unchanged.
  */

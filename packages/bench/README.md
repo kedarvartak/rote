@@ -1,7 +1,7 @@
 # @rote/bench
 
 Benchmark harness for M3: the "run it twice" economics gate from
-`docs/03-wedge-benchmark.md` and `docs/06-build-plan.md`.
+`docs/03-benchmark.md` and `docs/05-roadmap.md`.
 
 This package owns deterministic benchmark orchestration and reporting, not a
 specific live agent integration. Callers inject a `BenchDriver` that runs either
@@ -152,7 +152,7 @@ explicitly so it cannot be mistaken for provider billing.
 
 The serializer gate proves per-observation parity; the head-to-head gate proves
 the launch claim end-to-end — *tokens per whole task, at success parity*
-(`docs/17-v1-launch-plan.md` W5). Both harnesses' runs are expressed as a
+(`docs/05-roadmap.md` W5). Both harnesses' runs are expressed as a
 harness-neutral `CompetitorRunRecord` (Rote's per-source `token_usage[]` is
 summed into one total by `roteRecordsFromCells`; competitors report their own
 lump total). Records carry fairness provenance — `model`, `cache_adjusted`,
@@ -165,13 +165,13 @@ a seeded bootstrap. The gate passes only when the range's *lower bound* clears t
 floor: a conservative, publishable claim like *"38% fewer tokens (95% CI:
 31–44%)"*. Fewer than the minimum runs → the win is not certifiable, by design.
 
-The report is the docs/17 W5 **G1 report**: tokens, latency, and $ per task. It
+The report is the docs/05 W5 **G1 report**: tokens, latency, and $ per task. It
 renders a reductions table (tokens / latency / $ at the reported parity) plus a
 per-harness detail table (runs, success rate, avg tokens, avg/p50/p95 latency in
 ms, $/task). $ comes from a dated, overridable price table (`--prices`); an
 **unpriced model is labeled `price unavailable`, never $0** — a zero would read
 as "free" and quietly flatter whichever harness lacks a price. The launch *gate*
-stays token-based; latency and $ are reported, not gated, in V1 (docs/18 P3).
+stays token-based; latency and $ are reported, not gated, in V1 (docs/05 P3).
 
 - **`readCompetitorRecords`** — loads a records file (bare array or `{ records }`).
 - **`buildHeadToHead` / `renderHeadToHeadReport`** — per-task subject-vs-baseline

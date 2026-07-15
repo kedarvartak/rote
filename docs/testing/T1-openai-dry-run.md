@@ -11,7 +11,7 @@
 ## Why we ran it
 
 Everything up to this point was fake-world. The deterministic suite was green, the
-benchmark machinery was complete (#40–#42), and `docs/17` W5 was one command away
+benchmark machinery was complete (#40–#42), and `docs/05` W5 was one command away
 from producing "the number". Before spending a 108-run matrix (3 tasks × 18
 repetitions × 2 harnesses) we wanted the cheapest possible answer to a question no
 unit test can answer: **does any of this work against a real browser and a real
@@ -261,7 +261,7 @@ run it a few times to see both modes.
 
 ## References
 
-- `docs/17-v1-launch-plan.md` W4 (action plane, live expect checks), W5 (the gate)
-- `docs/03-wedge-benchmark.md` (success parity; publish method and raw data)
+- `docs/05-roadmap.md` W4 (action plane, live expect checks), W5 (the gate)
+- `docs/03-benchmark.md` (success parity; publish method and raw data)
 - `CLAUDE.md` invariant 1 (never silently wrong) — upheld throughout
 - Touch points: `packages/agent/src/types.ts`, `packages/agent/src/tagged-llm-planner.ts`, `packages/action`

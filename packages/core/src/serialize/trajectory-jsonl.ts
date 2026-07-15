@@ -22,7 +22,7 @@ export interface ParseTrajectoryJsonlOptions {
    * silently dropped instead of raising. This is what makes an
    * append-per-event, fsync'd recorder crash-safe: a process killed
    * mid-write leaves a file that parses cleanly up to the last complete
-   * event. See docs/06-build-plan.md M1 "Crash safety".
+   * event. See docs/05-roadmap.md M1 "Crash safety".
    */
   tolerateTrailingPartialLine?: boolean;
 }

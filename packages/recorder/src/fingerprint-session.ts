@@ -10,7 +10,7 @@ export interface ToolsListResult {
  * `tools/list` response plus the configured target identity. Each tool's
  * `schema_hash` is the SHA-256 of its canonicalized `inputSchema` — so a
  * tool with an unchanged name but a changed schema still fingerprints
- * differently (docs/06-build-plan.md M0 "Fingerprint stability"). Pure.
+ * differently (docs/05-roadmap.md M0 "Fingerprint stability"). Pure.
  */
 export function fingerprintFromToolsList(
   toolsList: ToolsListResult,

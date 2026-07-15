@@ -2,7 +2,7 @@
   "name": "@rote/recorder",
   "version": "0.0.0",
   "private": true,
-  "description": "stdio MCP proxy that taps tool calls into TrajectoryEvents (docs/06-build-plan.md M1)",
+  "description": "stdio MCP proxy that taps tool calls into TrajectoryEvents (docs/05-roadmap.md M1)",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

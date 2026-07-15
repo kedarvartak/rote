@@ -7,7 +7,7 @@ export const DEFAULT_RESAMPLES = 10000;
 export const DEFAULT_CONFIDENCE = 0.95;
 /**
  * Default minimum successful runs per harness before a win can be certified.
- * docs/17-v1-launch-plan.md W5 runs ×5; we require more because a bootstrap over
+ * docs/05-roadmap.md W5 runs ×5; we require more because a bootstrap over
  * fewer than ~15 samples produces a range too wide to trust (the honest coupling:
  * the gate demands enough data instead of pretending a 5-run win is solid).
  */
@@ -74,7 +74,7 @@ export function bootstrapReductionInterval(
 
 export interface LaunchGateOptions {
   /**
-   * Minimum reduction the *lower bound* of the range must clear. docs/17 W5 asks
+   * Minimum reduction the *lower bound* of the range must clear. docs/05 W5 asks
    * only for a win that survives variance; the floor sets how bold the claim is.
    * Default 0 = "confident the reduction is real and positive"; raise it (e.g.
    * 0.3) to certify "at least 30% cheaper" with confidence.
@@ -115,7 +115,7 @@ export class LaunchGateFailedError extends Error {
 }
 
 /**
- * Evaluates docs/17-v1-launch-plan.md's W5 launch gate. A comparison passes only
+ * Evaluates docs/05-roadmap.md's W5 launch gate. A comparison passes only
  * when all hold: success parity, enough successful runs per harness, and a
  * bootstrap confidence range whose lower bound clears the reduction floor. The
  * overall gate passes only if every comparison passes and there is at least one —

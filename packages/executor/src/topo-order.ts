@@ -3,7 +3,7 @@ import type { Step } from '@rote/core';
 /**
  * Returns step ids in an order that respects every `depends_on` edge.
  * `PlaybookSchema` already rejects cyclic `depends_on` at parse time (see
- * docs/06-build-plan.md M0), so a `Playbook` reaching the executor is
+ * docs/05-roadmap.md M0), so a `Playbook` reaching the executor is
  * guaranteed acyclic — this never throws for a validated playbook. Pure.
  * v1 executes sequentially even where steps could run in parallel; the
  * build plan doesn't ask for parallel dispatch, so this stays the simplest

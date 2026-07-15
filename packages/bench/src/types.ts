@@ -1,6 +1,6 @@
 import type { RunManifest, TokenUsageSource, TrajectoryEvent } from '@rote/core';
 
-/** Benchmark phase from docs/03-wedge-benchmark.md's protocol. */
+/** Benchmark phase from docs/03-benchmark.md's protocol. */
 export type BenchPhase = 'cold' | 'warm' | 'drift';
 
 /** One task class in the run-it-twice benchmark suite. */

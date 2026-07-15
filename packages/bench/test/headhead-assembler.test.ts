@@ -18,7 +18,7 @@ import { buildHeadToHead } from '../src/competitor.js';
 import { evaluateLaunchGate } from '../src/competitor-gate.js';
 
 // Writes a real `.rote/runs/<run_id>` artifact so the assembler reads it exactly
-// as it would a run produced by `rote run` (fake-world first, docs/06).
+// as it would a run produced by `rote run` (fake-world first, docs/05).
 async function writeRun(baseDir: string, runId: string, usage: TokenUsage[]): Promise<void> {
   const manifest: RunManifest = {
     run_id: runId,

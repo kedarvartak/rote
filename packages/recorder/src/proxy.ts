@@ -41,7 +41,7 @@ const EMPTY_FINGERPRINT_TARGET = 'unknown';
  * and records a TrajectoryEvent per correlated `tools/call` request/response
  * pair. Every line is forwarded unmodified regardless of whether it parses
  * or is recorded — the proxy must be observationally invisible to the
- * client (docs/06-build-plan.md M1 "Fidelity"). Resolves once the
+ * client (docs/05-roadmap.md M1 "Fidelity"). Resolves once the
  * downstream process exits and every queued write has drained.
  */
 export async function runProxy(config: ProxyConfig, clientIn: Readable, clientOut: Writable): Promise<void> {
@@ -86,7 +86,7 @@ export async function runProxy(config: ProxyConfig, clientIn: Readable, clientOu
   const childRl = createInterface({ input: child.stdout, terminal: false });
   childRl.on('line', (line) => {
     // Forward first and unconditionally: recording must never gate or alter
-    // what the client receives (see docs/06-build-plan.md M1 "Fidelity").
+    // what the client receives (see docs/05-roadmap.md M1 "Fidelity").
     clientOut.write(`${line}\n`);
 
     const msg = tryParseJsonRpcLine(line);

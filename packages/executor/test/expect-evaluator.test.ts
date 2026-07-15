@@ -5,7 +5,7 @@ import { initialWorldState, type WorldState } from '../src/world-state.js';
 
 /**
  * One pass case + one fail case per Expect DSL primitive
- * (docs/06-build-plan.md M2 "Every expect primitive" — 10 primitives, 20 tests).
+ * (docs/05-roadmap.md M2 "Every expect primitive" — 10 primitives, 20 tests).
  */
 
 function state(overrides: Partial<WorldState>): WorldState {

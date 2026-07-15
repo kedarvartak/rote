@@ -28,7 +28,7 @@ export interface RunBrowserTaskOptions {
   /**
    * Fixed run id for the recorded artifacts. The benchmark command driver sets
    * this (via `ROTE_RUN_ID`) so it can address the run it just produced; omitted
-   * for normal use, where a random id is assigned (see #40 / docs/17 W5).
+   * for normal use, where a random id is assigned (see #40 / docs/05 W5).
    */
   runId?: string;
 }

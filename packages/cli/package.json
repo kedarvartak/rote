@@ -2,7 +2,7 @@
   "name": "@rote/cli",
   "version": "0.0.0",
   "private": true,
-  "description": "rote command-line interface (docs/06-build-plan.md)",
+  "description": "rote command-line interface (docs/05-roadmap.md)",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

@@ -55,7 +55,7 @@ function walkStrings(value: unknown, onString: (s: string) => void): void {
  * Substitutes every {{param}} in a JSON-like value with its bound value.
  * Throws UnboundParamError if a referenced param has no binding — an
  * undeclared/unbound param is never silently rendered as an empty string
- * (docs/06-build-plan.md M0 "Templating").
+ * (docs/05-roadmap.md M0 "Templating").
  */
 export function renderTemplate(value: unknown, bindings: ParamBindings): unknown {
   if (typeof value === 'string') {

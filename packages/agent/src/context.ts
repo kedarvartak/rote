@@ -18,7 +18,7 @@ export interface AssemblePlannerContextOptions {
 
 /** Builds a cache-stable planner prefix and a per-step volatile suffix. */
 export function assemblePlannerContext(options: AssemblePlannerContextOptions): PlannerContext {
-  // see docs/16-harness-architecture.md "Decision plane details" — stable material
+  // see docs/02-architecture.md "Decision plane details" — stable material
   // stays before per-step state so provider prompt caches survive observation changes.
   const stablePrefix = `You are Rote's browser planner.
 Choose one safe next action that advances the task. Use only selectors present in the observation.

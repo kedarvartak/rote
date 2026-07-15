@@ -31,7 +31,7 @@ export interface BuildTrajectoryEventOutput {
  * inline vs. blob storage by size. Pure — the actual blob file write is the
  * caller's (I/O) responsibility (see blob-store.ts). This is what M1's
  * "large results" and "passthrough on failure" tests exercise directly,
- * without spinning up a process. See docs/06-build-plan.md M1.
+ * without spinning up a process. See docs/05-roadmap.md M1.
  */
 export function buildTrajectoryEvent(input: BuildTrajectoryEventInput): BuildTrajectoryEventOutput {
   const threshold = input.inlineThresholdBytes ?? DEFAULT_INLINE_THRESHOLD_BYTES;

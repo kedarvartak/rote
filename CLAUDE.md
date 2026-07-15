@@ -1,8 +1,10 @@
 # Rote — Agent Guidelines
 
-You are working on **Rote**: trajectory memoization for agent harnesses. Read
-`docs/06-build-plan.md` for the current milestone before writing any code; do not build
-ahead of the milestone order (executor before compiler — never violate this).
+You are working on **Rote**: an efficiency-first browser-agent harness — the same tasks
+for a fraction of the tokens, verified and reproducible. Read `docs/05-roadmap.md` for
+the current phase before writing any code; do not build ahead of it (executor before
+distiller — never violate this). `docs/02-architecture.md` §Status is the authoritative
+list of what is actually built; much of the design is not.
 
 ## Project invariants (non-negotiable, encode in tests, never "just this once")
 

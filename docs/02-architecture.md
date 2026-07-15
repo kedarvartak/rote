@@ -4,179 +4,253 @@
 
 ## Design thesis
 
-> **Control flow should be deterministic. The LLM's job is content and repair, not navigation.**
+> **Control flow should be deterministic. The model's job is content and repair, not
+> navigation.**
 
-A successful agent run contains two kinds of information tangled together: *what to do*
-(the procedure) and *what to say/fill/decide* (the content). Rote untangles them. The
-procedure gets compiled into a deterministic, replayable artifact; the LLM is invoked only
-where genuine judgment is needed — binding parameters, filling content slots, and repairing
-broken steps.
+A successful run tangles two things together: *what to do* (the procedure) and *what to
+say/fill/decide* (the content). Rote untangles them. The procedure becomes a
+deterministic, replayable artifact; the model is invoked only where genuine judgment
+lives — binding parameters, filling slots, repairing broken steps.
 
-> **Direction update (2026-07):** the "Full runtime (later)" option below is now the
-> plan of record — Rote is being built as a complete browser-agent system with this
-> doc's components as subsystems. See [13 — The Rote Agent System](13-agent-system.md)
-> and [16 — Harness Architecture](16-harness-architecture.md). The component designs,
-> playbook spec, and invariants in this doc remain authoritative.
+Rote is a **complete browser-agent harness**, not middleware. Every optimization that
+matters lives inside the loop — what the model sees, when it's called, which model, how
+actions are grounded — and a layer at the tool boundary can advise but cannot restructure
+the loop. Rote's tools are still exposed over MCP, so the same codebase can be *driven
+by* another client; the harness and the layer are two entry points, not two products.
 
-## Where Rote sits (and why it's not a proxy)
+## Status: what is built
 
-Rote is **harness middleware at the tool-call boundary** — a wrapper around the harness's
-tool dispatch layer — *not* a proxy at the LLM API boundary (where compression middleware sits).
+**Read this table before believing anything below it.** Design and reality are easy to
+confuse in an architecture doc; this is the boundary.
 
-This placement is the load-bearing decision:
+| Subsystem | State |
+|---|---|
+| Core schemas, Expect DSL, templating, fingerprinting | **built** |
+| Recorder — append-only, crash-safe, fsync-per-event | **built** |
+| Replay executor — verified, zero-model on hand-written playbooks | **built** |
+| CDP browser backend, perception (distill → stable IDs → diff → budget) | **built** |
+| Agent loop, context assembler, tagged LLM client | **built** |
+| Benchmark matrix, per-source accounting, head-to-head gate | **built** |
+| Action plane: settledness, resolution chain, expect checks | **built** — but see [T1](testing/T1-openai-dry-run.md) |
+| **Playbook distiller** (trajectory → playbook) | **not built** — V1 playbooks are hand-written |
+| **Matcher** (semantic match + bind) | **not built** — fingerprint gate only |
+| **Site memory, model routing, speculation** | **not built** — designed below |
 
-- At the tool-call boundary you see **structured steps**: tool name, arguments, result,
-  timing, and which later steps consumed which earlier outputs. That structure is what makes
-  a trajectory compilable into a DAG.
-- At the LLM API boundary you see a flat token stream. You can compress it, but you cannot
-  *not run* a step, because steps don't exist there.
-- Consequence: **Rote composes with compression middleware.** Rote decides whether steps
-  execute at all; compression shrinks whatever still flows to the model. They are different
-  layers, not competitors.
+Packages that exist: `core recorder executor bench cli browser perception action agent llm`.
+Designed but absent: `decision predictor memory mcp-server`.
 
-Integration surface, in order of shipping priority:
+## The four planes
 
-1. **SDK wrapper** — wrap the tool-executor of an existing harness (Claude Agent SDK,
-   Vercel AI SDK `tools`, LangGraph nodes, MCP server shim). ~10 lines to adopt.
-2. **MCP proxy** — an MCP server that fronts other MCP servers, recording and replaying
-   transparently. Zero harness changes; instantly compatible with every MCP client.
-3. **Full runtime** (later) — Rote as the executor, harness as a plugin.
+| Plane | Baseline cost | Rote's answer | Status |
+|---|---|---|---|
+| **Perception** | 5–40K tokens/step, re-sent every step | distill → filter → diff → budget | built |
+| **Decision** | frontier model, every step, full context | cache-local layout; route down or skip the model | layout built; routing designed |
+| **Action** | act → wait → observe, serialized | settledness, self-healing resolution, speculation | first two built |
+| **Learning** | every run starts cold | recorded trajectories → playbooks → site memory | recording + replay built |
 
-## Components
+## The control loop
 
-### 1. Recorder
-Taps every tool call during normal agent runs: `(tool, args, result_digest, t, run_id)`,
-plus the task spec, env fingerprint (tool inventory, repo/URL identity, versions of key
-surfaces), and final outcome. Cheap, always-on, append-only log. No LLM involvement.
+```ts
+async function runTask(task: TaskSpec, deps: HarnessDeps): Promise<TaskResult> {
+  const fp = await fingerprint(deps.session);          // invariant 3: hard gate
+  const brief = deps.memory.brief(fp, task);           // site memory, ≤1K tokens  [planned]
+  const ctx = ContextAssembler.init({ task, brief });  // owns cache layout
 
-### 2. Distiller (post-run, offline LLM pass)
-Converts a *successful* trajectory into a **playbook**. This is where the hard
-generalization work happens, and it runs off the critical path (async, batchable, can use a
-big model because it runs once per learned task, not once per execution):
+  const match = deps.memory.matchPlaybook(fp, task);   // [planned]
+  if (match?.confidence >= TAU_REPLAY)
+    return deps.executor.replay(match, task.params);   // zero model steps  [built]
 
-- **Causal pruning** — build the dependency graph of which call outputs actually fed later
-  arguments or the final answer; drop dead-end explorations (typically the majority of a
-  cold run).
-- **Parameterization** — identify literals that are task *inputs* (ticket ID, branch name,
-  form values) vs environment *constants*, and lift inputs into typed slots.
-- **Assertion synthesis** — for every step, emit a cheap postcondition ("expect" block):
-  exit code, selector exists, JSON path present, output matches shape. Assertions are the
-  immune system of replay — without them, replay silently produces garbage when the world
-  drifts.
-- **Verification plan** — a final end-to-end check distilled from how the original run knew
-  it had succeeded.
+  while (true) {
+    await deps.action.settled(deps.session);                            // built
+    const obs = await deps.perception.observe(deps.session, ctx.budget); // built
+    ctx.push(obs);                                                       // diff-encoded
 
-### 3. Playbook Store
-Versioned, content-addressed store of playbooks. A playbook is a parameterized step DAG:
+    const route  = deps.decision.route(ctx, deps.memory);   // [planned] → frontier today
+    const action = await deps.decision.decide(route, ctx);  // structured output, built
+
+    const outcome = await deps.action.dispatch(action, deps.session);   // built
+    deps.recorder.record(outcome);                                      // always
+    if (outcome.expect.some(failed)) {
+      const recovered = await deps.recovery.ladder(outcome, ctx);       // [partial]
+      if (!recovered) return failCleanly(outcome);                      // invariant 2
+    }
+    if (action.verb === 'done')
+      return deps.verify.gate(task, ctx)   // invariant 1: no verify pass, no success
+        ? success(action.result)
+        : deps.recovery.escalate(task, ctx);
+  }
+}
+```
+
+**The ContextAssembler owns message layout** and is the only module allowed to reorder
+them: immutable system prompt + tool schemas → session-stable site brief → compacted
+history → live tail. Prompt-cache reads are ~10× cheaper and agent loops re-send the
+whole transcript every step, so **hit rate ≈ spend**. Tests fail if any volatile token
+(timestamp, run id) lands above the stable line.
+
+## Type spine (Zod-first; types derived, never hand-written)
+
+```ts
+// perception
+interface StableNodeId { hash: string }        // role + name + ancestry content hash
+type Observation =
+  | { kind: 'full';    page: PageIdentity; tree: DistilledNode[]; tokens: number }
+  | { kind: 'diff';    page: PageIdentity; baseSeq: number; changes: NodeChange[] }
+  | { kind: 'summary'; page: PageIdentity; text: string; expandable: Region[] };
+
+// decision
+type StepClass = 'replay' | 'speculated' | 'grounded-routine' | 'frontier' | 'recovery';
+
+// action — a small closed verb set, not 50 overlapping tools
+type Action =
+  | { verb: 'navigate'; url: string }
+  | { verb: 'click';  target: StableNodeId }
+  | { verb: 'fill';   target: StableNodeId; value: string }
+  | { verb: 'select'; target: StableNodeId; option: string }
+  | { verb: 'extract'; query: ExtractQuery }
+  | { verb: 'done'; result: unknown } | { verb: 'fail'; reason: string };
+
+interface StepOutcome {
+  action: Action; result: ToolResult;
+  expect: ExpectVerdict[];
+  timing: { settleMs: number; actMs: number; observeMs: number; thinkMs: number };
+  tokens: PerSourceTokens;          // invariant 5: every call tagged
+}
+```
+
+**Stable IDs are a schema-level commitment.** They appear in trajectories, playbooks, and
+memory, which is what makes diffs (`"#e42 changed"` rather than re-listing the page) and
+cross-run learning possible at all. Most harnesses renumber every step and silently break
+history reuse.
+
+## Playbooks
+
+A playbook is a parameterized step DAG. Humans never author them — agents discover them —
+but they export to readable YAML precisely so humans can audit them.
 
 ```yaml
 playbook: submit-vendor-invoice
-version: 3                      # patches bump versions; history kept
+version: 3                       # patches bump versions; history kept
 task_signature:
-  intent_embedding: <vec>
   env_fingerprint: {domain: vendors.acme.com, tools: [browser.*]}
 params:
   - {name: invoice_id, type: string}
-  - {name: amount, type: money}
 steps:
   - id: open_portal
     tool: browser.navigate
     args: {url: "https://vendors.acme.com/invoices"}
     expect: {selector_visible: "#invoice-table"}
-    on_fail: repair            # repair | retry(n) | fallback
-  - id: fill_form
+    on_fail: repair              # repair | retry(n) | fallback
+  - id: fill_amount
     tool: browser.fill
-    args: {selector: "#amount", value: "{{amount}}"}   # slot
+    args: {selector: "#amount", value: "{{amount}}"}     # slot
     expect: {input_value: "#amount", equals: "{{amount}}"}
-  - id: judgment_slot          # LLM-filled content, not LLM control flow
-    llm_fill: {prompt: "summarize dispute reason from {{context}}", max_tokens: 200}
 verify:
   - {text_visible: "Invoice submitted"}
-confidence: 0.94               # updated every run (see Drift Tracker)
+confidence: 0.94                 # updated every run
 ```
 
 Three step kinds, deliberately minimal:
-- **Deterministic step** — tool + bound args. Zero LLM tokens.
-- **Slot step** — LLM fills a value/content field. Small, scoped call (can be a cheap model).
-- **Judgment gate** — rare explicit branch where the original run genuinely decided
-  something from data; encoded as a constrained LLM classification, not free-form planning.
 
-### 4. Matcher
-At task intake, decide: replay or explore. Two-stage to keep it fast and safe:
+- **Deterministic** — tool + bound args. Zero model tokens.
+- **Slot** — the model fills a value. Small, scoped, cheap-model-eligible.
+- **Judgment gate** — a rare explicit branch, encoded as constrained classification, not
+  free-form planning.
 
-1. **Structural filter** — env fingerprint must match (same tool inventory, same target
-   system identity). Hard gate; no fuzzy matching across environments.
-2. **Semantic match + bind** — embedding similarity on task intent shortlists candidates;
-   one small LLM call confirms the match *and extracts parameter bindings* in the same shot.
-   Below threshold τ → miss → full agent run (which becomes new training data).
+## Verification, and what T1 taught us
 
-A miss costs one cheap LLM call. A false-positive match is the dangerous failure mode —
-which is why replay is assertion-gated at every step rather than trusted.
+Every step carries a postcondition; the task carries a final `verify[]`. **Success is
+only reported if verification passes** — invariant 1, and the anchor under every
+efficiency claim (all benchmark numbers are *at success parity*).
 
-### 5. Replay Executor
-Walks the DAG. Deterministic steps dispatch straight to tools — the LLM planner is not in
-the loop. Every step's `expect` block is checked; slot steps invoke a scoped, cheap LLM
-call. Cost per warm run ≈ match call + slot fills + verification. That's the floor the
-economics trend toward.
+[T1](testing/T1-openai-dry-run.md) found the live-agent version of this is currently
+mis-designed: the action schema makes `expect` mandatory, so the planner must **predict
+the page's confirmation text before it has seen it**. It guesses plausibly and wrongly,
+and a correct run is recorded as a failure. Meanwhile the expects that *pass* are largely
+tautological (asserting a value the model itself just typed). Open: [#49](https://github.com/kedarvartak/rote/issues/49)
+[#50](https://github.com/kedarvartak/rote/issues/50).
 
-### 6. Repair Agent (self-healing)
+The lesson generalizes: **a model-authored postcondition about a future state is either a
+guess or a tautology.** Postconditions should be structural (a selector it observed) or
+derived from the observation diff — not predicted prose. The final `verify` gate, which
+is authored against ground truth, is what makes T1's B1/B3 successes real, and stays.
+
+## Repair ladder
 
 ![Repair ladder](diagrams/repair-ladder.svg)
 
-On assertion failure, escalate a **repair ladder** — never fail the task, never silently
-continue:
+On assertion failure — never fail the task blindly, never silently continue:
 
-1. **Retry** — transient failures (network, timing) per step policy.
-2. **Scoped repair** — spin up an LLM with a *narrow* context: the failing step, its
-   expected postcondition, current observed state, and the playbook's intent for that step.
-   It re-derives just that step (find the moved button, the renamed flag, the new API path),
-   emits a **patch**, replay resumes. Patches are additive and versioned (`vN+1`) — bad
-   patches roll back, and patch history is itself signal about environment volatility.
-3. **Fallback** — full agent run on the original task; the recorder captures it and the
-   distiller re-learns. Worst case equals today's status quo cost — Rote's failure mode
-   is "no worse than not having Rote."
+1. **Retry** — transient (network, timing), per step policy.
+2. **Scoped repair** — a model call with *narrow* context: the failing step, its expected
+   postcondition, observed state, and the step's intent. It re-derives one step, emits a
+   **patch**, replay resumes. Patches are additive and versioned; bad patches roll back,
+   and patch history is itself a drift signal.
+3. **Fallback** — full agent run, recorded, re-learned. Worst case equals not having Rote.
 
-This matches the field-tested pattern: *deterministic playbooks, LLM fills content,
-explore once, repair with persisted patches.*
+Cheap recovery is an efficiency feature: a scoped repair costs ~one step; a blind restart
+costs the whole task.
 
-### 7. Confidence & Drift Tracker
-Per-playbook health: success streak, repair frequency, time since validation. Confidence
-gates matching (low-confidence playbooks require re-verification or shadow replay).
-Rising repair frequency on one surface = drift alert — proactively re-distill instead of
-degrading run-by-run. This is also the observability product surface: "your top 20
-procedures, their replay hit rate, and what re-derivation is costing you."
+## Learning plane (designed)
 
-## Run lifecycle economics
+Three memory tiers, in build order:
+
+| Tier | Content | Mode |
+|---|---|---|
+| 1 — **Playbook** | whole-task DAG, exact repeats | replay (contract: verified, zero-model) |
+| 2 — **Subflow** | shared prefixes (login → dashboard) reused across tasks | replay with hand-off |
+| 3 — **Site memory** | selector maps, form semantics, page graph, settle times, quirks | **advisory** — the agent stays in control |
+
+The distinction matters: tiers 1–2 *execute*; tier 3 only *informs* (a ≤1K-token brief,
+resolution hints, calibrated settle times). Advisory memory can be wrong without being
+dangerous — the agent still observes and verifies.
+
+## Speculative execution (designed)
+
+The loop is fully serialized: think → act → settle → observe → think. **While the model
+thinks about step N, the predicted step N+1 can already be executing** in a shadow
+context — promote on hit, discard on miss, never past the effect boundary. This needs an
+action safety classifier (`pure-read` / `local-nav` / `local-write` / `external-effect`),
+a session virtualizer, and a predictor over recorded runs. Research with blind draft
+models reaches ~55% accuracy for ~20% latency; trajectory memory should predict warm
+sites far better. Kill gate: ≥70% top-1 accuracy offline, before any systems work.
+
+## Run economics
 
 ![Run lifecycle](diagrams/run-lifecycle.svg)
 
 | | Cold (run 1) | Warm (run N) | Drift (run N+k) |
 |---|---|---|---|
-| LLM in control loop | every step | never | one step |
+| Model in control loop | every step | never | one step |
 | Tool calls | ~40 (incl. dead ends) | ~6 (essential only) | ~8 |
-| Tokens (illustrative) | ~210K | ~18K | ~31K |
-| Artifact produced | trajectory → playbook v1 | confidence++ | patch → v2 |
+| Artifact | trajectory → playbook v1 | confidence++ | patch → v2 |
 
-The marginal cost of a memoized task trends toward the **verification floor**: the price of
-proving the replay still holds. That floor is the honest lower bound — you never get to
-zero, because trusting an unverified replay is how you ship wrong answers.
+Illustrative, not measured — the measured numbers live in [03](03-benchmark.md) and
+[testing/](testing/). The marginal cost of a memoized task trends toward the
+**verification floor**: the price of proving the replay still holds. That floor is the
+honest lower bound. You never reach zero, because trusting an unverified replay is how
+you ship wrong answers.
 
-## Failure-safety invariants
+## Invariants
 
-1. **Never silently wrong** — every replayed step is assertion-gated; final verify block
-   must pass or the run escalates the repair ladder.
-2. **Never worse than baseline** — full-agent fallback is always available; a Rote failure
-   costs one wasted match call.
-3. **Never cross environments** — structural fingerprint is a hard gate; a playbook learned
-   on staging cannot fire on prod unless fingerprints match.
-4. **Every change is versioned** — playbooks and patches are append-only with rollback.
+1. **Never silently wrong** — every replayed step is assertion-gated; no path reports
+   success on a failed check.
+2. **Never worse than baseline** — full-agent fallback always reachable, and it logs
+   *why* it fired.
+3. **Never cross environments** — structural fingerprint is a hard gate. A playbook
+   learned on staging cannot fire on prod.
+4. **Everything versioned** — playbooks and patches are append-only, with rollback.
+5. **Every model call is tagged** — `planner|matcher|slot|repair|verify|distill`, through
+   one client wrapper. Untagged calls fail lint.
+
+These bind the agent loop exactly as they bound the middleware design. They are not
+negotiable under schedule pressure; see `CLAUDE.md`.
 
 ## What Rote is not
 
 - **Not a workflow engine** — humans never author playbooks; agents discover them.
-  (But playbooks should *export* to human-readable YAML precisely so humans can audit them.)
-- **Not semantic memory** — Rote stores procedures, not facts. Pair it with Mem0/Zep if
-  you want both; they inject knowledge, Rote removes work.
-- **Not compression** — pair with compression middleware at the LLM API boundary; orthogonal layers.
+- **Not semantic memory** — Rote stores procedures, not facts. Pair with Mem0/Zep:
+  they inject knowledge, Rote removes work.
+- **Not compression** — orthogonal. Compression shrinks a step; Rote declines to run it.
 
-Next: [03 — Wedge Benchmark](03-wedge-benchmark.md)
+Next: [03 — Benchmark](03-benchmark.md)

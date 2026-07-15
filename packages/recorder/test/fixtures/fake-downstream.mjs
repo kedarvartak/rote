@@ -2,7 +2,7 @@
 // A scriptable fake MCP downstream server for recorder tests. Speaks
 // line-delimited JSON-RPC 2.0 over stdio. Deliberately outside src/ and
 // plain JS (not TS) so tests can spawn it as a real child process without
-// a build step — see docs/06-build-plan.md M1 "Fake-world first".
+// a build step — see docs/05-roadmap.md M1 "Fake-world first".
 import { createInterface } from 'node:readline';
 
 const rl = createInterface({ input: process.stdin, terminal: false });

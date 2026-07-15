@@ -3,7 +3,7 @@
 <!-- One paragraph: what this PR does and why. Link the issue if one exists. -->
 
 **Milestone:** <!-- e.g. M1 — Recorder -->
-**Exit-gate criterion advanced:** <!-- quote the relevant line from docs/06-build-plan.md, or "N/A: <reason>" -->
+**Exit-gate criterion advanced:** <!-- quote the relevant line from docs/05-roadmap.md, or "N/A: <reason>" -->
 
 ## Changes
 

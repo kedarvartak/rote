@@ -123,5 +123,5 @@ If the gate fails:
 
 - 50–80% token reduction: investigate executor/reporting overhead once, then
   re-run.
-- <50% token reduction: stop and rethink the thesis per `docs/06-build-plan.md`.
+- <50% token reduction: stop and rethink the thesis per `docs/05-roadmap.md`.
 - success regression: fix safety/replay correctness before measuring tokens.

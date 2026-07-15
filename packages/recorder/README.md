@@ -3,7 +3,7 @@
 A stdio MCP proxy that wraps a downstream MCP server, forwards every message
 unmodified, and taps `tools/call` traffic into a `TrajectoryEvent` per call
 plus a `RunManifest` at session end. See `docs/02-architecture.md`
-"Recorder" and `docs/06-build-plan.md` (M1) for the design behind this.
+"Recorder" and `docs/05-roadmap.md` (M1) for the design behind this.
 
 The proxy must be **observationally invisible**: every line from the
 downstream is written to the client before it is ever inspected, so recording

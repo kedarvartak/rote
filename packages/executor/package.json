@@ -2,7 +2,7 @@
   "name": "@rote/executor",
   "version": "0.0.0",
   "private": true,
-  "description": "Replay executor: walks a Playbook's step DAG against the real tool/LLM boundary (docs/06-build-plan.md M2)",
+  "description": "Replay executor: walks a Playbook's step DAG against the real tool/LLM boundary (docs/05-roadmap.md M2)",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

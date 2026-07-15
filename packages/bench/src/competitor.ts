@@ -14,7 +14,7 @@ const PHASES: readonly BenchPhase[] = ['cold', 'warm', 'drift'];
  * Competitors (Browser Use, Stagehand-agent, …) do not share Rote's per-source
  * token tags (`planner|slot|verify|…`), so the head-to-head collapses to total
  * input/output tokens for the whole task. Fairness provenance travels with every
- * record so the published number can be audited — see docs/03-wedge-benchmark.md
+ * record so the published number can be audited — see docs/03-benchmark.md
  * "fairness rules" (same model, best-effort competitor config, cache-adjusted
  * token counts, success parity reported per task).
  */
@@ -60,7 +60,7 @@ export interface HarnessTaskSummary {
   success_rate: number;
   avg_total_tokens: number;
   avg_duration_ms: number;
-  /** Median wall-clock of a successful run, in ms (docs/17 W5 G1 latency-per-phase). */
+  /** Median wall-clock of a successful run, in ms (docs/05 W5 G1 latency-per-phase). */
   p50_duration_ms: number;
   /** 95th-percentile wall-clock of a successful run, in ms — the tail users feel. */
   p95_duration_ms: number;
@@ -85,7 +85,7 @@ export interface HeadToHeadComparison {
   latency_reduction_ratio: number;
   /** $-per-task reduction; `undefined` when either side's model is unpriced. */
   cost_reduction_ratio?: number;
-  /** True when the subject's success rate is at least the baseline's (docs/17 parity). */
+  /** True when the subject's success rate is at least the baseline's (docs/05 parity). */
   success_parity: boolean;
 }
 

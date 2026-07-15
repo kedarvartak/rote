@@ -45,7 +45,7 @@ need to explore that website from scratch.**
 ## What Rote does
 
 Rote is a complete browser-agent harness with four efficiency planes (see
-[docs/13](docs/13-agent-system.md)):
+[docs/02](docs/02-architecture.md)):
 
 1. **Perception** — capture pages through CDP, distill them into compact interactive trees,
    assign stable element IDs, and send diffs instead of full page dumps when possible.
@@ -83,42 +83,39 @@ procedures, and verification signals — so the next run starts warmer.
 
 ## Status
 
-**Early build.** The original foundations are built: data model, recorder, verified replay
-executor, and benchmark harness. The current V1 work is the browser-agent harness from
-[docs/17 — V1 launch plan](docs/17-v1-launch-plan.md): browser capture, perception
-distillation, stable IDs, diff observations, budgeted context, and a reproducible
-head-to-head benchmark against incumbent browser agents.
+**Early build — no launch number yet.**
 
-The current P1 foundation starts that V1 path with `@rote/browser`, `@rote/perception`,
-`@rote/agent`, and static B1–B3 fixture pages.
+Built and working end to end: core schemas + Expect DSL, lossless recorder, verified
+replay executor, CDP browser backend, perception (distill → stable IDs → diff → budget),
+the agent loop, cache-aware context assembly, tagged LLM accounting, and the benchmark +
+head-to-head gate. First live run against a real browser and model
+([T1](docs/testing/T1-openai-dry-run.md)) completed B1 in the minimum four actions.
+
+Not built: the playbook distiller (V1 replays hand-written playbooks), the matcher, site
+memory, model routing, speculation. `docs/02-architecture.md` §Status is authoritative.
+
+**Blocked:** T1 found that the live agent's mandatory action `expect` asks the model to
+predict page text it has not seen, so a correctly-completed task is recorded as a failure
+([#49](https://github.com/kedarvartak/rote/issues/49)). The benchmark matrix waits on
+that fix — running it today would measure our bug, not our efficiency. **No number, no
+launch.**
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)
 
 Solid packages exist today; dashed packages are the target composition described in
-[docs/16 — Harness Architecture](docs/16-harness-architecture.md).
+[docs/02 — Architecture](docs/02-architecture.md).
 
 ## Docs
 
 | Doc | Contents |
 |---|---|
-| [Problem](docs/01-problem.md) | The reuse-path gap and why incumbents don't fill it |
-| [Architecture](docs/02-architecture.md) | Components, playbook spec, failure-safety invariants |
-| [Wedge benchmark](docs/03-wedge-benchmark.md) | "Run it twice" — task suite, metrics, kill thresholds |
-| [Market](docs/04-market.md) | Competitive map, steelmanned objections, buyers, why now |
-| [Roadmap](docs/05-roadmap.md) | Phased plan and open questions |
-| [Build plan](docs/06-build-plan.md) | Milestone-by-milestone execution detail: tasks, test suites, exit/kill gates |
-| [Where Rote works](docs/07-where-rote-works.md) | Browser-agent fit guide: where site memory and replay help or do not help |
-| [Browser memory architecture](docs/08-browser-memory-architecture.md) | Memory tiers, replay vs advisory modes, build order |
-| [Generalization evaluation](docs/09-generalization-evaluation.md) | How the memory tiers get benchmarked beyond exact repeats |
-| [Competitive landscape](docs/10-competitive-landscape.md) | Who memoizes browser agents today and where the gaps are |
-| [Speculative execution](docs/11-speculative-execution.md) | Overlapping model thinking with browser acting — memory as a branch predictor |
-| [Implementation path](docs/12-implementation-path.md) | How the existing packages evolve into the speculative pipeline |
-| [The Rote agent system](docs/13-agent-system.md) | Direction of record: a full efficiency-first browser-agent system |
-| [Optimization catalog](docs/14-optimization-catalog.md) | Every optimization the system needs — evidence, incumbents, priorities |
-| [Competitor teardown](docs/15-competitor-teardown.md) | The 2026 field, per player, with a capability matrix |
-| [Harness architecture](docs/16-harness-architecture.md) | Components, interfaces, control loop, and build order |
-| [V1 launch plan](docs/17-v1-launch-plan.md) | The six-week launchable subset and its gates |
-| [Product roadmap](docs/18-product-roadmap.md) | The full timeline: phases P0–P5 with exit and kill gates |
+| [01 — Problem](docs/01-problem.md) | Why agents re-derive everything; the reuse-path gap; where Rote fits and where it doesn't |
+| [02 — Architecture](docs/02-architecture.md) | **What is built vs designed**; the four planes; control loop; playbooks; repair ladder; memory; speculation; invariants |
+| [03 — Benchmark](docs/03-benchmark.md) | Task suite, metrics, fairness rules, the variance rule, the launch gate, generalization |
+| [04 — Competition](docs/04-competition.md) | The field, per-competitor teardown, capability matrix, steelmanned objections |
+| [05 — Roadmap](docs/05-roadmap.md) | Where we are; V1 scope and gates; P0–P5; open questions |
+| [06 — Optimizations](docs/06-optimizations.md) | The master catalog: every optimization, tier, status, evidence |
+| [testing/](docs/testing/) | Records of tests against real Rote — live browser, live model, live key |
 
 ## Contributing
 

@@ -1,7 +1,7 @@
 /**
  * The executor's model of "what the world looks like right now," built up
  * from each step's observable output so `expect`/`verify` can check it. The
- * Expect DSL (docs/06-build-plan.md M0) is tool-agnostic, so this file
+ * Expect DSL (docs/05-roadmap.md M0) is tool-agnostic, so this file
  * defines the one convention every tool result is read through: a tool's
  * raw result may optionally carry `url`, `visible_selectors`,
  * `input_values`, and `visible_text` fields; anything else is only visible

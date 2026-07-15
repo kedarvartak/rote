@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Rote is pre-release (no tagged versions yet — see `docs/06-build-plan.md` for
+Rote is pre-release (no tagged versions yet — see `docs/05-roadmap.md` for
 milestone status). Security fixes land on `main` only; there is no LTS branch
 to backport to at this stage.
 

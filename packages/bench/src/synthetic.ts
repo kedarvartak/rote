@@ -41,7 +41,7 @@ const TOOL_BY_INDEX = ['browser.navigate', 'browser.click', 'browser.extract', '
  * Writes a deterministic fake M3 reproducibility pack: recorded run artifacts,
  * usage sidecars, benchmark spec, and Markdown report. This is not the real
  * browser benchmark; it proves the full reporting pipeline before live drivers
- * exist (docs/06-build-plan.md "Fake-world first").
+ * exist (docs/05-roadmap.md "Fake-world first").
  */
 export async function writeSyntheticBenchmarkPack(options: SyntheticBenchmarkOptions): Promise<SyntheticBenchmarkPack> {
   const tasks = options.tasks ?? DEFAULT_TASKS;

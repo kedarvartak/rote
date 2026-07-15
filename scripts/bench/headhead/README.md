@@ -1,7 +1,7 @@
 # Head-to-head: Rote vs Browser Use
 
 This is the runbook for **the number** — end-to-end tokens per task at success
-parity (`docs/17-v1-launch-plan.md` W5, `docs/03-wedge-benchmark.md` fairness
+parity (`docs/05-roadmap.md` W5, `docs/03-benchmark.md` fairness
 rules). The serializer gate proves per-observation parity; this proves the launch
 claim on whole tasks.
 
@@ -58,7 +58,7 @@ python run_browser_use.py --out ../../../../bench-out/browser-use
 `--model` defaults to the model `tasks.json` pins for **both** harnesses, and
 `--provider` defaults to `ROTE_LLM_PROVIDER` from your `.env` — so passing
 nothing is the fair thing. Browser Use is a pinned dependency
-(`browser-use==0.13.4`), never a fork or a vendored copy: `docs/17`'s launch
+(`browser-use==0.13.4`), never a fork or a vendored copy: `docs/05`'s launch
 checklist requires that adapters "import competitors as dependencies, not forks",
 and a fork we control is a fork we could tune.
 

@@ -1,79 +1,107 @@
-# 01 — The Problem: Agents Re-Derive Everything
+# 01 — The Problem
 
-## One sentence
+> **Browser agents re-derive everything, every run, and pay for it in tokens.**
 
-**Agents re-explore and re-derive already-solved workflows on every run, and no harness-level layer exists that captures a successful trajectory, generalizes it into a cheap-to-replay playbook, and self-heals it when the environment drifts.**
+## Where the money goes
 
-## The three token-spending paths of an agent harness
+Per step:
 
-| Path | What it is | Who owns it today |
-|------|-----------|-------------------|
-| **Read path** | Compressing what goes *into* context (tool outputs, logs, search results) | Compression proxies, LLMLingua, provider-side context editing — crowded |
-| **Write path** | Cross-session *semantic* memory ("the user prefers X", "the staging DB is Y") | Mem0, Zep, Letta/MemGPT, Cognee — crowded |
-| **Reuse path** | Replaying *how* the agent solved something so it never re-derives it | **Nobody. This is the gap.** |
+```
+cost ≈ observation tokens + history tokens + reasoning/output tokens
+time ≈ model think + action + page settle + observation build
+```
 
-Read-path tools make every token cheaper. Reuse-path tools make most tokens **not exist**.
-That is a categorically bigger lever: 90% compression of a 40-call exploration still costs 40
-calls of latency, 40 round-trips of LLM control-flow, and 40 opportunities for the model to
-wander. Not doing the exploration costs ~0.
+Input tokens dominate agentic spend (~85%), and **observations dominate input**. Raw
+DOM can exceed 100 lines per logical form field; enterprise pages reach 40–500K tokens
+raw. That observation is rebuilt and re-sent every step, of every run, forever.
 
-## What re-derivation looks like in production
+## What re-derivation looks like
 
-Watch any coding / browser / ops agent across two runs of the same task class:
+Run 1: 40 tool calls discovering the login flow, the nav structure, which button
+downloads the report. Succeeds. Run 2, next day, fresh context: **the same 40 calls,
+the same dead ends, the same bill.**
 
-- **Run 1**: 40 tool calls, ~200K tokens spent discovering how to run the test suite, where
-  configs live, which env vars matter, what the deploy sequence is. Succeeds.
-- **Run 2** (next day, fresh context): **the entire thing again, from zero.** Same greps,
-  same dead ends, same tokens, same wall-clock.
+The harness threw away the most valuable thing it produced — the *procedure*. Agents
+have episodic amnesia not about facts (semantic memory solves that) but about **skills**.
 
-The harness threw away the most valuable artifact it produced: the *procedure*.
-Agents today have episodic amnesia not about facts (semantic memory solves that) but about
-**skills**.
+## The three token-spending paths
 
-## Why the incumbents don't solve this
+| Path | What it is | Who owns it |
+|---|---|---|
+| **Read** | Compress what goes *into* context | Compression proxies, provider-side context editing — crowded |
+| **Write** | Cross-session *semantic* memory ("the user prefers X") | Mem0, Zep, Letta — crowded |
+| **Reuse** | Replaying *how* a task was solved, so it is never re-derived | **The gap.** |
 
-- **Semantic memory (Mem0/Zep/Letta)** stores *facts*, then injects them into the prompt.
-  The agent still runs the full LLM control loop every step; facts shave a few dead ends
-  but the trajectory is re-planned token-by-token every time. Recall ≠ replay.
-- **Compression proxies** are stateless per-request middleware at the LLM API boundary.
-  It shrinks what the model reads; it cannot prevent a step from running, because at the
-  token-stream level "steps" don't exist.
-- **Workflow engines (Temporal, LangGraph graphs)** replay great — but a human has to
-  *author* the workflow. The whole point of agents is that nobody authored the procedure.
-  The missing piece is a machine that turns *agent-discovered* procedures into
-  *engine-replayable* workflows automatically.
-- **Prompt/skill files (CLAUDE.md, Claude Code skills)** are the manual, text-shaped version
-  of this. They prove demand — teams hand-write "how we do X here" docs for their agents —
-  but they're prose the LLM must re-interpret every run, not executable steps. Text hints
-  reduce exploration; they don't eliminate the control loop.
+Read-path tools make every token cheaper. Reuse-path tools make most tokens **not
+exist** — a categorically bigger lever. Compressing a 40-call exploration by 90% still
+costs 40 round-trips, 40 chances for the model to wander, and 40 steps of latency. Not
+doing the exploration costs ~0.
 
-## Why this problem is real (not a toy)
+Why the adjacent tools don't close it:
 
-1. **The cost structure is inverted from what people optimize.** Everyone races on per-token
-   price and compression ratio. The 10× lever is trajectory non-emission. Re-exploration is
-   the largest hidden cost in production agent fleets — it just doesn't show up on any
-   dashboard because nobody measures "tokens spent re-deriving known procedures."
-2. **Repetition is the norm, not the exception.** Production agent workloads are heavily
-   templated: "triage this ticket", "run the release checklist", "fill this vendor form",
-   "regenerate this report". The long tail of novel tasks exists, but the head is fat and
-   repetitive — exactly the shape memoization exploits.
-3. **It compounds.** A compression proxy is as good on day 400 as day 1. A playbook library
-   improves with every run and every repair — a data flywheel the stateless competitors
-   structurally cannot have.
-4. **It's measurable in one demo.** "Same task, run twice: 210K → 18K tokens, 90s → 8s,
-   identical output." No benchmark gymnastics needed.
+- **Semantic memory** stores facts and injects them. The agent still runs the full
+  control loop every step. **Recall ≠ replay.**
+- **Compression** sits at the token-stream boundary, where *steps do not exist*. It can
+  shrink a step; it cannot decline to run one.
+- **Workflow engines** replay beautifully — but a human authors the workflow. The whole
+  point of an agent is that nobody authored the procedure.
+- **Prompt/skill files** are the manual, prose-shaped version. They prove the demand and
+  reduce exploration; they are text the model re-interprets every run, not executable
+  steps.
 
-## The CS framing
+## The name
 
-This is **memoization applied to agent trajectories** — cache the result of an expensive
-computation (exploration), keyed by task class and environment fingerprint, with cache
-invalidation handled by assertions + scoped repair instead of TTLs. Hence the name: **Rote**.
+This is **memoization applied to agent trajectories**: cache the result of an expensive
+computation (exploration), keyed by task class and environment fingerprint, with
+invalidation by assertion and scoped repair rather than TTL. Hence **Rote**.
 
-The two genuinely hard sub-problems (and therefore the moat):
+The two genuinely hard sub-problems — and therefore the moat:
 
-- **Generalization**: which of the 40 recorded calls were *essential* vs incidental noise,
-  and which literal values are actually *parameters* of the task class?
-- **Self-healing**: the selector moved, the API version bumped, the repo layout changed —
-  repair the one broken step instead of falling back to full re-exploration.
+- **Generalization** — which of the 40 recorded calls were essential rather than
+  incidental, and which literals are actually *parameters* of the task class?
+- **Self-healing** — the selector moved; repair the one broken step instead of falling
+  back to full re-exploration.
+
+## The three levers, in order of size
+
+| Lever | Question | Plane |
+|---|---|---|
+| **Send less** | Why re-send a page that didn't change? | perception |
+| **Call less** | Why re-derive a known procedure with a frontier model? | decision |
+| **Remember** | Why does run #50 cost what run #1 cost? | learning |
+
+Every fix lives *inside* the loop — what the model sees, when it's called, which model,
+how actions are grounded. No external layer can retrofit that. It is why Rote is a
+harness, not middleware ([02](02-architecture.md)).
+
+## Where Rote fits — and where it doesn't
+
+Being honest about the fit is load-bearing; the benchmark reports the losses too
+([03](03-benchmark.md)).
+
+**Strong fit**
+
+- **Repeated portal work** — the same login → navigate → extract with different
+  parameters, hundreds of times a day. Deterministic control flow, high repetition.
+- **High-volume operational agents** — where the bill *is* the product.
+- **Expensive observation loops** — enterprise DOMs where the page dwarfs the reasoning.
+
+**Weak fit — say it out loud**
+
+- **One-off sites.** Memoization pays nothing on a task that never recurs; matcher
+  overhead is pure cost. Break-even ≈ 2 runs.
+- **Open-ended browsing.** "Research this topic" has no procedure to reuse.
+- **Sites that change meaning, not layout.** Repair handles a renamed selector. It
+  cannot handle a changed business rule, and must not pretend to.
+- **Creative work.** Out of scope by construction — the matcher must reliably *miss*
+  these rather than confidently replay something wrong.
+
+## Why browser agents are the right wedge
+
+Browser workflows are simultaneously the **worst case for re-derivation** (DOM
+exploration is the most token-expensive perception there is) and the **best case for
+memoization** (portals and forms are relentlessly repetitive). Drift is testable —
+mutate the DOM, watch the repair path. And the economics are legible: a token is a
+token, and anyone can check the arithmetic.
 
 Next: [02 — Architecture](02-architecture.md)

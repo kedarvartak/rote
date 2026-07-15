@@ -2,7 +2,7 @@
  * Minimal dot/bracket path resolver for `json_path_exists`/`json_path_equals`
  * — deliberately not a full JSONPath engine (no wildcards, no filters, no
  * expressions). The closed Expect DSL forbids arbitrary code execution
- * (docs/06-build-plan.md M0); a plain property-path lookup is data access,
+ * (docs/05-roadmap.md M0); a plain property-path lookup is data access,
  * not code, so it stays inside that constraint. Supports `a.b.c` and
  * `a.b[0].c` / `a[0].b`.
  */

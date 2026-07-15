@@ -3,7 +3,7 @@
 Zod schemas, pure data-transformation logic, and serializers for Rote's core
 data model: TrajectoryEvent, RunManifest, EnvFingerprint, Playbook, Patch, and
 the closed Expect DSL. See `docs/02-architecture.md` for the design behind
-these types and `docs/06-build-plan.md` (M0) for what this package covers.
+these types and `docs/05-roadmap.md` (M0) for what this package covers.
 
 This package has **zero I/O** — no filesystem, no network, no clock reads
 beyond what callers pass in. Recording (M1), replay execution (M2), matching

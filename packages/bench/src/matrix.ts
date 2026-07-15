@@ -9,7 +9,7 @@ export interface BenchmarkMatrixConfig {
 
 /**
  * Runs the benchmark matrix in deterministic task → phase → repetition order.
- * Driver errors become failed cells, never missing cells, because docs/06-build-plan.md
+ * Driver errors become failed cells, never missing cells, because docs/05-roadmap.md
  * M3 requires failed runs to mark their matrix cell instead of silently disappearing.
  */
 export async function runBenchmarkMatrix(config: BenchmarkMatrixConfig): Promise<BenchResult> {

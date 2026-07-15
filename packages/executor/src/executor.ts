@@ -35,7 +35,7 @@ export type ExecutorOutcome = 'success' | 'failure' | 'fallback';
 export interface ExecutorResult {
   outcome: ExecutorOutcome;
   runId: string;
-  /** Every step that fully passed, in execution order — populated on every outcome, including fallback, so a caller always knows what already ran (docs/06-build-plan.md M2 "no-side-effect-repeat guard"). */
+  /** Every step that fully passed, in execution order — populated on every outcome, including fallback, so a caller always knows what already ran (docs/05-roadmap.md M2 "no-side-effect-repeat guard"). */
   completedStepIds: string[];
   failedStepId?: string;
   reason?: string;
@@ -57,7 +57,7 @@ export interface ExecutorDeps {
   clock?: () => Date;
 }
 
-/** Judgment output outside its declared enum is a hard error, never a silently-chosen branch (docs/06-build-plan.md M2). */
+/** Judgment output outside its declared enum is a hard error, never a silently-chosen branch (docs/05-roadmap.md M2). */
 export class JudgmentOutOfEnumError extends Error {
   constructor(stepId: string, got: string, options: readonly string[]) {
     super(`Judgment step "${stepId}" returned "${got}", not one of [${options.join(', ')}]`);
@@ -79,7 +79,7 @@ function checkExpect(expect: Expect | undefined, bindings: ParamBindings, world:
 
 /**
  * Walks a Playbook's step DAG against the real tool/LLM boundary, recording
- * its own trajectory as it goes (see docs/06-build-plan.md M2 "Executor
+ * its own trajectory as it goes (see docs/05-roadmap.md M2 "Executor
  * emits its own trajectory through the recorder"). Never reports 'success'
  * if any `verify` check fails, even when every step passed — sacred
  * invariant #1 (project invariant "never silently wrong"), enforced in

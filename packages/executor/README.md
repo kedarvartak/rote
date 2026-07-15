@@ -3,7 +3,7 @@
 The replay executor: walks a `Playbook`'s step DAG against the real tool/LLM
 boundary. No Matcher, no Distiller — playbook selection is the caller's job
 (a CLI flag today; M4's job later). See `docs/02-architecture.md` "Replay
-Executor" and `docs/06-build-plan.md` (M2) for the design behind this.
+Executor" and `docs/05-roadmap.md` (M2) for the design behind this.
 
 ## Public API
 
@@ -69,7 +69,7 @@ through real local Chrome with zero LLM calls in the opt-in CDP suite.
 npm test --workspace @rote/executor
 ```
 
-Every scenario in `docs/06-build-plan.md` M2's automated-test list runs
+Every scenario in `docs/05-roadmap.md` M2's automated-test list runs
 against fake `ToolCaller`/`LlmClient` doubles (`test/helpers/`), never a real
 LLM or MCP server — see `test/executor.test.ts` and
 `test/invariants/never-success-on-failed-verify.test.ts` for the sacred

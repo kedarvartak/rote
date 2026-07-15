@@ -5,7 +5,7 @@ milestone plan — read this before opening a PR.
 
 ## Before you start
 
-- Read [`docs/06-build-plan.md`](docs/06-build-plan.md) for the current
+- Read [`docs/05-roadmap.md`](docs/05-roadmap.md) for the current
   milestone. Don't build ahead of the milestone order (e.g. executor before
   matcher, matcher before distiller) — later milestones depend on earlier
   ones being proven first.

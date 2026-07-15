@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { z } from 'zod';
 
 /**
- * Model prices for the head-to-head's $-per-task column (docs/17 W5 G1 report).
+ * Model prices for the head-to-head's $-per-task column (docs/05 W5 G1 report).
  *
  * Prices are data, not logic: they change without notice, so the table is dated
  * and overridable (`rote-bench headhead --prices <file>`) rather than compiled
