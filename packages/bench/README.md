@@ -193,9 +193,21 @@ wrong competitor.
 
 - **`assembleHeadToHeadRecords`** — merges recorded Rote runs + competitor
   sidecars into the neutral records the gate consumes.
-- **`competitorRecordsFromRaw`** — the adapter contract: maps a competitor's
-  minimal per-run output (`task`, `outcome`, tokens, `duration_ms`) onto neutral
-  records with fairness provenance attached in-repo, not per adapter.
+- **`readCompetitorRawRuns` / `competitorRecordsFromRaw`** — the adapter contract:
+  loads a competitor's minimal per-run output (`task`, `outcome`, tokens,
+  `duration_ms`) and maps it onto neutral records with fairness provenance
+  attached in-repo, not per adapter. Exposed as `rote-bench competitor-records`,
+  whose `--harness`/`--model`/`--cache-adjusted` are required with no defaults so
+  un-adjusted counts cannot be compared without it showing in the record.
+
+```bash
+rote-bench competitor-records raw-runs.json --harness browser-use --model claude-opus-4-8 \
+  --cache-adjusted true --config-notes "browser-use 0.13.4, defaults" --out browser-use.json
+```
+
+The Browser Use runner that produces `raw-runs.json` is out-of-process (it is a
+Python library) and lives in [`scripts/bench/headhead/`](../../scripts/bench/headhead/README.md),
+which is the full runbook for the W5 number.
 
 ```json
 {

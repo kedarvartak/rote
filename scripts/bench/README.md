@@ -3,6 +3,9 @@
 Local, deterministic M3 smoke scripts plus the live-run contract for producing
 the real M3 gate report.
 
+For the V1 launch number (Rote vs Browser Use, tokens per task at success parity),
+see [`headhead/README.md`](headhead/README.md).
+
 For real frozen browser-agent runs, start with
 [`run-live-benchmark.md`](run-live-benchmark.md) and
 [`live-b1-b3-plan.example.json`](live-b1-b3-plan.example.json).
