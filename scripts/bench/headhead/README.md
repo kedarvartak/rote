@@ -52,8 +52,15 @@ on this side — the totals are summed from recorded artifacts, never hand-typed
 ```bash
 cd scripts/bench/headhead/browser-use
 pip install -r requirements.txt
-python run_browser_use.py --out ../../../../bench-out/browser-use --model claude-opus-4-8
+python run_browser_use.py --out ../../../../bench-out/browser-use
 ```
+
+`--model` defaults to the model `tasks.json` pins for **both** harnesses, and
+`--provider` defaults to `ROTE_LLM_PROVIDER` from your `.env` — so passing
+nothing is the fair thing. Browser Use is a pinned dependency
+(`browser-use==0.13.4`), never a fork or a vendored copy: `docs/17`'s launch
+checklist requires that adapters "import competitors as dependencies, not forks",
+and a fork we control is a fork we could tune.
 
 This writes `raw-runs.json` plus a per-run dump under `raw/` (usage, visited
 URLs, errors, final result, and the installed browser-use version). Publish
@@ -68,7 +75,7 @@ illustrative example, **not** a real capture and not evidence of anything.
 ```bash
 node packages/bench/bin/rote-bench.js competitor-records bench-out/browser-use/raw-runs.json \
   --harness browser-use \
-  --model claude-opus-4-8 \
+  --model "$(python3 -c 'import json;print(json.load(open("scripts/bench/headhead/tasks.json"))["model"])')" \
   --cache-adjusted true \
   --config-notes "browser-use 0.13.4, default DOM serializer, max_steps=25" \
   --out bench-out/browser-use.json

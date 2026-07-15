@@ -26,6 +26,9 @@ export const PriceTableSchema = z.object({
 });
 export type PriceTable = z.infer<typeof PriceTableSchema>;
 
+const ANTHROPIC_SOURCE = 'https://platform.claude.com/docs/en/about-claude/models/overview';
+const OPENAI_SOURCE = 'https://developers.openai.com/api/docs/pricing';
+
 /**
  * Prices as published on 2026-07-15. Cache reads/writes bill at different rates;
  * these are the base per-token rates, which is why a record's `cache_adjusted`
@@ -39,15 +42,35 @@ export type PriceTable = z.infer<typeof PriceTableSchema>;
  */
 export const DEFAULT_PRICE_TABLE: PriceTable = PriceTableSchema.parse({
   version: '2026-07-15',
-  source: 'https://platform.claude.com/docs/en/about-claude/models/overview',
+  source: `${ANTHROPIC_SOURCE} + ${OPENAI_SOURCE}`,
   prices: {
+    // Anthropic — platform.claude.com model overview.
     'claude-fable-5': { input_usd_per_mtok: 10, output_usd_per_mtok: 50 },
+    'claude-mythos-5': { input_usd_per_mtok: 10, output_usd_per_mtok: 50 },
     'claude-opus-4-8': { input_usd_per_mtok: 5, output_usd_per_mtok: 25 },
     'claude-opus-4-7': { input_usd_per_mtok: 5, output_usd_per_mtok: 25 },
     'claude-opus-4-6': { input_usd_per_mtok: 5, output_usd_per_mtok: 25 },
     'claude-sonnet-5': { input_usd_per_mtok: 3, output_usd_per_mtok: 15 },
     'claude-sonnet-4-6': { input_usd_per_mtok: 3, output_usd_per_mtok: 15 },
     'claude-haiku-4-5': { input_usd_per_mtok: 1, output_usd_per_mtok: 5 },
+
+    // OpenAI — developers.openai.com pricing. `gpt-5.6` is the documented alias
+    // for `gpt-5.6-sol`; both are listed so a record using either is priced.
+    'gpt-5.6': { input_usd_per_mtok: 5, output_usd_per_mtok: 30 },
+    'gpt-5.6-sol': { input_usd_per_mtok: 5, output_usd_per_mtok: 30 },
+    'gpt-5.6-terra': { input_usd_per_mtok: 2.5, output_usd_per_mtok: 15 },
+    'gpt-5.6-luna': { input_usd_per_mtok: 1, output_usd_per_mtok: 6 },
+    'gpt-5.5': { input_usd_per_mtok: 5, output_usd_per_mtok: 30 },
+    'gpt-5.5-pro': { input_usd_per_mtok: 30, output_usd_per_mtok: 180 },
+    'gpt-5.4': { input_usd_per_mtok: 2.5, output_usd_per_mtok: 15 },
+    'gpt-5.4-mini': { input_usd_per_mtok: 0.75, output_usd_per_mtok: 4.5 },
+    'gpt-5.4-nano': { input_usd_per_mtok: 0.2, output_usd_per_mtok: 1.25 },
+    'gpt-5.4-pro': { input_usd_per_mtok: 30, output_usd_per_mtok: 180 },
+    'gpt-5.3-codex': { input_usd_per_mtok: 1.75, output_usd_per_mtok: 14 },
+    // The `@rote/llm` OpenAI default. Not on the pricing page's headline table,
+    // but its model page prices it and OpenAI's deprecations page lists no
+    // shutdown date, so it is a live model a benchmark run can legitimately use.
+    'gpt-4.1-mini': { input_usd_per_mtok: 0.4, output_usd_per_mtok: 1.6 },
   },
 });
 
