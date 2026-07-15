@@ -165,9 +165,21 @@ a seeded bootstrap. The gate passes only when the range's *lower bound* clears t
 floor: a conservative, publishable claim like *"38% fewer tokens (95% CI:
 31–44%)"*. Fewer than the minimum runs → the win is not certifiable, by design.
 
+The report is the docs/17 W5 **G1 report**: tokens, latency, and $ per task. It
+renders a reductions table (tokens / latency / $ at the reported parity) plus a
+per-harness detail table (runs, success rate, avg tokens, avg/p50/p95 latency in
+ms, $/task). $ comes from a dated, overridable price table (`--prices`); an
+**unpriced model is labeled `price unavailable`, never $0** — a zero would read
+as "free" and quietly flatter whichever harness lacks a price. The launch *gate*
+stays token-based; latency and $ are reported, not gated, in V1 (docs/18 P3).
+
 - **`readCompetitorRecords`** — loads a records file (bare array or `{ records }`).
 - **`buildHeadToHead` / `renderHeadToHeadReport`** — per-task subject-vs-baseline
-  economics with mean token reduction and success parity.
+  economics: token/latency/$ reductions, latency percentiles, and success parity.
+- **`DEFAULT_PRICE_TABLE` / `priceForModel` / `runCostUsd` / `readPriceTable`** —
+  the dated price table (captured 2026-07-15) and pure cost arithmetic.
+- **`mean` / `percentile` / `reduction`** (`stats.ts`) — pure, shared by the
+  aggregation and the gate's bootstrap.
 - **`bootstrapReductionInterval`** — pure, deterministic (fixed seed) reduction
   point estimate plus confidence range from each harness's per-run token totals.
 - **`evaluateLaunchGate`** — the W5 gate: a comparison passes only at success
@@ -175,7 +187,7 @@ floor: a conservative, publishable claim like *"38% fewer tokens (95% CI:
 
 ```bash
 rote-bench records sources.json --out bench-out/records.json
-rote-bench headhead bench-out/records.json --subject rote --out bench-out/headhead.md
+rote-bench headhead bench-out/records.json --subject rote --prices prices.json --out bench-out/headhead.md
 rote-bench launch-gate bench-out/records.json --subject rote --min-token-reduction 0.3 --min-runs 15
 ```
 

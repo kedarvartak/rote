@@ -1,4 +1,5 @@
 import type { HeadToHeadComparison, HeadToHeadResult } from './competitor.js';
+import { mean, percentile, reduction } from './stats.js';
 
 /** Default number of bootstrap resamples; fixed so gate output is deterministic. */
 export const DEFAULT_RESAMPLES = 10000;
@@ -202,15 +203,6 @@ function evaluateComparison(
   };
 }
 
-function reduction(subjectMean: number, baselineMean: number): number {
-  if (baselineMean <= 0) return 0;
-  return 1 - subjectMean / baselineMean;
-}
-
-function mean(values: readonly number[]): number {
-  return values.reduce((sum, v) => sum + v, 0) / values.length;
-}
-
 /** One bootstrap resample mean: draw values.length items with replacement. */
 function resampleMean(values: readonly number[], random: () => number): number {
   let sum = 0;
@@ -218,16 +210,6 @@ function resampleMean(values: readonly number[], random: () => number): number {
     sum += values[Math.floor(random() * values.length)] as number;
   }
   return sum / values.length;
-}
-
-/** Linear-interpolation percentile on an ascending-sorted array; p in [0,1]. */
-function percentile(sorted: readonly number[], p: number): number {
-  if (sorted.length === 1) return sorted[0] as number;
-  const rank = p * (sorted.length - 1);
-  const lo = Math.floor(rank);
-  const hi = Math.ceil(rank);
-  const weight = rank - lo;
-  return (sorted[lo] as number) * (1 - weight) + (sorted[hi] as number) * weight;
 }
 
 /** Small deterministic PRNG (mulberry32) so bootstrap output is reproducible. */
