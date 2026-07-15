@@ -9,6 +9,9 @@ labeled `skip-changelog`.
 
 ## [Unreleased]
 
+### Changed
+- **P1**: Head-to-head report is now the docs/17 W5 G1 report — latency (avg/p50/p95 ms) and \$-per-task columns alongside tokens, priced from a dated overridable table (`--prices`) that labels an unpriced model rather than reporting it as \$0 (#42).
+
 ### Docs
 - **P1**: Record the head-to-head grading rule in `docs/03` (competitors are graded by the same symmetric verification Rote applies to itself; a missing measurement is never scored) and replace `docs/17` W5's superseded "×5 runs" variance rule with the shipped ≥15-runs bootstrap lower bound.
 

@@ -11,6 +11,7 @@ import { renderSerializerComparison, SerializerParityGateError } from './seriali
 import { compareSerializersFromSpec } from './serializer-spec.js';
 import { buildHeadToHead, readCompetitorRecords, renderHeadToHeadReport } from './competitor.js';
 import { evaluateLaunchGate, LaunchGateFailedError, renderLaunchGateResult } from './competitor-gate.js';
+import { readPriceTable } from './pricing.js';
 import { assembleHeadToHeadRecords, competitorRecordsFromRaw, readCompetitorRawRuns } from './headhead-assembler.js';
 
 interface ReportOptions {
@@ -19,6 +20,7 @@ interface ReportOptions {
   minTokenReductionRatio?: number;
   minRuns?: number;
   subject?: string;
+  prices?: string;
 }
 
 /** CLI entrypoint for M3 report generation from recorded run artifacts. */
@@ -77,7 +79,10 @@ export async function main(argv: string[]): Promise<string> {
   if ((command === 'headhead' || command === 'launch-gate') && subject) {
     const options = parseOptions(rest);
     const records = await readCompetitorRecords(resolve(subject));
-    const result = buildHeadToHead(records, { subject: options.subject });
+    const result = buildHeadToHead(records, {
+      subject: options.subject,
+      ...(options.prices ? { prices: await readPriceTable(options.prices) } : {}),
+    });
     if (command === 'launch-gate') {
       const gate = evaluateLaunchGate(result, {
         minTokenReductionRatio: options.minTokenReductionRatio,
@@ -215,6 +220,13 @@ function parseOptions(args: string[]): ReportOptions {
       i += 1;
       continue;
     }
+    if (arg === '--prices') {
+      const value = args[i + 1];
+      if (!value) throw new Error('--prices requires a path to a price table JSON file');
+      options.prices = value;
+      i += 1;
+      continue;
+    }
     if (arg === '--subject') {
       const value = args[i + 1];
       if (!value) throw new Error('--subject requires a harness id');
@@ -237,5 +249,5 @@ function parseOptions(args: string[]): ReportOptions {
 }
 
 function usage(): string {
-  return 'usage: rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
 }

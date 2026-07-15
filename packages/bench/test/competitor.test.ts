@@ -214,7 +214,91 @@ describe('renderHeadToHeadReport', () => {
     ]);
     const md = renderHeadToHeadReport(result);
     expect(md).toBe(renderHeadToHeadReport(result));
-    expect(md).toContain('| B1 | browser-use | 100 | 400 | 75.0% | 100.0% | 100.0% | yes |');
+    expect(md).toContain('| B1 | browser-use | 75.0% | 0.0% | 75.0% | yes |');
+    expect(md).toContain('| B1 | rote | 1 | 100.0% | 100 | 1000 | 1000 | 1000 | $0.0005 |');
+    expect(md).toContain('| B1 | browser-use | 1 | 100.0% | 400 | 1000 | 1000 | 1000 | $0.0020 |');
+  });
+
+  it('labels an unpriced model instead of rendering it as free', () => {
+    const result = buildHeadToHead([
+      record({ task: 'B1', harness: 'rote', model: 'claude-opus-4-8' }),
+      record({ task: 'B1', harness: 'browser-use', model: 'some-unlisted-model' }),
+    ]);
+    const md = renderHeadToHeadReport(result);
+
+    expect(result.comparisons[0]?.baseline.avg_cost_usd).toBeUndefined();
+    // A $0 here would read as "the competitor is free" and flatter nobody honestly.
+    expect(md).not.toContain('$0.0000');
+    expect(md).toContain('price unavailable');
+    // The token reduction is still reported — an unpriced model costs us the $
+    // column, not the whole comparison.
+    expect(result.comparisons[0]?.cost_reduction_ratio).toBeUndefined();
+    expect(result.comparisons[0]?.token_reduction_ratio).toBe(0);
+  });
+
+  it('records which price table produced the $ column', () => {
+    const result = buildHeadToHead([record({ harness: 'rote' }), record({ harness: 'browser-use' })]);
+    expect(renderHeadToHeadReport(result)).toContain(`Prices: \`${result.prices.version}\``);
+  });
+});
+
+describe('latency and cost aggregation', () => {
+  const runs = (harness: string, durations: number[]) =>
+    durations.map((duration_ms, i) => record({ harness, repetition: i, duration_ms }));
+
+  it('summarizes latency as avg/p50/p95 in ms over successful runs', () => {
+    const [summary] = summarizeHarnessRuns(runs('rote', [1000, 2000, 3000, 4000]));
+    expect(summary?.avg_duration_ms).toBe(2500);
+    expect(summary?.p50_duration_ms).toBe(2500);
+    // Linear interpolation between the 3rd and 4th value: 3000 + 0.85 * 1000.
+    // Close-to, not exact: the interpolation lands on 3849.9999999999995 in
+    // binary floating point. Rendering rounds to 2dp, so the report is unaffected.
+    expect(summary?.p95_duration_ms).toBeCloseTo(3850, 6);
+  });
+
+  it('excludes failed runs from latency and cost, as it does from tokens', () => {
+    const [summary] = summarizeHarnessRuns([
+      record({ harness: 'rote', repetition: 0, duration_ms: 1000 }),
+      record({ harness: 'rote', repetition: 1, outcome: 'failure', duration_ms: 99_000 }),
+    ]);
+    expect(summary?.avg_duration_ms).toBe(1000);
+    expect(summary?.p95_duration_ms).toBe(1000);
+    expect(summary?.runs).toBe(2);
+    // The failure still lowers the success rate the parity gate reads.
+    expect(summary?.success_rate).toBe(0.5);
+  });
+
+  it('prices a run from its own model at the table rate', () => {
+    // claude-opus-4-8: $5/MTok input, $25/MTok output.
+    const [summary] = summarizeHarnessRuns([
+      record({ harness: 'rote', input_tokens: 1_000_000, output_tokens: 1_000_000 }),
+    ]);
+    expect(summary?.avg_cost_usd).toBe(30);
+  });
+
+  it('reports latency and $ reductions alongside the token reduction', () => {
+    const result = buildHeadToHead([
+      record({ task: 'B1', harness: 'rote', input_tokens: 100, output_tokens: 0, duration_ms: 1000 }),
+      record({ task: 'B1', harness: 'browser-use', input_tokens: 400, output_tokens: 0, duration_ms: 4000 }),
+    ]);
+    const comparison = result.comparisons[0];
+    expect(comparison?.token_reduction_ratio).toBe(0.75);
+    expect(comparison?.latency_reduction_ratio).toBe(0.75);
+    // Same model on both sides, so $ tracks tokens exactly.
+    expect(comparison?.cost_reduction_ratio).toBe(0.75);
+  });
+
+  it('honors an overriding price table so actual billed rates can be reported', () => {
+    const prices = {
+      version: '2026-07-15-test',
+      source: 'test',
+      prices: { 'claude-opus-4-8': { input_usd_per_mtok: 1, output_usd_per_mtok: 1 } },
+    };
+    const [summary] = summarizeHarnessRuns(
+      [record({ harness: 'rote', input_tokens: 1_000_000, output_tokens: 1_000_000 })],
+      prices,
+    );
+    expect(summary?.avg_cost_usd).toBe(2);
   });
 });
 
