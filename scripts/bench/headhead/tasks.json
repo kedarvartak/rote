@@ -1,0 +1,27 @@
+{
+  "fixture_port": 8080,
+  "repetitions": 18,
+  "tasks": [
+    {
+      "id": "B1",
+      "name": "download latest report",
+      "path": "b1-report.html",
+      "prompt": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+      "verify_text": "Report download complete: quarterly-report.pdf"
+    },
+    {
+      "id": "B2",
+      "name": "vendor registration",
+      "path": "b2-vendor-form.html",
+      "prompt": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+      "verify_text": "Vendor registration complete"
+    },
+    {
+      "id": "B3",
+      "name": "catalog search extraction",
+      "path": "b3-catalog.html",
+      "prompt": "Search the catalog for \"alpha\" and open the Alpha result.",
+      "verify_text": "Alpha product opened"
+    }
+  ]
+}

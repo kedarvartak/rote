@@ -1,0 +1,4 @@
+# Pinned so the published competitor number is reproducible (docs/03). The runner
+# also records the installed version in every raw dump, so a report can be checked
+# against the version that actually produced it rather than against this file.
+browser-use==0.13.4

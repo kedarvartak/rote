@@ -99,6 +99,21 @@ export const CompetitorRawRunSchema = z.object({
 });
 export type CompetitorRawRun = z.infer<typeof CompetitorRawRunSchema>;
 
+const CompetitorRawRunsFileSchema = z.union([
+  z.array(CompetitorRawRunSchema).min(1),
+  z.object({ runs: z.array(CompetitorRawRunSchema).min(1) }),
+]);
+
+/**
+ * Loads an adapter's raw per-run output (bare array or `{ runs }`), rejecting a
+ * file that does not carry every field the neutral record needs — an adapter that
+ * cannot report its tokens must fail here rather than contribute a silent zero.
+ */
+export async function readCompetitorRawRuns(path: string): Promise<CompetitorRawRun[]> {
+  const parsed = CompetitorRawRunsFileSchema.parse(JSON.parse(await readFile(resolve(path), 'utf8')));
+  return Array.isArray(parsed) ? parsed : parsed.runs;
+}
+
 export interface CompetitorAdapterOptions {
   harness: string;
   model: string;

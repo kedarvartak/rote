@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: Reproducible Browser Use competitor runner (`scripts/bench/headhead/`) plus a `rote-bench competitor-records` mapping step that stamps required fairness provenance onto raw adapter output, so both harnesses run the same fixture tasks from one task file into the head-to-head gate (docs/17 W5, #41).
 - **P1**: Repetition fan-out (`repetitions: N`) in the `rote-bench run` command plan, and `rote run` now honors `ROTE_RUN_ID`, so one plan drives ≥15 real recorded Rote runs per task straight into the head-to-head assembler (docs/17 W5, #40).
 - **P1**: `rote-bench records` head-to-head assembler that builds the comparison records from *real* recorded Rote run artifacts (summed from `.rote/runs` manifests, never hand-typed) merged with competitor sidecars, plus a generic `competitorRecordsFromRaw` adapter contract and a harness-label integrity check (docs/17 W5).
 - **P1**: Head-to-head competitor benchmark adapter in `@rote/bench` — a harness-neutral run record, a Rote-cells-to-record bridge, per-task subject-vs-baseline aggregation, and a `rote-bench launch-gate` that passes only at success parity, with ≥15 successful runs per harness, and a seeded-bootstrap token-reduction confidence range whose lower bound clears the floor (docs/17 W5).

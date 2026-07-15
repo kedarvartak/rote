@@ -1,0 +1,7 @@
+[
+  { "task": "B1", "outcome": "success", "input_tokens": 41230, "output_tokens": 1840, "duration_ms": 28400, "repetition": 0, "phase": "cold" },
+  { "task": "B1", "outcome": "success", "input_tokens": 39880, "output_tokens": 1755, "duration_ms": 26100, "repetition": 1, "phase": "cold" },
+  { "task": "B1", "outcome": "failure", "input_tokens": 52100, "output_tokens": 2310, "duration_ms": 44800, "repetition": 2, "phase": "cold" },
+  { "task": "B2", "outcome": "success", "input_tokens": 63400, "output_tokens": 3120, "duration_ms": 51200, "repetition": 0, "phase": "cold" },
+  { "task": "B3", "outcome": "abandoned", "input_tokens": 71950, "output_tokens": 2480, "duration_ms": 62700, "repetition": 0, "phase": "cold" }
+]

@@ -11,7 +11,7 @@ import { renderSerializerComparison, SerializerParityGateError } from './seriali
 import { compareSerializersFromSpec } from './serializer-spec.js';
 import { buildHeadToHead, readCompetitorRecords, renderHeadToHeadReport } from './competitor.js';
 import { evaluateLaunchGate, LaunchGateFailedError, renderLaunchGateResult } from './competitor-gate.js';
-import { assembleHeadToHeadRecords } from './headhead-assembler.js';
+import { assembleHeadToHeadRecords, competitorRecordsFromRaw, readCompetitorRawRuns } from './headhead-assembler.js';
 
 interface ReportOptions {
   out?: string;
@@ -46,6 +46,22 @@ export async function main(argv: string[]): Promise<string> {
     }
     if (command === 'serializer-gate' && !result.passed) throw new SerializerParityGateError(result);
     return options.out ? `wrote ${options.out}` : markdown;
+  }
+  if (command === 'competitor-records' && subject) {
+    const options = parseCompetitorRecordsOptions(rest);
+    const records = competitorRecordsFromRaw(await readCompetitorRawRuns(subject), {
+      harness: options.harness,
+      model: options.model,
+      cache_adjusted: options.cacheAdjusted,
+      ...(options.configNotes ? { config_notes: options.configNotes } : {}),
+    });
+    const json = `${JSON.stringify(records, null, 2)}\n`;
+    if (options.out) {
+      await mkdir(dirname(options.out), { recursive: true });
+      await writeFile(options.out, json, 'utf8');
+      return `wrote ${options.out} (${records.length} ${options.harness} records)`;
+    }
+    return json;
   }
   if (command === 'records' && subject) {
     const options = parseOptions(rest);
@@ -128,6 +144,50 @@ function parseSerializerOptions(args: string[]): Pick<ReportOptions, 'out'> {
   throw new Error('serializer comparison accepts only --out <report.md>');
 }
 
+interface CompetitorRecordsOptions {
+  harness: string;
+  model: string;
+  cacheAdjusted: boolean;
+  configNotes?: string;
+  out?: string;
+}
+
+/**
+ * Parses the competitor mapping options. `--harness`, `--model` and
+ * `--cache-adjusted` are all required with no defaults: fairness provenance is
+ * what makes the published number auditable (docs/03), and a defaulted
+ * `cache_adjusted` would let un-adjusted competitor counts be compared without
+ * it showing anywhere in the record.
+ */
+function parseCompetitorRecordsOptions(args: string[]): CompetitorRecordsOptions {
+  const values = new Map<string, string>();
+  for (let i = 0; i < args.length; i += 2) {
+    const flag = args[i];
+    const value = args[i + 1];
+    if (!flag?.startsWith('--') || value === undefined) throw new Error(competitorRecordsUsage());
+    if (!['--harness', '--model', '--cache-adjusted', '--config-notes', '--out'].includes(flag)) {
+      throw new Error(`unknown option: ${flag}`);
+    }
+    values.set(flag, value);
+  }
+  const harness = values.get('--harness');
+  const model = values.get('--model');
+  const cacheAdjusted = values.get('--cache-adjusted');
+  if (!harness || !model || cacheAdjusted === undefined) throw new Error(competitorRecordsUsage());
+  if (cacheAdjusted !== 'true' && cacheAdjusted !== 'false') throw new Error('--cache-adjusted must be true or false');
+  return {
+    harness,
+    model,
+    cacheAdjusted: cacheAdjusted === 'true',
+    configNotes: values.get('--config-notes'),
+    out: values.get('--out'),
+  };
+}
+
+function competitorRecordsUsage(): string {
+  return 'rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json]';
+}
+
 function parseOptions(args: string[]): ReportOptions {
   const options: ReportOptions = {};
   for (let i = 0; i < args.length; i += 1) {
@@ -177,5 +237,5 @@ function parseOptions(args: string[]): ReportOptions {
 }
 
 function usage(): string {
-  return 'usage: rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
 }
