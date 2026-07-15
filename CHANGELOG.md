@@ -15,7 +15,11 @@ labeled `skip-changelog`.
 ### Fixed
 - **P1**: Pin the model on every Rote run in the head-to-head plan. The plan omitted `--model`, so runs silently used the SDK default while the records still declared the model from `sources.json` — a record asserting a run it did not make, and a head-to-head that could compare two different models.
 
+### Added
+- **P1**: OpenAI model prices in the head-to-head price table (GPT-5.6/5.5/5.4 families, `gpt-5.3-codex`, and the `@rote/llm` default `gpt-4.1-mini`), captured from OpenAI's published pricing on 2026-07-15, so `$/task` is reported rather than `price unavailable` on an OpenAI-driven run.
+
 ### Changed
+- **P1**: Browser Use runner takes `--provider anthropic|openai` (defaulting to `ROTE_LLM_PROVIDER`) instead of hardcoding `ChatAnthropic`, and `--model` now defaults to the model `tasks.json` pins for both harnesses — so running it with no flags is the fair comparison.
 - **P1**: Head-to-head report is now the docs/17 W5 G1 report — latency (avg/p50/p95 ms) and \$-per-task columns alongside tokens, priced from a dated overridable table (`--prices`) that labels an unpriced model rather than reporting it as \$0 (#42).
 
 ### Docs

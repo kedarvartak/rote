@@ -17,7 +17,8 @@ fairness provenance live in-repo, reviewable, in `headhead-assembler.ts`.
 Usage:
     pip install -r requirements.txt
     node ../serve-fixtures.mjs 8080 &
-    ANTHROPIC_API_KEY=... python run_browser_use.py --out ./out --model claude-opus-4-8
+    set -a; source ../../../../.env; set +a     # provider + API key
+    python run_browser_use.py --out ./out       # --model defaults to tasks.json
 """
 
 from __future__ import annotations
@@ -25,6 +26,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import time
 from dataclasses import asdict, dataclass
 from importlib import metadata
@@ -146,17 +148,34 @@ def classify_outcome(history: Any, page_text: str | None, verify_text: str) -> s
     return "success" if concluded_done and verify_text in page_text else "failure"
 
 
+def build_llm(provider: str, model: str) -> Any:
+    """Constructs the Browser Use chat client for `provider`.
+
+    Both providers are supported because fairness requires the *same* model on
+    both sides (docs/03), and which model that is depends on whose key the
+    operator has — not on anything about Browser Use.
+    """
+    if provider == "anthropic":
+        try:
+            from browser_use import ChatAnthropic  # browser-use >= 0.13
+        except ImportError:  # pragma: no cover - older layout
+            from browser_use.llm import ChatAnthropic
+        return ChatAnthropic(model=model)
+    if provider == "openai":
+        try:
+            from browser_use import ChatOpenAI  # browser-use >= 0.13
+        except ImportError:  # pragma: no cover - older layout
+            from browser_use.llm import ChatOpenAI
+        return ChatOpenAI(model=model)
+    raise SystemExit(f'--provider must be "openai" or "anthropic", got {provider!r}')
+
+
 async def run_once(task: dict[str, Any], repetition: int, args: argparse.Namespace) -> tuple[RawRun, dict[str, Any]]:
     # Imported lazily so `--help` works without the dependency installed.
     from browser_use import Agent
 
-    try:
-        from browser_use import ChatAnthropic  # browser-use >= 0.13
-    except ImportError:  # pragma: no cover - older layout
-        from browser_use.llm import ChatAnthropic
-
     url = f"http://127.0.0.1:{args.port}/{task['path']}"
-    agent = Agent(task=f"{task['prompt']}\nStart at {url}", llm=ChatAnthropic(model=args.model))
+    agent = Agent(task=f"{task['prompt']}\nStart at {url}", llm=build_llm(args.provider, args.model))
 
     started = time.monotonic()
     history = await agent.run(max_steps=args.max_steps)
@@ -178,6 +197,7 @@ async def run_once(task: dict[str, Any], repetition: int, args: argparse.Namespa
         **asdict(run),
         "url": url,
         "browser_use_version": browser_use_version(),
+        "provider": args.provider,
         "model": args.model,
         "is_successful": _call_safely(history, "is_successful"),
         "final_result": _call_safely(history, "final_result"),
@@ -202,7 +222,16 @@ async def main() -> None:
     tasks_config = json.loads(TASKS_PATH.read_text())
     parser = argparse.ArgumentParser(description="Run Browser Use over the Rote head-to-head fixture tasks")
     parser.add_argument("--out", type=Path, required=True, help="output directory for raw-runs.json and raw/")
-    parser.add_argument("--model", required=True, help="model id; must match the Rote runs exactly")
+    # Defaults to the model tasks.json pins for both harnesses, so the fair thing
+    # is what happens when you pass nothing. Overriding it is possible but makes
+    # the comparison unfair unless you change the Rote plan to match.
+    parser.add_argument("--model", default=tasks_config["model"], help="model id; must match the Rote runs exactly")
+    parser.add_argument(
+        "--provider",
+        default=os.environ.get("ROTE_LLM_PROVIDER", "anthropic"),
+        choices=["anthropic", "openai"],
+        help="which provider serves --model; reads ROTE_LLM_PROVIDER by default",
+    )
     parser.add_argument("--port", type=int, default=tasks_config["fixture_port"], help="fixture server port")
     parser.add_argument("--repetitions", type=int, default=tasks_config["repetitions"], help="runs per task (gate needs >= 15 successes)")
     parser.add_argument("--max-steps", type=int, default=25, help="Browser Use step ceiling per run")
