@@ -84,6 +84,42 @@ invoke the baseline agent or replay executor while honoring the injected env:
 A command that exits non-zero becomes a failed benchmark cell. A command that
 exits zero but does not write its run artifacts is also recorded as failed.
 
+### Producing ≥15 Rote runs per task (repetition fan-out)
+
+The head-to-head launch gate needs ≥15 successful runs per harness (`--min-runs`).
+Rather than hand-author one plan entry per repetition, give an entry
+`repetitions: N` instead of `repetition`: it expands to N runs with `repetition`
+1..N and auto-derived ids (`<task>-<phase>-<rep>`). The command is a real
+`rote run`, which honors `ROTE_RUN_ID` and `ROTE_BASE_DIR` (set by the driver) and
+writes a self-describing manifest with `token_usage` — no usage sidecar needed.
+
+Start the frozen fixture server first (exported as `FixtureSiteServer` from
+`@rote/browser`), then run one plan:
+
+```json
+{
+  "runs": [
+    {
+      "task": { "id": "B1", "name": "download report" },
+      "phase": "cold",
+      "command": "rote",
+      "args": ["run", "B1: download the latest report", "--url", "http://localhost:8080/b1", "--verify-text", "Download complete"],
+      "repetitions": 18
+    }
+  ]
+}
+```
+
+```bash
+rote-bench run headhead-plan.json --out bench-out/            # 18 recorded runs -> bench-spec.json
+# then reference bench-out/bench-spec.json as the subject.spec in sources.json:
+rote-bench records sources.json --out bench-out/records.json
+rote-bench launch-gate bench-out/records.json --min-runs 15
+```
+
+A failed repetition is retained as a failed cell (never dropped), so a flaky run
+lowers the success rate the parity gate reads instead of silently vanishing.
+
 ## Synthetic pack
 
 ```bash

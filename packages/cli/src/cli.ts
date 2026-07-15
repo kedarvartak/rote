@@ -34,7 +34,10 @@ export async function main(
   if (group === 'run') {
     if (!subcommand) throw new Error(runUsage());
     const options = parseRunOptions(subcommand, rest, baseDir);
-    const result = await dependencies.runBrowserTask(options);
+    // The benchmark command driver pins the run id so it can address the run it
+    // just produced (docs/17 W5 repetition runner); normal use assigns a random id.
+    const runId = process.env['ROTE_RUN_ID'];
+    const result = await dependencies.runBrowserTask(runId ? { ...options, runId } : options);
     if (!result.success) throw new Error(`browser task failed (run ${result.runId}): ${result.summary}`);
     return [
       `success: ${result.summary}`,
