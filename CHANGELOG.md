@@ -23,6 +23,7 @@ labeled `skip-changelog`.
 - **P1**: Head-to-head report is now the docs/17 W5 G1 report — latency (avg/p50/p95 ms) and \$-per-task columns alongside tokens, priced from a dated overridable table (`--prices`) that labels an unpriced model rather than reporting it as \$0 (#42).
 
 ### Docs
+- **P1**: Add `docs/testing/` — a numbered log of tests run against real Rote (live browser, live model, live key), starting with T1: the first OpenAI dry run of the B1–B3 fixtures. B1/B3 pass; B2 fails 0/7 on a design flaw where mandatory action `expect` asks the model to predict unseen page text (#49, #50, #51, #52).
 - **P1**: Record the head-to-head grading rule in `docs/03` (competitors are graded by the same symmetric verification Rote applies to itself; a missing measurement is never scored) and replace `docs/17` W5's superseded "×5 runs" variance rule with the shipped ≥15-runs bootstrap lower bound.
 
 ### Added
