@@ -34,6 +34,12 @@ We are in **P1 (V1)**. The launch gate — a measured tokens-per-task win at suc
 | [06 — Optimizations](06-optimizations.md) | The master catalog: every optimization, its tier, its status, and the evidence |
 | [testing/](testing/) | Numbered records of tests against **real** Rote — live browser, live model, live key |
 
+### Working notes (not constitution)
+
+| Note | Contents |
+|---|---|
+| [Browser memory moat](browser-memory-moat.md) | Agent loops are O(n²) in task length and the field only optimizes the constant. Measured on our own runs; records that B3 cache-layout discipline is marked built but isn't, and a live accounting bug that would report a fake win if caching were enabled. |
+
 ## Diagrams
 
 Rendered with the Excalidraw MCP in the base hand-drawn font — no generator scripts. To
