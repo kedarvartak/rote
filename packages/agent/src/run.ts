@@ -1,17 +1,20 @@
-import { assertBrowserExpect, resolveElementTarget, type ElementResolutionResult } from '@rote/action';
+import { assertBrowserExpect, BrowserExpectationError, resolveElementTarget, type ElementResolutionResult } from '@rote/action';
 import type { BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext } from './context.js';
-import { BrowserActionSchema, type BrowserAction, type BrowserAgentResult, type BrowserAgentStep, type RunBrowserAgentOptions } from './types.js';
+import { BrowserActionSchema, type BrowserAction, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
 
 /** Runs the compact-observation browser-agent loop until the planner returns `done`. */
 export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<BrowserAgentResult> {
   const maxSteps = options.maxSteps ?? 20;
+  const maxRepairs = options.maxRepairs ?? 1;
   const clock = options.clock ?? Date.now;
   const previousActions: BrowserAction[] = [];
   const steps: BrowserAgentStep[] = [];
   let previousNodes: DistilledNode[] | undefined;
   let finished = false;
+  let repairsUsed = 0;
+  let pendingRepair: BrowserExpectFailure | undefined;
 
   try {
     for (let step = 0; step < maxSteps; step += 1) {
@@ -24,25 +27,32 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       });
       previousNodes = nodes;
       const pageState = { url: page.url, title: page.title };
+      // A step that follows a failed postcondition is a scoped repair, and is billed
+      // as one: docs/02 makes cheap recovery an efficiency claim, so repair spend has
+      // to be visible in the accounting rather than hidden inside planner totals.
+      const source: BrowserPlannerSource = pendingRepair ? 'repair' : 'planner';
       const context = assemblePlannerContext({
         task: options.task,
         page: pageState,
         observation: observation.text,
         observationMode: observation.mode,
         previousActions,
+        ...(pendingRepair ? { repair: pendingRepair } : {}),
       });
       // INVARIANT: planner calls are always source-tagged for benchmark accounting.
-      const planned = await options.planner.plan('planner', {
+      const planned = await options.planner.plan(source, {
         task: options.task,
         step,
         page: pageState,
         observation,
         previousActions,
         context,
+        ...(pendingRepair ? { repair: pendingRepair } : {}),
       });
+      pendingRepair = undefined;
       const action = BrowserActionSchema.parse(planned.action);
       // INVARIANT: usage returned by a planner cannot be relabeled as another source.
-      if (planned.usage.source !== 'planner') throw new Error(`planner returned usage tagged ${planned.usage.source}`);
+      if (planned.usage.source !== source) throw new Error(`planner returned usage tagged ${planned.usage.source} for a ${source} call`);
 
       let actionError: Error | undefined;
       let resolution: ElementResolutionResult | undefined;
@@ -50,8 +60,13 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         try {
           resolution = resolveAction(action, nodes);
           await applyAction(options.page, action, resolution?.selector);
-          const liveExpect = resolvedExpect(action.expect, action.kind === 'navigate' ? undefined : action.selector, resolution?.selector);
-          assertBrowserExpect(liveExpect, await options.page.capture());
+          // An omitted expect is not an unchecked action: the independent final
+          // verifier still gates success (#49). It only means the model declined to
+          // predict, which beats an invented string.
+          if (action.expect) {
+            const liveExpect = resolvedExpect(action.expect, action.kind === 'navigate' ? undefined : action.selector, resolution?.selector);
+            assertBrowserExpect(liveExpect, await options.page.capture());
+          }
           previousActions.push(action);
         } catch (error) {
           actionError = asError(error);
@@ -68,7 +83,26 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       };
       steps.push(recordedStep);
       await options.recorder?.recordStep(recordedStep);
-      if (actionError) throw actionError;
+      if (actionError) {
+        // see docs/02-architecture.md "Repair ladder" — on assertion failure, never
+        // fail the task blindly and never silently continue. The step above is
+        // recorded with its error either way; what a remaining budget buys is one
+        // chance to reconcile against the real page.
+        //
+        // INVARIANT: only a failed *postcondition* is repairable. An action that
+        // threw (element detached, navigation error) is a broken world, not a wrong
+        // belief about it, and stays fatal.
+        const repairable = actionError instanceof BrowserExpectationError && repairsUsed < maxRepairs;
+        if (repairable) {
+          repairsUsed += 1;
+          pendingRepair = { action, reason: actionError.message };
+          // The action did execute, so it belongs in history even though its
+          // postcondition did not hold.
+          previousActions.push(action);
+          continue;
+        }
+        throw actionError;
+      }
 
       if (action.kind === 'done') {
         let success = action.success;

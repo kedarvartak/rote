@@ -9,6 +9,9 @@ labeled `skip-changelog`.
 
 ## [Unreleased]
 
+### Fixed
+- **P1**: Make action `expect` optional and give a failed postcondition one scoped repair instead of ending the run — a mandatory expect forced the planner to predict confirmation text it had never seen, failing B2 0/7 with correct form submissions recorded as failures. B2 now passes 11/11 on `gpt-5.6-luna` and `gpt-5.6-sol` at roughly neutral token cost (#49, #50)
+
 ### Added
 - **P1**: `.env.example` documenting every environment variable the harness reads (provider selection, API keys, Chrome path, run artifacts, opt-in CDP tests), with the driver-injected benchmark variables called out as not-to-be-set.
 

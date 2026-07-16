@@ -31,7 +31,7 @@ confuse in an architecture doc; this is the boundary.
 | CDP browser backend, perception (distill → stable IDs → diff → budget) | **built** |
 | Agent loop, context assembler, tagged LLM client | **built** |
 | Benchmark matrix, per-source accounting, head-to-head gate | **built** |
-| Action plane: settledness, resolution chain, expect checks | **built** — but see [T1](testing/T1-openai-dry-run.md) |
+| Action plane: settledness, resolution chain, optional expect + scoped repair | **built** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | **Playbook distiller** (trajectory → playbook) | **not built** — V1 playbooks are hand-written |
 | **Matcher** (semantic match + bind) | **not built** — fingerprint gate only |
 | **Site memory, model routing, speculation** | **not built** — designed below |
@@ -163,17 +163,36 @@ Every step carries a postcondition; the task carries a final `verify[]`. **Succe
 only reported if verification passes** — invariant 1, and the anchor under every
 efficiency claim (all benchmark numbers are *at success parity*).
 
-[T1](testing/T1-openai-dry-run.md) found the live-agent version of this is currently
-mis-designed: the action schema makes `expect` mandatory, so the planner must **predict
-the page's confirmation text before it has seen it**. It guesses plausibly and wrongly,
-and a correct run is recorded as a failure. Meanwhile the expects that *pass* are largely
-tautological (asserting a value the model itself just typed). Open: [#49](https://github.com/kedarvartak/rote/issues/49)
-[#50](https://github.com/kedarvartak/rote/issues/50).
+[T1](testing/T1-openai-dry-run.md) found the live-agent version of this was
+mis-designed: the action schema made `expect` **mandatory**, so the planner had to
+predict the page's confirmation text before seeing it. It guessed plausibly and wrongly,
+and correct runs were recorded as failures (B2: 0/7). Meanwhile the expects that *passed*
+were largely tautological — asserting a value the model itself had just typed.
 
 The lesson generalizes: **a model-authored postcondition about a future state is either a
-guess or a tautology.** Postconditions should be structural (a selector it observed) or
-derived from the observation diff — not predicted prose. The final `verify` gate, which
-is authored against ground truth, is what makes T1's B1/B3 successes real, and stays.
+guess or a tautology.** T1's B2 sharpened it further — the confirmation section is
+`hidden` until submit and the distiller drops hidden nodes, so the post-click state was
+not expressible in *any* primitive of the DSL. Text or selector alike, the model had
+never seen it. Steering toward "structural" expects would only have moved the guess from
+a string to an id.
+
+**Resolved ([#49](https://github.com/kedarvartak/rote/issues/49),
+[#50](https://github.com/kedarvartak/rote/issues/50)) — `expect` is now optional:**
+
+1. The planner is told to **omit** rather than guess, and does: across live re-runs it
+   omitted on every action of B1/B3/B2, so the tautologies disappeared too. Forcing the
+   field was itself the cause of both failure shapes — a mandatory slot with nothing true
+   to put in gets filled with an invention or a restatement.
+2. A failed expect is no longer fatal. It buys **one scoped repair** (rung 2 below),
+   because a failed assertion means the model's belief was wrong, not that the action
+   was — on B2 the submit had already landed. Exhausting the budget is fatal.
+3. Success still requires the independent final `verify` gate, authored against ground
+   truth. That gate is what makes B1/B3/B2 successes real, and it never moved.
+
+Result: B2 0/7 → **11/11** on `gpt-5.6-luna` and `gpt-5.6-sol`, at roughly neutral token
+cost (B3 got ~1% *cheaper* — the output tokens saved by not emitting `expect` paid for
+the prompt guidance). Deriving postconditions from the observation diff instead of
+asking the model at all remains open as [#54](https://github.com/kedarvartak/rote/issues/54).
 
 ## Repair ladder
 

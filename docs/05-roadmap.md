@@ -62,14 +62,20 @@ small-model hosting questions. Both headline later launches.
 | W1 browser + perception capture | ✅ |
 | W2 distill, stable IDs, diff, render | ✅ |
 | W3 loop + context assembler | ✅ |
-| W4 action plane | ⚠️ built — **[T1](testing/T1-openai-dry-run.md) found the expect design broken** |
+| W4 action plane | ✅ — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | W5 benchmark + the number | machinery ✅ · **number not yet run** |
 | W6 launch package | ✗ not started |
 
-**Blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49) — mandatory
-`expect` asks the model to predict unseen text, so B2 fails 0/7 and a *correct* run is
-recorded as a failure. Running the matrix today would measure our bug rather than our
-efficiency. Also [#50](https://github.com/kedarvartak/rote/issues/50)
+**No longer blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49)
+and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` is now
+optional, the planner omits rather than guesses, and a failed postcondition buys one
+scoped repair instead of killing a correct run. B2 went **0/7 → 11/11** on
+`gpt-5.6-luna` and `gpt-5.6-sol` at roughly neutral token cost. The matrix would now
+measure our efficiency rather than our bug. Still open before the number is meaningful:
+[#51](https://github.com/kedarvartak/rote/issues/51) (a malformed planner completion ends
+the run) and [#52](https://github.com/kedarvartak/rote/issues/52) (a malformed *optional*
+`stableId` is fatal) — both turn a recoverable model slip into a recorded failure, which
+lands on success parity the same way #49 did.
 [#51](https://github.com/kedarvartak/rote/issues/51)
 [#52](https://github.com/kedarvartak/rote/issues/52).
 
@@ -150,9 +156,15 @@ can read; the benchmark as an industry-neutral instrument.
 
 1. **Assertion strength vs brittleness** — over-tight assertions cause spurious repairs;
    loose ones let drift through. **[T1](testing/T1-openai-dry-run.md) turned this from a
-   question into a finding**: mandatory model-authored expects are both too tight (a
-   correct run fails) and too loose (the ones that pass are tautologies). Likely needs
-   assertion-level confidence learning. See #49/#50.
+   question into a finding**: mandatory model-authored expects were both too tight (a
+   correct run fails) and too loose (the ones that pass are tautologies). **Fixed in
+   #49/#50** by removing the forcing rather than tuning the strength — asked for
+   omission, made a failed expect cost one scoped repair instead of the run, and left the
+   ground-truth `verify` gate as the thing that decides success. Both failure shapes were
+   symptoms of a mandatory field, not of assertion strength.
+   Still open: with expects mostly omitted, per-action checking now rests on the final
+   gate alone. Deriving postconditions from the observation diff — which needs no
+   prediction and no model call — is [#54](https://github.com/kedarvartak/rote/issues/54).
 2. **Small-model hosting** — Fara-class models are self-hostable (7B). Bundled local
    inference or API? Affects adoption friction vs the cost story. Decide in P2 with data.
 3. **Matching threshold policy** — how conservative should τ be at launch? Lean:
