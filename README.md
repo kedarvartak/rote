@@ -6,8 +6,8 @@
 |_| \_\___/  \__\___|
 </pre>
 
-**An efficiency-first browser-agent system.**
-Fewer observation tokens, lower latency, and browser memory that compounds with every run.
+**The memory manager for browser agents.**
+Every harness has memory. None of them manages it.
 
 </div>
 
@@ -15,12 +15,11 @@ Fewer observation tokens, lower latency, and browser memory that compounds with 
 
 ## The one-liner
 
-> **Rote is the browser agent that gets cheaper as it learns a site.**
+> **Agent harnesses have no memory manager. Rote is the memory manager.**
 
-Browser agents spend most of their budget repeatedly observing pages, grounding elements,
-waiting for UI state, and rediscovering workflows. Rote treats efficiency as the harness
-architecture: compact perception, cache-friendly context, verified replay, and a learning
-plane that turns past runs into browser memory.
+Browser agents forget at three timescales, and pay again at every one. Rote treats the
+context window as a managed resource: a budget, an eviction policy, a layout contract, and
+a trust gate on the way back in.
 
 ## The problem
 
@@ -30,17 +29,30 @@ A typical browser agent loop is expensive and serialized:
 observe page → model thinks → act → wait → observe again
 ```
 
-On real portals, every observation can mean thousands of DOM/accessibility/screenshot
-tokens. Across repeated use of the same sites, agents keep paying to rediscover:
+And it re-sends its whole transcript every step. A run of *n* steps sends `1 + 2 + … + n`
+prompt-units, so **cost is O(n²) in task length**. Measured on our own runs, input tokens
+climb every step:
 
-- which fields and buttons matter
-- which selectors are stable
-- what confirms success or failure
-- which navigation prefixes are common
-- which observations changed and which stayed the same
+```
+B2 (10 steps):  637 → 677 → 716 → 759 → 800 → 839 → 876 → 917 → 953   (+38%)
+```
 
-Rote's goal is simple: **the more your browser agent uses a website, the less it should
-need to explore that website from scratch.**
+**21% of that run's input bill is re-reading text it already sent** — on a page that
+distills to 10 nodes. Everything the field competes on (DOM serializers, element filtering,
+vision-vs-a11y) shrinks the *per-step* prompt. That lowers the constant. Nobody has touched
+the exponent.
+
+### The three amnesias
+
+| Tier | Scope | What it forgets | The bill |
+|---|---|---|---|
+| **0 — Working** | within a run | what it already sent this run | O(n²) in task length |
+| **1 — Episodic** | across runs of a task | the procedure that worked yesterday | run #50 costs what run #1 cost |
+| **2 — Semantic** | across tasks on a site | how the site behaves at all | every task re-learns the portal |
+
+And the precondition: **memory that might be wrong is worse than no memory.** Every tier is
+assertion-gated on the way back in — success is decided by page state, never by the absence
+of an exception.
 
 ## What Rote does
 
@@ -83,22 +95,32 @@ procedures, and verification signals — so the next run starts warmer.
 
 ## Status
 
-**Early build — no launch number yet.**
+**Early build — no launch number yet, and the curve above is not yet drawn against anyone.**
 
 Built and working end to end: core schemas + Expect DSL, lossless recorder, verified
-replay executor, CDP browser backend, perception (distill → stable IDs → diff → budget),
-the agent loop, cache-aware context assembly, tagged LLM accounting, and the benchmark +
+replay executor, CDP browser backend, perception (distill → stable IDs → budget),
+**observation eviction**, the agent loop, tagged LLM accounting, and the benchmark +
 head-to-head gate. First live run against a real browser and model
-([T1](docs/testing/T1-openai-dry-run.md)) completed B1 in the minimum four actions.
+([T1](docs/testing/T1-openai-dry-run.md)) completed B1 in the minimum four actions; B2 now
+passes 11/11 after [#49](https://github.com/kedarvartak/rote/issues/49).
+
+We are in **P1 = tier 0, working memory**. Its four levers, honestly:
+
+| Lever | State |
+|---|---|
+| Observation eviction — keep what you did, not what you saw | **built** (and never claimed until now) |
+| Diff observations | **built, never fired** — the budget is 4000 chars; our fixtures render ~537 |
+| Cache layout | **not built.** The docs marked it built; no `cache_control` is ever sent, and the accounting cannot see a cache hit ([#57](https://github.com/kedarvartak/rote/issues/57)) |
+| History compaction | not built — the lever that would make the curve linear rather than a smaller quadratic |
 
 Not built: the playbook distiller (V1 replays hand-written playbooks), the matcher, site
-memory, model routing, speculation. `docs/02-architecture.md` §Status is authoritative.
+memory, model routing, speculation. **Tier 1 is table stakes and we are late to it** —
+Skyvern ships record → codegen → zero-LLM replay → fallback today
+([docs/04](docs/04-competition.md)). `docs/02-architecture.md` §Status is authoritative.
 
-**Blocked:** T1 found that the live agent's mandatory action `expect` asks the model to
-predict page text it has not seen, so a correctly-completed task is recorded as a failure
-([#49](https://github.com/kedarvartak/rote/issues/49)). The benchmark matrix waits on
-that fix — running it today would measure our bug, not our efficiency. **No number, no
-launch.**
+**No number, no launch.** Two gates, neither run: the **curve** (cumulative tokens vs. task
+length, on the provider's own cache accounting) and the **level** (tokens-per-task at
+success parity). Until then this is a hypothesis with good arithmetic.
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)
 

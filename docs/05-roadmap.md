@@ -8,63 +8,92 @@
 
 ## The arc
 
-| Phase | Theme | Launch headline | Target |
-|---|---|---|---|
-| **P0** ✅ | Foundations | — (internal) | done |
-| **P1** ◀ | **V1: the cheapest loop** | "Same tasks, fraction of the tokens — reproducible" | 2026-Q3 |
-| P2 | V2: the harness that learns | "Your 50th task on a site costs a fraction of your 1st" | 2026-Q4 |
-| P3 | V3: faster than the model thinks | "Warm flows bounded by think-time only" | 2027-Q1 |
-| P4 | Fleet & enterprise | "10K tasks/day, audited, lowest $ per task" | 2027-Q2–Q3 |
-| P5 | Platform | "The efficiency substrate other agents build on" | 2027-Q4+ |
+Sequenced by **memory tier** ([02 §The memory spine](02-architecture.md)) — V1 is tier 0,
+the only tier where nobody else is building.
+
+| Phase | Theme | Tier | Launch headline | Target |
+|---|---|---|---|---|
+| **P0** — done | Foundations | — | — (internal) | done |
+| **P1** — *here* | **V1: working memory** | **0** | **"The first browser agent with a managed context window"** | 2026-Q3 |
+| P2 | V2: the harness that learns | 1, 2 | "Your 50th task on a site costs a fraction of your 1st" | 2026-Q4 |
+| P3 | V3: faster than the model thinks | 2 | "Warm flows bounded by think-time only" | 2027-Q1 |
+| P4 | Fleet & enterprise | — | "10K tasks/day, audited, lowest $ per task" | 2027-Q2–Q3 |
+| P5 | Platform | — | "The efficiency substrate other agents build on" | 2027-Q4+ |
+
+**Why tier 0 first, when tier 1 is the original thesis:** tier 1 is table stakes — Skyvern
+already ships record → codegen → zero-LLM replay → fallback ([04](04-competition.md)).
+Building the distiller first reaches parity and passes nothing. Tier 0 is where the
+exponent lives, no competitor is there, it needs no site cooperation, and it pays even on
+tasks that never recur. It is also the only tier we can measure this quarter.
 
 Cross-cutting, never a phase: invariants & test discipline, benchmark cadence,
 community/OSS, docs-as-constitution.
 
 ---
 
-## P0 — Foundations ✅
+## P0 — Foundations (done)
 
 Core schemas + Expect DSL, lossless recorder, verified replay executor, benchmark matrix
 + per-source accounting. Carries forward unchanged.
 
-## P1 — V1: the cheapest loop ◀ *we are here*
+## P1 — V1: working memory *(we are here)*
 
-A working OSS browser agent whose observation and context economics beat the incumbents,
-proven by a reproducible head-to-head.
+**A browser agent that manages its context window, and a curve that proves it.**
 
-V1 launches on the **deterministic** wins (perception, context layout, accounting,
-verified replay). The probabilistic ones (routing, speculation, learned memory) are
-deliberately V2+: they need calibration time and would delay the number without changing
-its headline. A launch *cadence* beats one bigger launch.
+Everyone re-sends the transcript every step, so every harness is O(n²) in task length.
+Every optimization the field competes on lowers the *constant*. V1 attacks the *exponent* —
+four levers, on tier 0, where the capability matrix is an empty column for the whole field.
+
+V1 launches on the **deterministic** wins (working memory, accounting, verified replay).
+The probabilistic ones (routing, speculation, learned memory) are deliberately V2+: they
+need calibration time and would delay the number without changing its headline. A launch
+*cadence* beats one bigger launch.
+
+### The tier-0 four
+
+| Lever | Effect on the curve | State |
+|---|---|---|
+| **A11 observation eviction** | kills the dominant quadratic term | **built** — and never claimed. Growth is 35 tok/step (one action JSON), not 135+ |
+| **A4 diff observations** | −~90% on the constant, real pages | **built, never fired** — budget 4000 chars, our observations are ~537 |
+| **B3 cache layout** | 10× off the surviving quadratic | **not built** — no `cache_control` sent; accounting blind (#57) |
+| **B4 compaction** | history → O(1); **curve → linear** | not built |
+
+**Measure before building.** Three of those four have never been exercised, and our
+fixtures cannot exercise them: too small for A4 to trigger, and under the ~1024-token
+threshold that makes caching legal at all. The first task is the curve, not the code.
 
 ### In / out
 
 | In V1 | Deferred |
 |---|---|
+| **The curve**: cumulative tokens vs. steps, vs. Browser Use, on a real page — the headline | live-site continuous eval |
+| **#57 cache accounting** — prerequisite, not follow-up | — |
+| A11 eviction (built) + A4 diff proven on a real page | cross-step dedup (A10), task-focused filtering (P2) |
+| B3 cache layout: real `cache_control` + cache-aware accounting | B4 compaction (P2 — fights B3, needs scheduling) |
 | CDP browser backend | remote backends beyond a connect string (P2) |
-| Distillation, element detection, stable IDs | task-focused filtering (P2), WebMCP (P3) |
-| **Diff observations + token budgeter** — the headline | cross-step dedup |
-| Cache-layout-owning context assembler | compaction, routing (P2), prediction hints |
+| Distillation, element detection, stable IDs, token budgeter | WebMCP (P3 — no site implements it; see [04](04-competition.md)) |
 | Settledness, self-healing resolution v0 | memory-ranked resolution, batched fill (P2) |
 | Live expect checks + verify gate | automated distillation (P2) — V1 replays hand-written playbooks |
 | Always-on recording, replay fast path | subflows, drift tracker |
 | Per-source token + latency accounting | efficiency-regression CI (post-launch) |
-| Head-to-head benchmark + raw data | live-site continuous eval |
+| Head-to-head benchmark + raw data | routing, prediction hints (P2) |
 
-The two hardest cuts: **speculation** is the deepest differentiator but the riskiest
-machinery (shadow contexts, promotion atomicity); **routing** depends on unresolved
-small-model hosting questions. Both headline later launches.
+The hardest cuts: **the distiller** is the original thesis and is now known to be tier-1
+catch-up — Skyvern ships it, so it headlines V2 rather than V1. **Speculation** is the
+deepest differentiator and the riskiest machinery (shadow contexts, promotion atomicity).
+**Routing** depends on unresolved small-model hosting questions.
 
 ### Status
 
 | Workstream | State |
 |---|---|
-| W1 browser + perception capture | ✅ |
-| W2 distill, stable IDs, diff, render | ✅ |
-| W3 loop + context assembler | ✅ |
-| W4 action plane | ✅ — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
-| W5 benchmark + the number | machinery ✅ · **number not yet run** |
-| W6 launch package | ✗ not started |
+| W1 browser + perception capture | done |
+| W2 distill, stable IDs, diff, render | **done, but diff has never fired** — fixtures too small |
+| W3 loop + context assembler | **done, except the cache layout does nothing** — no `cache_control`, blind accounting (#57) |
+| W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
+| W5 benchmark + the number | machinery done · **number not yet run** · **the curve not yet drawn** |
+| W6 launch package | not started |
+| **W7 working memory (new)** | **#57 accounting → the curve → `cache_control` → compaction.** The V1 headline |
 
 **No longer blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49)
 and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` is now
@@ -84,35 +113,64 @@ lands on success parity the same way #49 did.
 
 ### Exit gate
 
-> **Rote wins tokens-per-task at success parity by a margin that survives variance**
-> (≥15 runs/harness; bootstrap lower bound above the floor — [03](03-benchmark.md)).
-> If it doesn't, we fix or we don't launch on efficiency claims. **No number, no launch.**
+Two gates. The first is the headline; the second keeps the first honest.
+
+> **G1 — the curve.** Cumulative tokens grow **materially slower with task length** than
+> the baseline harness, at success parity, on a real page — measured on the provider's own
+> cache accounting, not ours. Published as a graph with raw JSONL.
+>
+> **G2 — the level.** Rote wins tokens-per-task at success parity by a margin that
+> survives variance (≥15 runs/harness; bootstrap lower bound above the floor —
+> [03](03-benchmark.md)).
+
+**No number, no launch.** If G1 fails, the memory thesis is wrong and we say so — it costs
+one benchmark, which is the point of running it before building. G2 alone is the old gate:
+a fight on the axis where we are late, against harnesses with years of head start on the
+same idea ([04](04-competition.md)). Lead with G1.
+
+**The threshold on G1 is deliberately unset.** We have never drawn the curve; inventing a
+target before the first measurement is how you end up tuning the benchmark to the claim.
+Set it from the first honest run, in public, before optimizing against it.
 
 ### Launch checklist
 
 - [ ] `npx` quickstart works on a clean machine with only an API key
 - [ ] Benchmark reproduction is one command; raw JSONL downloadable
 - [ ] Every efficiency claim carries a number, units, and a link to method
+- [ ] **The curve is a graph in the README**, with the method and the raw data
+- [ ] **#57 closed** — cache accounting is provider-normalized, or no caching claim ships
 - [ ] Sacred invariant suite green; CI enforces changelog + lint + tests
-- [ ] Known limitations written honestly (no routing/speculation/learning yet)
+- [ ] Known limitations written honestly (no routing/speculation/learning yet; **no
+      distiller — tier 1 is V2**; eviction trades recall for cost)
 - [ ] Licence check on competitor comparisons (dependencies, not forks)
 
-## P2 — V2: the harness that learns (~8–10 weeks)
+## P2 — V2: tiers 1 and 2, the harness that learns (~8–10 weeks)
 
-The learning plane goes live; the learning curve becomes the product.
+Episodic and semantic memory go live; the learning curve becomes the product. **This is
+catch-up on tier 1 and a lead on tier 2** — Skyvern ships the former, nobody ships the
+latter ([04](04-competition.md)). Sequenced after V1 because tier 0 is where we are alone
+and tier 1 is where we are behind; parity is worth less than a position.
 
-1. **Predictor** — trace matching, transition models, offline simulation. *The kill gate
+1. **History compaction** (B4) — finishes tier 0. The only lever that turns the curve from
+   a smaller quadratic into a **linear** one. Cache-economics-scheduled, because it fights
+   B3 by construction: compaction mutates the prefix caching needs immutable, so compact
+   every ~*k* steps and eat one miss. Listed first because it completes V1's headline
+   rather than starting a new one.
+2. **Distiller v1** (tier 1) — trajectory → playbook: causal pruning, parameterization,
+   assertion synthesis. Replaces hand-written playbooks. Gate: distilled playbooks replay
+   the fixture suite with zero human edits. **Reaches parity with Skyvern's 2026 baseline;
+   the differentiator is the verification contract, not the distillation.**
+3. **Predictor** — trace matching, transition models, offline simulation. *The kill gate
    comes first and costs no systems work*: **≥70% warm next-action accuracy** on recorded
    runs, or P3's speculation thesis dies early and P2 re-scopes to
    memory-without-prediction.
-2. **Distiller v1** — trajectory → playbook: causal pruning, parameterization, assertion
-   synthesis. Replaces hand-written playbooks. Gate: distilled playbooks replay the
-   fixture suite with zero human edits.
-3. **Site memory** — per-fingerprint selector maps, form semantics, page graph,
-   settle-time priors, quirks. Append-only, confidence + freshness.
-4. **Model routing** — `grounded-routine` on a small model, escalation contract, per-site
+4. **Site memory** (tier 2) — per-fingerprint selector maps, form semantics, page graph,
+   settle-time priors, quirks. Append-only, confidence + freshness. Advisory only: it
+   *informs*, never *executes*, so it can be wrong without being dangerous. Its brief is
+   tier-0 content and must live inside the token budget — a 2K brief at 5% utility is
+   overhead, not memory.
+5. **Model routing** — `grounded-routine` on a small model, escalation contract, per-site
    calibration. New `route`/`predict` tags (invariant 5; CLAUDE.md updated same PR).
-5. **History compaction** in the context assembler, cache-economics-scheduled.
 
 **Exit gates:** T0 ≥80% reduction at parity *with automated distillation*; **T2 ≥30%**
 (the generalization bet — retreat rule if <15%); ≥50% of warm steps off the frontier

@@ -1,10 +1,11 @@
 # Rote — design docs
 
-> **The browser agent that gets cheaper as it learns a site.**
+> **Agent harnesses have no memory manager. Rote is the memory manager.**
 
-Rote is a browser-agent harness built around efficiency: compact observations, stable
-element IDs, diff-based perception, cache-friendly context, verified replay, and a
-learning plane that turns prior runs into site memory.
+Browser agents forget at three timescales and pay again at each: they re-send the
+transcript every step (O(n²) within a run), re-derive the procedure every run, and re-learn
+the site every task. Rote treats the context window as a managed resource — with a budget,
+an eviction policy, a layout contract, and a trust gate on the way back in.
 
 ![Architecture](diagrams/architecture.svg)
 
@@ -15,12 +16,22 @@ marks status; the authoritative table is [02 §Status](02-architecture.md).
 
 | | |
 |---|---|
-| **Built** | core schemas + Expect DSL · recorder · verified replay executor · CDP backend · perception (distill → stable IDs → diff → budget) · agent loop · context assembler · tagged LLM client · benchmark + accounting + head-to-head gate |
-| **Not built** | playbook distiller (V1 replays hand-written playbooks) · matcher · site memory · model routing · speculation |
-| **Known broken** | the live-agent `expect` design — [T1](testing/T1-openai-dry-run.md), [#49](https://github.com/kedarvartak/rote/issues/49) |
+| **Built** | core schemas + Expect DSL · recorder · verified replay executor · CDP backend · perception (distill → stable IDs → budget) · **observation eviction** · agent loop · tagged LLM client · benchmark + accounting + head-to-head gate |
+| **Built but never exercised** | diff observations — the budget is 4000 chars and our fixtures render ~537, so it has never fired |
+| **Not built** | **cache layout** (marked built until 2026-07-17; no `cache_control` is sent — [#57](https://github.com/kedarvartak/rote/issues/57)) · compaction · playbook distiller · matcher · site memory · model routing · speculation |
 
-We are in **P1 (V1)**. The launch gate — a measured tokens-per-task win at success parity
-— **has not been run yet**, and is blocked on #49. No number, no launch.
+We are in **P1 (V1)**: **tier 0, working memory.** Neither launch gate has been run — not
+the curve (cumulative tokens vs. task length) nor the level (tokens-per-task at parity).
+**No number, no launch.**
+
+## The memory spine
+
+| Tier | Scope | The field | Us |
+|---|---|---|---|
+| **0 — Working** | within a run | **nobody** — everyone re-sends the transcript | **the wedge**; half-built |
+| **1 — Episodic** | across runs of a task | **Skyvern ships it** | late; distiller unbuilt |
+| **2 — Semantic** | across tasks on a site | nobody | unbuilt |
+| **Trust gate** | all tiers | nobody — success means "no exception thrown" | invariant 1 |
 
 ## The docs
 
@@ -34,11 +45,6 @@ We are in **P1 (V1)**. The launch gate — a measured tokens-per-task win at suc
 | [06 — Optimizations](06-optimizations.md) | The master catalog: every optimization, its tier, its status, and the evidence |
 | [testing/](testing/) | Numbered records of tests against **real** Rote — live browser, live model, live key |
 
-### Working notes (not constitution)
-
-| Note | Contents |
-|---|---|
-| [Browser memory moat](browser-memory-moat.md) | Agent loops are O(n²) in task length and the field only optimizes the constant. Measured on our own runs; records that B3 cache-layout discipline is marked built but isn't, and a live accounting bug that would report a fake win if caching were enabled. |
 
 ## Diagrams
 

@@ -1,10 +1,15 @@
 # Rote — Agent Guidelines
 
-You are working on **Rote**: an efficiency-first browser-agent harness — the same tasks
-for a fraction of the tokens, verified and reproducible. Read `docs/05-roadmap.md` for
-the current phase before writing any code; do not build ahead of it (executor before
-distiller — never violate this). `docs/02-architecture.md` §Status is the authoritative
-list of what is actually built; much of the design is not.
+You are working on **Rote**: **the memory manager for browser agents.** Agent harnesses
+all have memory; none manages it. Rote treats the context window as a managed resource —
+budget, eviction policy, layout contract, and a trust gate on the way back in — across
+three tiers: **0 working** (within a run), **1 episodic** (across runs of a task),
+**2 semantic** (across tasks on a site). See `docs/02-architecture.md` §The memory spine.
+
+We are in **P1 = tier 0**. Read `docs/05-roadmap.md` for the current phase before writing
+any code; do not build ahead of it (executor before distiller — never violate this).
+`docs/02-architecture.md` §Status is the authoritative list of what is actually built;
+much of the design is not, and some of what the docs marked built was not.
 
 ## Project invariants (non-negotiable, encode in tests, never "just this once")
 
