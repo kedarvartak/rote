@@ -26,12 +26,10 @@ export class AnthropicLlmClient implements LlmClient {
       volatileSuffix: `${request.prompt}${optionInstruction}`,
       maxTokens: request.maxTokens ?? 1024,
     });
-    return {
-      text: response.text,
-      usage: {
-        input_tokens: response.usage.input_tokens,
-        output_tokens: response.usage.output_tokens,
-      },
-    };
+    // Pass the normalized usage through whole. Re-projecting named fields here is
+    // how the cache buckets got dropped before (#57); the executor re-tags `source`
+    // at the push site, so that is the only field this adapter removes.
+    const { source: _source, ...usage } = response.usage;
+    return { text: response.text, usage };
   }
 }

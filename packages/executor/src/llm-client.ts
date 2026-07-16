@@ -1,4 +1,4 @@
-import type { TokenUsageSource } from '@rote/core';
+import type { TokenUsage, TokenUsageSource } from '@rote/core';
 
 export interface LlmCompletionRequest {
   /** CLAUDE.md "every LLM call is tagged" — untagged usage fails lint elsewhere. */
@@ -11,7 +11,14 @@ export interface LlmCompletionRequest {
 
 export interface LlmCompletionResult {
   text: string;
-  usage: { input_tokens: number; output_tokens: number };
+  /**
+   * Provider-normalized usage minus its `source` (the executor tags each call at
+   * the push site). Derived from `TokenUsage` rather than re-declared so the cache
+   * buckets cannot be dropped in transit — this adapter previously re-projected
+   * `{input_tokens, output_tokens}` by hand and silently discarded cache
+   * accounting on the way through (#57).
+   */
+  usage: Omit<TokenUsage, 'source'>;
 }
 
 /** Injected LLM boundary for slot fills and judgment classifications. */

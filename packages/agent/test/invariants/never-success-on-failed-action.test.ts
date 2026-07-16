@@ -48,7 +48,12 @@ describe('browser agent recording: never reports success on a failed action', ()
     const manifest = RunManifestSchema.parse(JSON.parse(await readFile(join(runDir, 'manifest.json'), 'utf8')));
     const event = TrajectoryEventSchema.parse(JSON.parse((await readFile(join(runDir, 'trajectory.jsonl'), 'utf8')).trim()));
     expect(manifest.outcome).toBe('failure');
-    expect(manifest.token_usage).toEqual([{ source: 'planner', input_tokens: 12, output_tokens: 3 }]);
+    // INVARIANT: recorded usage carries its cache buckets as measured zeros (#57).
+    // A planner that reports no cache activity must land in the manifest as an
+    // explicit 0, never as an absent field a later reader could treat as unknown.
+    expect(manifest.token_usage).toEqual([
+      { source: 'planner', input_tokens: 12, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 3 },
+    ]);
     expect(event.tool).toBe('browser.click');
     expect(event.error?.message).toBe('button detached');
   });
@@ -99,8 +104,8 @@ describe('browser agent recording: never reports success on a failed action', ()
     ]);
     // INVARIANT: repair spend is tagged, never folded into planner totals (invariant 5).
     expect(manifest.token_usage).toEqual([
-      { source: 'planner', input_tokens: 8, output_tokens: 2 },
-      { source: 'repair', input_tokens: 8, output_tokens: 2 },
+      { source: 'planner', input_tokens: 8, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 2 },
+      { source: 'repair', input_tokens: 8, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 2 },
     ]);
   });
 
