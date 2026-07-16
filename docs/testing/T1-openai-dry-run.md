@@ -4,7 +4,7 @@
 |---|---|
 | **Date** | 2026-07-15 |
 | **Subject** | Does Rote actually complete the frozen B1–B3 fixture tasks, end to end, with a real model and a real browser? |
-| **Verdict** | **B1 ✅, B3 ✅, B2 ❌ 0/7.** The harness works. B2 fails on a design flaw in mandatory action `expect`, not on capability. |
+| **Verdict** | **B1 pass, B3 pass, B2 fail 0/7.** The harness works. B2 fails on a design flaw in mandatory action `expect`, not on capability. |
 | **Issues raised** | [#49](https://github.com/kedarvartak/rote/issues/49) · [#50](https://github.com/kedarvartak/rote/issues/50) · [#51](https://github.com/kedarvartak/rote/issues/51) · [#52](https://github.com/kedarvartak/rote/issues/52) |
 | **Cost** | Under \$0.10 total |
 
@@ -64,10 +64,10 @@ catch (e: any) {
 
 | Task | Model | Runs | Outcome | Tokens (in+out) | Steps |
 |---|---|---|---|---|---|
-| B1 login → download | luna | 1 | ✅ verified | 2,413 + 313 | 5 |
-| B3 search → open | luna | 1 | ✅ verified | 1,743 + 323 | 4 |
-| B2 8-field form | luna | 4 | ❌ 0/4 | — | died mid-run |
-| B2 8-field form | **sol** | 3 | ❌ 0/3 | ~6,879 + 682 per run | died mid-run |
+| B1 login → download | luna | 1 | pass (verified) | 2,413 + 313 | 5 |
+| B3 search → open | luna | 1 | pass (verified) | 1,743 + 323 | 4 |
+| B2 8-field form | luna | 4 | fail 0/4 | — | died mid-run |
+| B2 8-field form | **sol** | 3 | fail 0/3 | ~6,879 + 682 per run | died mid-run |
 
 ### B1 and B3 genuinely work
 
@@ -284,9 +284,9 @@ Re-measured on the same frozen fixtures, same prompts, same two model tiers:
 
 | Task | T1 (2026-07-15) | After #49 | Tokens |
 |---|---|---|---|
-| B1 | ✅ 1/1 | ✅ 1/1 | 2726 → 2750 (+0.9%) |
-| B3 | ✅ 1/1 | ✅ 1/1 | 2066 → 2048 (**−0.9%**) |
-| B2 | ❌ **0/7** | ✅ **11/11** | — (was unmeasurable: no run finished) |
+| B1 | pass 1/1 | pass 1/1 | 2726 → 2750 (+0.9%) |
+| B3 | pass 1/1 | pass 1/1 | 2066 → 2048 (**−0.9%**) |
+| B2 | fail **0/7** | pass **11/11** | — (was unmeasurable: no run finished) |
 
 B3 got *cheaper*: the output tokens saved by not emitting `expect` more than paid for the
 prompt guidance that asks for omission. The reproduction commands above still apply — at

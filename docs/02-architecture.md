@@ -4,8 +4,10 @@
 
 ## Design thesis
 
-> **Control flow should be deterministic. The model's job is content and repair, not
-> navigation.**
+> **Agent harnesses have no memory manager. Rote is the memory manager.**
+>
+> Corollary: control flow should be deterministic. The model's job is content and repair,
+> not navigation.
 
 A successful run tangles two things together: *what to do* (the procedure) and *what to
 say/fill/decide* (the content). Rote untangles them. The procedure becomes a
@@ -18,35 +20,153 @@ actions are grounded — and a layer at the tool boundary can advise but cannot 
 the loop. Rote's tools are still exposed over MCP, so the same codebase can be *driven
 by* another client; the harness and the layer are two entry points, not two products.
 
+### The memory spine
+
+Everything below hangs off one idea. The context window is **memory**, and memory needs a
+manager: a budget, an eviction policy, a write path, and a trust gate on the way back in.
+No shipping harness has one — they append to a transcript and hope
+([04](04-competition.md)).
+
+Three tiers, three timescales, one disease at each: the agent forgets, re-derives, pays
+again ([01](01-problem.md)).
+
+| Tier | Scope | Answers | Mechanism | Where |
+|---|---|---|---|---|
+| **0 — Working** | one run | "what am I looking at, what have I done" | evict observations, diff, budget, cache layout, compact | perception + decision planes |
+| **1 — Episodic** | runs of one task | "how did this go last time" | record → distill → playbook → verified replay → repair | learning plane |
+| **2 — Semantic** | tasks on one site | "how does this site behave" | site brief, selector maps, settle priors, quirks | learning plane |
+
+The operating-system reading is exact, and worth holding: the context window is RAM,
+observations are pages, dropping them is eviction, diffing is delta encoding, the prompt
+cache is L2, compaction is GC, a playbook is a cached compiled program, and site memory is
+the persistent store. Every one of those has a manager in an OS. **None of them has one in
+a browser agent.**
+
+**The trust gate is not a fourth tier — it is the precondition for all three.** Memory that
+might be wrong is worse than no memory (invariant 1). Reuse without verification is a
+machine for repeating a mistake at volume.
+
 ## Status: what is built
 
 **Read this table before believing anything below it.** Design and reality are easy to
 confuse in an architecture doc; this is the boundary.
 
-| Subsystem | State |
-|---|---|
-| Core schemas, Expect DSL, templating, fingerprinting | **built** |
-| Recorder — append-only, crash-safe, fsync-per-event | **built** |
-| Replay executor — verified, zero-model on hand-written playbooks | **built** |
-| CDP browser backend, perception (distill → stable IDs → diff → budget) | **built** |
-| Agent loop, context assembler, tagged LLM client | **built** |
-| Benchmark matrix, per-source accounting, head-to-head gate | **built** |
-| Action plane: settledness, resolution chain, optional expect + scoped repair | **built** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
-| **Playbook distiller** (trajectory → playbook) | **not built** — V1 playbooks are hand-written |
-| **Matcher** (semantic match + bind) | **not built** — fingerprint gate only |
-| **Site memory, model routing, speculation** | **not built** — designed below |
+| Subsystem | Tier | State |
+|---|---|---|
+| Core schemas, Expect DSL, templating, fingerprinting | — | **built** |
+| Recorder — append-only, crash-safe, fsync-per-event | 1 | **built** |
+| Replay executor — verified, zero-model on hand-written playbooks | 1 | **built** |
+| CDP browser backend, perception (distill → stable IDs → budget) | 0 | **built** |
+| Agent loop, context assembler, tagged LLM client | 0 | **built** |
+| Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
+| Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
+| **Observation eviction** — keep actions, drop prior observations | 0 | **built** — the dominant quadratic term is already gone |
+| **Diff observations** (A4) | 0 | **built but inert** — has never fired; fixtures are too small to trigger it |
+| **Cache-layout discipline** (B3) | 0 | **not built** — the stable/volatile split exists; no `cache_control` is ever sent, and the accounting cannot see a cache hit ([#57](https://github.com/kedarvartak/rote/issues/57)) |
+| **History compaction** (B4) | 0 | **not built** — required to make the curve linear rather than a smaller quadratic |
+| **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
+| **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
+| **Site memory, model routing, speculation** | 2 | **not built** — designed below |
 
 Packages that exist: `core recorder executor bench cli browser perception action agent llm`.
 Designed but absent: `decision predictor memory mcp-server`.
 
+**Tier 0 is half-built and unmeasured.** Eviction works and was never claimed; diffing has
+never run; caching is a doc claim with no mechanism. That is the V1 gap
+([05](05-roadmap.md)).
+
 ## The four planes
 
-| Plane | Baseline cost | Rote's answer | Status |
-|---|---|---|---|
-| **Perception** | 5–40K tokens/step, re-sent every step | distill → filter → diff → budget | built |
-| **Decision** | frontier model, every step, full context | cache-local layout; route down or skip the model | layout built; routing designed |
-| **Action** | act → wait → observe, serialized | settledness, self-healing resolution, speculation | first two built |
-| **Learning** | every run starts cold | recorded trajectories → playbooks → site memory | recording + replay built |
+The planes are *where code lives*; the memory tiers are *what it is for*. They cross.
+
+| Plane | Baseline cost | Rote's answer | Serves tier | Status |
+|---|---|---|---|---|
+| **Perception** | 5–40K tokens/step, re-sent every step | distill → filter → diff → budget | 0 | built, except diff never fires |
+| **Decision** | frontier model, every step, full context | cache-local layout; route down or skip the model | 0, 1 | **layout not built** (#57); routing designed |
+| **Action** | act → wait → observe, serialized | settledness, self-healing resolution, speculation | — | first two built |
+| **Learning** | every run starts cold | recorded trajectories → playbooks → site memory | 1, 2 | recording + replay built |
+
+## Tier 0 — working memory
+
+The context window is a managed resource with a budget, an eviction policy, and a layout
+contract. This is the tier where the exponent lives, and the only one where no competitor
+is building ([04](04-competition.md)).
+
+Per planner call today (`packages/agent/src/context.ts`):
+
+| Segment | Size | Behavior |
+|---|---|---|
+| `stablePrefix` — instructions, task, action schema, expect guidance | ~268 tok | constant |
+| `Current page: {title} \| {url}` | ~20 tok | constant |
+| `Previous actions:` — one JSON action per prior step | **~35–40 tok/step** | **grows linearly** |
+| `Compact observation ({mode})` | ~135 tok (B2) | constant per page, re-sent fresh |
+
+Step *n* costs `268 + 20 + 40n + obs`, so the sum over *n* steps carries a `40·n(n+1)/2`
+term. That term is the parabola. The measured +35 tok/step matches one action JSON exactly
+— the arithmetic and the telemetry agree.
+
+### The policy: keep what you did, not what you saw
+
+The standard agent pattern is a chat transcript —
+`[system, user(obs₁), assistant(act₁), user(obs₂), …]` — in which **every observation stays
+in context forever**. At 5–40K tokens each, step 20 is a 100–800K token prompt. It is what
+the chat API shape encourages, and it is the catastrophic form of the quadratic.
+
+`assemblePlannerContext` does not do this. It sends the action history plus the **current
+observation only**; prior observations are evicted. That is why growth is 35 tok/step and
+not 135+ — **the measurement proves the policy**.
+
+**The trade, stated plainly:** the model recalls what it *did*, not what it *saw*. Correct
+for form-filling and navigation. It will fail on tasks whose answer lives in an evicted
+observation — "compare prices across three products". A real limit
+([01](01-problem.md) §fit), not a footnote.
+
+### The four levers
+
+| Lever | Effect on the curve | Status |
+|---|---|---|
+| **Evict observations** | kills the dominant quadratic term | **built** (A4-adjacent; never claimed) |
+| **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built, never fires** — budget 4000 chars, B2's observation is 537, so every render is `full` |
+| **Prefix-cache `[stable][history]`** (B3) | 10× off the surviving quadratic term | **not built** — see below |
+| **Scheduled compaction** (B4) | history → O(1); curve → **linear** | not built (P2) |
+| **Replay** (B2) | 0 steps, 0 tokens | needs the distiller (P2) |
+
+### Caching: the claim is currently false
+
+The action history is **append-only**, so `[stable][history]` is a growing prefix and the
+observation already sits last. The structure is right; the mechanism is absent. No
+`cache_control` breakpoints are ever sent — Anthropic requires them explicitly, so on
+Anthropic there is **no caching at all**, regardless of how well-ordered the prompt is.
+
+Worse, the accounting is blind to it:
+
+> **Anthropic's `usage.input_tokens` EXCLUDES cache reads** (they live in
+> `cache_creation_input_tokens` / `cache_read_input_tokens`).
+> **OpenAI's INCLUDES them** (broken out under `input_tokens_details.cached_tokens`).
+
+`@rote/llm` reads only `input_tokens` on both. **Enabling caching today would collapse
+reported input on Anthropic — a fake win produced by a field we do not read**, which is
+invariant 1 violated inside our own instrument. Fix the accounting before the optimization
+([#57](https://github.com/kedarvartak/rote/issues/57)).
+
+Our fixtures cannot show any of this: both providers need ~1024 tokens before prefix
+caching applies, and B2's per-call prompts are 637–953. **Caching, if built today, would do
+nothing on our benchmark** — the distiller made the prompts too small to cache. The win
+only appears on real pages with real history.
+
+### Caching and compaction fight
+
+Caching requires the prefix to be immutable; compaction rewrites history to bound it.
+Compact every step and you cache-miss every step — you have paid for both mechanisms and
+bought neither. The resolution is amortization: compact on a schedule and eat one miss
+every ~*k* steps. **Cache-economics-scheduled**, not step-scheduled.
+
+### What is unproven
+
+The curve has never been drawn against a competitor; "they're quadratic, we're linear" is
+inference from architecture, not measurement. Rote is a *smaller-constant quadratic*, not
+linear — linear needs compaction. Diffing's ~90% claim is untested at any real page size.
+The eviction trade has never been stress-tested on a task requiring recall.
 
 ## The control loop
 
@@ -210,19 +330,25 @@ On assertion failure — never fail the task blindly, never silently continue:
 Cheap recovery is an efficiency feature: a scoped repair costs ~one step; a blind restart
 costs the whole task.
 
-## Learning plane (designed)
+## Tiers 1 and 2 — the learning plane (designed)
 
-Three memory tiers, in build order:
+Three stores, in build order. They implement memory tiers 1 (episodic) and 2 (semantic);
+the numbering below is the *store*, not the tier — see §The memory spine.
 
-| Tier | Content | Mode |
-|---|---|---|
-| 1 — **Playbook** | whole-task DAG, exact repeats | replay (contract: verified, zero-model) |
-| 2 — **Subflow** | shared prefixes (login → dashboard) reused across tasks | replay with hand-off |
-| 3 — **Site memory** | selector maps, form semantics, page graph, settle times, quirks | **advisory** — the agent stays in control |
+| Store | Tier | Content | Mode |
+|---|---|---|---|
+| **Playbook** | 1 | whole-task DAG, exact repeats | replay (contract: verified, zero-model) |
+| **Subflow** | 1 | shared prefixes (login → dashboard) reused across tasks | replay with hand-off |
+| **Site memory** | 2 | selector maps, form semantics, page graph, settle times, quirks | **advisory** — the agent stays in control |
 
-The distinction matters: tiers 1–2 *execute*; tier 3 only *informs* (a ≤1K-token brief,
-resolution hints, calibrated settle times). Advisory memory can be wrong without being
-dangerous — the agent still observes and verifies.
+The distinction matters: the tier-1 stores *execute*; tier 2 only *informs* (a ≤1K-token
+brief, resolution hints, calibrated settle times). **Advisory memory can be wrong without
+being dangerous** — the agent still observes and verifies. Executable memory cannot, which
+is why only tier 1 is assertion-gated on replay.
+
+Tier 2 also feeds tier 0: a site brief is working-memory content with a token budget, and
+a brief at 5% utility is overhead, not memory ([03](03-benchmark.md) reports hint utility
+for exactly this reason).
 
 ## Speculative execution (designed)
 

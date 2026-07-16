@@ -168,57 +168,108 @@ don't want to own.
 Legend: ● ships it · ◐ partial/adjacent · ○ absent. **The Rote column is the designed
 target, not today's build** — see [02 §Status](02-architecture.md) for what actually exists.
 
-| Optimization | Browser Use | Stagehand | Skyvern | Magnitude | Labs | **Rote (target)** |
+Grouped by memory tier. **The Rote column is today's build, not the target** — that is the
+change from previous versions of this table, which described the design and marked
+things ● that do not exist.
+
+| Optimization | Browser Use | Stagehand | Skyvern | Magnitude | Labs | **Rote (actual)** |
 |---|---|---|---|---|---|---|
+| **TIER 0 — working memory** | | | | | | |
 | A1/A2 distillation + element detection | ● | ◐ | ◐ | ○ | ○ | ● |
 | A3 stable element IDs | ◐ | ○ | ○ | ○ | ○ | ● |
-| **A4 diff observations** | ○ | ○ | ○ | ○ | ○ | ● |
-| A7 elective vision (SoM) | ◐ | ◐ | ● always-on | ● always-on | ● always-on | ● elective |
+| **A11 observation eviction** | ○ | n/a | ○ | ○ | ○ | **● built** |
+| **A4 diff observations** | ○ | ○ | ○ | ○ | ○ | ◐ built, never fired |
 | A8 token budget contract | ○ | ○ | ○ | ○ | ○ | ● |
-| A9 WebMCP-first | ○ | ○ | ○ | ○ | ◐ | ● |
-| B1 model routing | ○ | ◐ | ◐ | ○ | ○ | ● |
-| B2 no-model replay | ◐ separate | ◐ action cache | ● code cache | ◐ | ○ | ● +verified |
-| B3 cache-layout discipline | ○ | ○ | ◐ | ○ | n/a | ● |
+| **B3 cache-layout discipline** | ○ | ○ | ◐ | ○ | n/a | **○ not built** (#57) |
+| **B4 history compaction** | ○ | ○ | ○ | ○ | ○ | ○ |
+| A7 elective vision (SoM) | ◐ | ◐ | ● always-on | ● always-on | ● always-on | ○ (no vision path) |
+| A9 WebMCP-first | ○ | ○ | ○ | ○ | ◐ | ○ |
+| **TIER 1 — episodic memory** | | | | | | |
+| B2 no-model replay | ◐ separate | ◐ action cache | **● code cache** | ◐ | ○ | ◐ executor only |
+| D2 playbook distillation | ◐ workflow-use | ○ | **● codegen** | ○ | ○ | **○ not built** |
+| D1 lossless always-on recording | ○ | ○ | ◐ | ○ | ○ | ● |
+| **TIER 2 — semantic memory** | | | | | | |
+| B1 model routing | ○ | ◐ | ◐ | ○ | ○ | ○ |
+| C2 self-healing resolution | ◐ | ● | ◐ | n/a | n/a | ● (not memory-ranked) |
+| D3/D4 site memory + prediction | ○ | ○ | ◐ | ○ | ○ | ○ |
+| **C3 speculative execution** | ○ | ○ | ○ | ○ | ○ | ○ |
+| **PRECONDITION + infra** | | | | | | |
+| C6/F1 assertion-gated verification | ○ | ○ | ◐ | ○ | ○ | **● invariant** |
 | C1 settledness detection | ◐ | ◐ | ◐ | ◐ | ○ | ● |
-| C2 self-healing resolution | ◐ | ● | ◐ | n/a | n/a | ● +memory-ranked |
-| **C3 speculative execution** | ○ | ○ | ○ | ○ | ○ | ● |
-| C6/F1 assertion-gated verification | ○ | ○ | ◐ | ○ | ○ | ● invariant |
-| D1 lossless always-on recording | ○ | ○ | ◐ | ○ | ○ | ● built |
-| D3/D4 site memory + prediction | ○ | ○ | ◐ | ○ | ○ | ● |
-| G1 per-source cost accounting | ○ | ○ | ◐ | ○ | ○ | ● built |
+| G1 per-source cost accounting | ○ | ○ | ◐ | ○ | ○ | ● |
 
-The all-○ rows are the position: **no shipping harness has diff observations,
-speculation, per-site compounding memory, cache-layout discipline, and assertion-gated
-replay.** Several ship one. None ship most.
+Read this honestly, because the previous version did not:
 
-Read the **B2 row honestly**: Skyvern is a full ●, Stagehand and Browser Use are ◐.
-Reuse is *table stakes among serious harnesses*, not our wedge. The differentiating
-token in that cell is `+verified`, and nothing else.
+- **Tier 1 is where we are behind.** Skyvern is ● on both replay and distillation; we are ○
+  on the distiller. Their column is stronger than ours today.
+- **Tier 0 is an almost-empty column for everyone** — including us. Four of its rows are
+  all-○ across the entire field. That is the position, and we have exactly one ● that
+  nobody else has (A11), one ◐ that has never run, and two ○.
+- **The trust-gate row is the only one where we are alone at ●** — and it is a precondition,
+  not a product.
+- Rote is ○ on vision and WebMCP. We are not better at everything; we do not do those.
 
 ## Positioning
 
-> **The only harness that can prove the cheap path did the right thing.**
+> **Agent harnesses have no memory manager. Rote is the memory manager.**
 
-Reuse is table stakes — Skyvern, Stagehand and `workflow-use` all ship a version of it,
-and Skyvern has shipped it longer than we have existed. **We are late to memoization, not
-early.** Building the distiller and matcher reaches parity with Skyvern's 2026 baseline;
-it passes nothing.
+Everyone in stratum 2 has memory. Nobody *manages* it. The context window is treated as a
+garbage dump — append, and hope — and the stores that exist (Skyvern's code cache,
+Stagehand's selector cache) are point solutions bolted beside the loop rather than a policy
+inside it.
 
-What no one ships is the **contract**: an assertion gate that decides success from page
-state rather than from the absence of an exception, a fingerprint hard gate before any
-reuse, and a repair ladder that makes drift a marginal cost instead of a silent wrong
-answer. Skyvern's #SKY-7577 is the evidence that this is a real distinction and not a
-slogan.
+Three tiers, and the field's position at each ([01](01-problem.md), [02](02-architecture.md)):
 
-So the wedge is **efficiency**; the durable value is **determinism you can audit**.
-Compression makes every token cheaper; Rote makes most tokens not exist — but a cheap
-wrong answer is worth less than no answer, and we are the only ones architecturally
-committed to that.
+| Tier | Scope | The field | Rote |
+|---|---|---|---|
+| **0 — Working** | within a run | **nobody.** Everyone re-sends the transcript; everyone is O(n²) | **the wedge** — half-built, unmeasured |
+| **1 — Episodic** | across runs | **Skyvern ships it**, with branch coverage we don't design for. Stagehand, `workflow-use` adjacent | **late.** Distiller unbuilt |
+| **2 — Semantic** | across tasks on a site | nobody (Skyvern ◐) | unbuilt |
+| **Trust gate** | all tiers | **nobody** — success = no exception thrown | invariant 1 |
 
-**Corollary for [03](03-benchmark.md):** a head-to-head on tokens is a fight against
-harnesses with years of head start on the same idea. A head-to-head on **silent-failure
-rate under drift** (B5/T5) is one no competitor is instrumented to run — their success
-signal is "no exception thrown". Publish both; lead with the second.
+**We are late to tier 1 and early to tier 0.** Building the distiller reaches parity with
+Skyvern's 2026 baseline; it passes nothing. Tier 0 is where the exponent lives and where
+no one is competing.
+
+### Why tier 0 is defensible
+
+The honest objection: *"it's just caching — anyone can reorder a prompt in a weekend."*
+The 50 lines of `cache_control` are indeed trivial. **The discipline is not.** Prefix
+caching rewards a property that feels unnatural to write:
+
+> **Nothing above the line may ever mutate.** Not a timestamp, not a run id, not a
+> reordered tool schema, not a "helpful" recency reshuffle.
+
+Most harnesses cannot guarantee that, because **nothing owns prompt layout** — messages are
+appended wherever convenient, across the codebase. Retrofitting the guarantee means finding
+every writer and constraining it. Rote has one `ContextAssembler` that owns layout as an
+architectural rule.
+
+That is the same shape as invariant 1: **not clever code, an enforced constraint.** Those
+are the hard ones to copy, because copying them means changing how your codebase is allowed
+to be written.
+
+### The trust gate is the precondition, not a competing claim
+
+Memory that might be wrong is worse than no memory. Skyvern's fallback fires on runtime
+errors, so a replay that throws nothing is assumed correct — #SKY-7577 is that assumption
+arriving as a bug. Verification is not a separate wedge; it is what makes any tier of
+memory safe to use at volume.
+
+So: the wedge is **the cost curve**; the precondition is **auditable determinism**; the
+compounding asset is **the accumulated, verified memory** itself.
+
+**Corollary for [03](03-benchmark.md):** a head-to-head on *tokens per task* is a fight
+against harnesses with years of head start on the same idea. Two better instruments, and
+neither is one a competitor is equipped to run:
+
+1. **Cumulative tokens vs. task length** — the curve. Everyone a parabola; us flatter. The
+   demo is one graph, and the receipts are the provider's (`cache_read_input_tokens`), not
+   ours.
+2. **Silent-failure rate under drift** (B5/T5) — their success signal is "no exception
+   thrown", so they are not instrumented to measure it at all.
+
+**Neither has been run.** Until then this is a hypothesis with good arithmetic.
 
 ## The hard objections, steelmanned
 
