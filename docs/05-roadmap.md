@@ -55,19 +55,20 @@ need calibration time and would delay the number without changing its headline. 
 |---|---|---|
 | **A11 observation eviction** | kills the dominant quadratic term | **built** — and never claimed. Growth is 35 tok/step (one action JSON), not 135+ |
 | **A4 diff observations** | −~90% on the constant, real pages | **built, never fired** — budget 4000 chars, our observations are ~537 |
-| **B3 cache layout** | 10× off the surviving quadratic | **not built** — no `cache_control` sent; accounting blind (#57) |
+| **B3 cache layout** | 10× off the surviving quadratic | **not built** — no `cache_control` sent. Its prerequisite, cache-aware accounting, is done (#57) |
 | **B4 compaction** | history → O(1); **curve → linear** | not built |
 
 **Measure before building.** Three of those four have never been exercised, and our
-fixtures cannot exercise them: too small for A4 to trigger, and under the ~1024-token
-threshold that makes caching legal at all. The first task is the curve, not the code.
+fixtures cannot exercise them: too small for A4 to trigger, and under the minimum cacheable
+prefix (4096 tokens on Opus 4.8, 2048 on Sonnet 4.6, 1024 on older Sonnets — our calls are
+637–953). The first task is the curve, not the code.
 
 ### In / out
 
 | In V1 | Deferred |
 |---|---|
 | **The curve**: cumulative tokens vs. steps, vs. Browser Use, on a real page — the headline | live-site continuous eval |
-| **#57 cache accounting** — prerequisite, not follow-up | — |
+| ~~#57 cache accounting~~ — **done**; it was the prerequisite, so it shipped first | — |
 | A11 eviction (built) + A4 diff proven on a real page | cross-step dedup (A10), task-focused filtering (P2) |
 | B3 cache layout: real `cache_control` + cache-aware accounting | B4 compaction (P2 — fights B3, needs scheduling) |
 | CDP browser backend | remote backends beyond a connect string (P2) |
@@ -89,11 +90,11 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 |---|---|
 | W1 browser + perception capture | done |
 | W2 distill, stable IDs, diff, render | **done, but diff has never fired** — fixtures too small |
-| W3 loop + context assembler | **done, except the cache layout does nothing** — no `cache_control`, blind accounting (#57) |
+| W3 loop + context assembler | **done, except the cache layout does nothing** — no `cache_control` is sent. Accounting is no longer blind (#57 fixed) |
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | W5 benchmark + the number | machinery done · **number not yet run** · **the curve not yet drawn** |
 | W6 launch package | not started |
-| **W7 working memory (new)** | **#57 accounting → the curve → `cache_control` → compaction.** The V1 headline |
+| **W7 working memory (new)** | #57 accounting **done** → **the curve (next)** → `cache_control` → compaction. The V1 headline |
 
 **No longer blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49)
 and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` is now
@@ -138,7 +139,7 @@ Set it from the first honest run, in public, before optimizing against it.
 - [ ] Benchmark reproduction is one command; raw JSONL downloadable
 - [ ] Every efficiency claim carries a number, units, and a link to method
 - [ ] **The curve is a graph in the README**, with the method and the raw data
-- [ ] **#57 closed** — cache accounting is provider-normalized, or no caching claim ships
+- [x] **#57 closed** — cache accounting is provider-normalized (uncached / cache-read / cache-write), priced per bucket, property-tested against both providers
 - [ ] Sacred invariant suite green; CI enforces changelog + lint + tests
 - [ ] Known limitations written honestly (no routing/speculation/learning yet; **no
       distiller — tier 1 is V2**; eviction trades recall for cost)

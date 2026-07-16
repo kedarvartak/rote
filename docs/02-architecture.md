@@ -62,7 +62,7 @@ confuse in an architecture doc; this is the boundary.
 | Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built** — the dominant quadratic term is already gone |
 | **Diff observations** (A4) | 0 | **built but inert** — has never fired; fixtures are too small to trigger it |
-| **Cache-layout discipline** (B3) | 0 | **not built** — the stable/volatile split exists; no `cache_control` is ever sent, and the accounting cannot see a cache hit ([#57](https://github.com/kedarvartak/rote/issues/57)) |
+| **Cache-layout discipline** (B3) | 0 | **not built** — the stable/volatile split exists, but no `cache_control` is ever sent. Its prerequisite, provider-normalized cache accounting, is **built** ([#57](https://github.com/kedarvartak/rote/issues/57)) |
 | **History compaction** (B4) | 0 | **not built** — required to make the curve linear rather than a smaller quadratic |
 | **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
 | **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
@@ -72,8 +72,8 @@ Packages that exist: `core recorder executor bench cli browser perception action
 Designed but absent: `decision predictor memory mcp-server`.
 
 **Tier 0 is half-built and unmeasured.** Eviction works and was never claimed; diffing has
-never run; caching is a doc claim with no mechanism. That is the V1 gap
-([05](05-roadmap.md)).
+never run; caching still has no mechanism, though its accounting prerequisite now does
+(#57). That is the V1 gap ([05](05-roadmap.md)).
 
 ## The four planes
 
@@ -82,7 +82,7 @@ The planes are *where code lives*; the memory tiers are *what it is for*. They c
 | Plane | Baseline cost | Rote's answer | Serves tier | Status |
 |---|---|---|---|---|
 | **Perception** | 5–40K tokens/step, re-sent every step | distill → filter → diff → budget | 0 | built, except diff never fires |
-| **Decision** | frontier model, every step, full context | cache-local layout; route down or skip the model | 0, 1 | **layout not built** (#57); routing designed |
+| **Decision** | frontier model, every step, full context | cache-local layout; route down or skip the model | 0, 1 | **layout not built** — its accounting prerequisite is (#57); routing designed |
 | **Action** | act → wait → observe, serialized | settledness, self-healing resolution, speculation | — | first two built |
 | **Learning** | every run starts cold | recorded trajectories → playbooks → site memory | 1, 2 | recording + replay built |
 
@@ -127,7 +127,7 @@ observation — "compare prices across three products". A real limit
 |---|---|---|
 | **Evict observations** | kills the dominant quadratic term | **built** (A4-adjacent; never claimed) |
 | **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built, never fires** — budget 4000 chars, B2's observation is 537, so every render is `full` |
-| **Prefix-cache `[stable][history]`** (B3) | 10× off the surviving quadratic term | **not built** — see below |
+| **Prefix-cache `[stable][history]`** (B3) | 10× off the surviving quadratic term | **not built** — accounting prerequisite done (#57); see below |
 | **Scheduled compaction** (B4) | history → O(1); curve → **linear** | not built (P2) |
 | **Replay** (B2) | 0 steps, 0 tokens | needs the distiller (P2) |
 
@@ -138,21 +138,41 @@ observation already sits last. The structure is right; the mechanism is absent. 
 `cache_control` breakpoints are ever sent — Anthropic requires them explicitly, so on
 Anthropic there is **no caching at all**, regardless of how well-ordered the prompt is.
 
-Worse, the accounting is blind to it:
+The accounting was also blind to it, and that is now fixed
+([#57](https://github.com/kedarvartak/rote/issues/57)) — **the accounting had to land
+before any caching work**, because the two providers mean opposite things by the same
+field name:
 
-> **Anthropic's `usage.input_tokens` EXCLUDES cache reads** (they live in
-> `cache_creation_input_tokens` / `cache_read_input_tokens`).
-> **OpenAI's INCLUDES them** (broken out under `input_tokens_details.cached_tokens`).
+> **Anthropic's `usage.input_tokens` EXCLUDES cache activity** — `cache_read_input_tokens`
+> and `cache_creation_input_tokens` are siblings, so the true prompt size is their sum.
+> **OpenAI's `usage.input_tokens` INCLUDES it** — `input_tokens_details` is a *breakdown*.
 
-`@rote/llm` reads only `input_tokens` on both. **Enabling caching today would collapse
-reported input on Anthropic — a fake win produced by a field we do not read**, which is
-invariant 1 violated inside our own instrument. Fix the accounting before the optimization
-([#57](https://github.com/kedarvartak/rote/issues/57)).
+`@rote/llm` read only `input_tokens` on both, which broke in **opposite directions**
+(measured live, 2026-07-17, `gpt-5.6-luna`, a ~4K prompt sent twice):
 
-Our fixtures cannot show any of this: both providers need ~1024 tokens before prefix
-caching applies, and B2's per-call prompts are 637–953. **Caching, if built today, would do
-nothing on our benchmark** — the distiller made the prompts too small to cache. The win
-only appears on real pages with real history.
+```
+OpenAI cold: input_tokens=4027  cached=0     cache_write=4024
+OpenAI warm: input_tokens=4027  cached=4024  cache_write=0
+```
+
+- **Anthropic** — reported input *collapses* when cached: a **fake token win** that never
+  happened, published by the instrument we use to prove our efficiency claims.
+- **OpenAI** — reported input *stays flat* at 4027: **no win visible at all**, and 4024
+  cached tokens priced at the base rate instead of ~0.1×, **overstating** cost ~10× on the
+  cached portion.
+
+The same one-line bug would have made Rote look artificially cheap on one provider and
+artificially expensive on the other, in the same benchmark. `TokenUsage` is now normalized
+at the provider boundary onto one contract —
+`input_tokens + cache_read_tokens + cache_write_tokens === the provider's true prompt size`,
+with `input_tokens` always the uncached remainder — and property-tested against both shapes.
+
+**Our fixtures still cannot exercise caching.** The minimum cacheable prefix is
+*model-dependent*, not a flat 1024: **4096 tokens** on Opus 4.8/4.7/4.6/4.5 and Haiku 4.5,
+2048 on Fable 5 and Sonnet 4.6, 1024 on Sonnet 4.5 and older. B2's per-call prompts are
+637–953 — under every one of those. **Caching, if built today, would do nothing on our
+benchmark**: the distiller made the prompts too small to cache. The win only appears on
+real pages with real history, which is the same reason A4 has never fired.
 
 ### Caching and compaction fight
 
