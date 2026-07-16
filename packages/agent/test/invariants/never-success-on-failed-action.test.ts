@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { buildEnvFingerprint, RunManifestSchema, TrajectoryEventSchema } from '@rote/core';
-import { FileBrowserAgentRunRecorder, runBrowserAgent, type BrowserPageSession, type BrowserPlannerClient } from '../../src/index.js';
+import { FileBrowserAgentRunRecorder, runBrowserAgent, type BrowserAction, type BrowserPageSession, type BrowserPlannerClient } from '../../src/index.js';
 
 let baseDir: string | undefined;
 
@@ -53,7 +53,7 @@ describe('browser agent recording: never reports success on a failed action', ()
     expect(event.error?.message).toBe('button detached');
   });
 
-  it('records failure when an action postcondition fails', async () => {
+  it('records failure when an action postcondition fails and the repair budget is exhausted', async () => {
     baseDir = await mkdtemp(join(tmpdir(), 'rote-agent-expect-invariant-'));
     const recorder = new FileBrowserAgentRunRecorder({
       task: 'Remove submit button',
@@ -62,6 +62,9 @@ describe('browser agent recording: never reports success on a failed action', ()
       runId: 'failed-expect-run',
       clock: sequenceClock(),
     });
+    // A planner that never corrects: it re-emits the same unsatisfiable postcondition
+    // on the repair call too. This is what exhausts the budget (#49) — the ceiling is
+    // what stops a recoverable expect from becoming an ignorable one.
     const planner: BrowserPlannerClient = {
       async plan(source) {
         return {
@@ -82,9 +85,52 @@ describe('browser agent recording: never reports success on a failed action', ()
 
     const runDir = join(baseDir, 'runs', 'failed-expect-run');
     const manifest = RunManifestSchema.parse(JSON.parse(await readFile(join(runDir, 'manifest.json'), 'utf8')));
-    const event = TrajectoryEventSchema.parse(JSON.parse((await readFile(join(runDir, 'trajectory.jsonl'), 'utf8')).trim()));
+    const events = (await readFile(join(runDir, 'trajectory.jsonl'), 'utf8'))
+      .trim().split('\n').map((line) => TrajectoryEventSchema.parse(JSON.parse(line)));
     expect(manifest.outcome).toBe('failure');
-    expect(event.error?.message).toBe('selector "#submit" still visible');
+    // Exactly one repair was attempted, then the run died. Asserting the count keeps
+    // the budget honest: a regression that retried forever would still end in
+    // `failure` and pass a weaker check.
+    expect(events).toHaveLength(2);
+    // INVARIANT: nothing silently continued — every attempt carries its error.
+    expect(events.map((event) => event.error?.message)).toEqual([
+      'selector "#submit" still visible',
+      'selector "#submit" still visible',
+    ]);
+    // INVARIANT: repair spend is tagged, never folded into planner totals (invariant 5).
+    expect(manifest.token_usage).toEqual([
+      { source: 'planner', input_tokens: 8, output_tokens: 2 },
+      { source: 'repair', input_tokens: 8, output_tokens: 2 },
+    ]);
+  });
+
+  it('never lets a repaired postcondition failure reach success without the verifier', async () => {
+    // The risk the repair path introduces: a failed expect no longer kills the run, so
+    // success must still be impossible unless the independent verifier says so. Here the
+    // planner recovers from its own bad expect and declares done — and is overruled.
+    const script: BrowserAction[] = [
+      { kind: 'click', selector: '#submit', expect: { selector_absent: '#submit' } },
+      { kind: 'done', success: true, summary: 'I think it worked' },
+    ];
+    let index = 0;
+    const planner: BrowserPlannerClient = {
+      async plan(source) {
+        const action = script[Math.min(index, script.length - 1)]!;
+        index += 1;
+        return { action, usage: { source, input_tokens: 5, output_tokens: 1 } };
+      },
+    };
+
+    const result = await runBrowserAgent({
+      task: 'Remove submit button',
+      page: failingPage(false),
+      planner,
+      verifier: { async verify() { return { success: false, summary: 'submit button still present' }; } },
+      clock: () => 100,
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.summary).toBe('submit button still present');
   });
 
   it('records failure when the planner declares success but verification fails', async () => {

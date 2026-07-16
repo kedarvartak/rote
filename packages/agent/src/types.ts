@@ -4,11 +4,27 @@ import type { CapturedPage } from '@rote/browser';
 import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
 import type { AdaptiveRenderedObservation } from '@rote/perception';
 
+/**
+ * `expect` is **optional** by deliberate design (#49).
+ *
+ * A model-authored postcondition can only assert what the model has already
+ * observed, so a postcondition about a *future* page state is either a guess or a
+ * tautology. On the T1 B2 fixture the confirmation section is `hidden` until the
+ * submit lands and our distiller drops hidden nodes, so the post-click state was
+ * not expressible in any primitive of the DSL — text or selector alike. Forcing a
+ * field the model cannot fill produces invented strings, and a wrong guess failed
+ * 7/7 correct runs. Omission is a truthful answer to "what do you expect?"; a
+ * guess is not.
+ *
+ * This does not weaken verification: the independent final `verify` gate is
+ * authored against ground truth and still decides success (docs/02 "Repair
+ * ladder").
+ */
 export const BrowserActionSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('navigate'), url: z.string().min(1), expect: BrowserExpectSchema }),
-  z.object({ kind: z.literal('fill'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema }),
-  z.object({ kind: z.literal('select'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema }),
-  z.object({ kind: z.literal('click'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), expect: BrowserExpectSchema }),
+  z.object({ kind: z.literal('navigate'), url: z.string().min(1), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('fill'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('select'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('click'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), expect: BrowserExpectSchema.optional() }),
   z.object({ kind: z.literal('done'), success: z.boolean(), summary: z.string().default('') }),
 ]);
 export type BrowserAction = z.infer<typeof BrowserActionSchema>;
@@ -28,6 +44,19 @@ export interface PlannerContext {
   volatileSuffix: string;
 }
 
+/**
+ * Why the previous step's postcondition failed, handed to the next planner call.
+ *
+ * Note this describes a *failed assertion*, not a failed action: on B2 the click
+ * landed and the form was submitted — only the model's claim about the result was
+ * wrong. So the repair must let the planner reconcile against the post-action
+ * page, never blindly re-run the step it just performed.
+ */
+export interface BrowserExpectFailure {
+  action: BrowserAction;
+  reason: string;
+}
+
 export interface BrowserPlannerRequest {
   task: string;
   step: number;
@@ -35,6 +64,8 @@ export interface BrowserPlannerRequest {
   observation: AdaptiveRenderedObservation;
   previousActions: readonly BrowserAction[];
   context: PlannerContext;
+  /** Present only on a scoped repair call (docs/02 "Repair ladder" rung 2). */
+  repair?: BrowserExpectFailure;
 }
 
 export interface BrowserPlannerResponse {
@@ -42,8 +73,11 @@ export interface BrowserPlannerResponse {
   usage: TokenUsage;
 }
 
+/** The usage sources the agent loop may request: a normal step, or a scoped repair. */
+export type BrowserPlannerSource = Extract<TokenUsageSource, 'planner' | 'repair'>;
+
 export interface BrowserPlannerClient {
-  plan(source: Extract<TokenUsageSource, 'planner'>, request: BrowserPlannerRequest): Promise<BrowserPlannerResponse>;
+  plan(source: BrowserPlannerSource, request: BrowserPlannerRequest): Promise<BrowserPlannerResponse>;
 }
 
 export interface BrowserAgentVerification {
@@ -69,6 +103,13 @@ export interface RunBrowserAgentOptions {
   maxSteps?: number;
   observationMaxChars?: number;
   clock?: () => number;
+  /**
+   * Scoped repairs allowed per run before a failed postcondition is fatal
+   * (default 1). The budget is what keeps a non-fatal expect honest: without a
+   * ceiling, "continue and let verify decide" would let a planner ignore every
+   * assertion it authored. Exhausting it throws.
+   */
+  maxRepairs?: number;
 }
 
 export interface BrowserAgentStep {

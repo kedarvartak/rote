@@ -259,6 +259,39 @@ node packages/cli/bin/rote.js run \
 B2's exact failure is stochastic (usually the expect, occasionally `stableId`), so
 run it a few times to see both modes.
 
+## Outcome (added 2026-07-16)
+
+T1's primary finding is **fixed** (#49/#50). The record above is left as written — it is
+the log of what we measured on 2026-07-15, not a live status page.
+
+What the fix changed, and one thing T1 got wrong:
+
+- **`expect` is now optional.** The planner is asked to omit rather than guess. On live
+  re-runs it omitted on *every* action of B1, B2 and B3 — so the tautological
+  `input_value` expects (#50) vanished at the same time. Both failure shapes were
+  symptoms of a mandatory field with nothing true to put in it.
+- **A failed expect costs one scoped repair, not the run.** T1's own trace showed why the
+  repair must not replay the action: on B2 the submit had *already landed*: only the
+  belief about it was wrong.
+- **T1's proposed fix #1 was wrong.** It suggested preferring structural expects, on the
+  grounds that `selector_visible: "#registration-confirmation"` is "checkable from the
+  observation the model already has". It is not. That section is `hidden` until submit
+  and the distiller drops hidden nodes, so the id never reaches the model either.
+  Structural expects would have moved the guess from a string to an id, not removed it.
+  The post-click state was not expressible in **any** primitive of the DSL.
+
+Re-measured on the same frozen fixtures, same prompts, same two model tiers:
+
+| Task | T1 (2026-07-15) | After #49 | Tokens |
+|---|---|---|---|
+| B1 | ✅ 1/1 | ✅ 1/1 | 2726 → 2750 (+0.9%) |
+| B3 | ✅ 1/1 | ✅ 1/1 | 2066 → 2048 (**−0.9%**) |
+| B2 | ❌ **0/7** | ✅ **11/11** | — (was unmeasurable: no run finished) |
+
+B3 got *cheaper*: the output tokens saved by not emitting `expect` more than paid for the
+prompt guidance that asks for omission. The reproduction commands above still apply — at
+`ac58573` they fail as recorded; on `main` they pass.
+
 ## References
 
 - `docs/05-roadmap.md` W4 (action plane, live expect checks), W5 (the gate)
