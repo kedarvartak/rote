@@ -25,8 +25,14 @@ describe('readUsageSidecar', () => {
     await writeFile(arrayPath, JSON.stringify([{ source: 'planner', input_tokens: 3, output_tokens: 4 }]), 'utf8');
     await writeFile(objectPath, JSON.stringify({ token_usage: [{ source: 'slot', input_tokens: 1, output_tokens: 2 }] }), 'utf8');
 
-    await expect(readUsageSidecar(arrayPath)).resolves.toEqual([{ source: 'planner', input_tokens: 3, output_tokens: 4 }]);
-    await expect(readUsageSidecar(objectPath)).resolves.toEqual([{ source: 'slot', input_tokens: 1, output_tokens: 2 }]);
+    // A pre-#57 sidecar omits the cache buckets; parsing fills them with a real 0,
+    // because no caching existed when those runs were recorded.
+    await expect(readUsageSidecar(arrayPath)).resolves.toEqual([
+      { source: 'planner', input_tokens: 3, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 4 },
+    ]);
+    await expect(readUsageSidecar(objectPath)).resolves.toEqual([
+      { source: 'slot', input_tokens: 1, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 2 },
+    ]);
   });
 
   it('rejects untagged usage entries', async () => {

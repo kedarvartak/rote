@@ -26,7 +26,7 @@ describe('FileBrowserAgentRunRecorder', () => {
       runId: 'success-run',
       clock: sequenceClock(),
     });
-    const usage = { source: 'planner' as const, input_tokens: 20, output_tokens: 4 };
+    const usage = { source: 'planner' as const, input_tokens: 20, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 4 };
 
     await recorder.recordStep({
       step: 0,

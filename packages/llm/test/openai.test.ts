@@ -28,7 +28,9 @@ describe('OpenAiTaggedLlmClient', () => {
     });
     expect(result).toEqual({
       text: '{"kind":"done","success":true,"summary":"ok"}',
-      usage: { source: 'planner', input_tokens: 123, output_tokens: 17 },
+      // Normalized shape (#57): an uncached call reports its cache buckets as a
+      // measured 0, not as an absent field.
+      usage: { source: 'planner', input_tokens: 123, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 17 },
     });
   });
 

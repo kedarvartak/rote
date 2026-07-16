@@ -55,7 +55,10 @@ describe('benchmark spec', () => {
       expect.objectContaining({
         status: 'success',
         runId: 'r1',
-        manifest: expect.objectContaining({ token_usage: [{ source: 'planner', input_tokens: 10, output_tokens: 5 }] }),
+        manifest: expect.objectContaining({
+          // Cache buckets default to a measured 0 when a sidecar omits them (#57).
+          token_usage: [{ source: 'planner', input_tokens: 10, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 5 }],
+        }),
       }),
       expect.objectContaining({ status: 'failure', phase: 'warm', error: 'fallback' }),
     ]);

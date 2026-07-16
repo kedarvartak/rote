@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import {
   buildEnvFingerprint,
   computeResultDigest,
+  uncachedTokenUsage,
   writeTrajectoryJsonl,
   type RunManifest,
   type TokenUsage,
@@ -124,18 +125,17 @@ function syntheticEvent(runId: string, seq: number, task: BenchTask, phase: Benc
   };
 }
 
+// Synthetic pack: no caching is modelled, so every cache bucket is an explicit
+// measured zero (`uncachedTokenUsage`) rather than an omitted field (#57).
 function usageForPhase(phase: BenchPhase, total: number): TokenUsage[] {
-  if (phase === 'cold') return [{ source: 'planner', input_tokens: Math.floor(total * 0.8), output_tokens: Math.ceil(total * 0.2) }];
+  if (phase === 'cold') return [uncachedTokenUsage('planner', Math.floor(total * 0.8), Math.ceil(total * 0.2))];
   if (phase === 'warm') {
-    return [
-      { source: 'matcher', input_tokens: 12_000, output_tokens: 1_000 },
-      { source: 'slot', input_tokens: 4_000, output_tokens: 1_000 },
-    ];
+    return [uncachedTokenUsage('matcher', 12_000, 1_000), uncachedTokenUsage('slot', 4_000, 1_000)];
   }
   return [
-    { source: 'matcher', input_tokens: 12_000, output_tokens: 1_000 },
-    { source: 'repair', input_tokens: 15_000, output_tokens: 2_000 },
-    { source: 'verify', input_tokens: 900, output_tokens: 100 },
+    uncachedTokenUsage('matcher', 12_000, 1_000),
+    uncachedTokenUsage('repair', 15_000, 2_000),
+    uncachedTokenUsage('verify', 900, 100),
   ];
 }
 

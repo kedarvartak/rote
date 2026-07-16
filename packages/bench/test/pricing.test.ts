@@ -89,4 +89,29 @@ describe('readPriceTable', () => {
     expect(priceForModel('gpt-5.6-sol', table)?.input_usd_per_mtok).toBe(1);
     await expect(readPriceTable(bad)).rejects.toThrow();
   });
+  it('prices cache buckets at their real rates rather than the base input rate (#57)', () => {
+    // The real measured OpenAI warm call: 3 uncached + 4024 cache-read + 5 output.
+    const price = priceForModel('gpt-5.6-luna')!;
+    const warm = runCostUsd(3, 5, price, 4024, 0);
+
+    // What the pre-#57 code did: count every input token at the base rate, because
+    // OpenAI's input_tokens (4027) is inclusive and the cache split was never read.
+    const naive = runCostUsd(4027, 5, price);
+
+    // Cache reads bill at ~0.1x, so the naive figure overstates this call's input
+    // cost by roughly 10x on the cached portion. Both are non-zero; the gap is the bug.
+    expect(warm).toBeLessThan(naive);
+    expect(naive / warm).toBeGreaterThan(5);
+  });
+
+  it('prices an Anthropic cache write above base and a read below it', () => {
+    const price = priceForModel('claude-opus-4-8')!;
+    const base = runCostUsd(1_000_000, 0, price);
+    const write = runCostUsd(0, 0, price, 0, 1_000_000);
+    const read = runCostUsd(0, 0, price, 1_000_000, 0);
+
+    // Published multipliers: writes 1.25x base (5-minute TTL), reads ~0.1x.
+    expect(write).toBeCloseTo(base * 1.25, 6);
+    expect(read).toBeCloseTo(base * 0.1, 6);
+  });
 });

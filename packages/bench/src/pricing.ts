@@ -10,11 +10,32 @@ import { z } from 'zod';
  * into the accounting. An unpriced model is reported as unpriced — never as $0,
  * which would silently read as "free" in the launch table.
  */
+/**
+ * Cache-rate multipliers, applied to a model's base input rate.
+ *
+ * Published rates rather than folklore: cache **reads** bill at ~0.1x base on both
+ * providers. Cache **writes** bill at 1.25x base for Anthropic's default 5-minute
+ * TTL (2x for the 1-hour TTL, which `@rote/llm` refuses to normalize rather than
+ * mis-price — see `normalizeAnthropicUsage`).
+ *
+ * These are multipliers, not absolute rates, because that is how both providers
+ * document them — a model whose base price changes keeps its cache economics.
+ */
+export const CACHE_READ_MULTIPLIER = 0.1;
+export const CACHE_WRITE_5M_MULTIPLIER = 1.25;
+
 export const ModelPriceSchema = z.object({
-  /** USD per 1M input tokens. */
+  /** USD per 1M uncached input tokens. */
   input_usd_per_mtok: z.number().nonnegative(),
   /** USD per 1M output tokens. */
   output_usd_per_mtok: z.number().nonnegative(),
+  /**
+   * USD per 1M cache-read tokens. Defaults to `input * CACHE_READ_MULTIPLIER`
+   * when a table omits it; override for a model that prices caching differently.
+   */
+  cache_read_usd_per_mtok: z.number().nonnegative().optional(),
+  /** USD per 1M cache-write tokens (5-minute TTL). Defaults to `input * CACHE_WRITE_5M_MULTIPLIER`. */
+  cache_write_usd_per_mtok: z.number().nonnegative().optional(),
 });
 export type ModelPrice = z.infer<typeof ModelPriceSchema>;
 
@@ -79,9 +100,34 @@ export function priceForModel(model: string, table: PriceTable = DEFAULT_PRICE_T
   return table.prices[model];
 }
 
-/** USD cost of one run's tokens at the given price. Pure. */
-export function runCostUsd(inputTokens: number, outputTokens: number, price: ModelPrice): number {
-  return (inputTokens * price.input_usd_per_mtok + outputTokens * price.output_usd_per_mtok) / 1_000_000;
+/**
+ * USD cost of one run's tokens at the given price. Pure.
+ *
+ * Cache buckets are priced separately (#57) — reads at ~0.1x base and writes at
+ * 1.25x — because pricing every input token at the base rate overstates a cached
+ * run's cost by ~10x on the cached portion, and that error would land directly in
+ * the head-to-head's `$/task` column.
+ *
+ * `cacheReadTokens`/`cacheWriteTokens` default to 0 so existing callers summing
+ * pre-#57 records (recorded when no caching existed, so 0 is the true value) are
+ * unaffected.
+ */
+export function runCostUsd(
+  inputTokens: number,
+  outputTokens: number,
+  price: ModelPrice,
+  cacheReadTokens = 0,
+  cacheWriteTokens = 0,
+): number {
+  const cacheRead = price.cache_read_usd_per_mtok ?? price.input_usd_per_mtok * CACHE_READ_MULTIPLIER;
+  const cacheWrite = price.cache_write_usd_per_mtok ?? price.input_usd_per_mtok * CACHE_WRITE_5M_MULTIPLIER;
+  return (
+    (inputTokens * price.input_usd_per_mtok +
+      cacheReadTokens * cacheRead +
+      cacheWriteTokens * cacheWrite +
+      outputTokens * price.output_usd_per_mtok) /
+    1_000_000
+  );
 }
 
 /** Loads and validates a price table override file. */
