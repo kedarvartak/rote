@@ -9,6 +9,9 @@ labeled `skip-changelog`.
 
 ## [Unreleased]
 
+### Docs
+- **P1**: Re-survey the competition (2026-07-16) and reposition on verified reuse. Skyvern already ships Rote's memoization thesis — agent-run → generated code → zero-LLM replay → auto-fallback, plus progressive branch coverage — so reuse is table stakes, not a wedge; the retracted claim of "finer-grained learning" is corrected. No harness verifies that a replayed run was *correct* (their fallbacks fire on runtime errors, so no-exception is read as success — cf. Skyvern #SKY-7577, a cached click succeeding against a missing element). New position: "the only harness that can prove the cheap path did the right thing", with WebMCP consumption recorded as the one place we are genuinely early (shipping in Edge 147, zero agents or harnesses consuming it, and no chicken-and-egg for the first-party enterprise portals that are our best-fit buyer).
+
 ### Fixed
 - **P1**: Make action `expect` optional and give a failed postcondition one scoped repair instead of ending the run — a mandatory expect forced the planner to predict confirmation text it had never seen, failing B2 0/7 with correct form submissions recorded as failures. B2 now passes 11/11 on `gpt-5.6-luna` and `gpt-5.6-sol` at roughly neutral token cost (#49, #50)
 
