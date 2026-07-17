@@ -5,12 +5,17 @@ import { BrowserPlannerOutputError, TaggedLlmBrowserPlanner, type BrowserPlanner
 class FakeTaggedClient implements TaggedLlmClient {
   requests: TaggedLlmRequest[] = [];
 
-  constructor(private readonly text: string) {}
+  private index = 0;
+
+  constructor(private readonly texts: string | readonly string[]) {}
 
   async complete(request: TaggedLlmRequest) {
     this.requests.push(request);
+    const values = typeof this.texts === 'string' ? [this.texts] : this.texts;
+    const text = values[Math.min(this.index, values.length - 1)]!;
+    this.index += 1;
     return {
-      text: this.text,
+      text,
       usage: { source: request.source, input_tokens: 42, output_tokens: 8 },
     };
   }
@@ -35,16 +40,33 @@ describe('TaggedLlmBrowserPlanner', () => {
     }]);
   });
 
-  it('rejects malformed output instead of guessing an action', async () => {
-    const planner = new TaggedLlmBrowserPlanner(new FakeTaggedClient('click submit'));
+  it('repairs one malformed completion with narrow validation context', async () => {
+    const client = new FakeTaggedClient([
+      'click submit',
+      '{"kind":"click","selector":"#submit"}',
+    ]);
+    const planner = new TaggedLlmBrowserPlanner(client);
 
-    await expect(planner.plan('planner', request())).rejects.toBeInstanceOf(BrowserPlannerOutputError);
+    const response = await planner.plan('planner', request());
+
+    expect(response).toEqual({
+      action: { kind: 'click', selector: '#submit' },
+      usage: { source: 'planner', input_tokens: 42, output_tokens: 8 },
+      repairUsage: [{ source: 'repair', input_tokens: 42, output_tokens: 8 }],
+    });
+    expect(client.requests).toHaveLength(2);
+    expect(client.requests[1]).toEqual(expect.objectContaining({ source: 'repair' }));
+    expect(client.requests[1]?.volatileSuffix).toContain('browser planner returned invalid JSON');
+    expect(client.requests[1]?.volatileSuffix).toContain('click submit');
   });
 
-  it('rejects JSON outside the closed browser action schema', async () => {
+  it('fails closed with all usage when the repair budget is exhausted', async () => {
     const planner = new TaggedLlmBrowserPlanner(new FakeTaggedClient('{"kind":"click","selector":""}'));
 
-    await expect(planner.plan('planner', request())).rejects.toBeInstanceOf(BrowserPlannerOutputError);
+    const failure = await planner.plan('planner', request()).catch((error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(BrowserPlannerOutputError);
+    expect((failure as BrowserPlannerOutputError).usages.map((usage) => usage.source)).toEqual(['planner', 'repair']);
   });
 });
 

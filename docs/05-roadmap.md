@@ -101,13 +101,12 @@ and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` 
 optional, the planner omits rather than guesses, and a failed postcondition buys one
 scoped repair instead of killing a correct run. B2 went **0/7 → 11/11** on
 `gpt-5.6-luna` and `gpt-5.6-sol` at roughly neutral token cost. The matrix would now
-measure our efficiency rather than our bug. Still open before the number is meaningful:
-[#51](https://github.com/kedarvartak/rote/issues/51) (a malformed planner completion ends
-the run) and [#52](https://github.com/kedarvartak/rote/issues/52) (a malformed *optional*
-`stableId` is fatal) — both turn a recoverable model slip into a recorded failure, which
-lands on success parity the same way #49 did.
-[#51](https://github.com/kedarvartak/rote/issues/51)
-[#52](https://github.com/kedarvartak/rote/issues/52).
+measure our efficiency rather than our bug. [#51](https://github.com/kedarvartak/rote/issues/51) is now fixed: malformed planner
+output gets one scoped corrective call, with the original spend tagged `planner` and the
+correction tagged `repair`; exhausting that budget still fails closed. Still open before
+the number is meaningful: [#52](https://github.com/kedarvartak/rote/issues/52), where a
+malformed *optional* `stableId` is fatal. It turns a recoverable model slip into a
+recorded failure, which lands on success parity the same way #49 did.
 
 **Blocking the launch:** `packages/cli` is private at `0.0.0` and unpublished, so the
 `npx rote run` quickstart does not exist; the README has no number in it; no demo.

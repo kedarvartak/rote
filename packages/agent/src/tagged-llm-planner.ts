@@ -1,9 +1,15 @@
+import type { TokenUsage } from '@rote/core';
 import type { TaggedLlmClient } from '@rote/llm';
-import { BrowserActionSchema, type BrowserPlannerClient, type BrowserPlannerRequest, type BrowserPlannerResponse } from './types.js';
+import { BrowserActionSchema, type BrowserAction, type BrowserPlannerClient, type BrowserPlannerRequest, type BrowserPlannerResponse, type BrowserPlannerSource } from './types.js';
 
-/** Raised when a planner completion is not one valid browser-action JSON object. */
+/** Raised when bounded correction cannot produce one valid browser action. */
 export class BrowserPlannerOutputError extends Error {
-  constructor(message: string, readonly output: string) {
+  constructor(
+    message: string,
+    readonly output: string,
+    /** Every model call spent before the planner failed closed. */
+    readonly usages: readonly TokenUsage[],
+  ) {
     super(message);
     this.name = 'BrowserPlannerOutputError';
   }
@@ -11,25 +17,83 @@ export class BrowserPlannerOutputError extends Error {
 
 /** Browser planner backed by Rote's shared source-tagged LLM client. */
 export class TaggedLlmBrowserPlanner implements BrowserPlannerClient {
-  constructor(private readonly client: TaggedLlmClient) {}
+  constructor(
+    private readonly client: TaggedLlmClient,
+    private readonly maxOutputRepairs = 1,
+  ) {}
 
-  async plan(source: 'planner', request: BrowserPlannerRequest): Promise<BrowserPlannerResponse> {
-    const completion = await this.client.complete({
-      source,
-      stablePrefix: request.context.stablePrefix,
-      volatileSuffix: request.context.volatileSuffix,
-      maxTokens: 256,
-    });
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(completion.text);
-    } catch {
-      throw new BrowserPlannerOutputError('browser planner returned invalid JSON', completion.text);
+  async plan(source: BrowserPlannerSource, request: BrowserPlannerRequest): Promise<BrowserPlannerResponse> {
+    const usages: TokenUsage[] = [];
+    let volatileSuffix = request.context.volatileSuffix;
+    let lastFailure: ParsedFailure | undefined;
+
+    for (let attempt = 0; attempt <= this.maxOutputRepairs; attempt += 1) {
+      // see docs/02-architecture.md "Repair ladder" — malformed output is a
+      // recoverable planner-boundary slip, but every corrective call is scoped,
+      // bounded, and separately tagged so success parity includes its cost.
+      const attemptSource: BrowserPlannerSource = attempt === 0 ? source : 'repair';
+      const completion = await this.client.complete({
+        source: attemptSource,
+        stablePrefix: request.context.stablePrefix,
+        volatileSuffix,
+        maxTokens: 256,
+      });
+      usages.push(completion.usage);
+
+      const parsed = parseAction(completion.text);
+      if (parsed.success) {
+        return {
+          action: parsed.action,
+          usage: usages[0]!,
+          ...(usages.length > 1 ? { repairUsage: usages.slice(1) } : {}),
+        };
+      }
+
+      lastFailure = parsed;
+      volatileSuffix = renderOutputRepair(request.context.volatileSuffix, parsed);
     }
-    const action = BrowserActionSchema.safeParse(parsed);
-    if (!action.success) {
-      throw new BrowserPlannerOutputError(`browser planner returned an invalid action: ${action.error.message}`, completion.text);
-    }
-    return { action: action.data, usage: completion.usage };
+
+    // INVARIANT: exhausting the repair budget fails closed; malformed output is
+    // never guessed into an action or dropped from token accounting.
+    throw new BrowserPlannerOutputError(lastFailure!.message, lastFailure!.output, usages);
   }
+}
+
+interface ParsedSuccess {
+  success: true;
+  action: BrowserAction;
+}
+
+interface ParsedFailure {
+  success: false;
+  message: string;
+  output: string;
+}
+
+function parseAction(output: string): ParsedSuccess | ParsedFailure {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(output);
+  } catch {
+    return { success: false, message: 'browser planner returned invalid JSON', output };
+  }
+  const action = BrowserActionSchema.safeParse(parsed);
+  if (!action.success) {
+    return {
+      success: false,
+      message: `browser planner returned an invalid action: ${action.error.message}`,
+      output,
+    };
+  }
+  return { success: true, action: action.data };
+}
+
+function renderOutputRepair(originalSuffix: string, failure: ParsedFailure): string {
+  return `${originalSuffix}
+
+Your previous response was not a valid browser action.
+Validation error: ${failure.message}
+Invalid response:
+${failure.output}
+Return exactly one corrected JSON action object and nothing else.`;
 }

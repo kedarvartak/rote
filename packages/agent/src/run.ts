@@ -2,7 +2,8 @@ import { assertBrowserExpect, BrowserExpectationError, resolveElementTarget, typ
 import type { BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext } from './context.js';
-import { BrowserActionSchema, type BrowserAction, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
+import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
+import { BrowserActionSchema, type BrowserAction, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
 
 /** Runs the compact-observation browser-agent loop until the planner returns `done`. */
 export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<BrowserAgentResult> {
@@ -51,8 +52,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       });
       pendingRepair = undefined;
       const action = BrowserActionSchema.parse(planned.action);
-      // INVARIANT: usage returned by a planner cannot be relabeled as another source.
-      if (planned.usage.source !== source) throw new Error(`planner returned usage tagged ${planned.usage.source} for a ${source} call`);
+      assertPlannerUsageSources(planned, source);
 
       let actionError: Error | undefined;
       let resolution: ElementResolutionResult | undefined;
@@ -77,6 +77,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         action,
         observation,
         usage: planned.usage,
+        ...(planned.repairUsage ? { repairUsage: planned.repairUsage } : {}),
         durationMs: Math.max(0, clock() - startedAt),
         ...(actionError ? { error: actionError.message } : {}),
         ...(resolution ? { resolution } : {}),
@@ -129,14 +130,30 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
     const failure = asError(error);
     if (!finished) {
       finished = true;
-      await options.recorder?.finish('failure', failure.message, steps.map((entry) => entry.usage));
+      const outputFailureUsage = failure instanceof BrowserPlannerOutputError ? failure.usages : [];
+      await options.recorder?.finish('failure', failure.message, [...tokenUsageFromSteps(steps), ...outputFailureUsage]);
     }
     throw failure;
   }
 }
 
 function resultFromSteps(success: boolean, summary: string, steps: BrowserAgentStep[]): BrowserAgentResult {
-  return { success, summary, steps, tokenUsage: steps.map((entry) => entry.usage) };
+  return { success, summary, steps, tokenUsage: tokenUsageFromSteps(steps) };
+}
+
+function tokenUsageFromSteps(steps: readonly BrowserAgentStep[]) {
+  return steps.flatMap((entry) => [entry.usage, ...(entry.repairUsage ?? [])]);
+}
+
+function assertPlannerUsageSources(planned: BrowserPlannerResponse, source: BrowserPlannerSource): void {
+  // INVARIANT: usage returned by a planner cannot be relabeled as another source.
+  if (planned.usage.source !== source) {
+    throw new Error(`planner returned usage tagged ${planned.usage.source} for a ${source} call`);
+  }
+  const wronglyTaggedRepair = planned.repairUsage?.find((usage) => usage.source !== 'repair');
+  if (wronglyTaggedRepair) {
+    throw new Error(`planner returned output-repair usage tagged ${wronglyTaggedRepair.source}`);
+  }
 }
 
 function resolvedExpect(expect: BrowserExpect, originalSelector?: string, resolvedSelector?: string): BrowserExpect {

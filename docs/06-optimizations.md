@@ -101,7 +101,7 @@ The letter sections below group by *plane* (where the code lives). This groups b
 | ID | Optimization | Tier | Status |
 |---|---|---|---|
 | **F1** | **Task-level verify gate.** Invariant 1: success is only reported after `verify[]` passes. Also the anchor for every efficiency claim — **all benchmark numbers are at success parity.** | P0 | ● |
-| **F2** | **Recovery ladder.** Retry → scoped repair (one step, narrow context) → fallback (full agent, recorded, re-learned). Cheap recovery *is* an efficiency feature: scoped repair costs ~one step, a blind restart costs the task. **Currently absent at the planner boundary — #51.** | P1 | ○ |
+| **F2** | **Recovery ladder.** Retry → scoped repair (one step, narrow context) → fallback (full agent, recorded, re-learned). Cheap recovery *is* an efficiency feature: scoped repair costs ~one step, a blind restart costs the task. Planner-boundary format repair and live expect repair are built; executor patch repair and full-agent fallback orchestration remain absent. | P1 | ◐ |
 | **F3** | **Prompt-injection containment.** Page content is untrusted input. Contain at the *perception* boundary: mark DOM text as data, strip instruction-shaped content from element names, never auto-follow page-suggested navigation across the effect boundary. Labs handle model-side; the harness must handle representation-side. | P1 | ○ |
 | **F4** | **Deterministic eval + drift suites.** Fake-world fixtures + scripted DOM mutation suites + latency-configurable downstream. Competitors eval on live sites and flake; **our CI determinism is why the invariant suites mean anything.** | P0 | ● |
 
