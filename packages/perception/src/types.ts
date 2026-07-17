@@ -11,6 +11,7 @@ export const DistilledNodeSchema = z.object({
   selectorHint: z.string().optional(),
   depth: z.number().int().nonnegative(),
   interactive: z.boolean(),
+  state: z.object({ checked: z.boolean().optional() }).optional(),
 });
 export type DistilledNode = z.infer<typeof DistilledNodeSchema>;
 

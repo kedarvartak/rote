@@ -30,6 +30,9 @@ export function distillPage(page: CapturedPage): DistilledNode[] {
       selectorHint: selectorHint(element),
       depth: element.depth,
       interactive,
+      ...(role === 'checkbox' || role === 'radio'
+        ? { state: { checked: 'checked' in element.attributes } }
+        : {}),
     });
   }
   return nodes;

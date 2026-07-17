@@ -32,7 +32,7 @@ labeled `skip-changelog`.
 
 ### Added
 - **P1**: Define the G1 WordPress curve protocol at 7/10/15/20/25 required planner calls, add a strict per-provider-call JSONL contract carrying normalized cache buckets plus raw provider receipts, and add a `rote-bench curve-dry-run` command that emits and re-parses 77 explicitly non-evidentiary rows; record the oversized-first-observation blocker discovered by the protocol (#67, #68).
-- **P1**: Select a digest-pinned, self-hosted WordPress administration page for the G1 curve and add one-command deterministic seeding/reset, database-level verification, and a reproducible 15-session observation probe; the real page renders 40,151 characters (~10,038 approximate tokens) with zero measured range, clearing E1.1's size and stability gates (#66).
+- **P1**: Select a digest-pinned, self-hosted WordPress administration page for the G1 curve and add one-command deterministic seeding/reset, database-level verification, and a reproducible 15-session observation probe; the real page renders 41,579 characters (~10,395 approximate tokens) with zero measured range, clearing E1.1's size and stability gates (#66).
 - **P1**: `.env.example` documenting every environment variable the harness reads (provider selection, API keys, Chrome path, run artifacts, opt-in CDP tests), with the driver-injected benchmark variables called out as not-to-be-set.
 
 ### Fixed

@@ -60,6 +60,18 @@ describe('distillPage', () => {
     expect(nodes.some((node) => node.selectorHint === '#visible')).toBe(true);
   });
 
+  it('preserves live checkbox state as diffable observation data', () => {
+    const unchecked = distillPage(captureStaticHtml('mem://checks', '<input id="row" type="checkbox" />'));
+    const checked = distillPage(captureStaticHtml('mem://checks', '<input id="row" type="checkbox" checked />'));
+
+    expect(unchecked[0]).toEqual(expect.objectContaining({ state: { checked: false } }));
+    expect(checked[0]).toEqual(expect.objectContaining({
+      id: unchecked[0]?.id,
+      state: { checked: true },
+    }));
+    expect(renderObservation(checked).text).toContain('checked=true');
+  });
+
   it('keeps stable IDs across selector and irrelevant attribute changes', () => {
     const base = captureStaticHtml('mem://base', '<button id="submit" class="a">Submit</button>');
     const changed = captureStaticHtml('mem://base', '<button id="submit-v2" class="b" data-random="1">Submit</button>');

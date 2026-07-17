@@ -93,10 +93,10 @@ describe('renderAdaptiveObservation', () => {
     expect(bootstrap.approxTokens).toBeGreaterThan(10_000);
     expect(bootstrap.text).toContain('#row-799');
 
-    const changed = heavyweight.map((item, index) => index === 799 ? { ...item, name: 'Procurement row 799 selected' } : item);
+    const changed = heavyweight.map((item, index) => index === 799 ? { ...item, state: { checked: true } } : item);
     const next = renderAdaptiveObservation(changed, { previousNodes: heavyweight, maxChars: 4000 });
     expect(next.mode).toBe('diff');
-    expect(next.text).toContain('Procurement row 799 selected');
+    expect(next.text).toContain('checked=true');
     expect(next.text.length).toBeLessThanOrEqual(4000);
   });
 
