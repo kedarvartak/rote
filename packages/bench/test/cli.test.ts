@@ -1,6 +1,6 @@
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { writeTrajectoryJsonl } from '@rote/core';
 import { runPaths } from '@rote/recorder';
@@ -21,6 +21,19 @@ afterEach(async () => {
 });
 
 describe('rote-bench CLI', () => {
+  it('validates the curve protocol and writes non-evidentiary dry-run JSONL', async () => {
+    const root = await tempDir();
+    const outPath = join(root, 'curve-dry-run.jsonl');
+    const protocolPath = resolve('../../scripts/bench/curve/protocol.json');
+
+    await expect(main(['curve-dry-run', protocolPath, '--out', outPath])).resolves.toBe(
+      `wrote ${outPath} (77 dry-run step records)`,
+    );
+    const lines = (await readFile(outPath, 'utf8')).trim().split('\n');
+    expect(lines).toHaveLength(77);
+    expect(JSON.parse(lines[0]!)).toEqual(expect.objectContaining({ record_kind: 'dry_run', task_id: 'WP-N07' }));
+  });
+
   it('writes a synthetic benchmark pack and evaluates the M3 gate', async () => {
     const root = await tempDir();
     const specPath = join(root, 'bench-spec.json');

@@ -61,7 +61,7 @@ confuse in an architecture doc; this is the boundary.
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
 | Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built** — the dominant quadratic term is already gone |
-| **Diff observations** (A4) | 0 | **built but inert** — has never fired; fixtures are too small to trigger it |
+| **Diff observations** (A4) | 0 | **built but inert** — has never fired; the selected real page exposed first-snapshot bootstrap blocker [#67](https://github.com/kedarvartak/rote/issues/67) |
 | **Cache-layout discipline** (B3) | 0 | **not built** — the stable/volatile split exists, but no `cache_control` is ever sent. Its prerequisite, provider-normalized cache accounting, is **built** ([#57](https://github.com/kedarvartak/rote/issues/57)) |
 | **History compaction** (B4) | 0 | **not built** — required to make the curve linear rather than a smaller quadratic |
 | **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
@@ -128,7 +128,7 @@ observation — "compare prices across three products". A real limit
 | Lever | Effect on the curve | Status |
 |---|---|---|
 | **Evict observations** | kills the dominant quadratic term | **built** (A4-adjacent; never claimed) |
-| **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built, never fires** — budget 4000 chars, B2's observation is 537, so every render is `full` |
+| **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built, never fires** — B1–B3 fit as `full`; WordPress's first 40K-character snapshot has no diff base and collapses to an unactionable summary (#67) |
 | **Prefix-cache `[stable][history]`** (B3) | 10× off the surviving quadratic term | **not built** — accounting prerequisite done (#57); see below |
 | **Scheduled compaction** (B4) | history → O(1); curve → **linear** | not built (P2) |
 | **Replay** (B2) | 0 steps, 0 tokens | needs the distiller (P2) |
@@ -185,8 +185,11 @@ every ~*k* steps. **Cache-economics-scheduled**, not step-scheduled.
 
 ### What is unproven
 
-The curve has never been drawn against a competitor; "they're quadratic, we're linear" is
-inference from architecture, not measurement. Rote is a *smaller-constant quadratic*, not
+The curve has never been drawn against a competitor. The real-page protocol also exposed
+[#67](https://github.com/kedarvartak/rote/issues/67): an oversized first snapshot has no
+diff base, so the current hard-budget fallback sends a selector-free summary and the
+planner cannot act. That blocks the first honest A4 run until bootstrap is explicit.
+"They're quadratic, we're linear" is inference from architecture, not measurement. Rote is a *smaller-constant quadratic*, not
 linear — linear needs compaction. Diffing's ~90% claim is untested at any real page size.
 The eviction trade has never been stress-tested on a task requiring recall.
 

@@ -13,6 +13,7 @@ import { buildHeadToHead, readCompetitorRecords, renderHeadToHeadReport } from '
 import { evaluateLaunchGate, LaunchGateFailedError, renderLaunchGateResult } from './competitor-gate.js';
 import { readPriceTable } from './pricing.js';
 import { assembleHeadToHeadRecords, competitorRecordsFromRaw, readCompetitorRawRuns } from './headhead-assembler.js';
+import { writeCurveDryRun } from './curve-dry-run.js';
 
 interface ReportOptions {
   out?: string;
@@ -37,6 +38,13 @@ export async function main(argv: string[]): Promise<string> {
     const outDir = options.out ?? 'bench-out';
     const result = await runCommandBenchmarkPlan({ planPath: subject, outDir });
     return `wrote ${result.specPath}`;
+  }
+  if (command === 'curve-dry-run') {
+    if (!subject) throw new Error(usage());
+    const options = parseOptions(rest);
+    if (!options.out) throw new Error('curve-dry-run requires --out <records.jsonl>');
+    const count = await writeCurveDryRun(subject, options.out);
+    return `wrote ${options.out} (${count} dry-run step records)`;
   }
   if ((command === 'serializer-report' || command === 'serializer-gate') && subject) {
     const options = parseSerializerOptions(rest);
@@ -249,5 +257,5 @@ function parseOptions(args: string[]): ReportOptions {
 }
 
 function usage(): string {
-  return 'usage: rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench curve-dry-run <protocol.json> --out records.jsonl | rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
 }

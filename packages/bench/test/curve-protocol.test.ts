@@ -1,0 +1,81 @@
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { parseCurveProtocol, parseCurveStepJsonl, renderCurveDryRun } from '../src/index.js';
+
+describe('G1 curve protocol', () => {
+  it('fixes increasing real-page task checkpoints and emits valid dry-run JSONL', async () => {
+    const protocol = parseCurveProtocol(JSON.parse(await readFile(
+      resolve('../../scripts/bench/curve/protocol.json'),
+      'utf8',
+    )));
+
+    expect(protocol.checkpoints.map((checkpoint) => checkpoint.target_steps)).toEqual([7, 10, 15, 20, 25]);
+    const records = parseCurveStepJsonl(renderCurveDryRun(protocol));
+    expect(records).toHaveLength(77);
+    expect(records[0]).toEqual(expect.objectContaining({ task_id: 'WP-N07', step_index: 1, record_kind: 'dry_run' }));
+    expect(records.at(-1)).toEqual(expect.objectContaining({ task_id: 'WP-N25', step_index: 25, record_kind: 'dry_run' }));
+    expect(records.every((record) => record.record_kind === 'dry_run' && record.provider_usage.dry_run === true)).toBe(true);
+  });
+
+  it('rejects a checkpoint whose named work does not match its step target', () => {
+    expect(() => parseCurveProtocol({
+      schema_version: 1,
+      protocol_id: 'invalid',
+      provider: 'anthropic',
+      model: 'model',
+      repetitions_per_harness: 15,
+      model_seed: null,
+      seed_policy: 'unsupported',
+      page: {
+        environment: 'fixture',
+        initial_url: 'http://127.0.0.1',
+        reset_command: 'reset',
+        verify_command_template: 'verify',
+      },
+      prompt_bindings: [],
+      checkpoints: [
+        {
+          id: 'bad-1',
+          target_steps: 10,
+          selected_post_count: 1,
+          post_titles: ['one'],
+          prompt_template: 'move one',
+          expected_trash_count: 1,
+        },
+        {
+          id: 'bad-2',
+          target_steps: 11,
+          selected_post_count: 2,
+          post_titles: ['one'],
+          prompt_template: 'move two',
+          expected_trash_count: 1,
+        },
+      ],
+    })).toThrow();
+  });
+
+  it('rejects blank JSONL rows rather than silently dropping measurements', () => {
+    const zero = { input_tokens: 0, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 0 };
+    const valid = JSON.stringify({
+      schema_version: 1,
+      record_kind: 'dry_run',
+      protocol_id: 'p',
+      task_id: 't',
+      harness: 'dry-run',
+      provider: 'provider',
+      model: 'model',
+      run_id: 'run',
+      repetition: 1,
+      target_steps: 1,
+      step_index: 1,
+      source: 'planner',
+      duration_ms: 0,
+      usage: zero,
+      cumulative_usage: zero,
+      provider_usage: { dry_run: true },
+      step_outcome: 'dry_run',
+    });
+    expect(() => parseCurveStepJsonl(`${valid}\n\n`)).toThrow('curve JSONL line 2 is blank');
+  });
+});
