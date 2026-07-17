@@ -1,0 +1,51 @@
+services:
+  db:
+    image: mariadb@sha256:a794d9eb009e20de605858a11f32f63b4075cbd197c650436f0e3b457e4caed7
+    environment:
+      MARIADB_DATABASE: rote_curve
+      MARIADB_USER: rote
+      MARIADB_PASSWORD: ${ROTE_CURVE_DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${ROTE_CURVE_DB_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - db-data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress@sha256:09ac1315368f234db7559e4f9dcca3178a5efc6f2193b88289252abe18551522
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: rote_curve
+      WORDPRESS_DB_USER: rote
+      WORDPRESS_DB_PASSWORD: ${ROTE_CURVE_DB_PASSWORD}
+    ports:
+      - "127.0.0.1:18081:80"
+    volumes:
+      - wordpress-data:/var/www/html
+
+  cli:
+    image: wordpress@sha256:f8aeb68164c6a04f5dcc91da30d8ffa096b0f7fafb7a65f144c2dd62587caca0
+    depends_on:
+      db:
+        condition: service_healthy
+      wordpress:
+        condition: service_started
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: rote_curve
+      WORDPRESS_DB_USER: rote
+      WORDPRESS_DB_PASSWORD: ${ROTE_CURVE_DB_PASSWORD}
+    user: "33:33"
+    volumes:
+      - wordpress-data:/var/www/html
+      - ./seed.php:/seed.php:ro
+
+volumes:
+  db-data:
+  wordpress-data:
