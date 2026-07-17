@@ -3,7 +3,7 @@ import type { BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
-import { BrowserActionSchema, type BrowserAction, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
+import { normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
 
 /** Runs the compact-observation browser-agent loop until the planner returns `done`. */
 export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<BrowserAgentResult> {
@@ -51,7 +51,12 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(pendingRepair ? { repair: pendingRepair } : {}),
       });
       pendingRepair = undefined;
-      const action = BrowserActionSchema.parse(planned.action);
+      const normalized = normalizeBrowserAction(planned.action);
+      const action = normalized.action;
+      const classifications = uniqueClassifications([
+        ...(planned.classifications ?? []),
+        ...normalized.classifications,
+      ]);
       assertPlannerUsageSources(planned, source);
 
       let actionError: Error | undefined;
@@ -78,6 +83,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         observation,
         usage: planned.usage,
         ...(planned.repairUsage ? { repairUsage: planned.repairUsage } : {}),
+        ...(classifications.length > 0 ? { classifications } : {}),
         durationMs: Math.max(0, clock() - startedAt),
         ...(actionError ? { error: actionError.message } : {}),
         ...(resolution ? { resolution } : {}),
@@ -143,6 +149,12 @@ function resultFromSteps(success: boolean, summary: string, steps: BrowserAgentS
 
 function tokenUsageFromSteps(steps: readonly BrowserAgentStep[]) {
   return steps.flatMap((entry) => [entry.usage, ...(entry.repairUsage ?? [])]);
+}
+
+function uniqueClassifications(
+  classifications: readonly BrowserActionClassification[],
+): BrowserActionClassification[] {
+  return [...new Set(classifications)];
 }
 
 function assertPlannerUsageSources(planned: BrowserPlannerResponse, source: BrowserPlannerSource): void {

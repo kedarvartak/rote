@@ -60,6 +60,18 @@ describe('TaggedLlmBrowserPlanner', () => {
     expect(client.requests[1]?.volatileSuffix).toContain('click submit');
   });
 
+  it('drops a malformed optional stable ID without spending a repair call', async () => {
+    const client = new FakeTaggedClient('{"kind":"click","selector":"#submit","stableId":"invented-too-long","role":"button","name":"Submit"}');
+    const planner = new TaggedLlmBrowserPlanner(client);
+
+    const response = await planner.plan('planner', request());
+
+    expect(response.action).toEqual({ kind: 'click', selector: '#submit', role: 'button', name: 'Submit' });
+    expect(response.classifications).toEqual(['dropped_malformed_stable_id']);
+    expect(response.repairUsage).toBeUndefined();
+    expect(client.requests).toHaveLength(1);
+  });
+
   it('fails closed with all usage when the repair budget is exhausted', async () => {
     const planner = new TaggedLlmBrowserPlanner(new FakeTaggedClient('{"kind":"click","selector":""}'));
 

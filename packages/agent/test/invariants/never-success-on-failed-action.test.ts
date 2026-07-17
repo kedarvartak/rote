@@ -209,6 +209,39 @@ describe('browser agent recording: never reports success on a failed action', ()
     expect(manifest.token_usage.map((usage) => usage.source)).toEqual(['planner', 'repair']);
   });
 
+  it('fails loudly when a well-formed stable ID has no safe resolution', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-agent-unresolved-stable-id-invariant-'));
+    const recorder = new FileBrowserAgentRunRecorder({
+      task: 'Submit the form',
+      envFingerprint: buildEnvFingerprint({ tool_inventory: [], target_identity: 'fixture.test', surface_versions: {} }),
+      baseDir,
+      runId: 'unresolved-stable-id-run',
+      clock: sequenceClock(),
+    });
+    const planner: BrowserPlannerClient = {
+      async plan(source) {
+        return {
+          action: { kind: 'click', selector: '#submit', stableId: 'aaaaaaaaaaaaaaaa' },
+          usage: { source, input_tokens: 8, output_tokens: 2 },
+        };
+      },
+    };
+
+    await expect(runBrowserAgent({
+      task: 'Submit the form',
+      page: failingPage(false),
+      planner,
+      verifier: { async verify() { return { success: true, summary: 'unreachable' }; } },
+      recorder,
+      clock: () => 100,
+    })).rejects.toThrow('could not resolve browser target');
+
+    const manifest = RunManifestSchema.parse(JSON.parse(
+      await readFile(join(baseDir, 'runs', 'unresolved-stable-id-run', 'manifest.json'), 'utf8'),
+    ));
+    expect(manifest.outcome).toBe('failure');
+  });
+
   it('records failure when the planner declares success but verification fails', async () => {
     baseDir = await mkdtemp(join(tmpdir(), 'rote-agent-verify-invariant-'));
     const recorder = new FileBrowserAgentRunRecorder({

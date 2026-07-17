@@ -1,6 +1,6 @@
 import type { TokenUsage } from '@rote/core';
 import type { TaggedLlmClient } from '@rote/llm';
-import { BrowserActionSchema, type BrowserAction, type BrowserPlannerClient, type BrowserPlannerRequest, type BrowserPlannerResponse, type BrowserPlannerSource } from './types.js';
+import { normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserPlannerClient, type BrowserPlannerRequest, type BrowserPlannerResponse, type BrowserPlannerSource } from './types.js';
 
 /** Raised when bounded correction cannot produce one valid browser action. */
 export class BrowserPlannerOutputError extends Error {
@@ -46,6 +46,7 @@ export class TaggedLlmBrowserPlanner implements BrowserPlannerClient {
           action: parsed.action,
           usage: usages[0]!,
           ...(usages.length > 1 ? { repairUsage: usages.slice(1) } : {}),
+          ...(parsed.classifications.length > 0 ? { classifications: parsed.classifications } : {}),
         };
       }
 
@@ -62,6 +63,7 @@ export class TaggedLlmBrowserPlanner implements BrowserPlannerClient {
 interface ParsedSuccess {
   success: true;
   action: BrowserAction;
+  classifications: BrowserActionClassification[];
 }
 
 interface ParsedFailure {
@@ -77,15 +79,17 @@ function parseAction(output: string): ParsedSuccess | ParsedFailure {
   } catch {
     return { success: false, message: 'browser planner returned invalid JSON', output };
   }
-  const action = BrowserActionSchema.safeParse(parsed);
-  if (!action.success) {
+  try {
+    const normalized = normalizeBrowserAction(parsed);
+    return { success: true, ...normalized };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
     return {
       success: false,
-      message: `browser planner returned an invalid action: ${action.error.message}`,
+      message: `browser planner returned an invalid action: ${message}`,
       output,
     };
   }
-  return { success: true, action: action.data };
 }
 
 function renderOutputRepair(originalSuffix: string, failure: ParsedFailure): string {
