@@ -139,6 +139,7 @@ Solid packages exist today; dashed packages are the target composition described
 | [04 — Competition](docs/04-competition.md) | The field, per-competitor teardown, capability matrix, steelmanned objections |
 | [05 — Roadmap](docs/05-roadmap.md) | Where we are; V1 scope and gates; P0–P5; open questions |
 | [06 — Optimizations](docs/06-optimizations.md) | The master catalog: every optimization, tier, status, evidence |
+| [07 — Execution plan](docs/07-execution-plan.md) | The work breakdown: epics, tasks, dependencies, acceptance criteria, RAID |
 | [testing/](docs/testing/) | Records of tests against real Rote — live browser, live model, live key |
 
 ## Contributing

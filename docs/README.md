@@ -43,6 +43,7 @@ the curve (cumulative tokens vs. task length) nor the level (tokens-per-task at 
 | [04 — Competition](04-competition.md) | The field in four strata; per-competitor teardown; capability matrix; the steelmanned objections |
 | [05 — Roadmap](05-roadmap.md) | Where we are; V1 scope and gates; P0–P5; open questions |
 | [06 — Optimizations](06-optimizations.md) | The master catalog: every optimization, its tier, its status, and the evidence |
+| [07 — Execution plan](07-execution-plan.md) | The work breakdown: P1 epics and tasks with dependencies, acceptance criteria, estimates, and the RAID log. 05 owns strategy; 07 owns tasks |
 | [testing/](testing/) | Numbered records of tests against **real** Rote — live browser, live model, live key |
 
 
