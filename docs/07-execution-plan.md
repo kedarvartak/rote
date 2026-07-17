@@ -6,6 +6,12 @@
 >
 > Snapshot date **2026-07-17**. Owner: Kedar. Update cadence: every merged PR that
 > completes a task flips its status here; a weekly pass re-checks the sequence table.
+>
+> **Board:** every task below is mirrored on the GitHub Project
+> ([kedarvartak/projects/1](https://github.com/users/kedarvartak/projects/1)) with
+> Epic / Week / State / Estimate fields; #50 #51 #52 #54 are on it as real issues. The
+> board tracks day-to-day status; this doc stays the source of truth for scope,
+> acceptance criteria, and sequencing — same precedence rule as with 05.
 
 ## How to read this doc
 
