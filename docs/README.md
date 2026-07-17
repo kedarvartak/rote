@@ -48,12 +48,22 @@ the curve (cumulative tokens vs. task length) nor the level (tokens-per-task at 
 
 ## Diagrams
 
-Rendered with the Excalidraw MCP in the base hand-drawn font — no generator scripts. To
-change one, re-render through the MCP and overwrite the SVG; don't hand-edit the output.
+Rendered with the Excalidraw MCP in the base hand-drawn font (Virgil) — no generator
+scripts. To change one, re-render through the MCP and overwrite the SVG; don't hand-edit
+the output. Redrawn 2026-07-17 around the memory spine, with build status stated honestly
+in the diagram itself (solid = built, dashed = designed).
 
-`architecture` · `package-map` · `perception-pipeline` · `run-lifecycle` · `repair-ladder`
-· `vs-browser-use` · `vs-stagehand` · `vs-skyvern` · `competitive-landscape` ·
-`t1-b2-false-negative`
+| Diagram | Shows | Embedded in |
+|---|---|---|
+| `architecture` | the loop, the three tiers, the trust gate | README, 02 |
+| `tier0-curve` | the O(n²) bill and the four levers on it | README, 01 |
+| `perception-pipeline` | page → distill → diff → budget → context; the eviction policy | 02 |
+| `repair-ladder` | retry → scoped repair → fallback; clean failure | 02 |
+| `run-lifecycle` | cold / warm / drift economics (tier 1, illustrative) | 02 |
+| `package-map` | packages that exist vs designed | README |
+| `competitive-landscape` | the field per tier vs Rote's actual build | 04 |
+| `vs-browser-use` · `vs-stagehand` · `vs-skyvern` | per-competitor contrasts | 04 |
+| `t1-b2-false-negative` | **historical record of T1's finding — do not redraw** | testing/T1 |
 
 ## The invariants
 
