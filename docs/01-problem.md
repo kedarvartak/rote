@@ -41,6 +41,8 @@ B1  (5 steps):  418 → 452 → 489 → 519 → 588                             
 **21% of B2's input bill is re-reading text we already sent** — on a 10-step task against
 a page that distills to 10 nodes. Both figures are lower bounds; these fixtures are toys.
 
+![The quadratic and the four levers on it](diagrams/tier0-curve.svg)
+
 Browsers are the pathological case, and the pathology is also the exploit:
 
 | Property of browser observations | Consequence |

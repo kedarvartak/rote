@@ -42,6 +42,8 @@ distills to 10 nodes. Everything the field competes on (DOM serializers, element
 vision-vs-a11y) shrinks the *per-step* prompt. That lowers the constant. Nobody has touched
 the exponent.
 
+![The quadratic and the four levers on it](docs/diagrams/tier0-curve.svg)
+
 ### The three amnesias
 
 | Tier | Scope | What it forgets | The bill |

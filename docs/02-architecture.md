@@ -86,6 +86,8 @@ The planes are *where code lives*; the memory tiers are *what it is for*. They c
 | **Action** | act → wait → observe, serialized | settledness, self-healing resolution, speculation | — | first two built |
 | **Learning** | every run starts cold | recorded trajectories → playbooks → site memory | 1, 2 | recording + replay built |
 
+![Perception pipeline](diagrams/perception-pipeline.svg)
+
 ## Tier 0 — working memory
 
 The context window is a managed resource with a budget, an eviction policy, and a layout
