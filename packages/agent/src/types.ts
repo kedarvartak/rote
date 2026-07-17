@@ -20,14 +20,40 @@ import type { AdaptiveRenderedObservation } from '@rote/perception';
  * authored against ground truth and still decides success (docs/02 "Repair
  * ladder").
  */
+export const BrowserStableIdSchema = z.string().regex(/^[0-9a-f]{16}$/);
+const OptionalBrowserStableIdSchema = z.preprocess(
+  (value) => value === undefined || BrowserStableIdSchema.safeParse(value).success ? value : undefined,
+  BrowserStableIdSchema.optional(),
+);
+
 export const BrowserActionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('navigate'), url: z.string().min(1), expect: BrowserExpectSchema.optional() }),
-  z.object({ kind: z.literal('fill'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
-  z.object({ kind: z.literal('select'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
-  z.object({ kind: z.literal('click'), selector: z.string().min(1), stableId: z.string().length(16).optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('fill'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('select'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('click'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), expect: BrowserExpectSchema.optional() }),
   z.object({ kind: z.literal('done'), success: z.boolean(), summary: z.string().default('') }),
 ]);
 export type BrowserAction = z.infer<typeof BrowserActionSchema>;
+
+export const BrowserActionClassificationSchema = z.enum(['dropped_malformed_stable_id']);
+export type BrowserActionClassification = z.infer<typeof BrowserActionClassificationSchema>;
+
+/** Normalizes optional planner hints while preserving auditable degradation classifications. */
+export function normalizeBrowserAction(input: unknown): {
+  action: BrowserAction;
+  classifications: BrowserActionClassification[];
+} {
+  const classifications: BrowserActionClassification[] = [];
+  if (hasMalformedStableId(input)) classifications.push('dropped_malformed_stable_id');
+  return { action: BrowserActionSchema.parse(input), classifications };
+}
+
+function hasMalformedStableId(input: unknown): boolean {
+  if (typeof input !== 'object' || input === null || !('kind' in input) || !('stableId' in input)) return false;
+  const action = input as { kind?: unknown; stableId?: unknown };
+  if (!['fill', 'select', 'click'].includes(String(action.kind)) || action.stableId === undefined) return false;
+  return !BrowserStableIdSchema.safeParse(action.stableId).success;
+}
 
 export interface BrowserPageSession {
   navigate(url: string): Promise<void>;
@@ -74,6 +100,8 @@ export interface BrowserPlannerResponse {
   usage: TokenUsage;
   /** Bounded corrective calls made after malformed planner output. */
   repairUsage?: readonly TokenUsage[];
+  /** Non-fatal optional-hint degradation applied before action resolution. */
+  classifications?: readonly BrowserActionClassification[];
 }
 
 /** The usage sources the agent loop may request: a normal step, or a scoped repair. */
@@ -122,6 +150,8 @@ export interface BrowserAgentStep {
   usage: TokenUsage;
   /** Planner-output repair usage associated with this action. */
   repairUsage?: readonly TokenUsage[];
+  /** Non-fatal optional-hint degradation applied before action resolution. */
+  classifications?: readonly BrowserActionClassification[];
   durationMs: number;
   error?: string;
   resolution?: ElementResolutionResult;

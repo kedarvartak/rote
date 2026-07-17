@@ -104,6 +104,28 @@ describe('runBrowserAgent', () => {
     expect(planner.requests[1]?.observation.text).toBe('(no observation changes)');
   });
 
+  it('drops a malformed stable ID and resolves through role and name', async () => {
+    const page = new FakePage();
+    const malformedAction = {
+      kind: 'click',
+      selector: '#stale-submit',
+      stableId: 'invented-too-long',
+      role: 'button',
+      name: 'Submit registration',
+    } as unknown as BrowserAction;
+    const planner = new ScriptedPlanner([
+      malformedAction,
+      { kind: 'done', success: true, summary: 'submitted' },
+    ]);
+
+    const result = await runBrowserAgent({ task: 'Submit', page, planner, verifier: passVerifier });
+
+    expect(page.clicks).toEqual(['#registration-submit']);
+    expect('stableId' in result.steps[0]!.action ? result.steps[0]!.action.stableId : undefined).toBeUndefined();
+    expect(result.steps[0]?.classifications).toEqual(['dropped_malformed_stable_id']);
+    expect(result.steps[0]?.resolution?.strategy).toBe('role-name');
+  });
+
   it('resolves a stale selector through role and name before dispatch', async () => {
     const page = new FakePage();
     const planner = new ScriptedPlanner([

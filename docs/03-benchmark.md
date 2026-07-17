@@ -153,9 +153,9 @@ rote-bench launch-gate bench-out/records.json  --min-runs 15
 ```
 
 Live-run findings are recorded in [`docs/testing/`](testing/). T1's B2 design defect
-([#49](https://github.com/kedarvartak/rote/issues/49)) is fixed, and malformed planner
-output now receives one bounded correction (#51). Certification still waits on #52: a
-malformed optional stable ID can turn a recoverable model slip into a failed run and
-therefore distort success parity.
+([#49](https://github.com/kedarvartak/rote/issues/49)) and its two planner-boundary
+robustness findings (#51/#52) are fixed. The matrix is no longer blocked on those known
+success-parity defects; the next prerequisite is the real-page curve protocol in
+[07 E1](07-execution-plan.md#e1--the-curve-gate-g1-67-days).
 
 Next: [04 — Competition](04-competition.md)

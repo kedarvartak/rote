@@ -34,7 +34,8 @@ describe('FileBrowserAgentRunRecorder', () => {
       observation: { text: 'button Open Alpha', truncated: false, approxTokens: 4, mode: 'full' },
       usage,
       durationMs: 15,
-      resolution: { selector: '#open-alpha', strategy: 'stable-id', stableId: 'aaaaaaaaaaaaaaaa' },
+      classifications: ['dropped_malformed_stable_id'],
+      resolution: { selector: '#open-alpha', strategy: 'role-name', stableId: 'aaaaaaaaaaaaaaaa' },
     });
     await recorder.finish('success', 'alpha opened', [usage]);
 
@@ -46,7 +47,8 @@ describe('FileBrowserAgentRunRecorder', () => {
     expect(events[0]?.result_ref).toEqual(expect.objectContaining({
       kind: 'inline',
       value: expect.objectContaining({
-        resolution: { selector: '#open-alpha', strategy: 'stable-id', stableId: 'aaaaaaaaaaaaaaaa' },
+        action_classifications: ['dropped_malformed_stable_id'],
+        resolution: { selector: '#open-alpha', strategy: 'role-name', stableId: 'aaaaaaaaaaaaaaaa' },
       }),
     }));
     expect(manifest).toEqual(expect.objectContaining({
