@@ -65,6 +65,7 @@ on a real page, at success parity, on the **provider's own** cache accounting.
 | E1.5 | **Draw and publish.** The graph (cumulative tokens vs. steps, both harnesses), method note, raw JSONL downloadable. | 1 | E1.3, E1.4 | graph embedded in README with units and method link | blocked |
 | E1.6 | **Set the G1 threshold** from the first honest run, in public — [05](05-roadmap.md) leaves it deliberately unset until now. Update 05 in the same PR. | 0.5 | E1.5 | 05 names a number and its provenance | blocked |
 | E1.7 | **Findings record** (`docs/testing/T2-…`): observation sizes, whether A4 fired, prompt sizes vs. cache minimums — the inputs E3 needs. | 0.5 | E1.4 | T2 committed | blocked |
+| E1.8 | **Prove A4 on a real page.** Diff observations have never fired; the −90%-on-the-constant claim is untested at any page size ([02 §What is unproven](02-architecture.md)). Measure diff-vs-full render sizes across the E1 protocol steps. | 1 | E1.4 | measured diff/full ratio published alongside the curve; A4's row in [06](06-optimizations.md) loses "never fired" | blocked |
 
 ### E2 — Robustness at the planner boundary. ~3–4 days (+ stretch)
 
@@ -118,6 +119,7 @@ page — our fixtures are below every provider's minimum cacheable prefix.
 |---|---|---|---|---|---|
 | E6.1 | **Heavyweight deterministic fixture** (~10–40K tok distilled): the first environment where A4 fires in CI, and the budget's degrade ladder (full→diff→summary) gets covered at all. | 2 | — | a deterministic test asserts a `diff` render occurred | ready |
 | E6.2 | **Efficiency-regression budgets in CI** (G2 in [06](06-optimizations.md)) — deliberately post-launch; recorded here so it is not forgotten. | 1 | E5.6 | per-fixture token budgets enforced | deferred (P2) |
+| E6.4 | **Eviction recall-trade stress test.** The policy keeps what the agent *did*, not what it *saw*; a task needing an evicted page must fail **cleanly**, not silently wrong ([02 §The policy](02-architecture.md)). Build a compare-across-pages fixture task and assert the failure is clean and classified. | 1 | E6.1 | test in the invariant suite; the limit documented in [01 §fit](01-problem.md) gains a measured example | blocked |
 | E6.3 | **Issue triage cadence:** weekly pass over open issues; anything touching success parity is P1-blocking by default. | — | — | this doc's snapshot stays current | ongoing |
 
 ### Sequence (target: 2026-Q3 launch, per 05)
