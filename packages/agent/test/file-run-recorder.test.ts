@@ -31,7 +31,13 @@ describe('FileBrowserAgentRunRecorder', () => {
     await recorder.recordStep({
       step: 0,
       action: { kind: 'click', selector: '#open-alpha', expect: { selector_visible: '#open-alpha' } },
-      observation: { text: 'button Open Alpha', truncated: false, approxTokens: 4, mode: 'full' },
+      observation: {
+        text: 'button Open Alpha',
+        truncated: false,
+        approxTokens: 4,
+        mode: 'bootstrap',
+        bootstrap: { budgetChars: 10, exceededByChars: 7 },
+      },
       usage,
       durationMs: 15,
       classifications: ['dropped_malformed_stable_id'],
@@ -47,6 +53,8 @@ describe('FileBrowserAgentRunRecorder', () => {
     expect(events[0]?.result_ref).toEqual(expect.objectContaining({
       kind: 'inline',
       value: expect.objectContaining({
+        observation_mode: 'bootstrap',
+        observation_bootstrap: { budgetChars: 10, exceededByChars: 7 },
         action_classifications: ['dropped_malformed_stable_id'],
         resolution: { selector: '#open-alpha', strategy: 'role-name', stableId: 'aaaaaaaaaaaaaaaa' },
       }),

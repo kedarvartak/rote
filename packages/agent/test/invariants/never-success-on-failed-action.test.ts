@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { buildEnvFingerprint, RunManifestSchema, TrajectoryEventSchema } from '@rote/core';
 import type { TaggedLlmClient } from '@rote/llm';
+import { ObservationBootstrapLimitError } from '@rote/perception';
 import { FileBrowserAgentRunRecorder, runBrowserAgent, TaggedLlmBrowserPlanner, type BrowserAction, type BrowserPageSession, type BrowserPlannerClient } from '../../src/index.js';
 
 let baseDir: string | undefined;
@@ -240,6 +241,45 @@ describe('browser agent recording: never reports success on a failed action', ()
       await readFile(join(baseDir, 'runs', 'unresolved-stable-id-run', 'manifest.json'), 'utf8'),
     ));
     expect(manifest.outcome).toBe('failure');
+  });
+
+  it('fails before planning when no grounded observation fits the bootstrap ceiling', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-agent-bootstrap-limit-invariant-'));
+    const recorder = new FileBrowserAgentRunRecorder({
+      task: 'Submit the form',
+      envFingerprint: buildEnvFingerprint({ tool_inventory: [], target_identity: 'fixture.test', surface_versions: {} }),
+      baseDir,
+      runId: 'bootstrap-limit-run',
+      clock: sequenceClock(),
+    });
+    let plannerCalls = 0;
+    const planner: BrowserPlannerClient = {
+      async plan(source) {
+        plannerCalls += 1;
+        return {
+          action: { kind: 'done', success: true, summary: 'must remain unreachable' },
+          usage: { source, input_tokens: 1, output_tokens: 1 },
+        };
+      },
+    };
+
+    await expect(runBrowserAgent({
+      task: 'Submit the form',
+      page: failingPage(false),
+      planner,
+      verifier: { async verify() { return { success: true, summary: 'unreachable' }; } },
+      recorder,
+      observationMaxChars: 10,
+      observationBootstrapMaxChars: 20,
+      clock: () => 100,
+    })).rejects.toBeInstanceOf(ObservationBootstrapLimitError);
+
+    const manifest = RunManifestSchema.parse(JSON.parse(
+      await readFile(join(baseDir, 'runs', 'bootstrap-limit-run', 'manifest.json'), 'utf8'),
+    ));
+    expect(plannerCalls).toBe(0);
+    expect(manifest.outcome).toBe('failure');
+    expect(manifest.token_usage).toEqual([]);
   });
 
   it('records failure when the planner declares success but verification fails', async () => {

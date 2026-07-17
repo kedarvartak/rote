@@ -61,7 +61,7 @@ confuse in an architecture doc; this is the boundary.
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
 | Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built** — the dominant quadratic term is already gone |
-| **Diff observations** (A4) | 0 | **built but inert** — has never fired; the selected real page exposed first-snapshot bootstrap blocker [#67](https://github.com/kedarvartak/rote/issues/67) |
+| **Diff observations** (A4) | 0 | **built and deterministically exercised** — a 10K-token fixture now runs grounded bootstrap → diff; real-page reduction remains unmeasured (#67) |
 | **Cache-layout discipline** (B3) | 0 | **not built** — the stable/volatile split exists, but no `cache_control` is ever sent. Its prerequisite, provider-normalized cache accounting, is **built** ([#57](https://github.com/kedarvartak/rote/issues/57)) |
 | **History compaction** (B4) | 0 | **not built** — required to make the curve linear rather than a smaller quadratic |
 | **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
@@ -81,7 +81,7 @@ The planes are *where code lives*; the memory tiers are *what it is for*. They c
 
 | Plane | Baseline cost | Rote's answer | Serves tier | Status |
 |---|---|---|---|---|
-| **Perception** | 5–40K tokens/step, re-sent every step | distill → filter → diff → budget | 0 | built, except diff never fires |
+| **Perception** | 5–40K tokens/step, re-sent every step | distill → grounded bootstrap → diff → budget | 0 | built and deterministically exercised; not yet measured live |
 | **Decision** | frontier model, every step, full context | cache-local layout; route down or skip the model | 0, 1 | **layout not built** — its accounting prerequisite is (#57); routing designed |
 | **Action** | act → wait → observe, serialized | settledness, self-healing resolution, speculation | — | first two built |
 | **Learning** | every run starts cold | recorded trajectories → playbooks → site memory | 1, 2 | recording + replay built |
@@ -128,7 +128,7 @@ observation — "compare prices across three products". A real limit
 | Lever | Effect on the curve | Status |
 |---|---|---|
 | **Evict observations** | kills the dominant quadratic term | **built** (A4-adjacent; never claimed) |
-| **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built, never fires** — B1–B3 fit as `full`; WordPress's first 40K-character snapshot has no diff base and collapses to an unactionable summary (#67) |
+| **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built, exercised in CI** — an oversized grounded snapshot explicitly establishes the base, then ordinary-budget diffs resume (#67); WordPress ratio unmeasured |
 | **Prefix-cache `[stable][history]`** (B3) | 10× off the surviving quadratic term | **not built** — accounting prerequisite done (#57); see below |
 | **Scheduled compaction** (B4) | history → O(1); curve → **linear** | not built (P2) |
 | **Replay** (B2) | 0 steps, 0 tokens | needs the distiller (P2) |
@@ -174,7 +174,7 @@ with `input_tokens` always the uncached remainder — and property-tested agains
 2048 on Fable 5 and Sonnet 4.6, 1024 on Sonnet 4.5 and older. B2's per-call prompts are
 637–953 — under every one of those. **Caching, if built today, would do nothing on our
 benchmark**: the distiller made the prompts too small to cache. The win only appears on
-real pages with real history, which is the same reason A4 has never fired.
+real pages with real history, which is why A4 still has no live-provider measurement.
 
 ### Caching and compaction fight
 
@@ -185,11 +185,14 @@ every ~*k* steps. **Cache-economics-scheduled**, not step-scheduled.
 
 ### What is unproven
 
-The curve has never been drawn against a competitor. The real-page protocol also exposed
-[#67](https://github.com/kedarvartak/rote/issues/67): an oversized first snapshot has no
-diff base, so the current hard-budget fallback sends a selector-free summary and the
-planner cannot act. That blocks the first honest A4 run until bootstrap is explicit.
-"They're quadratic, we're linear" is inference from architecture, not measurement. Rote is a *smaller-constant quadratic*, not
+The curve has never been drawn against a competitor. The real-page protocol exposed and
+[#67](https://github.com/kedarvartak/rote/issues/67) fixed the first-snapshot bootstrap
+hole: when neither full nor diff fits the ordinary budget, Rote sends one explicitly
+metered grounded snapshot under a 100,000-character emergency ceiling, then resumes
+ordinary-budget diffs. Above that ceiling it fails before planning rather than asking the
+model to invent selectors from a count-only summary. This is deterministic-test evidence,
+not a live A4 win. "They're quadratic, we're linear" is inference from architecture, not
+measurement. Rote is a *smaller-constant quadratic*, not
 linear — linear needs compaction. Diffing's ~90% claim is untested at any real page size.
 The eviction trade has never been stress-tested on a task requiring recall.
 

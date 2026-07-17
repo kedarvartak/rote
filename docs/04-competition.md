@@ -178,7 +178,7 @@ things ● that do not exist.
 | A1/A2 distillation + element detection | ● | ◐ | ◐ | ○ | ○ | ● |
 | A3 stable element IDs | ◐ | ○ | ○ | ○ | ○ | ● |
 | **A11 observation eviction** | ○ | n/a | ○ | ○ | ○ | **● built** |
-| **A4 diff observations** | ○ | ○ | ○ | ○ | ○ | ◐ built, never fired |
+| **A4 diff observations** | ○ | ○ | ○ | ○ | ○ | ◐ built, CI-exercised |
 | A8 token budget contract | ○ | ○ | ○ | ○ | ○ | ● |
 | **B3 cache-layout discipline** | ○ | ○ | ◐ | ○ | n/a | **○ not built** (#57) |
 | **B4 history compaction** | ○ | ○ | ○ | ○ | ○ | ○ |

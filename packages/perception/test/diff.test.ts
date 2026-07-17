@@ -5,6 +5,7 @@ import {
   diffObservations,
   ObservationDiffError,
   ObservationIdentityError,
+  ObservationBootstrapLimitError,
   renderAdaptiveObservation,
   type DistilledNode,
 } from '../src/index.js';
@@ -67,13 +68,43 @@ describe('renderAdaptiveObservation', () => {
     expect(applyObservationDiff(base, rendered.diff!)).toEqual(current);
   });
 
-  it('degrades to a hard-budget summary when neither full nor diff fits', () => {
-    const current = base.map((item) => ({ ...item, name: `${item.name} changed substantially` }));
-    const rendered = renderAdaptiveObservation(current, { previousNodes: base, maxChars: 45 });
+  it('bootstraps one grounded oversized snapshot, then returns to a budgeted diff', () => {
+    const bootstrap = renderAdaptiveObservation(base, { maxChars: 100 });
+    expect(bootstrap.mode).toBe('bootstrap');
+    expect(bootstrap.text).toContain('#button-0');
+    expect(bootstrap.text.length).toBeGreaterThan(100);
+    expect(bootstrap.bootstrap).toEqual({
+      budgetChars: 100,
+      exceededByChars: bootstrap.text.length - 100,
+    });
 
-    expect(rendered.mode).toBe('summary');
-    expect(rendered.text.length).toBeLessThanOrEqual(45);
-    expect(rendered.truncated).toBe(true);
+    const current = base.map((item, index) => index === 3 ? { ...item, selectorHint: '#button-three' } : item);
+    const next = renderAdaptiveObservation(current, { previousNodes: base, maxChars: 100 });
+    expect(next.mode).toBe('diff');
+    expect(next.text.length).toBeLessThanOrEqual(100);
+  });
+
+  it('keeps a deterministic 10K-token first page actionable before diffing its next change', () => {
+    const heavyweight = Array.from({ length: 800 }, (_, index) => (
+      node(index.toString(16).padStart(16, '0'), `Procurement row ${index}`, `#row-${index}`)
+    ));
+    const bootstrap = renderAdaptiveObservation(heavyweight, { maxChars: 4000 });
+    expect(bootstrap.mode).toBe('bootstrap');
+    expect(bootstrap.approxTokens).toBeGreaterThan(10_000);
+    expect(bootstrap.text).toContain('#row-799');
+
+    const changed = heavyweight.map((item, index) => index === 799 ? { ...item, name: 'Procurement row 799 selected' } : item);
+    const next = renderAdaptiveObservation(changed, { previousNodes: heavyweight, maxChars: 4000 });
+    expect(next.mode).toBe('diff');
+    expect(next.text).toContain('Procurement row 799 selected');
+    expect(next.text.length).toBeLessThanOrEqual(4000);
+  });
+
+  it('fails cleanly when a grounded snapshot exceeds the bootstrap ceiling', () => {
+    expect(() => renderAdaptiveObservation(base, {
+      maxChars: 45,
+      maxBootstrapChars: 100,
+    })).toThrow(ObservationBootstrapLimitError);
   });
 });
 

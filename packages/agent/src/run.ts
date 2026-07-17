@@ -24,6 +24,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       const nodes = distillPage(page);
       const observation = renderAdaptiveObservation(nodes, {
         maxChars: options.observationMaxChars,
+        maxBootstrapChars: options.observationBootstrapMaxChars,
         previousNodes,
       });
       previousNodes = nodes;

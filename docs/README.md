@@ -17,7 +17,7 @@ marks status; the authoritative table is [02 §Status](02-architecture.md).
 | | |
 |---|---|
 | **Built** | core schemas + Expect DSL · recorder · verified replay executor · CDP backend · perception (distill → stable IDs → budget) · **observation eviction** · agent loop · tagged LLM client · benchmark + accounting + head-to-head gate |
-| **Built but never exercised** | diff observations — the budget is 4000 chars and our fixtures render ~537, so it has never fired |
+| **Built, CI-only evidence** | diff observations — #67 exercises an explicit ~10K-token grounded bootstrap followed by a 4,000-character-budget diff; real-page reduction remains unmeasured |
 | **Not built** | **cache layout** (marked built until 2026-07-17; no `cache_control` is sent — [#57](https://github.com/kedarvartak/rote/issues/57)) · compaction · playbook distiller · matcher · site memory · model routing · speculation |
 
 We are in **P1 (V1)**: **tier 0, working memory.** Neither launch gate has been run — not
