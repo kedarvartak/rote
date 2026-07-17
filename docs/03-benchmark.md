@@ -152,9 +152,10 @@ rote-bench records     bench-out/sources.json  --out bench-out/records.json
 rote-bench launch-gate bench-out/records.json  --min-runs 15
 ```
 
-Live-run findings are recorded in [`docs/testing/`](testing/). **As of
-[T1](testing/T1-openai-dry-run.md), the matrix should not be run**: B2 fails 0/7 on a
-design flaw ([#49](https://github.com/kedarvartak/rote/issues/49)), so the gate would
-measure our bug rather than our efficiency.
+Live-run findings are recorded in [`docs/testing/`](testing/). T1's B2 design defect
+([#49](https://github.com/kedarvartak/rote/issues/49)) is fixed, and malformed planner
+output now receives one bounded correction (#51). Certification still waits on #52: a
+malformed optional stable ID can turn a recoverable model slip into a failed run and
+therefore distort success parity.
 
 Next: [04 — Competition](04-competition.md)

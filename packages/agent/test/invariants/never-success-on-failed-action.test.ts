@@ -3,7 +3,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { buildEnvFingerprint, RunManifestSchema, TrajectoryEventSchema } from '@rote/core';
-import { FileBrowserAgentRunRecorder, runBrowserAgent, type BrowserAction, type BrowserPageSession, type BrowserPlannerClient } from '../../src/index.js';
+import type { TaggedLlmClient } from '@rote/llm';
+import { FileBrowserAgentRunRecorder, runBrowserAgent, TaggedLlmBrowserPlanner, type BrowserAction, type BrowserPageSession, type BrowserPlannerClient } from '../../src/index.js';
 
 let baseDir: string | undefined;
 
@@ -136,6 +137,76 @@ describe('browser agent recording: never reports success on a failed action', ()
 
     expect(result.success).toBe(false);
     expect(result.summary).toBe('submit button still present');
+  });
+
+  it('completes after one malformed planner completion and accounts for the repair', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-agent-output-repair-invariant-'));
+    const recorder = new FileBrowserAgentRunRecorder({
+      task: 'Submit the form',
+      envFingerprint: buildEnvFingerprint({ tool_inventory: [], target_identity: 'fixture.test', surface_versions: {} }),
+      baseDir,
+      runId: 'output-repair-run',
+      clock: sequenceClock(),
+    });
+    const outputs = ['not json', '{"kind":"done","success":true,"summary":"submitted"}'];
+    const client: TaggedLlmClient = {
+      async complete(request) {
+        return {
+          text: outputs.shift()!,
+          usage: { source: request.source, input_tokens: 9, output_tokens: 2 },
+        };
+      },
+    };
+
+    const result = await runBrowserAgent({
+      task: 'Submit the form',
+      page: failingPage(false),
+      planner: new TaggedLlmBrowserPlanner(client),
+      verifier: { async verify() { return { success: true, summary: 'verified' }; } },
+      recorder,
+      clock: () => 100,
+    });
+
+    const manifest = RunManifestSchema.parse(JSON.parse(
+      await readFile(join(baseDir, 'runs', 'output-repair-run', 'manifest.json'), 'utf8'),
+    ));
+    expect(result.success).toBe(true);
+    // INVARIANT: surviving a format slip cannot hide its repair cost.
+    expect(manifest.token_usage.map((usage) => usage.source)).toEqual(['planner', 'repair']);
+  });
+
+  it('records failure and all usage when malformed planner output exhausts repair', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-agent-output-failure-invariant-'));
+    const recorder = new FileBrowserAgentRunRecorder({
+      task: 'Submit the form',
+      envFingerprint: buildEnvFingerprint({ tool_inventory: [], target_identity: 'fixture.test', surface_versions: {} }),
+      baseDir,
+      runId: 'output-failure-run',
+      clock: sequenceClock(),
+    });
+    const client: TaggedLlmClient = {
+      async complete(request) {
+        return {
+          text: 'still not json',
+          usage: { source: request.source, input_tokens: 7, output_tokens: 2 },
+        };
+      },
+    };
+
+    await expect(runBrowserAgent({
+      task: 'Submit the form',
+      page: failingPage(false),
+      planner: new TaggedLlmBrowserPlanner(client),
+      verifier: { async verify() { return { success: true, summary: 'unreachable' }; } },
+      recorder,
+      clock: () => 100,
+    })).rejects.toThrow('browser planner returned invalid JSON');
+
+    const manifest = RunManifestSchema.parse(JSON.parse(
+      await readFile(join(baseDir, 'runs', 'output-failure-run', 'manifest.json'), 'utf8'),
+    ));
+    expect(manifest.outcome).toBe('failure');
+    expect(manifest.token_usage.map((usage) => usage.source)).toEqual(['planner', 'repair']);
   });
 
   it('records failure when the planner declares success but verification fails', async () => {

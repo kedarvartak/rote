@@ -11,7 +11,7 @@ behind `BrowserPlannerClient`, while tests use deterministic scripted planners.
 
 - `runBrowserAgent(options)` — observe → plan → act loop until `done` or the step budget is exhausted; planner-declared success is gated by an injected verifier.
 - `BrowserPlannerClient` — planner interface; calls are always tagged with `source: 'planner'`.
-- `TaggedLlmBrowserPlanner` — production planner adapter over `@rote/llm`; strictly parses one typed action and returns provider token usage.
+- `TaggedLlmBrowserPlanner` — production planner adapter over `@rote/llm`; strictly parses one typed action, gives malformed output one scoped corrective call, and returns both the original and `repair`-tagged provider usage. Exhausting the bounded repair fails closed.
 - `assemblePlannerContext(options)` — separates cache-stable instructions/task/action schemas from volatile page observations and action history.
 - `BrowserPageSession` — minimal page-action surface required by the loop.
 - `BrowserAction` — Zod-backed action union: `navigate`, `fill`, `select`, `click`, `done`. A mutating action **may** carry a closed browser `expect` postcondition; it is optional because a model can only assert what it has already observed, so a mandatory field yields guesses or tautologies (#49/#50). Element actions may carry semantic identity for resilient resolution.

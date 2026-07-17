@@ -70,7 +70,10 @@ export interface BrowserPlannerRequest {
 
 export interface BrowserPlannerResponse {
   action: BrowserAction;
+  /** Usage for the requested planning call, including a malformed first completion. */
   usage: TokenUsage;
+  /** Bounded corrective calls made after malformed planner output. */
+  repairUsage?: readonly TokenUsage[];
 }
 
 /** The usage sources the agent loop may request: a normal step, or a scoped repair. */
@@ -117,6 +120,8 @@ export interface BrowserAgentStep {
   action: BrowserAction;
   observation: AdaptiveRenderedObservation;
   usage: TokenUsage;
+  /** Planner-output repair usage associated with this action. */
+  repairUsage?: readonly TokenUsage[];
   durationMs: number;
   error?: string;
   resolution?: ElementResolutionResult;
