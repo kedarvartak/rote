@@ -33,7 +33,7 @@ drives sequencing:
 | Fact | Consequence for the plan |
 |---|---|
 | Eviction built; diff built-but-inert; cache and compaction not built | tier 0 is half-built and **entirely unmeasured** |
-| Fixtures render ~537 chars; A4 budget is 4000; cache minimums are 1024–4096 tok | **nothing tier-0 can be proven on our fixtures** — a real page is a prerequisite, not a nice-to-have |
+| B1–B3 render ~537 chars; the selected WordPress page renders 40,151 chars (~10,038 approximate tok) identically across 15 fresh sessions ([T2](testing/T2-measurement-page-selection.md)) | The real-page prerequisite is now met; E1.2 can fix the curve protocol and E1.4 can collect provider-reported sizes |
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
 | #51/#52 done; open: [#54](https://github.com/kedarvartak/rote/issues/54) (diff-derived postconditions), #50 (close-out) | Planner formatting slips and malformed optional stable IDs no longer poison success parity; E4 certification is unblocked on robustness |
@@ -58,13 +58,13 @@ on a real page, at success parity, on the **provider's own** cache accounting.
 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---|---|---|---|
-| E1.1 | **Choose the measurement page.** Candidates: a self-hosted open-source portal (deterministic, no ToS risk) vs. a public site. Criteria: distilled observation ≥5K tokens; stable across ≥15 runs; a scriptable 10–25-step task with a ground-truth verify. Record the decision and why in `docs/testing/`. | 1 | — | decision recorded; page reachable and seeded locally | decision |
+| E1.1 | **Choose the measurement page.** Candidates: a self-hosted open-source portal (deterministic, no ToS risk) vs. a public site. Criteria: distilled observation ≥5K tokens; stable across ≥15 runs; a scriptable 10–25-step task with a ground-truth verify. Record the decision and why in `docs/testing/`. | 1 | — | [T2](testing/T2-measurement-page-selection.md): digest-pinned WordPress, 10,038 approximate tok, zero range across 15 sessions; locally seeded and database-verified | done |
 | E1.2 | **Define the curve protocol.** Task spec at n≈5/10/15/20/25 steps; per-step provider-reported usage (all three #57 buckets); JSONL schema with units; fixed seeds where applicable. | 1 | E1.1 | protocol doc committed; a dry run emits valid JSONL | ready |
 | E1.3 | **Browser Use per-step usage capture.** Extend the existing runner to record usage per step, same pinned model, same task file (fairness rules in [03](03-benchmark.md)). Known risk: BU may not surface per-step usage — fallback is wrapping the provider client. | 2 | E1.2 | one BU run emits per-step JSONL from provider-reported usage | blocked (E1.2) |
 | E1.4 | **Rote run of the same protocol.** No code changes expected; this is the first live sighting of A4 and real observation sizes. | 0.5 | E1.2 | Rote JSONL for the same task matrix | blocked (E1.2) |
 | E1.5 | **Draw and publish.** The graph (cumulative tokens vs. steps, both harnesses), method note, raw JSONL downloadable. | 1 | E1.3, E1.4 | graph embedded in README with units and method link | blocked |
 | E1.6 | **Set the G1 threshold** from the first honest run, in public — [05](05-roadmap.md) leaves it deliberately unset until now. Update 05 in the same PR. | 0.5 | E1.5 | 05 names a number and its provenance | blocked |
-| E1.7 | **Findings record** (`docs/testing/T2-…`): observation sizes, whether A4 fired, prompt sizes vs. cache minimums — the inputs E3 needs. | 0.5 | E1.4 | T2 committed | blocked |
+| E1.7 | **Findings record** (`docs/testing/T3-…`): provider-reported observation/prompt sizes, whether A4 fired, prompt sizes vs. cache minimums — the inputs E3 needs. | 0.5 | E1.4 | T3 committed (T2 is the E1.1 selection record) | blocked |
 | E1.8 | **Prove A4 on a real page.** Diff observations have never fired; the −90%-on-the-constant claim is untested at any page size ([02 §What is unproven](02-architecture.md)). Measure diff-vs-full render sizes across the E1 protocol steps. | 1 | E1.4 | measured diff/full ratio published alongside the curve; A4's row in [06](06-optimizations.md) loses "never fired" | blocked |
 
 ### E2 — Robustness at the planner boundary. ~3–4 days (+ stretch)
