@@ -54,7 +54,10 @@ export class CdpPage {
   async capture(): Promise<CapturedPage> {
     const html = await this.evaluateString(`(() => {
       const clone = document.documentElement.cloneNode(true);
-      const liveElements = document.querySelectorAll('*');
+      // Both queries must exclude their root. The document-level query includes
+      // <html> while the clone-level query does not, shifting
+      // every visibility bit onto the next element on real pages.
+      const liveElements = document.documentElement.querySelectorAll('*');
       const clonedElements = clone.querySelectorAll('*');
       liveElements.forEach((live, index) => {
         const copied = clonedElements[index];

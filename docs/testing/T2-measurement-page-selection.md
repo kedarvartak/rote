@@ -56,16 +56,17 @@ will collect provider-reported tokens for the actual curve.
 ## Results
 
 After one unmeasured session initialized WordPress's per-user admin state, each measured
-repetition used a fresh local Chrome instance and a new authenticated page session. All
-15 measured captures were identical after distillation:
+repetition used a fresh local Chrome instance and a new authenticated page session at the
+protocol-pinned 1920 × 1080 CSS-pixel viewport. All 15 measured captures were identical
+after distillation:
 
 | Metric | Result | Unit |
 |---|---:|---|
 | Captured elements | 6,789 | elements/run |
-| Distilled nodes | 736 | nodes/run |
-| Actionable nodes with selector hints | 108 | nodes/run |
-| Full compact observation | 41,579 | characters/run |
-| Approximate observation size | 10,395 | tokens/run |
+| Distilled nodes | 795 | nodes/run |
+| Actionable nodes with selector hints | 115 | nodes/run |
+| Full compact observation | 47,269 | characters/run |
+| Approximate observation size | 11,818 | tokens/run |
 | Range across 15 runs | **0** | approximate tokens |
 
 This clears E1.1's ≥5K-token and ≥15-run stability criteria. It also clears every cache
@@ -90,7 +91,7 @@ between measured repetitions.
 - It does not prove the G1 curve; no model or competitor ran in T2.
 - It does not prove A4's reduction ratio; E1.8 measures that over protocol transitions.
 - It does not prove provider caching; E3 measures actual cache buckets after the curve.
-- The exact 5/10/15/20/25-step protocol remains E1.2.
+- It does not evaluate the fixed 7/10/15/20/25-step protocol; E1 collects those runs.
 
 ## Conclusion
 

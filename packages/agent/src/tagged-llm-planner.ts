@@ -1,5 +1,5 @@
 import type { TokenUsage } from '@rote/core';
-import type { TaggedLlmClient } from '@rote/llm';
+import type { ProviderUsageReceipt, TaggedLlmClient } from '@rote/llm';
 import { normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserPlannerClient, type BrowserPlannerRequest, type BrowserPlannerResponse, type BrowserPlannerSource } from './types.js';
 
 /** Raised when bounded correction cannot produce one valid browser action. */
@@ -24,6 +24,8 @@ export class TaggedLlmBrowserPlanner implements BrowserPlannerClient {
 
   async plan(source: BrowserPlannerSource, request: BrowserPlannerRequest): Promise<BrowserPlannerResponse> {
     const usages: TokenUsage[] = [];
+    let providerReceipt: ProviderUsageReceipt | undefined;
+    const repairProviderReceipts: ProviderUsageReceipt[] = [];
     let volatileSuffix = request.context.volatileSuffix;
     let lastFailure: ParsedFailure | undefined;
 
@@ -39,13 +41,17 @@ export class TaggedLlmBrowserPlanner implements BrowserPlannerClient {
         maxTokens: 256,
       });
       usages.push(completion.usage);
+      if (attempt === 0) providerReceipt = completion.providerReceipt;
+      else if (completion.providerReceipt) repairProviderReceipts.push(completion.providerReceipt);
 
       const parsed = parseAction(completion.text);
       if (parsed.success) {
         return {
           action: parsed.action,
           usage: usages[0]!,
+          ...(providerReceipt ? { providerReceipt } : {}),
           ...(usages.length > 1 ? { repairUsage: usages.slice(1) } : {}),
+          ...(repairProviderReceipts.length > 0 ? { repairProviderReceipts } : {}),
           ...(parsed.classifications.length > 0 ? { classifications: parsed.classifications } : {}),
         };
       }

@@ -14,6 +14,8 @@ export interface CdpBrowserBackendOptions {
 export interface LaunchingCdpBrowserBackendOptions {
   chromePath?: string;
   headless?: boolean;
+  /** Deterministic outer window size in CSS pixels. */
+  windowSize?: { width: number; height: number };
 }
 
 /** Captures live pages from an existing Chrome DevTools Protocol endpoint. */
@@ -69,11 +71,16 @@ export class LaunchingCdpBrowserBackend implements BrowserCaptureBackend {
     const chromePath = this.options.chromePath ?? findChromeExecutable();
     if (!chromePath) throw new Error('Chrome/Chromium executable not found; pass chromePath');
     this.userDataDir = await mkdtemp(join(tmpdir(), 'rote-chrome-'));
+    const windowSize = this.options.windowSize;
+    if (windowSize && (!Number.isInteger(windowSize.width) || !Number.isInteger(windowSize.height) || windowSize.width < 1 || windowSize.height < 1)) {
+      throw new Error('windowSize width and height must be positive integers');
+    }
     this.child = spawn(chromePath, [
       '--remote-debugging-port=0',
       `--user-data-dir=${this.userDataDir}`,
       '--no-first-run',
       '--no-default-browser-check',
+      ...(windowSize ? [`--window-size=${windowSize.width},${windowSize.height}`] : []),
       ...(this.options.headless === false ? [] : ['--headless=new']),
       'about:blank',
     ], { stdio: ['ignore', 'ignore', 'pipe'] });

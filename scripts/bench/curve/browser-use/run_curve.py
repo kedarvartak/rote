@@ -133,7 +133,11 @@ async def run_once(
         task=task,
         llm=build_llm(protocol["provider"], protocol["model"]),
         sensitive_data=bindings,
-        browser_profile=BrowserProfile(allowed_domains=["127.0.0.1"]),
+        browser_profile=BrowserProfile(
+            allowed_domains=["127.0.0.1"],
+            window_size=protocol["page"]["viewport"],
+            viewport=protocol["page"]["viewport"],
+        ),
         use_judge=False,
         final_response_after_failure=False,
     )

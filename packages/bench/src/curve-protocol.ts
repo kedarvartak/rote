@@ -36,6 +36,10 @@ export const CurveProtocolSchema = z.object({
     initial_url: z.string().url(),
     reset_command: z.string().min(1),
     verify_command_template: z.string().min(1),
+    viewport: z.object({
+      width: z.number().int().positive(),
+      height: z.number().int().positive(),
+    }),
   }),
   prompt_bindings: z.array(z.string().min(1)),
   checkpoints: z.array(CurveCheckpointSchema).min(2),

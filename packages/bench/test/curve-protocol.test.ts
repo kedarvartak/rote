@@ -32,6 +32,7 @@ describe('G1 curve protocol', () => {
         initial_url: 'http://127.0.0.1',
         reset_command: 'reset',
         verify_command_template: 'verify',
+        viewport: { width: 1920, height: 1080 },
       },
       prompt_bindings: [],
       checkpoints: [

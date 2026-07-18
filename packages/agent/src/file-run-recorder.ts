@@ -41,6 +41,9 @@ export class FileBrowserAgentRunRecorder implements BrowserAgentRunRecorder {
         observation_mode: step.observation.mode,
         observation_bootstrap: step.observation.bootstrap,
         planner_usage: step.repairUsage ? [step.usage, ...step.repairUsage] : step.usage,
+        provider_receipts: step.providerReceipt
+          ? [step.providerReceipt, ...(step.repairProviderReceipts ?? [])]
+          : undefined,
         action_classifications: step.classifications,
         resolution: step.resolution,
       },

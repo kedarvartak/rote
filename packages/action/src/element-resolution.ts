@@ -57,6 +57,14 @@ export function resolveElementTarget(
     }
   }
 
+  // A mismatched stable ID is stronger evidence of a stale/decoy selector and
+  // must keep failing closed. Optional role/name hints are model-authored and
+  // may be wrong even when the copied selector is uniquely present.
+  const selectorMatches = target.stableId
+    ? []
+    : nodes.filter((candidate) => candidate.selectorHint === target.selector);
+  if (selectorMatches.length === 1) return result(selectorMatches[0]!, 'selector');
+
   const hasSemanticIdentity = Boolean(target.stableId || target.role || target.name || target.text);
   if (!hasSemanticIdentity && target.selector.trim()) return { selector: target.selector, strategy: 'selector' };
   throw new ElementResolutionError(target);

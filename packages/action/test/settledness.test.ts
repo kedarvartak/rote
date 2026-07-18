@@ -31,6 +31,18 @@ describe('waitForSettled', () => {
     expect(time.clock()).toBe(150);
   });
 
+  it('can tolerate a declared background-request floor while still requiring DOM quiet', async () => {
+    const time = fakeTime();
+    const result = await waitForSettled({
+      async sampleActivity() {
+        return { pendingRequests: 1, mutationVersion: 3 };
+      },
+    }, { quietWindowMs: 100, pollIntervalMs: 50, timeoutMs: 150, maxPendingRequests: 1, ...time });
+
+    expect(result).toEqual({ pendingRequests: 1, mutationVersion: 3 });
+    expect(time.clock()).toBe(100);
+  });
+
   it('fails loudly when activity exceeds the timeout', async () => {
     const time = fakeTime();
 

@@ -14,8 +14,9 @@ comes in here, then `@rote/perception` turns it into compact observations for th
 - `CapturedPage` / `CapturedElement` — Zod-backed page capture records.
 - `StaticHtmlBackend` / `captureStaticHtml` — fixture backend with associated-label/`aria-labelledby` accessibility enrichment.
 - `CdpBrowserBackend` — captures from an existing CDP HTTP endpoint.
-- `LaunchingCdpBrowserBackend` — launches local Chrome/Chromium with CDP enabled, captures a page, opens stateful action sessions, and closes cleanly.
-- `CdpPage` — stateful CDP page session with navigation/actions, live form-value and checkbox/radio checked-state capture, and network/DOM activity sampling for settledness.
+- `LaunchingCdpBrowserBackend` — launches local Chrome/Chromium with CDP enabled, an optional deterministic window size, stateful action sessions, and clean shutdown.
+- `CdpPage` — stateful CDP page session with navigation/actions, correctly aligned live visibility, form-value and checkbox/radio checked-state capture, and network/DOM activity sampling for settledness.
+- `captureStaticHtml` — preserves nested screen-reader label text as the associated control's accessible name.
 - `FixtureSiteServer` — serves static fixture pages from a local directory for deterministic CDP tests.
 
 `LaunchingCdpBrowserBackend` uses `CHROME_PATH` when set, otherwise probes common local

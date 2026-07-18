@@ -7,9 +7,18 @@ export interface TaggedLlmRequest {
   maxTokens?: number;
 }
 
+/** Provider identity and unmodified usage payload retained for benchmark audit. */
+export interface ProviderUsageReceipt {
+  provider: 'anthropic' | 'openai';
+  model: string;
+  usage: Record<string, unknown>;
+}
+
 export interface TaggedLlmResponse {
   text: string;
   usage: TokenUsage;
+  /** Present for real provider calls; injectable fixture clients may omit it. */
+  providerReceipt?: ProviderUsageReceipt;
 }
 
 /** Shared LLM boundary; every request carries its benchmark-accounting source. */

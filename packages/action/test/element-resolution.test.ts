@@ -60,6 +60,14 @@ describe('resolveElementTarget', () => {
     })).toEqual({ selector: '#alpha-link', strategy: 'text-proximity', stableId: 'bbbbbbbbbbbbbbbb' });
   });
 
+  it('uses a uniquely grounded exact selector when optional semantic hints are wrong', () => {
+    expect(resolveElementTarget(nodes, {
+      selector: '#alpha-link',
+      role: 'link',
+      name: 'Bulk Actions',
+    })).toEqual({ selector: '#alpha-link', strategy: 'selector', stableId: 'bbbbbbbbbbbbbbbb' });
+  });
+
   it('uses the supplied selector only for legacy selector-only actions', () => {
     expect(resolveElementTarget(nodes, { selector: '#legacy' })).toEqual({
       selector: '#legacy',

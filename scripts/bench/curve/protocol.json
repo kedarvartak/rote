@@ -10,7 +10,8 @@
     "environment": "scripts/bench/curve/wordpress",
     "initial_url": "http://127.0.0.1:18081/wp-login.php?redirect_to=http%3A%2F%2F127.0.0.1%3A18081%2Fwp-admin%2Fedit.php",
     "reset_command": "scripts/bench/curve/wordpress/reset-state.sh",
-    "verify_command_template": "scripts/bench/curve/wordpress/verify-trash-count.sh {{expected_trash_count}}"
+    "verify_command_template": "scripts/bench/curve/wordpress/verify-trash-count.sh {{expected_trash_count}}",
+    "viewport": { "width": 1920, "height": 1080 }
   },
   "prompt_bindings": ["wp_admin_user", "wp_admin_password"],
   "checkpoints": [
