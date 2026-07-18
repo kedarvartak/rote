@@ -1,4 +1,4 @@
-import { assertBrowserExpect, BrowserExpectationError, resolveElementTarget, type ElementResolutionResult } from '@rote/action';
+import { assertBrowserExpect, BrowserExpectationError, ElementResolutionError, resolveElementTarget, type ElementResolutionResult } from '@rote/action';
 import type { BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext } from './context.js';
@@ -9,6 +9,8 @@ import { normalizeBrowserAction, type BrowserAction, type BrowserActionClassific
 export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<BrowserAgentResult> {
   const maxSteps = options.maxSteps ?? 20;
   const maxRepairs = options.maxRepairs ?? 1;
+  const maxTargetRepairs = options.maxTargetRepairs ?? 1;
+  if (maxTargetRepairs !== 0 && maxTargetRepairs !== 1) throw new Error('maxTargetRepairs must be 0 or 1');
   const clock = options.clock ?? Date.now;
   const previousActions: BrowserAction[] = [];
   const steps: BrowserAgentStep[] = [];
@@ -42,7 +44,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(pendingRepair ? { repair: pendingRepair } : {}),
       });
       // INVARIANT: planner calls are always source-tagged for benchmark accounting.
-      const planned = await options.planner.plan(source, {
+      let planned = await options.planner.plan(source, {
         task: options.task,
         step,
         page: pageState,
@@ -52,28 +54,64 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(pendingRepair ? { repair: pendingRepair } : {}),
       });
       pendingRepair = undefined;
-      const normalized = normalizeBrowserAction(planned.action);
-      const action = normalized.action;
-      const classifications = uniqueClassifications([
+      assertPlannerUsageSources(planned, source);
+      const initialUsage = planned.usage;
+      const repairUsage = [...(planned.repairUsage ?? [])];
+      const initialProviderReceipt = planned.providerReceipt;
+      const repairProviderReceipts = [...(planned.repairProviderReceipts ?? [])];
+      let normalized = normalizeBrowserAction(planned.action);
+      let action = normalized.action;
+      let classifications = uniqueClassifications([
         ...(planned.classifications ?? []),
         ...normalized.classifications,
       ]);
-      assertPlannerUsageSources(planned, source);
 
       let actionError: Error | undefined;
       let resolution: ElementResolutionResult | undefined;
       if (action.kind !== 'done') {
         try {
-          resolution = resolveAction(action, nodes);
-          await applyAction(options.page, action, resolution?.selector);
-          // An omitted expect is not an unchecked action: the independent final
-          // verifier still gates success (#49). It only means the model declined to
-          // predict, which beats an invented string.
-          if (action.expect) {
-            const liveExpect = resolvedExpect(action.expect, action.kind === 'navigate' ? undefined : action.selector, resolution?.selector);
-            assertBrowserExpect(liveExpect, await options.page.capture());
+          try {
+            resolution = resolveAction(action, nodes);
+          } catch (error) {
+            if (!(error instanceof ElementResolutionError) || maxTargetRepairs < 1) throw error;
+            // The action has not executed, so one bounded repair may copy a grounded
+            // target from the same observation. This is distinct from postcondition
+            // repair, where repeating an already-performed action would be unsafe.
+            planned = await options.planner.plan('repair', {
+              task: options.task,
+              step,
+              page: pageState,
+              observation,
+              previousActions,
+              context: {
+                ...context,
+                volatileSuffix: `${context.volatileSuffix}\n\nYour proposed action was NOT performed because its target could not be resolved: ${error.message}\nGrounded candidates for the requested role:\n${renderGroundedCandidates(nodes, 'role' in action ? action.role : undefined, 'name' in action ? action.name : undefined)}\nChoose one corrected action using an exact selector or stableId from that candidate list.`,
+              },
+            });
+            assertPlannerUsageSources(planned, 'repair');
+            repairUsage.push(planned.usage, ...(planned.repairUsage ?? []));
+            if (planned.providerReceipt) repairProviderReceipts.push(planned.providerReceipt);
+            repairProviderReceipts.push(...(planned.repairProviderReceipts ?? []));
+            normalized = normalizeBrowserAction(planned.action);
+            action = normalized.action;
+            classifications = uniqueClassifications([
+              ...classifications,
+              ...(planned.classifications ?? []),
+              ...normalized.classifications,
+            ]);
+            resolution = resolveAction(action, nodes);
           }
-          previousActions.push(action);
+          if (action.kind !== 'done') {
+            await applyAction(options.page, action, resolution?.selector);
+            // An omitted expect is not an unchecked action: the independent final
+            // verifier still gates success (#49). It only means the model declined to
+            // predict, which beats an invented string.
+            if (action.expect) {
+              const liveExpect = resolvedExpect(action.expect, action.kind === 'navigate' ? undefined : action.selector, resolution?.selector);
+              assertBrowserExpect(liveExpect, await options.page.capture());
+            }
+            previousActions.push(action);
+          }
         } catch (error) {
           actionError = asError(error);
         }
@@ -82,8 +120,10 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         step,
         action,
         observation,
-        usage: planned.usage,
-        ...(planned.repairUsage ? { repairUsage: planned.repairUsage } : {}),
+        usage: initialUsage,
+        ...(initialProviderReceipt ? { providerReceipt: initialProviderReceipt } : {}),
+        ...(repairUsage.length > 0 ? { repairUsage } : {}),
+        ...(repairProviderReceipts.length > 0 ? { repairProviderReceipts } : {}),
         ...(classifications.length > 0 ? { classifications } : {}),
         durationMs: Math.max(0, clock() - startedAt),
         ...(actionError ? { error: actionError.message } : {}),
@@ -209,6 +249,25 @@ async function applyAction(
     case 'done':
       return;
   }
+}
+
+function renderGroundedCandidates(nodes: readonly DistilledNode[], role?: string, name?: string): string {
+  const normalizedRole = role?.toLowerCase();
+  const normalizedName = name?.toLowerCase();
+  const candidates = nodes.filter((node) => (
+    node.selectorHint && (!normalizedRole || node.role.toLowerCase() === normalizedRole)
+  )).sort((left, right) => {
+    const leftExact = normalizedName && left.name.toLowerCase() === normalizedName ? 1 : 0;
+    const rightExact = normalizedName && right.name.toLowerCase() === normalizedName ? 1 : 0;
+    return rightExact - leftExact;
+  }).slice(0, 25);
+  if (candidates.length === 0) return '(none)';
+  return candidates.map((node) => JSON.stringify({
+    selector: node.selectorHint,
+    stableId: node.id.hash,
+    role: node.role,
+    name: node.name,
+  })).join('\n');
 }
 
 function asError(error: unknown): Error {

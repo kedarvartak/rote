@@ -63,6 +63,14 @@ export class AnthropicTaggedLlmClient implements TaggedLlmClient {
       messages: [{ role: 'user', content: request.volatileSuffix }],
     });
     const text = response.content.find((block): block is Anthropic.TextBlock => block.type === 'text')?.text ?? '';
-    return { text: text.trim(), usage: normalizeAnthropicUsage(request.source, response.usage) };
+    return {
+      text: text.trim(),
+      usage: normalizeAnthropicUsage(request.source, response.usage),
+      providerReceipt: {
+        provider: 'anthropic',
+        model: this.model,
+        usage: JSON.parse(JSON.stringify(response.usage)) as Record<string, unknown>,
+      },
+    };
   }
 }

@@ -6,7 +6,7 @@ The client accepts separately assembled stable and volatile prompt sections.
 
 ## Public API
 
-- `TaggedLlmClient` — provider-neutral completion boundary requiring a `source` tag.
+- `TaggedLlmClient` — provider-neutral completion boundary requiring a `source` tag and retaining the real provider/model usage receipt for benchmark audit.
 - `AnthropicTaggedLlmClient` — Anthropic implementation using `ANTHROPIC_API_KEY`.
 - `OpenAiTaggedLlmClient` — OpenAI Responses API implementation using `OPENAI_API_KEY`.
 - `createTaggedLlmClientFromEnv()` — selects `ROTE_LLM_PROVIDER=openai|anthropic`; defaults to Anthropic for backward compatibility.

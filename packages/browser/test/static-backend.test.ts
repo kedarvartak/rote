@@ -16,6 +16,16 @@ describe('StaticHtmlBackend', () => {
     );
   });
 
+  it('derives a control name from a nested screen-reader label', () => {
+    const page = captureStaticHtml('mem://posts', `
+      <input id="cb-select-123" type="checkbox" name="post[]">
+      <label for="cb-select-123"><span class="screen-reader-text">Select Rote curve post 120</span></label>
+    `);
+
+    expect(page.elements.find((element) => element.attributes['id'] === 'cb-select-123')?.attributes['data-rote-name'])
+      .toBe('Select Rote curve post 120');
+  });
+
   it('captures the same HTML byte-stably', () => {
     const html = '<html><head><title>X</title></head><body><button id="go">Go</button></body></html>';
 

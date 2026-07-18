@@ -150,6 +150,24 @@ describe('runBrowserAgent', () => {
     }));
   });
 
+  it('repairs one unresolvable target before performing any action', async () => {
+    const page = new FakePage();
+    const planner = new ScriptedPlanner([
+      { kind: 'click', selector: '#invented', role: 'button', name: 'Invented submit' },
+      { kind: 'click', selector: '#registration-submit' },
+      { kind: 'done', success: true, summary: 'submitted' },
+    ]);
+
+    const result = await runBrowserAgent({ task: 'Submit', page, planner, verifier: passVerifier });
+
+    expect(page.clicks).toEqual(['#registration-submit']);
+    expect(planner.sources).toEqual(['planner', 'repair', 'planner']);
+    expect(planner.requests[1]?.context.volatileSuffix).toContain('was NOT performed');
+    expect(result.steps[0]?.action).toEqual({ kind: 'click', selector: '#registration-submit' });
+    expect(result.steps[0]?.usage.source).toBe('planner');
+    expect(result.steps[0]?.repairUsage?.map((usage) => usage.source)).toEqual(['repair']);
+  });
+
   it('rejects planner usage attributed to another source', async () => {
     const planner: BrowserPlannerClient = {
       async plan() {

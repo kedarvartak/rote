@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { ElementResolutionResult } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
 import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
+import type { ProviderUsageReceipt } from '@rote/llm';
 import type { AdaptiveRenderedObservation } from '@rote/perception';
 
 /**
@@ -98,8 +99,12 @@ export interface BrowserPlannerResponse {
   action: BrowserAction;
   /** Usage for the requested planning call, including a malformed first completion. */
   usage: TokenUsage;
+  /** Raw receipt for the requested planning call, when supplied by a real provider client. */
+  providerReceipt?: ProviderUsageReceipt;
   /** Bounded corrective calls made after malformed planner output. */
   repairUsage?: readonly TokenUsage[];
+  /** Raw receipts aligned one-to-one with `repairUsage`. */
+  repairProviderReceipts?: readonly ProviderUsageReceipt[];
   /** Non-fatal optional-hint degradation applied before action resolution. */
   classifications?: readonly BrowserActionClassification[];
 }
@@ -143,6 +148,8 @@ export interface RunBrowserAgentOptions {
    * assertion it authored. Exhausting it throws.
    */
   maxRepairs?: number;
+  /** One pre-action correction for an ungrounded target; set 0 to fail immediately. */
+  maxTargetRepairs?: 0 | 1;
 }
 
 export interface BrowserAgentStep {
@@ -150,8 +157,12 @@ export interface BrowserAgentStep {
   action: BrowserAction;
   observation: AdaptiveRenderedObservation;
   usage: TokenUsage;
+  /** Raw receipt for the requested planning call. */
+  providerReceipt?: ProviderUsageReceipt;
   /** Planner-output repair usage associated with this action. */
   repairUsage?: readonly TokenUsage[];
+  /** Raw receipts aligned one-to-one with `repairUsage`. */
+  repairProviderReceipts?: readonly ProviderUsageReceipt[];
   /** Non-fatal optional-hint degradation applied before action resolution. */
   classifications?: readonly BrowserActionClassification[];
   durationMs: number;

@@ -18,7 +18,7 @@ export function captureStaticHtml(url: string, html: string): CapturedPage {
     url,
     title,
     html,
-    elements: enrichAccessibility(parseElements(html)),
+    elements: enrichAccessibility(parseElements(html), html),
   };
 }
 
@@ -43,14 +43,14 @@ function parseElements(html: string): CapturedElement[] {
   return elements;
 }
 
-function enrichAccessibility(elements: CapturedElement[]): CapturedElement[] {
+function enrichAccessibility(elements: CapturedElement[], html: string): CapturedElement[] {
   const textById = new Map<string, string>();
-  const labelByTarget = new Map<string, string>();
+  const labelByTarget = labelsFromHtml(html);
   for (const element of elements) {
     const id = element.attributes['id'];
     if (id && element.text) textById.set(id, element.text);
     const target = element.tag === 'label' ? element.attributes['for'] : undefined;
-    if (target && element.text) labelByTarget.set(target, element.text);
+    if (target && element.text && !labelByTarget.has(target)) labelByTarget.set(target, element.text);
   }
   return elements.map((element) => {
     const id = element.attributes['id'];
@@ -63,6 +63,18 @@ function enrichAccessibility(elements: CapturedElement[]): CapturedElement[] {
     if (!accessibleName) return element;
     return { ...element, attributes: { ...element.attributes, 'data-rote-name': accessibleName } };
   });
+}
+
+function labelsFromHtml(html: string): Map<string, string> {
+  const labels = new Map<string, string>();
+  const labelPattern = /<label\b([^>]*)>([\s\S]*?)<\/label\s*>/gi;
+  let match: RegExpExecArray | null;
+  while ((match = labelPattern.exec(html)) !== null) {
+    const target = parseAttributes(match[1] ?? '')['for'];
+    const text = stripTags(match[2] ?? '').trim().replace(/\s+/g, ' ');
+    if (target && text) labels.set(target, text);
+  }
+  return labels;
 }
 
 function parseAttributes(raw: string): Record<string, string> {

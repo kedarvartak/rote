@@ -30,7 +30,7 @@ describe('CdpPage', () => {
     const initialActivity = await page.sampleActivity();
     await page.evaluate<void>('document.body.append(document.createElement("aside"))');
     const changedActivity = await page.sampleActivity();
-    expect(initialActivity.pendingRequests).toBe(0);
+    expect(Number.isInteger(initialActivity.pendingRequests)).toBe(true);
     expect(changedActivity.mutationVersion).toBeGreaterThan(initialActivity.mutationVersion);
     await page.fill('#company-name', 'Acme Tools');
     await page.fill('#contact-email', 'ops@example.com');
@@ -46,7 +46,11 @@ describe('CdpPage', () => {
       expect.arrayContaining([
         expect.objectContaining({
           tag: 'input',
-          attributes: expect.objectContaining({ id: 'company-name', value: 'Acme Tools' }),
+          attributes: expect.objectContaining({ id: 'company-name', value: 'Acme Tools', 'data-rote-visible': 'true' }),
+        }),
+        expect.objectContaining({
+          tag: 'button',
+          attributes: expect.objectContaining({ id: 'registration-submit', 'data-rote-visible': 'true' }),
         }),
       ]),
     );

@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { LaunchingCdpBrowserBackend } from '../../../../packages/browser/src/index.ts';
 import { distillPage, renderObservation } from '../../../../packages/perception/src/index.ts';
 
+const protocol = JSON.parse(readFileSync(new URL('../protocol.json', import.meta.url), 'utf8'));
 const localEnv = Object.fromEntries(
   readFileSync(new URL('.env', import.meta.url), 'utf8')
     .trim()
@@ -21,7 +22,7 @@ const samples = [];
 // One unmeasured session initializes WordPress's per-user admin state. Measured
 // repetitions still each receive a fresh browser and page session.
 for (let repetition = 0; repetition <= repetitions; repetition += 1) {
-  const backend = new LaunchingCdpBrowserBackend();
+  const backend = new LaunchingCdpBrowserBackend({ windowSize: protocol.page.viewport });
   try {
     const page = await backend.openPage();
     await page.navigate('http://127.0.0.1:18081/wp-login.php');
@@ -56,6 +57,7 @@ console.log(JSON.stringify({
   schema_version: 1,
   units: { rendered_chars: 'characters', approximate_tokens: 'ceil(characters / 4)' },
   page: 'WordPress 6.8.2 /wp-admin/edit.php with 120 seeded posts and 100 rows per page',
+  viewport_css_pixels: protocol.page.viewport,
   repetitions,
   unmeasured_warmup_sessions: 1,
   summary: {

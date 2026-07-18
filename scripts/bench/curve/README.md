@@ -15,6 +15,7 @@ E1.2 defines the instrument; E1.3/E1.4 collect evidence with it.
 | Repetitions | ≥15 per harness/checkpoint |
 | Page | WordPress 6.8.2 Posts admin, 120 seeded posts, 100 rows/page |
 | Reset | `wordpress/reset-state.sh` before every measured run |
+| Viewport | 1920 × 1080 CSS px for both harnesses |
 | Verification | database-level `wordpress/verify-trash-count.sh` after every run |
 | Model seed | unavailable; pin everything else and report variance |
 
@@ -123,9 +124,34 @@ harness retries—the target is interaction complexity, and retries must remain 
 Credentials are passed through Browser Use's `sensitive_data` placeholders and are never
 written into either artifact.
 
+## Rote capture
+
+Rote's runner uses the same reset, viewport, task prompt, model identity, and database
+verifier. It retains each provider's raw usage receipt at the shared tagged-LLM boundary,
+then emits validated cumulative rows directly:
+
+```bash
+set -a; source .env; set +a
+node --import tsx/esm scripts/bench/curve/rote/run-curve.ts \
+  --out bench-out/curve/rote.jsonl
+```
+
+With no Anthropic key available, the instrument was exercised without creating evidence:
+
+```bash
+node --import tsx/esm scripts/bench/curve/rote/run-curve.ts \
+  --out /tmp/rote-openai-probe.jsonl \
+  --checkpoint WP-N07 --repetitions 1 \
+  --openai-probe-model gpt-4.1-mini
+```
+
+The probe protocol id is suffixed `-openai-instrument-probe`. On 2026-07-18 it emitted
+7/7 provider-call rows, concluded successfully, and passed the independent database
+check. This confirms the instrument and provides no Rote-vs-Browser-Use benchmark claim.
+
 ## Oversized observation bootstrap
 
-The selected page's full observation is ~40K characters, above the 4K ordinary budget.
+The selected page's full observation is ~47K characters, above the 4K ordinary budget.
 [#67](https://github.com/kedarvartak/rote/issues/67) fixes the no-base case with one
 explicit `bootstrap` observation under a separate 100,000-character hard ceiling; its
 full size and budget overage are recorded and included in G1. The next small change is

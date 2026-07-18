@@ -69,6 +69,14 @@ export class OpenAiTaggedLlmClient implements TaggedLlmClient {
       input: request.volatileSuffix,
       max_output_tokens: request.maxTokens ?? 512,
     });
-    return { text: response.output_text.trim(), usage: normalizeOpenAiUsage(request.source, response.usage) };
+    return {
+      text: response.output_text.trim(),
+      usage: normalizeOpenAiUsage(request.source, response.usage),
+      providerReceipt: {
+        provider: 'openai',
+        model: this.model,
+        usage: JSON.parse(JSON.stringify(response.usage)) as Record<string, unknown>,
+      },
+    };
   }
 }
