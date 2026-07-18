@@ -307,9 +307,10 @@ Three step kinds, deliberately minimal:
 
 ## Verification, and what T1 taught us
 
-Every step carries a postcondition; the task carries a final `verify[]`. **Success is
-only reported if verification passes** — invariant 1, and the anchor under every
-efficiency claim (all benchmark numbers are *at success parity*).
+Stored replay steps carry postconditions; live planner actions may carry an `expect` only
+when it is grounded rather than guessed. Every task carries a final independent verifier.
+**Success is only reported if final verification passes** — invariant 1, and the anchor
+under every efficiency claim (all benchmark numbers are *at success parity*).
 
 [T1](testing/T1-openai-dry-run.md) found the live-agent version of this was
 mis-designed: the action schema made `expect` **mandatory**, so the planner had to
