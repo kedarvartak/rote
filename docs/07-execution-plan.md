@@ -36,7 +36,7 @@ drives sequencing:
 | B1–B3 render ~537 chars; the selected WordPress page renders 47,269 chars (~11,818 approximate tok) identically across 15 fresh sessions ([T2](testing/T2-measurement-page-selection.md)) | The real-page prerequisite is now met; E1.2 can fix the curve protocol and E1.4 can collect provider-reported sizes |
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
-| #51/#52 done; open: [#54](https://github.com/kedarvartak/rote/issues/54) (diff-derived postconditions), #50 (close-out) | Planner formatting slips and malformed optional stable IDs no longer poison success parity; E4 certification is unblocked on robustness |
+| #50/#51/#52 done; open: [#54](https://github.com/kedarvartak/rote/issues/54) (diff-derived postconditions) | Planner slips no longer poison success parity; live expects are honestly optional and final verification remains mandatory |
 | `@rote/cli` private at 0.0.0; README has no number; no demo | the launch package is all unstarted |
 | B4–B6 benchmark tasks specified, not built | a G2 scope decision is required (E4.1) |
 
@@ -77,7 +77,7 @@ and poison both gates.
 |---|---|---|---|---|---|
 | E2.1 | **#51: malformed planner completion.** One re-prompt carrying the parse error, budgeted like repair; typed error when exhausted; fallback stays clean (invariant 2). | 1.5 | — | invariant test: a malformed-then-valid completion sequence completes the run; initial usage tagged `planner`, corrective usage tagged `repair` | done |
 | E2.2 | **#52: malformed optional `stableId`.** Treat as omitted with a logged classification instead of fatal. | 1 | — | test: junk `stableId` on an otherwise-valid action does not end the run | done |
-| E2.3 | **#50 close-out.** Post-#49 live evidence shows tautological expects gone; close with links, or narrow the issue to what remains. | 0.5 | — | issue closed or re-scoped with evidence | ready |
+| E2.3 | **#50 close-out.** Post-#49 live evidence shows tautological expects gone; close with links, or narrow the issue to what remains. | 0.5 | — | T1 records omission on every B1–B3 action and B2 11/11; docs credit final verification rather than optional live expects | done |
 | E2.4 | **#54: postconditions from the observation diff** (stretch — may move to P2). Spec first: which diff facts are assertable without prediction. No model call. | 3–5 | E1.7 | spec reviewed before code; property tests over diff→expect derivation | decision |
 
 ### E3 — B3 cache layout, for real. ~4–5 days
@@ -173,7 +173,7 @@ breakdown until P2 exits.
 **Assumptions:** 1–3 builders; OSS-first; pinned models stay available through E4;
 provider pricing table refreshed at E4.5.
 
-**Issues (open, tracked):** #50 close-out · #54 (stretch). **Done:** #51 · #52.
+**Issues (open, tracked):** #54 (stretch). **Done:** #50 · #51 · #52.
 
 **Dependencies:** provider usage APIs (#57 contract) · Browser Use as a dependency,
 never a fork · CDP/Chrome stability on the measurement page.
