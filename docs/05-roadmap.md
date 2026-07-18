@@ -54,7 +54,7 @@ need calibration time and would delay the number without changing its headline. 
 | Lever | Effect on the curve | State |
 |---|---|---|
 | **A11 observation eviction** | kills the dominant quadratic term | **built** — and never claimed. Growth is 35 tok/step (one action JSON), not 135+ |
-| **A4 diff observations** | −~90% on the constant, real pages | **built, never fired** — budget 4000 chars, our observations are ~537 |
+| **A4 diff observations** | −~90% on the constant, real pages | **built, exercised in CI** — grounded 10K-token bootstrap → diff works; real WordPress ratio unmeasured (#67) |
 | **B3 cache layout** | 10× off the surviving quadratic | **not built** — no `cache_control` sent. Its prerequisite, cache-aware accounting, is done (#57) |
 | **B4 compaction** | history → O(1); **curve → linear** | not built |
 
@@ -89,7 +89,7 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 | Workstream | State |
 |---|---|
 | W1 browser + perception capture | done |
-| W2 distill, stable IDs, diff, render | **done, but diff has never fired** — fixtures too small |
+| W2 distill, stable IDs, diff, render | **done and deterministically exercised** — #67 adds grounded oversized bootstrap → diff; live WordPress measurement pending |
 | W3 loop + context assembler | **done, except the cache layout does nothing** — no `cache_control` is sent. Accounting is no longer blind (#57 fixed) |
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | W5 benchmark + the number | machinery done · **number not yet run** · **the curve not yet drawn** |

@@ -133,6 +133,8 @@ export interface RunBrowserAgentOptions {
   recorder?: BrowserAgentRunRecorder;
   maxSteps?: number;
   observationMaxChars?: number;
+  /** Hard ceiling for an explicit grounded snapshot that establishes a diff base. */
+  observationBootstrapMaxChars?: number;
   clock?: () => number;
   /**
    * Scoped repairs allowed per run before a failed postcondition is fatal

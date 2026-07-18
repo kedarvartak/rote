@@ -111,7 +111,7 @@ We are in **P1 = tier 0, working memory**. Its four levers, honestly:
 | Lever | State |
 |---|---|
 | Observation eviction — keep what you did, not what you saw | **built** (and never claimed until now) |
-| Diff observations | **built, never fired** — the budget is 4000 chars; our fixtures render ~537 |
+| Diff observations | **built, CI-exercised** — grounded 10K-token bootstrap → diff works; real-page savings remain unmeasured (#67) |
 | Cache layout | **not built.** The docs marked it built; no `cache_control` is ever sent, and the accounting cannot see a cache hit ([#57](https://github.com/kedarvartak/rote/issues/57)) |
 | History compaction | not built — the lever that would make the curve linear rather than a smaller quadratic |
 

@@ -86,7 +86,7 @@ describe('runBrowserAgent', () => {
     expect(result.tokenUsage.every((usage) => usage.source === 'planner')).toBe(true);
   });
 
-  it('sends a diff after the first over-budget full observation', async () => {
+  it('sends a diff after an explicit over-budget bootstrap observation', async () => {
     const planner = new ScriptedPlanner([
       { kind: 'click', selector: '#registration-submit', expect: { selector_visible: '#registration-submit' } },
       { kind: 'done', success: true, summary: 'done' },
@@ -100,7 +100,9 @@ describe('runBrowserAgent', () => {
       observationMaxChars: 80,
     });
 
-    expect(planner.requests.map((request) => request.observation.mode)).toEqual(['summary', 'diff']);
+    expect(planner.requests.map((request) => request.observation.mode)).toEqual(['bootstrap', 'diff']);
+    expect(planner.requests[0]?.observation.text).toContain('#registration-submit');
+    expect(planner.requests[0]?.observation.bootstrap?.budgetChars).toBe(80);
     expect(planner.requests[1]?.observation.text).toBe('(no observation changes)');
   });
 

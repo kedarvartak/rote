@@ -85,12 +85,11 @@ The command validates checkpoint arithmetic and uniqueness, emits one placeholde
 every target step, then parses the JSONL back through the same public schema before
 writing it.
 
-## Known execution blocker discovered while defining the protocol
+## Oversized observation bootstrap
 
-The selected page's full observation is ~40K characters, above the 4K budget. On its
-first visit there is no previous snapshot, so A4 cannot make a diff; today's renderer
-falls directly to a selector-free summary. The planner therefore cannot ground the first
-checkbox action. This is tracked in
-[#67](https://github.com/kedarvartak/rote/issues/67) and blocks E1.4. Increasing the budget
-to 40K would make every later full observation fit and prevent A4 from firing, so the
-bootstrap contract must be fixed rather than benchmark-configured away.
+The selected page's full observation is ~40K characters, above the 4K ordinary budget.
+[#67](https://github.com/kedarvartak/rote/issues/67) fixes the no-base case with one
+explicit `bootstrap` observation under a separate 100,000-character hard ceiling; its
+full size and budget overage are recorded and included in G1. The next small change is
+rendered as an ordinary-budget diff. Above the emergency ceiling Rote fails before calling
+the planner rather than asking it to invent selectors from a count-only summary.

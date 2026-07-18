@@ -11,6 +11,7 @@ export const DistilledNodeSchema = z.object({
   selectorHint: z.string().optional(),
   depth: z.number().int().nonnegative(),
   interactive: z.boolean(),
+  state: z.object({ checked: z.boolean().optional() }).optional(),
 });
 export type DistilledNode = z.infer<typeof DistilledNodeSchema>;
 
@@ -32,7 +33,7 @@ export const ObservationDiffSchema = z.object({
 });
 export type ObservationDiff = z.infer<typeof ObservationDiffSchema>;
 
-export const AdaptiveObservationModeSchema = z.enum(['full', 'diff', 'summary']);
+export const AdaptiveObservationModeSchema = z.enum(['full', 'diff', 'summary', 'bootstrap']);
 export type AdaptiveObservationMode = z.infer<typeof AdaptiveObservationModeSchema>;
 
 export const AdaptiveRenderedObservationSchema = z.object({
@@ -41,5 +42,9 @@ export const AdaptiveRenderedObservationSchema = z.object({
   approxTokens: z.number().int().nonnegative(),
   mode: AdaptiveObservationModeSchema,
   diff: ObservationDiffSchema.optional(),
+  bootstrap: z.object({
+    budgetChars: z.number().int().nonnegative(),
+    exceededByChars: z.number().int().positive(),
+  }).optional(),
 });
 export type AdaptiveRenderedObservation = z.infer<typeof AdaptiveRenderedObservationSchema>;

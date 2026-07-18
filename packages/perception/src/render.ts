@@ -29,5 +29,6 @@ export function estimateTokens(text: string): number {
 export function renderNodeLine(node: DistilledNode): string {
   const selector = node.selectorHint ? ` ${node.selectorHint}` : '';
   const marker = node.interactive ? '*' : '-';
-  return `${marker} [${node.id.hash}] ${node.role}${selector}${node.name ? ` "${node.name}"` : ''}`;
+  const state = node.state?.checked === undefined ? '' : ` checked=${String(node.state.checked)}`;
+  return `${marker} [${node.id.hash}] ${node.role}${selector}${node.name ? ` "${node.name}"` : ''}${state}`;
 }

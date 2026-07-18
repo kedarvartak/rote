@@ -91,7 +91,7 @@ const CurveMeasurementStepSchema = CurveStepCommonSchema.extend({
   provider_usage: z.record(z.unknown()).refine((usage) => Object.keys(usage).length > 0, 'provider_usage cannot be empty'),
   action_kind: z.string().min(1).optional(),
   observation: z.object({
-    mode: z.enum(['full', 'diff', 'summary']),
+    mode: z.enum(['full', 'diff', 'summary', 'bootstrap']),
     rendered_chars: z.number().int().nonnegative(),
     approximate_tokens: z.number().int().nonnegative(),
   }).optional(),

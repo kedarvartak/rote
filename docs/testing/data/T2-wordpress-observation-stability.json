@@ -8,8 +8,8 @@
   "repetitions": 15,
   "unmeasured_warmup_sessions": 1,
   "summary": {
-    "min_approximate_tokens": 10038,
-    "max_approximate_tokens": 10038,
+    "min_approximate_tokens": 10395,
+    "max_approximate_tokens": 10395,
     "range_approximate_tokens": 0
   },
   "samples": [
@@ -18,8 +18,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -27,8 +27,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -36,8 +36,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -45,8 +45,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -54,8 +54,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -63,8 +63,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -72,8 +72,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -81,8 +81,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -90,8 +90,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -99,8 +99,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -108,8 +108,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -117,8 +117,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -126,8 +126,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -135,8 +135,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     },
     {
@@ -144,8 +144,8 @@
       "url": "http://127.0.0.1:18081/wp-admin/edit.php",
       "captured_elements": 6789,
       "distilled_nodes": 736,
-      "rendered_chars": 40151,
-      "approximate_tokens": 10038,
+      "rendered_chars": 41579,
+      "approximate_tokens": 10395,
       "actionable_nodes": 108
     }
   ]

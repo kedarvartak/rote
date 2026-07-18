@@ -69,6 +69,10 @@ export class CdpPage {
         const copied = clonedControls[index];
         if (!copied) return;
         copied.setAttribute('value', live.value);
+        if (live instanceof HTMLInputElement && (live.type === 'checkbox' || live.type === 'radio')) {
+          if (live.checked) copied.setAttribute('checked', 'checked');
+          else copied.removeAttribute('checked');
+        }
         if (copied.tagName === 'TEXTAREA') copied.textContent = live.value;
         if (copied.tagName === 'SELECT') {
           Array.from(copied.options).forEach((option) => {

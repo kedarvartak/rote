@@ -64,8 +64,8 @@ repetition used a fresh local Chrome instance and a new authenticated page sessi
 | Captured elements | 6,789 | elements/run |
 | Distilled nodes | 736 | nodes/run |
 | Actionable nodes with selector hints | 108 | nodes/run |
-| Full compact observation | 40,151 | characters/run |
-| Approximate observation size | 10,038 | tokens/run |
+| Full compact observation | 41,579 | characters/run |
+| Approximate observation size | 10,395 | tokens/run |
 | Range across 15 runs | **0** | approximate tokens |
 
 This clears E1.1's ≥5K-token and ≥15-run stability criteria. It also clears every cache
