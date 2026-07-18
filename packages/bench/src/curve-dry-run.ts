@@ -26,6 +26,7 @@ export function renderCurveDryRun(protocol: CurveProtocol): string {
       step_index: index + 1,
       source: 'planner',
       duration_ms: 0,
+      duration_scope: 'provider_call',
       usage: ZERO_USAGE,
       cumulative_usage: ZERO_USAGE,
       provider_usage: { dry_run: true },

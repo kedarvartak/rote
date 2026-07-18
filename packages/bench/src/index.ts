@@ -18,3 +18,4 @@ export * from './competitor-gate.js';
 export * from './headhead-assembler.js';
 export * from './curve-protocol.js';
 export * from './curve-dry-run.js';
+export * from './browser-use-curve.js';

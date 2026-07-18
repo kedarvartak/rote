@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { parseCurveProtocol, parseCurveStepJsonl, renderCurveDryRun } from '../src/index.js';
+import { CurveStepRecordSchema, parseCurveProtocol, parseCurveStepJsonl, renderCurveDryRun } from '../src/index.js';
 
 describe('G1 curve protocol', () => {
   it('fixes increasing real-page task checkpoints and emits valid dry-run JSONL', async () => {
@@ -55,6 +55,31 @@ describe('G1 curve protocol', () => {
     })).toThrow();
   });
 
+  it('allows actual provider calls above target interaction complexity so retries remain visible', () => {
+    const zero = { input_tokens: 0, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 0 };
+    const record = {
+      schema_version: 1,
+      record_kind: 'measurement',
+      protocol_id: 'p',
+      task_id: 't',
+      harness: 'browser-use',
+      provider: 'anthropic',
+      model: 'model',
+      run_id: 'run',
+      repetition: 1,
+      target_steps: 1,
+      step_index: 2,
+      source: 'planner',
+      duration_ms: 10,
+      duration_scope: 'agent_step',
+      usage: zero,
+      cumulative_usage: zero,
+      provider_usage: { prompt_tokens: 0, completion_tokens: 0 },
+      step_outcome: 'failure',
+    };
+    expect(() => CurveStepRecordSchema.parse(record)).not.toThrow();
+  });
+
   it('rejects blank JSONL rows rather than silently dropping measurements', () => {
     const zero = { input_tokens: 0, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 0 };
     const valid = JSON.stringify({
@@ -71,6 +96,7 @@ describe('G1 curve protocol', () => {
       step_index: 1,
       source: 'planner',
       duration_ms: 0,
+      duration_scope: 'provider_call',
       usage: zero,
       cumulative_usage: zero,
       provider_usage: { dry_run: true },

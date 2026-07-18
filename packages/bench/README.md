@@ -38,6 +38,8 @@ See `src/index.ts`. Highlights:
   `.rote/runs/<run_id>` artifacts and can export raw JSONL alongside it.
 - **`CurveProtocolSchema` / `CurveStepRecordSchema`** — validate P1 G1's real-page task checkpoints and per-provider-call JSONL, including all normalized cache buckets plus the raw provider receipt.
 - **`rote-bench curve-dry-run <protocol.json> --out <records.jsonl>`** — expands every checkpoint into explicitly non-evidentiary zero-usage rows and parses them back before writing, proving the protocol/JSONL plumbing without fabricating a benchmark result.
+- **`parseBrowserUseCurveRawJsonl` / `browserUseCurveRecordsFromRaw`** — retain and validate every Browser Use Anthropic receipt, then normalize its uncached/read/write/output buckets and cumulative totals into shared curve records.
+- **`rote-bench curve-browser-use-records <raw-calls.jsonl> --out <records.jsonl>`** — converts the external Python runner's raw receipts into validated measurement JSONL, failing on missing calls, impossible cache accounting, or unverifiable final outcomes.
 
 ## Spec format
 
