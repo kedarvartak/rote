@@ -67,6 +67,7 @@ const CurveStepCommonSchema = z.object({
   protocol_id: z.string().min(1),
   task_id: z.string().min(1),
   harness: z.string().min(1),
+  harness_version: z.string().min(1).optional(),
   provider: z.string().min(1),
   model: z.string().min(1),
   run_id: z.string().min(1),
@@ -75,6 +76,8 @@ const CurveStepCommonSchema = z.object({
   step_index: z.number().int().positive(),
   source: z.string().min(1),
   duration_ms: z.number().nonnegative(),
+  duration_scope: z.enum(['provider_call', 'agent_step']),
+  agent_step_index: z.number().int().positive().optional(),
   usage: TokenBucketsSchema,
   cumulative_usage: TokenBucketsSchema,
 });
@@ -103,9 +106,6 @@ export const CurveStepRecordSchema = z.discriminatedUnion('record_kind', [
   CurveDryRunStepSchema,
   CurveMeasurementStepSchema,
 ]).superRefine((record, context) => {
-  if (record.step_index > record.target_steps) {
-    context.addIssue({ code: z.ZodIssueCode.custom, path: ['step_index'], message: 'step_index cannot exceed target_steps' });
-  }
   if (record.record_kind === 'dry_run') {
     const buckets = [...Object.values(record.usage), ...Object.values(record.cumulative_usage)];
     if (buckets.some((value) => value !== 0)) {

@@ -48,9 +48,9 @@ independent database verifier.
 
 One line represents one provider call. Measurement rows require:
 
-- protocol/task/harness/model/run/repetition identity;
+- protocol/task/harness/version/model/run/repetition identity;
 - target and actual step index;
-- source tag and duration in milliseconds;
+- source tag and duration in milliseconds, plus `duration_scope` (`provider_call` or enclosing `agent_step`);
 - normalized uncached-input/cache-read/cache-write/output buckets;
 - the provider's raw usage object, retained as the receipt;
 - cumulative normalized buckets;
@@ -84,6 +84,44 @@ wc -l bench-out/curve-dry-run.jsonl   # 77
 The command validates checkpoint arithmetic and uniqueness, emits one placeholder row for
 every target step, then parses the JSONL back through the same public schema before
 writing it.
+
+## Browser Use capture
+
+The curve runner uses the same pinned Browser Use 0.13.4 dependency as the head-to-head
+runner and audits both its Anthropic and OpenAI receipt shapes. The frozen evidentiary
+protocol remains Anthropic; an OpenAI run with a different protocol id is an instrument
+probe, not curve evidence. Browser Use exposes provider receipts through its `TokenCost.usage_history`; the
+runner maps every receipt timestamp to an enclosing agent step and fails if any receipt
+is missing or unmapped. The independent database verifier replaces Browser Use's optional
+LLM judge, so both harnesses use the same success rule without charging Browser Use for a
+second, subjective grading call.
+
+```bash
+python3 -m venv /tmp/rote-browser-use
+/tmp/rote-browser-use/bin/pip install -r scripts/bench/curve/browser-use/requirements.txt
+scripts/bench/curve/wordpress/start.sh --reset
+set -a; source .env; set +a    # ANTHROPIC_API_KEY must be non-empty
+/tmp/rote-browser-use/bin/python scripts/bench/curve/browser-use/run_curve.py \
+  --out bench-out/curve/browser-use
+```
+
+For a non-publishable one-cell instrument probe, add `--checkpoint WP-N07
+--repetitions 1`. The command writes both `browser-use-raw-calls.jsonl` (unaltered
+Browser Use provider receipts) and `browser-use-curve.jsonl` (shared normalized rows).
+If normalization needs to be repeated without another paid run:
+
+```bash
+node packages/bench/bin/rote-bench.js curve-browser-use-records \
+  bench-out/curve/browser-use/browser-use-raw-calls.jsonl \
+  --out bench-out/curve/browser-use/browser-use-curve.jsonl
+```
+
+Browser Use reports only enclosing agent-step duration, not provider-call latency. Its
+measurement rows therefore use `duration_scope: "agent_step"`; Rote rows may use
+`provider_call`. Actual provider-call `step_index` may exceed `target_steps` when a
+harness retries—the target is interaction complexity, and retries must remain visible.
+Credentials are passed through Browser Use's `sensitive_data` placeholders and are never
+written into either artifact.
 
 ## Oversized observation bootstrap
 

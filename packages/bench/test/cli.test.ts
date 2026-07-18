@@ -34,6 +34,39 @@ describe('rote-bench CLI', () => {
     expect(JSON.parse(lines[0]!)).toEqual(expect.objectContaining({ record_kind: 'dry_run', task_id: 'WP-N07' }));
   });
 
+  it('converts raw Browser Use receipts into validated curve measurement JSONL', async () => {
+    const root = await tempDir();
+    const rawPath = join(root, 'raw-calls.jsonl');
+    const outPath = join(root, 'browser-use-curve.jsonl');
+    await writeFile(rawPath, `${JSON.stringify({
+      schema_version: 1,
+      protocol_id: 'p1-g1-wordpress-v1',
+      task_id: 'WP-N07',
+      browser_use_version: '0.13.4',
+      provider: 'anthropic',
+      model: 'claude-opus-4-8',
+      run_id: 'browser-use-WP-N07-r01',
+      repetition: 1,
+      target_steps: 7,
+      call_index: 1,
+      agent_step_index: 1,
+      agent_step_duration_ms: 1250,
+      provider_usage: { prompt_tokens: 1000, completion_tokens: 40, prompt_cached_tokens: 600 },
+      step_outcome: 'success',
+      verification_passed: true,
+      agent_concluded: true,
+    })}\n`, 'utf8');
+
+    await expect(main(['curve-browser-use-records', rawPath, '--out', outPath])).resolves.toBe(
+      `wrote ${outPath} (1 Browser Use measurement records)`,
+    );
+    const record = JSON.parse((await readFile(outPath, 'utf8')).trim());
+    expect(record).toEqual(expect.objectContaining({
+      record_kind: 'measurement',
+      usage: { input_tokens: 400, cache_read_tokens: 600, cache_write_tokens: 0, output_tokens: 40 },
+    }));
+  });
+
   it('writes a synthetic benchmark pack and evaluates the M3 gate', async () => {
     const root = await tempDir();
     const specPath = join(root, 'bench-spec.json');

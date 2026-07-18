@@ -140,7 +140,9 @@ hides a T2 regression behind T0 wins.
 
 ## Running it
 
-Full runbook: [`scripts/bench/headhead/README.md`](../scripts/bench/headhead/README.md).
+Full head-to-head runbook: [`scripts/bench/headhead/README.md`](../scripts/bench/headhead/README.md).
+The P1 cumulative-token curve has its own fixed real-page protocol and Browser Use receipt
+capture runbook in [`scripts/bench/curve/README.md`](../scripts/bench/curve/README.md).
 
 ```bash
 node scripts/bench/headhead/serve-fixtures.mjs 8080          # frozen pages

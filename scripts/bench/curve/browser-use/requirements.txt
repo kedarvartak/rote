@@ -1,0 +1,3 @@
+# Share the competitor pin with the head-to-head runner; the curve must not
+# quietly measure a different Browser Use release.
+-r ../../headhead/browser-use/requirements.txt
