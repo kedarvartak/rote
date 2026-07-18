@@ -10,12 +10,30 @@ describe('G1 curve protocol', () => {
       'utf8',
     )));
 
+    expect(protocol).toEqual(expect.objectContaining({
+      protocol_id: 'p1-g1-wordpress-v2-openai',
+      provider: 'openai',
+      model: 'gpt-4.1-mini',
+    }));
+    expect(protocol.page.verify_command_template).toContain('{{expected_post_titles_json}}');
     expect(protocol.checkpoints.map((checkpoint) => checkpoint.target_steps)).toEqual([7, 10, 15, 20, 25]);
     const records = parseCurveStepJsonl(renderCurveDryRun(protocol));
     expect(records).toHaveLength(77);
     expect(records[0]).toEqual(expect.objectContaining({ task_id: 'WP-N07', step_index: 1, record_kind: 'dry_run' }));
     expect(records.at(-1)).toEqual(expect.objectContaining({ task_id: 'WP-N25', step_index: 25, record_kind: 'dry_run' }));
     expect(records.every((record) => record.record_kind === 'dry_run' && record.provider_usage.dry_run === true)).toBe(true);
+  });
+
+  it('retains the superseded Anthropic protocol as an immutable provenance artifact', async () => {
+    const archived = parseCurveProtocol(JSON.parse(await readFile(
+      resolve('../../scripts/bench/curve/protocol-v1-anthropic.json'),
+      'utf8',
+    )));
+    expect(archived).toEqual(expect.objectContaining({
+      protocol_id: 'p1-g1-wordpress-v1',
+      provider: 'anthropic',
+      model: 'claude-opus-4-8',
+    }));
   });
 
   it('rejects a checkpoint whose named work does not match its step target', () => {

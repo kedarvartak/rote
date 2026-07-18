@@ -11,6 +11,7 @@ import argparse
 import asyncio
 import json
 import os
+import shlex
 import subprocess
 from importlib import metadata
 from pathlib import Path
@@ -144,7 +145,8 @@ async def run_once(
     history = await agent.run(max_steps=checkpoint["target_steps"] + max_extra_steps)
 
     verify_command = protocol["page"]["verify_command_template"].replace(
-        "{{expected_trash_count}}", str(checkpoint["expected_trash_count"])
+        "{{expected_post_titles_json}}",
+        shlex.quote(json.dumps(checkpoint["post_titles"], separators=(",", ":"))),
     )
     verified = run_protocol_command(verify_command).returncode == 0
     concluded = history.is_successful()

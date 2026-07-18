@@ -80,10 +80,11 @@ The candidate task selects *k* named seeded posts on the 100-row page, chooses t
 select, and the apply button through Rote's current perception/action stack. Varying *k*
 produces a controllable 10–25-step family; E1.2 owns the exact cells and wording.
 
-A manual five-post probe completed the browser operation and
-`verify-trash-count.sh 5` read exactly five trashed benchmark posts through WP-CLI.
-Verification therefore comes from WordPress's database, not from either agent's completion
-claim or page prose. `reset-state.sh` restores all 120 posts to the same published state
+A manual five-post probe completed the browser operation. The launch protocol now uses
+`verify-trash-posts.sh` to compare the exact trashed title set through WP-CLI; count-only
+verification was rejected after a live run moved the wrong post with the right cardinality
+(#77). Verification therefore comes from WordPress's database, not from either agent's
+completion claim or page prose. `reset-state.sh` restores all 120 posts to the same published state
 between measured repetitions.
 
 ## What this does not prove

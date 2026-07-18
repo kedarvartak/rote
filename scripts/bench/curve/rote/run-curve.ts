@@ -47,6 +47,10 @@ function readEnv(text: string): Record<string, string> {
   }));
 }
 
+function shellQuote(value: string): string {
+  return `'${value.replaceAll("'", `'"'"'`)}'`;
+}
+
 function bindPrompt(template: string, env: Record<string, string>): string {
   const bindings = {
     wp_admin_user: env['ROTE_CURVE_WP_ADMIN_USER'],
@@ -107,7 +111,7 @@ async function main(): Promise<void> {
           verifier: {
             async verify() {
               const command = protocol.page.verify_command_template.replace(
-                '{{expected_trash_count}}', String(checkpoint.expected_trash_count),
+                '{{expected_post_titles_json}}', shellQuote(JSON.stringify(checkpoint.post_titles)),
               );
               const passed = await runCommand(command);
               return { success: passed, summary: passed ? 'database verification passed' : 'database verification failed' };

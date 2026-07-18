@@ -38,7 +38,7 @@ See `src/index.ts`. Highlights:
   `.rote/runs/<run_id>` artifacts and can export raw JSONL alongside it.
 - **`CurveProtocolSchema` / `CurveStepRecordSchema`** — validate P1 G1's real-page task checkpoints and per-provider-call JSONL, including all normalized cache buckets plus the raw provider receipt.
 - **`rote-bench curve-dry-run <protocol.json> --out <records.jsonl>`** — expands every checkpoint into explicitly non-evidentiary zero-usage rows and parses them back before writing, proving the protocol/JSONL plumbing without fabricating a benchmark result.
-- **`parseBrowserUseCurveRawJsonl` / `browserUseCurveRecordsFromRaw`** — retain and validate every Browser Use Anthropic receipt, then normalize its Anthropic/OpenAI uncached/read/write/output buckets and cumulative totals into shared curve records.
+- **`parseBrowserUseCurveRawJsonl` / `browserUseCurveRecordsFromRaw`** — retain and validate every Browser Use provider receipt, then normalize its Anthropic/OpenAI uncached/read/write/output buckets and cumulative totals into shared curve records.
 - **`rote-bench curve-browser-use-records <raw-calls.jsonl> --out <records.jsonl>`** — converts the external Python runner's raw receipts into validated measurement JSONL, failing on missing calls, impossible cache accounting, or unverifiable final outcomes.
 - **`roteCurveRecordsFromRun` / `renderRoteCurveRun`** — emit Rote's matching per-provider-call rows from an agent run, requiring one raw receipt per normalized usage and preserving observation/action/verification evidence.
 
@@ -218,7 +218,7 @@ wrong competitor.
   un-adjusted counts cannot be compared without it showing in the record.
 
 ```bash
-rote-bench competitor-records raw-runs.json --harness browser-use --model claude-opus-4-8 \
+rote-bench competitor-records raw-runs.json --harness browser-use --model gpt-4.1-mini \
   --cache-adjusted true --config-notes "browser-use 0.13.4, defaults" --out browser-use.json
 ```
 
@@ -228,7 +228,7 @@ which is the full runbook for the W5 number.
 
 ```json
 {
-  "subject": { "spec": "bench-spec.json", "model": "claude-opus-4-8", "cache_adjusted": true },
+  "subject": { "spec": "bench-spec.json", "model": "gpt-4.1-mini", "cache_adjusted": true },
   "competitors": [{ "harness": "browser-use", "records": "browser-use.json" }]
 }
 ```
@@ -239,8 +239,8 @@ repetitions and emit the matching number of competitor runs into the sidecar.
 
 ```json
 [
-  { "harness": "rote", "task": "B1", "phase": "warm", "repetition": 0, "outcome": "success", "input_tokens": 100, "output_tokens": 20, "duration_ms": 900, "model": "claude-opus-4-8", "cache_adjusted": true },
-  { "harness": "browser-use", "task": "B1", "phase": "cold", "repetition": 0, "outcome": "success", "input_tokens": 420, "output_tokens": 60, "duration_ms": 2100, "model": "claude-opus-4-8", "cache_adjusted": true, "config_notes": "default DOM serializer" }
+  { "harness": "rote", "task": "B1", "phase": "warm", "repetition": 0, "outcome": "success", "input_tokens": 100, "output_tokens": 20, "duration_ms": 900, "model": "gpt-4.1-mini", "cache_adjusted": true },
+  { "harness": "browser-use", "task": "B1", "phase": "cold", "repetition": 0, "outcome": "success", "input_tokens": 420, "output_tokens": 60, "duration_ms": 2100, "model": "gpt-4.1-mini", "cache_adjusted": true, "config_notes": "default DOM serializer" }
 ]
 ```
 

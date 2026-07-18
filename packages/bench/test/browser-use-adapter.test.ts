@@ -132,7 +132,7 @@ describe('head-to-head task parity', () => {
       runs: Array<{ args: string[] }>;
     };
 
-    expect(config.model).toBeTruthy();
+    expect(config.model).toBe('gpt-4.1-mini');
     for (const run of plan.runs) {
       expect(run.args[run.args.indexOf('--model') + 1]).toBe(config.model);
     }

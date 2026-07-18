@@ -16,7 +16,7 @@
         "--verify-text",
         "Report download complete: quarterly-report.pdf",
         "--model",
-        "claude-opus-4-8"
+        "gpt-4.1-mini"
       ],
       "repetitions": 18
     },
@@ -36,7 +36,7 @@
         "--verify-text",
         "Vendor registration complete",
         "--model",
-        "claude-opus-4-8"
+        "gpt-4.1-mini"
       ],
       "repetitions": 18
     },
@@ -56,7 +56,7 @@
         "--verify-text",
         "Alpha product opened",
         "--model",
-        "claude-opus-4-8"
+        "gpt-4.1-mini"
       ],
       "repetitions": 18
     }

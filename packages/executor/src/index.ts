@@ -8,4 +8,5 @@ export * from './retry-policy.js';
 export * from './executor.js';
 export * from './mcp-tool-caller.js';
 export * from './anthropic-llm-client.js';
+export * from './tagged-llm-client.js';
 export * from './browser-tool-caller.js';

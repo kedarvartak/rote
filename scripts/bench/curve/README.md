@@ -10,13 +10,13 @@ E1.2 defines the instrument; E1.3/E1.4 collect evidence with it.
 | Input | Value |
 |---|---|
 | Protocol | `p1-g1-wordpress-v1` |
-| Provider/model | Anthropic / `claude-opus-4-8` |
+| Provider/model | OpenAI / `gpt-4.1-mini` |
 | Harnesses | Rote and Browser Use |
 | Repetitions | ≥15 per harness/checkpoint |
 | Page | WordPress 6.8.2 Posts admin, 120 seeded posts, 100 rows/page |
 | Reset | `wordpress/reset-state.sh` before every measured run |
 | Viewport | 1920 × 1080 CSS px for both harnesses |
-| Verification | database-level `wordpress/verify-trash-count.sh` after every run |
+| Verification | exact trashed-title set via `wordpress/verify-trash-posts.sh` after every run |
 | Model seed | unavailable; pin everything else and report variance |
 
 Both harnesses receive the same rendered prompt, initial URL, page state, model, and
@@ -65,8 +65,10 @@ The primary G1 logical-input curve uses:
 logical input = input_tokens + cache_read_tokens + cache_write_tokens
 ```
 
-This avoids Anthropic's cached-input collapse fabricating a token win. A secondary cost
-curve prices the three buckets separately; output tokens and latency are separate panels.
+This prevents either provider's cache semantics from fabricating a token win: OpenAI's
+inclusive input is split by subtraction, while Anthropic's optional path sums sibling
+cache fields. A secondary cost curve prices the buckets separately; output tokens and
+latency are separate panels.
 Raw provider usage is mandatory so normalization can be audited against the provider's
 own receipt.
 
@@ -89,9 +91,9 @@ writing it.
 ## Browser Use capture
 
 The curve runner uses the same pinned Browser Use 0.13.4 dependency as the head-to-head
-runner and audits both its Anthropic and OpenAI receipt shapes. The frozen evidentiary
-protocol remains Anthropic; an OpenAI run with a different protocol id is an instrument
-probe, not curve evidence. Browser Use exposes provider receipts through its `TokenCost.usage_history`; the
+runner and audits both OpenAI and optional Anthropic receipt shapes. The canonical
+`protocol.json` uses OpenAI; the superseded inaccessible pin is retained as
+`protocol-v1-anthropic.json` for provenance. Browser Use exposes provider receipts through its `TokenCost.usage_history`; the
 runner maps every receipt timestamp to an enclosing agent step and fails if any receipt
 is missing or unmapped. The independent database verifier replaces Browser Use's optional
 LLM judge, so both harnesses use the same success rule without charging Browser Use for a
@@ -101,7 +103,7 @@ second, subjective grading call.
 python3 -m venv /tmp/rote-browser-use
 /tmp/rote-browser-use/bin/pip install -r scripts/bench/curve/browser-use/requirements.txt
 scripts/bench/curve/wordpress/start.sh --reset
-set -a; source .env; set +a    # ANTHROPIC_API_KEY must be non-empty
+set -a; source .env; set +a    # OPENAI_API_KEY must be non-empty
 /tmp/rote-browser-use/bin/python scripts/bench/curve/browser-use/run_curve.py \
   --out bench-out/curve/browser-use
 ```
@@ -136,18 +138,10 @@ node --import tsx/esm scripts/bench/curve/rote/run-curve.ts \
   --out bench-out/curve/rote.jsonl
 ```
 
-With no Anthropic key available, the instrument was exercised without creating evidence:
-
-```bash
-node --import tsx/esm scripts/bench/curve/rote/run-curve.ts \
-  --out /tmp/rote-openai-probe.jsonl \
-  --checkpoint WP-N07 --repetitions 1 \
-  --openai-probe-model gpt-4.1-mini
-```
-
-The probe protocol id is suffixed `-openai-instrument-probe`. On 2026-07-18 it emitted
-7/7 provider-call rows, concluded successfully, and passed the independent database
-check. This confirms the instrument and provides no Rote-vs-Browser-Use benchmark claim.
+For a non-publishable one-cell test with a model other than the pinned model, pass one
+`--checkpoint`, `--repetitions 1`, and `--openai-probe-model <model>`. The runner suffixes
+the protocol id with `-openai-instrument-probe`, so those rows cannot be mistaken for
+canonical comparison evidence.
 
 ## Oversized observation bootstrap
 

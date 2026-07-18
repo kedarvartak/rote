@@ -14,12 +14,12 @@ describe('createTaggedLlmClientFromEnv', () => {
     expect(client).toBeInstanceOf(OpenAiTaggedLlmClient);
   });
 
-  it('selects Anthropic explicitly and keeps it as the backward-compatible default', () => {
+  it('uses OpenAI by default while keeping Anthropic explicitly selectable', () => {
+    expect(createTaggedLlmClientFromEnv({
+      env: { OPENAI_API_KEY: 'test-openai-key' },
+    })).toBeInstanceOf(OpenAiTaggedLlmClient);
     expect(createTaggedLlmClientFromEnv({
       env: { ROTE_LLM_PROVIDER: 'anthropic', ANTHROPIC_API_KEY: 'test-anthropic-key' },
-    })).toBeInstanceOf(AnthropicTaggedLlmClient);
-    expect(createTaggedLlmClientFromEnv({
-      env: { ANTHROPIC_API_KEY: 'test-anthropic-key' },
     })).toBeInstanceOf(AnthropicTaggedLlmClient);
   });
 

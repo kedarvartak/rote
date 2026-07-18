@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
-  "protocol_id": "p1-g1-wordpress-v2-openai",
-  "provider": "openai",
-  "model": "gpt-4.1-mini",
+  "protocol_id": "p1-g1-wordpress-v1",
+  "provider": "anthropic",
+  "model": "claude-opus-4-8",
   "repetitions_per_harness": 15,
   "model_seed": null,
-  "seed_policy": "The selected OpenAI endpoint exposes no deterministic sampling seed for this runner; pin provider, model, task order, page state, viewport, and repetitions, then report variance rather than inventing determinism.",
+  "seed_policy": "The selected provider exposes no deterministic sampling seed; pin provider, model, task order, page state, and repetitions, then report variance rather than inventing determinism.",
   "page": {
     "environment": "scripts/bench/curve/wordpress",
     "initial_url": "http://127.0.0.1:18081/wp-login.php?redirect_to=http%3A%2F%2F127.0.0.1%3A18081%2Fwp-admin%2Fedit.php",
     "reset_command": "scripts/bench/curve/wordpress/reset-state.sh",
-    "verify_command_template": "scripts/bench/curve/wordpress/verify-trash-posts.sh {{expected_post_titles_json}}",
+    "verify_command_template": "scripts/bench/curve/wordpress/verify-trash-count.sh {{expected_trash_count}}",
     "viewport": { "width": 1920, "height": 1080 }
   },
   "prompt_bindings": ["wp_admin_user", "wp_admin_password"],

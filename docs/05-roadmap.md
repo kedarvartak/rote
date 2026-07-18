@@ -55,7 +55,7 @@ need calibration time and would delay the number without changing its headline. 
 |---|---|---|
 | **A11 observation eviction** | kills the dominant quadratic term | **built** — and never claimed. Growth is 35 tok/step (one action JSON), not 135+ |
 | **A4 diff observations** | −~90% on the constant, real pages | **built, exercised in CI** — grounded 10K-token bootstrap → diff works; real WordPress ratio unmeasured (#67) |
-| **B3 cache layout** | 10× off the surviving quadratic | **not built** — no `cache_control` sent. Its prerequisite, cache-aware accounting, is done (#57) |
+| **B3 cache layout** | 10× off the surviving quadratic | **not built** — canonical OpenAI caching is automatic, but the real-page probe showed no Rote cache reads. Cache-aware accounting is done (#57) |
 | **B4 compaction** | history → O(1); **curve → linear** | not built |
 
 **Measure before building.** Three of those four have never been exercised, and our
@@ -70,7 +70,7 @@ prefix (4096 tokens on Opus 4.8, 2048 on Sonnet 4.6, 1024 on older Sonnets — o
 | **The curve**: cumulative tokens vs. steps, vs. Browser Use, on a real page — the headline | live-site continuous eval |
 | ~~#57 cache accounting~~ — **done**; it was the prerequisite, so it shipped first | — |
 | A11 eviction (built) + A4 diff proven on a real page | cross-step dedup (A10), task-focused filtering (P2) |
-| B3 cache layout: real `cache_control` + cache-aware accounting | B4 compaction (P2 — fights B3, needs scheduling) |
+| B3 cache layout: qualify OpenAI automatic prefix hits + cache-aware accounting | B4 compaction (P2 — fights B3, needs scheduling) |
 | CDP browser backend | remote backends beyond a connect string (P2) |
 | Distillation, element detection, stable IDs, token budgeter | WebMCP (P3 — no site implements it; see [04](04-competition.md)) |
 | Settledness, self-healing resolution v0 | memory-ranked resolution, batched fill (P2) |
@@ -90,11 +90,11 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 |---|---|
 | W1 browser + perception capture | done |
 | W2 distill, stable IDs, diff, render | **done and deterministically exercised** — #67 adds grounded oversized bootstrap → diff; live WordPress measurement pending |
-| W3 loop + context assembler | **done, except the cache layout does nothing** — no `cache_control` is sent. Accounting is no longer blind (#57 fixed) |
+| W3 loop + context assembler | **done, except the cache layout is unqualified** — the real-page OpenAI probe showed no Rote cache reads. Accounting is no longer blind (#57 fixed) |
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | W5 benchmark + the number | machinery done · **number not yet run** · **the curve not yet drawn** |
 | W6 launch package | not started |
-| **W7 working memory (new)** | #57 accounting **done** → **the curve (next)** → `cache_control` → compaction. The V1 headline |
+| **W7 working memory (new)** | #57 accounting **done** → **the curve (next)** → OpenAI cache-layout qualification → compaction. The V1 headline |
 
 **No longer blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49)
 and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` is now

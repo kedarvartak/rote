@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { buildEnvFingerprint, parsePlaybookYaml, type ParamBindings } from '@rote/core';
-import { AnthropicLlmClient } from './anthropic-llm-client.js';
+import { TaggedExecutorLlmClient } from './tagged-llm-client.js';
 import { runPlaybook } from './executor.js';
 import type { LlmClient } from './llm-client.js';
 import { McpToolCaller } from './mcp-tool-caller.js';
@@ -19,7 +19,7 @@ function parseArgs(argv: string[]): { playbookPath: string; params: ParamBinding
 /** No slot/judgment steps → no LLM client is ever constructed or called. */
 const NO_LLM_CLIENT: LlmClient = {
   complete: () => {
-    throw new Error('This playbook has slot/judgment steps but no LLM client is configured (set ANTHROPIC_API_KEY).');
+    throw new Error('This playbook has slot/judgment steps but no LLM client is configured (set the selected provider API key).');
   },
 };
 
@@ -35,7 +35,7 @@ export async function main(argv: string[]): Promise<string> {
   const toolCaller = new McpToolCaller({ command: downstreamCommand, args: downstreamArgs });
 
   const needsLlm = playbook.steps.some((step) => step.kind === 'slot' || step.kind === 'judgment');
-  const llmClient: LlmClient = needsLlm ? new AnthropicLlmClient() : NO_LLM_CLIENT;
+  const llmClient: LlmClient = needsLlm ? new TaggedExecutorLlmClient() : NO_LLM_CLIENT;
 
   const targetIdentity = process.env['ROTE_TARGET_IDENTITY'] ?? playbook.task_signature.env_fingerprint.domain;
   // A minimal, unmatched-against fingerprint — the executor records what
