@@ -70,6 +70,21 @@ describe('Browser Use G1 provider receipts', () => {
     }));
   });
 
+  it('normalizes Browser Use OpenAI cached prompt tokens without inventing cache writes', () => {
+    const calls = parseBrowserUseCurveRawJsonl(`${JSON.stringify(rawCall(1, {
+      provider: 'openai',
+      model: 'gpt-5.6-luna',
+      provider_usage: { prompt_tokens: 900, completion_tokens: 30, prompt_cached_tokens: 700 },
+      step_outcome: 'success',
+      verification_passed: true,
+      agent_concluded: true,
+    }))}\n`);
+    expect(browserUseCurveRecordsFromRaw(calls)[0]).toEqual(expect.objectContaining({
+      provider: 'openai',
+      usage: { input_tokens: 200, cache_read_tokens: 700, cache_write_tokens: 0, output_tokens: 30 },
+    }));
+  });
+
   it('fails instead of fabricating uncached usage from an impossible provider receipt', () => {
     const calls = parseBrowserUseCurveRawJsonl(`${JSON.stringify(rawCall(1, {
       provider_usage: { prompt_tokens: 10, completion_tokens: 2, prompt_cached_tokens: 11 },

@@ -88,7 +88,9 @@ writing it.
 ## Browser Use capture
 
 The curve runner uses the same pinned Browser Use 0.13.4 dependency as the head-to-head
-runner. Browser Use exposes provider receipts through its `TokenCost.usage_history`; the
+runner and audits both its Anthropic and OpenAI receipt shapes. The frozen evidentiary
+protocol remains Anthropic; an OpenAI run with a different protocol id is an instrument
+probe, not curve evidence. Browser Use exposes provider receipts through its `TokenCost.usage_history`; the
 runner maps every receipt timestamp to an enclosing agent step and fails if any receipt
 is missing or unmapped. The independent database verifier replaces Browser Use's optional
 LLM judge, so both harnesses use the same success rule without charging Browser Use for a

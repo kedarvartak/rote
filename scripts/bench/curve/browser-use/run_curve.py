@@ -86,15 +86,24 @@ def history_step_for_timestamp(history: Any, timestamp: float) -> tuple[int, flo
     raise RuntimeError(f"provider receipt at {timestamp} does not belong to a recorded Browser Use step")
 
 
-def build_llm(model: str) -> Any:
-    """Constructs the protocol-pinned Anthropic client lazily."""
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise RuntimeError("ANTHROPIC_API_KEY is unset; refusing to start an unmeasurable run")
+def build_llm(provider: str, model: str) -> Any:
+    """Constructs the protocol-pinned provider client lazily."""
+    env_key = {"anthropic": "ANTHROPIC_API_KEY", "openai": "OPENAI_API_KEY"}.get(provider)
+    if env_key is None:
+        raise RuntimeError(f"unsupported curve provider: {provider!r}")
+    if not os.environ.get(env_key):
+        raise RuntimeError(f"{env_key} is unset; refusing to start an unmeasurable run")
+    if provider == "anthropic":
+        try:
+            from browser_use import ChatAnthropic
+        except ImportError:  # pragma: no cover - compatibility layout
+            from browser_use.llm import ChatAnthropic
+        return ChatAnthropic(model=model)
     try:
-        from browser_use import ChatAnthropic
+        from browser_use import ChatOpenAI
     except ImportError:  # pragma: no cover - compatibility layout
-        from browser_use.llm import ChatAnthropic
-    return ChatAnthropic(model=model)
+        from browser_use.llm import ChatOpenAI
+    return ChatOpenAI(model=model)
 
 
 async def run_once(
@@ -104,7 +113,7 @@ async def run_once(
     max_extra_steps: int,
 ) -> list[dict[str, Any]]:
     """Runs one reset/agent/verification cell and returns every provider receipt."""
-    from browser_use import Agent
+    from browser_use import Agent, BrowserProfile
 
     reset = run_protocol_command(protocol["page"]["reset_command"])
     if reset.returncode != 0:
@@ -122,8 +131,9 @@ async def run_once(
     # grading call, while all task-planning provider calls remain measured.
     agent = Agent(
         task=task,
-        llm=build_llm(protocol["model"]),
+        llm=build_llm(protocol["provider"], protocol["model"]),
         sensitive_data=bindings,
+        browser_profile=BrowserProfile(allowed_domains=["127.0.0.1"]),
         use_judge=False,
         final_response_after_failure=False,
     )
@@ -184,8 +194,6 @@ async def main() -> None:
     parser.add_argument("--max-extra-steps", type=int, default=5, help="retry allowance above target interaction complexity")
     args = parser.parse_args()
 
-    if protocol["provider"] != "anthropic":
-        raise SystemExit("this adapter is audited for Browser Use 0.13.4 Anthropic receipts only")
     if args.repetitions is not None and args.repetitions < 1:
         raise SystemExit("--repetitions must be positive")
     if args.max_extra_steps < 0:

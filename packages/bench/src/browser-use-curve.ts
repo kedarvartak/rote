@@ -16,7 +16,7 @@ export const BrowserUseCurveRawCallSchema = z.object({
   protocol_id: z.string().min(1),
   task_id: z.string().min(1),
   browser_use_version: z.string().min(1),
-  provider: z.literal('anthropic'),
+  provider: z.enum(['anthropic', 'openai']),
   model: z.string().min(1),
   run_id: z.string().min(1),
   repetition: z.number().int().positive(),
@@ -70,14 +70,15 @@ export function parseBrowserUseCurveRawJsonl(text: string): BrowserUseCurveRawCa
   return calls;
 }
 
-/** Normalizes Browser Use's Anthropic receipts into the provider-neutral G1 buckets. */
+/** Normalizes Browser Use provider receipts into the provider-neutral G1 buckets. */
 export function browserUseCurveRecordsFromRaw(calls: readonly BrowserUseCurveRawCall[]): CurveStepRecord[] {
   const cumulativeByRun = new Map<string, { input_tokens: number; cache_read_tokens: number; cache_write_tokens: number; output_tokens: number }>();
   return calls.map((call) => {
     const read = call.provider_usage.prompt_cached_tokens ?? 0;
     const write = call.provider_usage.prompt_cache_creation_tokens ?? 0;
-    // Browser Use 0.13.4's Anthropic adapter defines prompt_tokens as uncached
-    // input plus cache reads, while exposing cache creation separately.
+    // Browser Use 0.13.4 reports prompt_tokens inclusive of cache reads for
+    // both supported providers; Anthropic cache creation remains separate.
+    // See docs/03-benchmark.md "Fairness rules" — normalize before comparing.
     const uncached = call.provider_usage.prompt_tokens - read;
     if (uncached < 0) {
       throw new Error(`Browser Use curve run ${call.run_id} call ${call.call_index} reports cache reads above prompt tokens`);
