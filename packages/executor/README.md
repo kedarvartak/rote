@@ -21,12 +21,13 @@ See `src/index.ts`. Highlights:
 - **`observationFromResult` / `mergeWorldState`** — pure: the tool-agnostic
   convention this package reads a result through (see "Known v1 limitations").
 - **`ToolCaller` / `LlmClient`** — the two injected boundaries; `McpToolCaller`
-  and `AnthropicLlmClient` back MCP replay, while `BrowserToolCaller` adapts a
-  stateful CDP page for verified browser replay.
+  and `TaggedExecutorLlmClient` back provider-neutral MCP replay; the explicit
+  `AnthropicLlmClient` remains available for opt-in compatibility, while
+  `BrowserToolCaller` adapts a stateful CDP page for verified browser replay.
 - **`rote-replay <playbook.yaml> --params '{...}'`** bin — reads
   `ROTE_DOWNSTREAM_COMMAND`/`ROTE_DOWNSTREAM_ARGS`, `ROTE_TARGET_IDENTITY`,
-  `ROTE_TASK_SPEC`, `ROTE_BASE_DIR` from the environment; requires
-  `ANTHROPIC_API_KEY` only if the playbook has slot/judgment steps.
+  `ROTE_TASK_SPEC`, `ROTE_BASE_DIR` from the environment; slot/judgment steps
+  require only the selected provider's key (OpenAI by default).
 
 ## Known v1 limitations (tracked, not silently missing)
 
@@ -54,10 +55,9 @@ See `src/index.ts`. Highlights:
 - **No live MCP `initialize` handshake.** `McpToolCaller` sends `tools/call`
   directly; it assumes the downstream accepts calls without a prior
   handshake, matching the recorder's same simplification.
-- **`AnthropicLlmClient` has no retry/backoff of its own** for transient API
-  errors — the executor's own `on_fail: retry` policy is the only retry
-  layer in v1. Provider calls now delegate to the shared source-tagged
-  `@rote/llm` boundary.
+- **Provider clients have no retry/backoff of their own** for transient API
+  errors — the executor's `on_fail: retry` policy is the only retry layer in
+  v1. Calls delegate to the shared source-tagged `@rote/llm` boundary.
 
 The stateful fixture browser playbooks live at
 `fixtures/playbooks/browser-b1-stateful.yaml` and `browser-b2-stateful.yaml`; both replay

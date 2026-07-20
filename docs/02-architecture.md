@@ -135,10 +135,11 @@ observation — "compare prices across three products". A real limit
 
 ### Caching: the claim is currently false
 
-The action history is **append-only**, so `[stable][history]` is a growing prefix and the
-observation already sits last. The structure is right; the mechanism is absent. No
-`cache_control` breakpoints are ever sent — Anthropic requires them explicitly, so on
-Anthropic there is **no caching at all**, regardless of how well-ordered the prompt is.
+The canonical P1 provider is OpenAI, whose prompt caching is automatic once an exact
+prefix clears the model threshold; Anthropic remains optional and would require explicit
+`cache_control` breakpoints that are not built. The stable/volatile split exists, but the
+real-page OpenAI probe reported no Rote cache reads, so the layout is **not qualified** and
+no caching benefit is claimed.
 
 The accounting was also blind to it, and that is now fixed
 ([#57](https://github.com/kedarvartak/rote/issues/57)) — **the accounting had to land
@@ -170,11 +171,11 @@ at the provider boundary onto one contract —
 with `input_tokens` always the uncached remainder — and property-tested against both shapes.
 
 **Our fixtures still cannot exercise caching.** The minimum cacheable prefix is
-*model-dependent*, not a flat 1024: **4096 tokens** on Opus 4.8/4.7/4.6/4.5 and Haiku 4.5,
-2048 on Fable 5 and Sonnet 4.6, 1024 on Sonnet 4.5 and older. B2's per-call prompts are
-637–953 — under every one of those. **Caching, if built today, would do nothing on our
-benchmark**: the distiller made the prompts too small to cache. The win only appears on
-real pages with real history, which is why A4 still has no live-provider measurement.
+model-dependent: OpenAI begins automatic caching at 1024 tokens; Anthropic thresholds
+range from 1024 to 4096 tokens by model. B2's per-call prompts are 637–953 — below all of
+them. The real WordPress page clears OpenAI's total-prompt floor, but E3 must prove that
+the *unchanged prefix* does too and that provider-reported `cache_read_tokens` become
+nonzero before B3 can move from unproven to built.
 
 ### Caching and compaction fight
 

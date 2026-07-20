@@ -5,7 +5,7 @@ import type { TaggedLlmClient } from './types.js';
 export type LlmProvider = 'anthropic' | 'openai';
 
 export interface TaggedLlmProviderOptions {
-  /** Defaults to `ROTE_LLM_PROVIDER`, then `anthropic` for backward compatibility. */
+  /** Defaults to `ROTE_LLM_PROVIDER`, then OpenAI for the executable P1 path. */
   provider?: string;
   model?: string;
   /** Injectable environment for deterministic configuration tests. */
@@ -17,7 +17,7 @@ export function createTaggedLlmClientFromEnv(
   options: TaggedLlmProviderOptions = {},
 ): TaggedLlmClient {
   const env = options.env ?? process.env;
-  const provider = options.provider ?? env['ROTE_LLM_PROVIDER'] ?? 'anthropic';
+  const provider = options.provider ?? env['ROTE_LLM_PROVIDER'] ?? 'openai';
   if (provider === 'openai') {
     return new OpenAiTaggedLlmClient({ apiKey: env['OPENAI_API_KEY'], model: options.model });
   }

@@ -61,12 +61,13 @@ The E1.2 protocol will parameterize one operation by task length:
 4. Apply it.
 
 Varying *k* yields a controllable 10–25 action range while every checkbox interaction
-starts from the same ~10K-token real administration page. The independent verification
-probe reads WordPress's database through WP-CLI rather than trusting either agent:
+starts from the same ~12K-token real administration page. The independent verifier reads
+WordPress's database through WP-CLI and requires the exact trashed title set—not merely
+the right count:
 
 ```bash
-scripts/bench/curve/wordpress/verify-trash-count.sh <expected-count>
+scripts/bench/curve/wordpress/verify-trash-posts.sh '["Rote curve post 120"]'
 ```
 
-E1.2 owns the exact step-count cells and task wording; this environment only fixes the
-page, seed, reset contract, and ground-truth boundary.
+The curve protocol owns the exact step-count cells and task wording; this environment
+fixes the page, seed, reset contract, and ground-truth boundary.

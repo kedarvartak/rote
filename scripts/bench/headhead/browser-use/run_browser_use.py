@@ -228,7 +228,7 @@ async def main() -> None:
     parser.add_argument("--model", default=tasks_config["model"], help="model id; must match the Rote runs exactly")
     parser.add_argument(
         "--provider",
-        default=os.environ.get("ROTE_LLM_PROVIDER", "anthropic"),
+        default=os.environ.get("ROTE_LLM_PROVIDER", "openai"),
         choices=["anthropic", "openai"],
         help="which provider serves --model; reads ROTE_LLM_PROVIDER by default",
     )

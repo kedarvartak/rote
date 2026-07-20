@@ -1,5 +1,5 @@
 {
-  "model": "claude-opus-4-8",
+  "model": "gpt-4.1-mini",
   "fixture_port": 8080,
   "repetitions": 18,
   "tasks": [

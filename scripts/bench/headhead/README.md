@@ -90,7 +90,7 @@ showing in the record.
 ```bash
 cat > bench-out/sources.json <<'JSON'
 {
-  "subject": { "spec": "rote/bench-spec.json", "model": "claude-opus-4-8", "cache_adjusted": true },
+  "subject": { "spec": "rote/bench-spec.json", "model": "gpt-4.1-mini", "cache_adjusted": true },
   "competitors": [{ "harness": "browser-use", "records": "browser-use.json" }]
 }
 JSON

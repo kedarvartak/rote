@@ -18,7 +18,7 @@ replay selection, distillation, status, and diff commands.
   is unit-testable without spawning the CLI.
 
 `ROTE_BASE_DIR` (default `.rote`) selects the run store. The cold path selects its
-provider with `ROTE_LLM_PROVIDER=openai|anthropic` (default: `anthropic`) and reads the
+provider with `ROTE_LLM_PROVIDER=openai|anthropic` (default: `openai`) and reads the
 matching `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`. At least one explicit verification
 condition is required; planner-declared success alone is never accepted. A matching
 zero-LLM replay does not construct any provider client. Candidate paths are relative to
