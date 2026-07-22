@@ -20,7 +20,9 @@ E1.2 defines the instrument; E1.3/E1.4 collect evidence with it.
 | Model seed | unavailable; pin everything else and report variance |
 
 Both harnesses receive the same rendered prompt, initial URL, page state, model, and
-named post set from [`protocol.json`](protocol.json). Credentials are bound from the
+named post set from [`protocol.json`](protocol.json). Both pre-navigate to the initial URL
+before the first measured provider call; Browser Use uses `initial_actions` rather than
+being charged to interpret a URL embedded in task prose. Credentials are bound from the
 local ignored WordPress `.env`; they are never written into protocol or result artifacts.
 Run order must alternate harnesses within each checkpoint/repetition to prevent a provider
 or host warm-up trend from belonging mostly to one side. Both harnesses block bulk Apply
