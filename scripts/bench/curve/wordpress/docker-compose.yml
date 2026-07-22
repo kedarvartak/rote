@@ -28,6 +28,7 @@ services:
       - "127.0.0.1:18081:80"
     volumes:
       - wordpress-data:/var/www/html
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins:ro
 
   cli:
     image: wordpress@sha256:f8aeb68164c6a04f5dcc91da30d8ffa096b0f7fafb7a65f144c2dd62587caca0
@@ -44,6 +45,7 @@ services:
     user: "33:33"
     volumes:
       - wordpress-data:/var/www/html
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins:ro
       - ./seed.php:/seed.php:ro
 
 volumes:

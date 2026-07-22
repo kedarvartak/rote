@@ -33,6 +33,13 @@ def row(task: str, repetition: int, call: int, outcome: str) -> dict:
 
 
 class BrowserUseCurveResumeTest(unittest.TestCase):
+    def test_exact_set_guard_checks_titles_at_apply_time(self) -> None:
+        script = RUNNER.exact_set_guard_script(['Rote curve post 120', 'quoted " title'])
+        self.assertIn('document.addEventListener(\'click\'', script)
+        self.assertIn("event.preventDefault()", script)
+        self.assertIn('.row-title', script)
+        self.assertIn('quoted \\" title', script)
+
     def write_rows(self, rows: list[dict]) -> Path:
         directory = Path(tempfile.mkdtemp())
         path = directory / "raw.jsonl"
