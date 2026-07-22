@@ -48,9 +48,11 @@ ordinary budget.
 | Ordinary diff | 24–89 characters; median 88 |
 
 OpenAI reported cache reads on 2 of 86 calls (39,552 tokens total), once in WP-N15 and once
-in WP-N25. That proves the accounting and provider can observe automatic hits, but a 2/86
-call hit rate is not a qualified cache layout. E3 must make the immutable prefix deliberate
-and measure repeatable hits.
+in WP-N25. Of 86 calls, 26 cleared OpenAI's 1,024-token eligibility floor; only 2/26
+eligible calls hit (7.7%, or 2.3% of all calls). The reproducible preflight report is
+[`data/T3-openai-cache-preflight.json`](data/T3-openai-cache-preflight.json). This proves
+the accounting and provider can observe automatic hits, but it is not a qualified cache
+layout. E3 must make the immutable prefix deliberate and measure repeatable hits.
 
 ## Decision
 
