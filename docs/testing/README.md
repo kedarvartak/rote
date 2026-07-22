@@ -36,3 +36,4 @@ enough to be re-run and disagreed with.
 | [T1](T1-openai-dry-run.md) | 2026-07-15 | First live run of the B1–B3 fixtures on a real OpenAI key | B1/B3 pass; **B2 fails 0/7** on a design flaw → #49 #50 #51 #52 |
 | [T2](T2-measurement-page-selection.md) | 2026-07-17 | Select and validate P1's real measurement page | Digest-pinned WordPress selected; 11,818 approximate tokens with zero range across 15 fresh measured sessions after one declared warm-up |
 | [T3](T3-rote-openai-exploratory.md) | 2026-07-22 | One Rote run at each real-page curve checkpoint | 7/10-step cells pass; 15/20/25 fail; A4 diffs are 24–89 characters; explicitly not comparison evidence |
+| [T4](T4-openai-cache-layout.md) | 2026-07-22 | Qualify append-only history ordering against OpenAI automatic caching | WP-N15 passes 2/2; both runs report a 1,024-token incremental cache read; economics remain unmeasured |

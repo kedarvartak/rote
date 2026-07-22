@@ -48,11 +48,13 @@ ${EXPECT_GUIDANCE}`;
   const actionHistory = options.previousActions.length === 0
     ? '(none)'
     : options.previousActions.map((action) => JSON.stringify(action)).join('\n');
-  const volatileSuffix = `Current page:
-${options.page.title} | ${options.page.url}
-
-Previous actions:
+  // see docs/02-architecture.md "Caching" — append-only history must precede
+  // page/observation churn so each longer request reuses the prior exact prefix.
+  const volatileSuffix = `Previous actions:
 ${actionHistory}
+
+Current page:
+${options.page.title} | ${options.page.url}
 
 Current stateful controls:
 ${options.stateSummary ?? '(none)'}

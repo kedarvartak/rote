@@ -24,6 +24,26 @@ describe('assemblePlannerContext', () => {
     expect(second.volatileSuffix).toContain('Compact observation (diff)');
     expect(second.volatileSuffix).toContain('Current stateful controls:');
     expect(second.volatileSuffix).toContain('#row-1');
+    expect(second.volatileSuffix.startsWith('Previous actions:\n')).toBe(true);
+    expect(second.volatileSuffix.indexOf('{"kind":"click"')).toBeLessThan(second.volatileSuffix.indexOf('Current page:'));
+  });
+
+  it('keeps prior append-only actions ahead of changing page state', () => {
+    const action = { kind: 'click', selector: '#row-1' } as const;
+    const make = (run: number, previousActions: readonly typeof action[]) => assemblePlannerContext({
+      task: 'Select rows',
+      page: { url: `https://portal.test?run=${run}`, title: `Run ${run}` },
+      observation: `observation ${run}`,
+      observationMode: 'diff',
+      previousActions,
+    });
+    const first = make(1, [action]);
+    const second = make(2, [action, action]);
+    const reusablePrefix = `Previous actions:\n${JSON.stringify(action)}\n`;
+
+    expect(first.volatileSuffix.startsWith(reusablePrefix)).toBe(true);
+    expect(second.volatileSuffix.startsWith(reusablePrefix)).toBe(true);
+    expect(second.volatileSuffix.indexOf('?run=2')).toBeGreaterThan(second.volatileSuffix.lastIndexOf(JSON.stringify(action)));
   });
 
   it('puts action definitions before volatile observations', () => {
