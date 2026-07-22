@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { captureStaticHtml } from '@rote/browser';
 import { distillPage, type DistilledNode } from '@rote/perception';
-import { ElementResolutionError, resolveElementTarget } from '../src/index.js';
+import { ElementResolutionConflictError, ElementResolutionError, resolveElementTarget } from '../src/index.js';
 
 const nodes: DistilledNode[] = [
   {
@@ -58,6 +58,29 @@ describe('resolveElementTarget', () => {
       selector: '#old-alpha-link',
       text: 'Open Alpha',
     })).toEqual({ selector: '#alpha-link', strategy: 'text-proximity', stableId: 'bbbbbbbbbbbbbbbb' });
+  });
+
+  it('rejects stable-ID and role/name hints spliced from different rows', () => {
+    const rows: DistilledNode[] = Array.from({ length: 19 }, (_, index) => {
+      const post = 102 + index;
+      return {
+        id: { hash: post.toString(16).padStart(16, '0') },
+        role: 'checkbox',
+        name: `Select Rote curve post ${post}`,
+        tag: 'input',
+        selectorHint: `#cb-select-${post + 3}`,
+        depth: 5,
+        interactive: true,
+      };
+    });
+    const post115 = rows.find((node) => node.name.endsWith('115'))!;
+
+    expect(() => resolveElementTarget(rows, {
+      selector: post115.selectorHint!,
+      stableId: post115.id.hash,
+      role: 'checkbox',
+      name: 'Select Rote curve post 112',
+    })).toThrow(ElementResolutionConflictError);
   });
 
   it('uses a uniquely grounded exact selector when optional semantic hints are wrong', () => {

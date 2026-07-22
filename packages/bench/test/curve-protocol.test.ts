@@ -11,7 +11,7 @@ describe('G1 curve protocol', () => {
     )));
 
     expect(protocol).toEqual(expect.objectContaining({
-      protocol_id: 'p1-g1-wordpress-v2-openai',
+      protocol_id: 'p1-g1-wordpress-v3-grounded',
       provider: 'openai',
       model: 'gpt-4.1-mini',
     }));
@@ -24,7 +24,17 @@ describe('G1 curve protocol', () => {
     expect(records.every((record) => record.record_kind === 'dry_run' && record.provider_usage.dry_run === true)).toBe(true);
   });
 
-  it('retains the superseded Anthropic protocol as an immutable provenance artifact', async () => {
+  it('retains superseded protocols as immutable provenance artifacts', async () => {
+    const openAiV2 = parseCurveProtocol(JSON.parse(await readFile(
+      resolve('../../scripts/bench/curve/protocol-v2-openai.json'),
+      'utf8',
+    )));
+    expect(openAiV2).toEqual(expect.objectContaining({
+      protocol_id: 'p1-g1-wordpress-v2-openai',
+      provider: 'openai',
+      model: 'gpt-4.1-mini',
+    }));
+
     const archived = parseCurveProtocol(JSON.parse(await readFile(
       resolve('../../scripts/bench/curve/protocol-v1-anthropic.json'),
       'utf8',

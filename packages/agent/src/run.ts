@@ -1,9 +1,9 @@
-import { assertBrowserExpect, BrowserExpectationError, ElementResolutionError, resolveElementTarget, type ElementResolutionResult } from '@rote/action';
+import { assertBrowserExpect, BrowserExpectationError, ElementResolutionConflictError, ElementResolutionError, resolveElementTarget, type ElementResolutionResult } from '@rote/action';
 import type { BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
-import { normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
+import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
 
 /** Runs the compact-observation browser-agent loop until the planner returns `done`. */
 export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<BrowserAgentResult> {
@@ -41,6 +41,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         observation: observation.text,
         observationMode: observation.mode,
         previousActions,
+        stateSummary: renderStatefulControls(nodes),
         ...(pendingRepair ? { repair: pendingRepair } : {}),
       });
       // INVARIANT: planner calls are always source-tagged for benchmark accounting.
@@ -72,8 +73,10 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         try {
           try {
             resolution = resolveAction(action, nodes);
+            options.beforeAction?.({ action, nodes, resolvedSelector: resolution?.selector });
           } catch (error) {
-            if (!(error instanceof ElementResolutionError) || maxTargetRepairs < 1) throw error;
+            const repairable = error instanceof ElementResolutionError || error instanceof BrowserActionGuardError;
+            if (!repairable || maxTargetRepairs < 1) throw error;
             // The action has not executed, so one bounded repair may copy a grounded
             // target from the same observation. This is distinct from postcondition
             // repair, where repeating an already-performed action would be unsafe.
@@ -85,7 +88,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
               previousActions,
               context: {
                 ...context,
-                volatileSuffix: `${context.volatileSuffix}\n\nYour proposed action was NOT performed because its target could not be resolved: ${error.message}\nGrounded candidates for the requested role:\n${renderGroundedCandidates(nodes, 'role' in action ? action.role : undefined, 'name' in action ? action.name : undefined)}\nChoose one corrected action using an exact selector or stableId from that candidate list.`,
+                volatileSuffix: `${context.volatileSuffix}\n\nYour proposed action was NOT performed because its pre-action checks failed: ${error.message}\nGrounded candidates for the requested role:\n${renderGroundedCandidates(nodes, error instanceof BrowserActionGuardError ? error.candidateRole : ('role' in action ? action.role : undefined), error instanceof BrowserActionGuardError ? error.candidateName : ('name' in action ? action.name : undefined))}\nChoose one corrected action by copying selector, stableId, role, and name from one complete candidate object. Never combine fields from different candidates.${error instanceof BrowserActionGuardError ? '\nYou MUST perform the missing candidate action now; do not repeat the rejected action.' : ''}`,
               },
             });
             assertPlannerUsageSources(planned, 'repair');
@@ -96,10 +99,12 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
             action = normalized.action;
             classifications = uniqueClassifications([
               ...classifications,
+              ...(error instanceof ElementResolutionConflictError ? ['repaired_conflicting_target_identity' as const] : []),
               ...(planned.classifications ?? []),
               ...normalized.classifications,
             ]);
             resolution = resolveAction(action, nodes);
+            options.beforeAction?.({ action, nodes, resolvedSelector: resolution?.selector });
           }
           if (action.kind !== 'done') {
             await applyAction(options.page, action, resolution?.selector);
@@ -225,6 +230,13 @@ function resolvedExpect(expect: BrowserExpect, originalSelector?: string, resolv
 
 function resolveAction(action: BrowserAction, nodes: readonly DistilledNode[]): ElementResolutionResult | undefined {
   if (action.kind === 'navigate' || action.kind === 'done') return undefined;
+  const hasSemanticIdentity = Boolean(action.stableId || action.role || action.name || action.text);
+  if (!hasSemanticIdentity && !nodes.some((node) => node.selectorHint === action.selector)) {
+    // The shared resolver retains selector-only compatibility for stored legacy
+    // actions. A live planner has the current observation and may not dispatch an
+    // invented selector that is absent from it.
+    throw new ElementResolutionError(action);
+  }
   return resolveElementTarget(nodes, action);
 }
 
@@ -249,6 +261,18 @@ async function applyAction(
     case 'done':
       return;
   }
+}
+
+function renderStatefulControls(nodes: readonly DistilledNode[]): string {
+  const selected = nodes.filter((node) => node.state?.checked && node.selectorHint);
+  if (selected.length === 0) return '(none selected)';
+  return selected.map((node) => JSON.stringify({
+    selector: node.selectorHint,
+    stableId: node.id.hash,
+    role: node.role,
+    name: node.name,
+    checked: true,
+  })).join('\n');
 }
 
 function renderGroundedCandidates(nodes: readonly DistilledNode[], role?: string, name?: string): string {

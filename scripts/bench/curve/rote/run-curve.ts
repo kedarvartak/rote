@@ -3,7 +3,7 @@ import { appendFile, mkdir, open, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { promisify } from 'node:util';
 import { SettledBrowserPageSession } from '../../../../packages/action/src/index.ts';
-import { runBrowserAgent, TaggedLlmBrowserPlanner } from '../../../../packages/agent/src/index.ts';
+import { BrowserActionGuardError, runBrowserAgent, TaggedLlmBrowserPlanner } from '../../../../packages/agent/src/index.ts';
 import { LaunchingCdpBrowserBackend } from '../../../../packages/browser/src/index.ts';
 import { parseCurveProtocol, renderRoteCurveRun } from '../../../../packages/bench/src/index.ts';
 import { createTaggedLlmClientFromEnv, type LlmProvider } from '../../../../packages/llm/src/index.ts';
@@ -108,6 +108,20 @@ async function main(): Promise<void> {
           task: bindPrompt(checkpoint.prompt_template, wordpressEnv),
           page,
           planner: new TaggedLlmBrowserPlanner(createTaggedLlmClientFromEnv({ provider, model: protocol.model })),
+          beforeAction({ action, nodes, resolvedSelector }) {
+            if (action.kind !== 'click' || !['#doaction', '#doaction2'].includes(resolvedSelector ?? '')) return;
+            const selected = new Set(nodes.filter((node) => node.state?.checked).map((node) => node.name));
+            const expected = checkpoint.post_titles.map((title) => `Select ${title}`);
+            const missing = expected.filter((name) => !selected.has(name));
+            const extra = [...selected].filter((name) => !expected.includes(name));
+            if (missing.length > 0 || extra.length > 0) {
+              throw new BrowserActionGuardError(
+                `bulk apply requires the exact requested checkbox set; missing=${JSON.stringify(missing)}, extra=${JSON.stringify(extra)}`,
+                'checkbox',
+                missing[0],
+              );
+            }
+          },
           verifier: {
             async verify() {
               const command = protocol.page.verify_command_template.replace(

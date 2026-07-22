@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { CapturedPage } from '@rote/browser';
-import { runBrowserAgent, type BrowserAction, type BrowserAgentVerifier, type BrowserPageSession, type BrowserPlannerClient, type BrowserPlannerRequest } from '../src/index.js';
+import { distillPage } from '@rote/perception';
+import { BrowserActionGuardError, runBrowserAgent, type BrowserAction, type BrowserAgentVerifier, type BrowserPageSession, type BrowserPlannerClient, type BrowserPlannerRequest } from '../src/index.js';
 
 class FakePage implements BrowserPageSession {
   url = 'mem://blank';
@@ -106,6 +107,38 @@ describe('runBrowserAgent', () => {
     expect(planner.requests[1]?.observation.text).toBe('(no observation changes)');
   });
 
+  it('retains selected checkbox identities in subsequent planner context', async () => {
+    let checked = false;
+    const page: BrowserPageSession = {
+      async navigate() {},
+      async capture() {
+        return {
+          url: 'mem://rows', title: 'Rows', html: '',
+          elements: [{
+            tag: 'input',
+            attributes: {
+              id: 'cb-row-1', type: 'checkbox', 'data-rote-name': 'Select row 1',
+              ...(checked ? { checked: 'checked' } : {}),
+            },
+            text: '', depth: 1,
+          }],
+        };
+      },
+      async fill() {},
+      async select() {},
+      async click() { checked = true; },
+    };
+    const planner = new ScriptedPlanner([
+      { kind: 'click', selector: '#cb-row-1' },
+      { kind: 'done', success: true, summary: 'selected' },
+    ]);
+
+    await runBrowserAgent({ task: 'Select row 1', page, planner, verifier: passVerifier });
+
+    expect(planner.requests[1]?.context.volatileSuffix).toContain('Select row 1');
+    expect(planner.requests[1]?.context.volatileSuffix).toContain('"checked":true');
+  });
+
   it('drops a malformed stable ID and resolves through role and name', async () => {
     const page = new FakePage();
     const malformedAction = {
@@ -150,10 +183,60 @@ describe('runBrowserAgent', () => {
     }));
   });
 
+  it('repairs conflicting semantic hints without clicking either mixed target', async () => {
+    const page = new FakePage();
+    const distilled = distillPage(await page.capture());
+    const submit = distilled.find((node) => node.selectorHint === '#registration-submit')!;
+    const planner = new ScriptedPlanner([
+      {
+        kind: 'click',
+        selector: '#registration-submit',
+        stableId: submit.id.hash,
+        role: 'combobox',
+        name: 'country',
+      },
+      { kind: 'click', selector: '#registration-submit', stableId: submit.id.hash, role: 'button', name: 'Submit registration' },
+      { kind: 'done', success: true, summary: 'submitted' },
+    ]);
+
+    const result = await runBrowserAgent({ task: 'Submit', page, planner, verifier: passVerifier });
+
+    expect(page.clicks).toEqual(['#registration-submit']);
+    expect(planner.sources).toEqual(['planner', 'repair', 'planner']);
+    expect(planner.requests[1]?.context.volatileSuffix).toContain('conflicting browser target identity');
+    expect(result.steps[0]?.resolution?.strategy).toBe('stable-id');
+    expect(result.steps[0]?.classifications).toContain('repaired_conflicting_target_identity');
+  });
+
+  it('repairs a deterministic pre-action guard without dispatching the rejected action', async () => {
+    const page = new FakePage();
+    const planner = new ScriptedPlanner([
+      { kind: 'click', selector: '#registration-submit' },
+      { kind: 'click', selector: '#registration-submit' },
+      { kind: 'done', success: true, summary: 'submitted' },
+    ]);
+    let guarded = false;
+
+    const result = await runBrowserAgent({
+      task: 'Submit', page, planner, verifier: passVerifier,
+      beforeAction() {
+        if (!guarded) {
+          guarded = true;
+          throw new BrowserActionGuardError('one required checkbox is missing', 'button', 'Submit registration');
+        }
+      },
+    });
+
+    expect(result.success).toBe(true);
+    expect(page.clicks).toEqual(['#registration-submit']);
+    expect(planner.sources).toEqual(['planner', 'repair', 'planner']);
+    expect(planner.requests[1]?.context.volatileSuffix).toContain('MUST perform the missing candidate action');
+  });
+
   it('repairs one unresolvable target before performing any action', async () => {
     const page = new FakePage();
     const planner = new ScriptedPlanner([
-      { kind: 'click', selector: '#invented', role: 'button', name: 'Invented submit' },
+      { kind: 'click', selector: '#invented' },
       { kind: 'click', selector: '#registration-submit' },
       { kind: 'done', success: true, summary: 'submitted' },
     ]);

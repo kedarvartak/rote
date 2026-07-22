@@ -9,7 +9,7 @@ E1.2 defines the instrument; E1.3/E1.4 collect evidence with it.
 
 | Input | Value |
 |---|---|
-| Protocol | `p1-g1-wordpress-v1` |
+| Protocol | `p1-g1-wordpress-v3-grounded` |
 | Provider/model | OpenAI / `gpt-4.1-mini` |
 | Harnesses | Rote and Browser Use |
 | Repetitions | ≥15 per harness/checkpoint |
@@ -27,8 +27,9 @@ or host warm-up trend from belonging mostly to one side.
 
 ## Task-length checkpoints
 
-The task signs in, checks *k* named posts, chooses `Move to Trash`, applies once, and
-concludes. Rote's closed one-action output therefore has a target of `k + 6` planner
+The task signs in, checks *k* explicitly enumerated posts, confirms the live selected-name
+ledger equals that set, chooses `Move to Trash`, applies once, and concludes. Rote's
+pre-action guard rejects an incomplete or extra selection before the bulk side effect. Rote's closed one-action output therefore has a target of `k + 6` planner
 calls: three login actions, *k* checkbox clicks, bulk select, apply, and done.
 
 | Cell | Named posts (*k*) | Target planner calls | Why |
@@ -92,8 +93,8 @@ writing it.
 
 The curve runner uses the same pinned Browser Use 0.13.4 dependency as the head-to-head
 runner and audits both OpenAI and optional Anthropic receipt shapes. The canonical
-`protocol.json` uses OpenAI; the superseded inaccessible pin is retained as
-`protocol-v1-anthropic.json` for provenance. Browser Use exposes provider receipts through its `TokenCost.usage_history`; the
+`protocol.json` uses OpenAI and enumerates every long-cell target; superseded v2 and the
+inaccessible Anthropic v1 pin are retained as provenance artifacts. Browser Use exposes provider receipts through its `TokenCost.usage_history`; the
 runner maps every receipt timestamp to an enclosing agent step and fails if any receipt
 is missing or unmapped. The independent database verifier replaces Browser Use's optional
 LLM judge, so both harnesses use the same success rule without charging Browser Use for a

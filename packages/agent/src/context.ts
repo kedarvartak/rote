@@ -24,6 +24,8 @@ export interface AssemblePlannerContextOptions {
   observation: string;
   observationMode: AdaptiveObservationMode;
   previousActions: readonly BrowserAction[];
+  /** Compact current control state retained even when unchanged nodes are diff-evicted. */
+  stateSummary?: string;
   /** Set on a scoped repair call; rendered into the volatile suffix only. */
   repair?: BrowserExpectFailure;
 }
@@ -34,6 +36,7 @@ export function assemblePlannerContext(options: AssemblePlannerContextOptions): 
   // stays before per-step state so provider prompt caches survive observation changes.
   const stablePrefix = `You are Rote's browser planner.
 Choose one safe next action that advances the task. Use only selectors present in the observation.
+For multi-select work, compare Current stateful controls against every requested item before applying a bulk action; never infer that an unchecked item was selected.
 Return JSON only; do not wrap it in markdown.
 
 Task:
@@ -50,6 +53,9 @@ ${options.page.title} | ${options.page.url}
 
 Previous actions:
 ${actionHistory}
+
+Current stateful controls:
+${options.stateSummary ?? '(none)'}
 ${renderRepair(options.repair)}
 Compact observation (${options.observationMode}):
 ${options.observation}`;

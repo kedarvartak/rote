@@ -96,8 +96,8 @@ describe('action expects: a wrong postcondition does not fail a correct run (#49
 
   it('still fails when the actions did not complete the task', async () => {
     const page = vendorFormPage();
-    // Clicks the wrong control, so the form is never submitted. The repair budget
-    // buys one correction; a planner that does not correct must still fail.
+    // Proposes an absent control, so no action is dispatched. The target-repair
+    // budget buys one correction; a planner that does not correct still fails.
     const planner = scriptedPlanner([
       { kind: 'click', selector: '#wrong-button', expect: { text_visible: 'Vendor registration complete' } },
     ]);
@@ -108,7 +108,7 @@ describe('action expects: a wrong postcondition does not fail a correct run (#49
       planner,
       verifier: groundTruthVerifier(),
       clock: () => 100,
-    })).rejects.toThrow(/not visible/);
+    })).rejects.toThrow(/could not resolve browser target/);
 
     expect(page.submitted()).toBe(false);
   });
