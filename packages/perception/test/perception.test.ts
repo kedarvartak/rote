@@ -32,6 +32,16 @@ describe('distillPage', () => {
     );
   });
 
+  it('retains a capture-proven unique selector for controls without ids', () => {
+    const nodes = distillPage(captureStaticHtml('mem://selector', `
+      <div id="row-1"><a data-rote-selector="#row-1 &gt; a">Edit record</a></div>
+    `));
+
+    expect(nodes).toEqual(expect.arrayContaining([
+      expect.objectContaining({ role: 'link', name: 'Edit record', selectorHint: '#row-1 > a' }),
+    ]));
+  });
+
   it('uses associated labels and aria-labelledby before machine-oriented names', () => {
     const page = captureStaticHtml('mem://labels', `
       <label for="email">Contact email</label><input id="email" name="contact_email" />

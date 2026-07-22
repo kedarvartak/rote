@@ -311,7 +311,7 @@ async def main() -> None:
     parser.add_argument("--repetition", type=int, help="run only this repetition (permits paired one-run collection)")
     parser.add_argument("--resume", action="store_true", help="validate and append to an existing raw artifact")
     parser.add_argument("--max-new-runs", type=int, help="stop after this many new atomic browser sessions")
-    parser.add_argument("--max-extra-steps", type=int, default=5, help="retry allowance above target interaction complexity")
+    parser.add_argument("--max-extra-steps", type=int, default=10, help="retry allowance above target interaction complexity")
     args = parser.parse_args()
 
     if args.repetitions is not None and args.repetitions < 1:

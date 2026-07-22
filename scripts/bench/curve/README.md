@@ -9,14 +9,14 @@ E1.2 defines the instrument; E1.3/E1.4 collect evidence with it.
 
 | Input | Value |
 |---|---|
-| Protocol | `p1-g1-wordpress-v6-accessible` (qualification only; long-cell redesign #92 pending) |
+| Protocol | `p1-g1-wordpress-v7-title-reviews` |
 | Provider/model | OpenAI / `gpt-4.1-mini` |
 | Harnesses | Rote and Browser Use |
 | Repetitions | ≥15 per harness/checkpoint |
 | Page | WordPress 6.8.2 Posts admin, 120 seeded posts, 100 rows/page |
 | Reset | `wordpress/reset-state.sh` before every measured run |
 | Viewport | 1920 × 1080 CSS px for both harnesses |
-| Verification | exact trashed-title set via `wordpress/verify-trash-posts.sh` after every run |
+| Verification | all 120 titles, contents, and statuses via `wordpress/verify-reviewed-posts.sh` after every run |
 | Model seed | unavailable; pin everything else and report variance |
 
 Both harnesses receive the same rendered prompt, initial URL, page state, model, and
@@ -25,27 +25,25 @@ before the first measured provider call; Browser Use uses `initial_actions` rath
 being charged to interpret a URL embedded in task prose. Credentials are bound from the
 local ignored WordPress `.env`; they are never written into protocol or result artifacts.
 Run order must alternate harnesses within each checkpoint/repetition to prevent a provider
-or host warm-up trend from belonging mostly to one side. Both harnesses block bulk Apply
-unless the live selected-title set satisfies the protocol; WordPress's existing
-screen-reader checkbox labels are mirrored onto `aria-label` so neither must infer row
-identity from numeric DOM ids. T7 found that this makes N15 reachable but does not make the
-current N20 bulk-checkbox task certifiable, so #92 must replace the long cells before
-collection.
+or host warm-up trend from belonging mostly to one side. T7 retains the rejected
+bulk-checkbox workload as provenance. Canonical v7 uses ordinary title-edit controls and
+no custom Browser Use action repair or guard.
 
 ## Task-length checkpoints
 
-The task signs in, checks *k* explicitly enumerated posts, confirms the live selected-name
-ledger equals that set, chooses `Move to Trash`, applies once, and concludes. Rote's
-pre-action guard rejects an incomplete or extra selection before the bulk side effect. Rote's closed one-action output therefore has a target of `k + 6` planner
-calls: three login actions, *k* checkbox clicks, bulk select, apply, and done.
+The task signs in and reviews *k* explicitly enumerated posts in order. For each post it
+opens the edit page, appends `— reviewed` to the title, updates, and returns to All Posts.
+Three login actions, four actions per post, and done produce `4k + 4` target interactions.
+The exact database verifier checks target titles and confirms every post's content/status
+and every non-target title remain unchanged.
 
-| Cell | Named posts (*k*) | Target planner calls | Why |
+| Cell | Reviewed posts (*k*) | Target interactions | Why |
 |---|---:|---:|---|
-| WP-N07 | 1 | 7 | shortest honest authenticated flow; replaces the aspirational n≈5 |
-| WP-N10 | 4 | 10 | short |
-| WP-N15 | 9 | 15 | medium |
-| WP-N20 | 14 | 20 | long |
-| WP-N25 | 19 | 25 | longest |
+| WP-N08 | 1 | 8 | shortest authenticated edit flow |
+| WP-N12 | 2 | 12 | short |
+| WP-N16 | 3 | 16 | medium |
+| WP-N20 | 4 | 20 | long |
+| WP-N24 | 5 | 24 | longest |
 
 The x-axis is **required interaction complexity**, fixed by *k*, not whichever harness
 happens to use more internal calls. Every provider call is still recorded with its actual
@@ -118,7 +116,7 @@ set -a; source .env; set +a    # OPENAI_API_KEY must be non-empty
   --out bench-out/curve/browser-use
 ```
 
-For a non-publishable one-cell instrument probe, add `--checkpoint WP-N07
+For a non-publishable one-cell instrument probe, add `--checkpoint WP-N08
 --repetitions 1`. The command writes both `browser-use-raw-calls.jsonl` (unaltered
 Browser Use provider receipts) and `browser-use-curve.jsonl` (shared normalized rows).
 Like the Rote runner, Browser Use refuses to overwrite non-empty evidence and supports
@@ -163,7 +161,7 @@ same repetition rather than advancing it:
 
 ```bash
 BROWSER_USE_PYTHON=/tmp/rote-browser-use/bin/python \
-  scripts/bench/curve/run-next-pair.sh WP-N07 1
+  scripts/bench/curve/run-next-pair.sh WP-N08 1
 ```
 
 Repeat by checkpoint/repetition, preserving Rote → Browser Use alternation. Override

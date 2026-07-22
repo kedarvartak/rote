@@ -62,15 +62,18 @@ after distillation:
 
 | Metric | Result | Unit |
 |---|---:|---|
-| Captured elements | 6,785 | elements/run |
-| Distilled nodes | 792 | nodes/run |
-| Actionable nodes with selector hints | 115 | nodes/run |
-| Full compact observation | 47,214 | characters/run |
-| Approximate observation size | 11,804 | tokens/run |
+| Captured elements | 6,784 | elements/run |
+| Distilled nodes | 797 | nodes/run |
+| Actionable nodes with selector hints | 787 | nodes/run |
+| Full compact observation | 89,114 | characters/run |
+| Approximate observation size | 22,279 | tokens/run |
 | Range across 15 runs | **0** | approximate tokens |
 
-These values were requalified across 15 fresh sessions on 2026-07-22 after the seed reset
-began deleting WordPress's stock “Hello world!” post. The corpus is now exactly the 120
+These values were requalified across 15 fresh sessions on 2026-07-22 after CDP capture
+began retaining dispatchable selectors for links without HTML ids. This makes the complete
+page actionable rather than presenting selector-free links; the full observation remains
+below the separate 100,000-character bootstrap ceiling. The seed reset also deletes
+WordPress's stock “Hello world!” post. The corpus is now exactly the 120
 named benchmark posts rather than 120 named posts plus an unrelated first row. The zero
 range and size gate remain unchanged.
 

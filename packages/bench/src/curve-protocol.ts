@@ -6,19 +6,26 @@ const CurveCheckpointSchema = z.object({
   selected_post_count: z.number().int().positive(),
   post_titles: z.array(z.string().min(1)).min(1),
   prompt_template: z.string().min(1),
-  expected_trash_count: z.number().int().nonnegative(),
+  expected_trash_count: z.number().int().nonnegative().optional(),
+  expected_result_count: z.number().int().nonnegative().optional(),
+  operation_mode: z.enum(['single_bulk', 'review_title_each']).default('single_bulk'),
 }).superRefine((checkpoint, context) => {
   if (checkpoint.post_titles.length !== checkpoint.selected_post_count) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: 'post_titles length must equal selected_post_count' });
   }
-  // Login (3), checkbox clicks (k), bulk select, apply, and done make k+6
-  // one-action planner calls. The protocol measures actual calls as well; this
-  // target only fixes task complexity symmetrically across harnesses.
-  if (checkpoint.target_steps !== checkpoint.selected_post_count + 6) {
-    context.addIssue({ code: z.ZodIssueCode.custom, message: 'target_steps must equal selected_post_count + 6' });
+  // Login (3) and done (1), plus either k checkbox clicks with shared bulk
+  // controls or an open/fill/update/return quartet per edited post.
+  const expectedSteps = checkpoint.operation_mode === 'review_title_each'
+    ? (4 * checkpoint.selected_post_count) + 4
+    : checkpoint.selected_post_count + 6;
+  if (checkpoint.target_steps !== expectedSteps) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: `target_steps must equal ${expectedSteps} for ${checkpoint.operation_mode}` });
   }
-  if (checkpoint.expected_trash_count !== checkpoint.selected_post_count) {
-    context.addIssue({ code: z.ZodIssueCode.custom, message: 'expected_trash_count must equal selected_post_count' });
+  const expectedCount = checkpoint.operation_mode === 'review_title_each'
+    ? checkpoint.expected_result_count
+    : checkpoint.expected_trash_count;
+  if (expectedCount !== checkpoint.selected_post_count) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: 'operation result count must equal selected_post_count' });
   }
 });
 

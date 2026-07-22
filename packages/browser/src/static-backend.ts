@@ -83,9 +83,18 @@ function parseAttributes(raw: string): Record<string, string> {
   while ((match = ATTR_RE.exec(raw)) !== null) {
     const key = match[1];
     if (!key) continue;
-    attrs[key] = match[3] ?? match[4] ?? match[5] ?? 'true';
+    attrs[key] = decodeHtmlEntities(match[3] ?? match[4] ?? match[5] ?? 'true');
   }
   return attrs;
+}
+
+function decodeHtmlEntities(value: string): string {
+  return value
+    .replaceAll('&gt;', '>')
+    .replaceAll('&lt;', '<')
+    .replaceAll('&quot;', '"')
+    .replaceAll('&#39;', "'")
+    .replaceAll('&amp;', '&');
 }
 
 function textOfFirst(html: string, tag: string): string {
