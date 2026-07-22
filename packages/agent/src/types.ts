@@ -3,7 +3,7 @@ import type { ElementResolutionResult } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
 import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
 import type { ProviderUsageReceipt } from '@rote/llm';
-import type { AdaptiveRenderedObservation } from '@rote/perception';
+import type { AdaptiveRenderedObservation, DistilledNode } from '@rote/perception';
 
 /**
  * `expect` is **optional** by deliberate design (#49).
@@ -36,7 +36,10 @@ export const BrowserActionSchema = z.discriminatedUnion('kind', [
 ]);
 export type BrowserAction = z.infer<typeof BrowserActionSchema>;
 
-export const BrowserActionClassificationSchema = z.enum(['dropped_malformed_stable_id']);
+export const BrowserActionClassificationSchema = z.enum([
+  'dropped_malformed_stable_id',
+  'repaired_conflicting_target_identity',
+]);
 export type BrowserActionClassification = z.infer<typeof BrowserActionClassificationSchema>;
 
 /** Normalizes optional planner hints while preserving auditable degradation classifications. */
@@ -125,6 +128,25 @@ export interface BrowserAgentVerifier {
   verify(page: CapturedPage, task: string, plannerSummary: string): Promise<BrowserAgentVerification>;
 }
 
+/** Pre-dispatch policy failure that may be repaired without side effects. */
+export class BrowserActionGuardError extends Error {
+  constructor(
+    message: string,
+    readonly candidateRole?: string,
+    readonly candidateName?: string,
+  ) {
+    super(message);
+    this.name = 'BrowserActionGuardError';
+  }
+}
+
+/** Current grounded action identity supplied to an injected pre-dispatch policy. */
+export interface BrowserActionGuardInput {
+  action: BrowserAction;
+  nodes: readonly DistilledNode[];
+  resolvedSelector?: string;
+}
+
 export interface BrowserAgentRunRecorder {
   recordStep(step: BrowserAgentStep): Promise<void>;
   finish(outcome: 'success' | 'failure', summary: string, tokenUsage: readonly TokenUsage[]): Promise<void>;
@@ -135,6 +157,8 @@ export interface RunBrowserAgentOptions {
   page: BrowserPageSession;
   planner: BrowserPlannerClient;
   verifier: BrowserAgentVerifier;
+  /** Optional deterministic pre-dispatch policy; thrown guard errors get one repair. */
+  beforeAction?: (input: BrowserActionGuardInput) => void;
   recorder?: BrowserAgentRunRecorder;
   maxSteps?: number;
   observationMaxChars?: number;

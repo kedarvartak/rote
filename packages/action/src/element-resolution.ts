@@ -24,24 +24,47 @@ export class ElementResolutionError extends Error {
   }
 }
 
+/** Raised when independently grounded semantic hints identify different elements. */
+export class ElementResolutionConflictError extends ElementResolutionError {
+  constructor(
+    target: ElementResolutionTarget,
+    readonly stableSelector: string,
+    readonly semanticSelector: string,
+  ) {
+    super(target);
+    this.name = 'ElementResolutionConflictError';
+    this.message = `conflicting browser target identity: stableId resolves ${stableSelector}, role+name resolves ${semanticSelector}`;
+  }
+}
+
 /** Resolves stable ID → role+name → text proximity → supplied selector. */
 export function resolveElementTarget(
   nodes: readonly DistilledNode[],
   target: ElementResolutionTarget,
 ): ElementResolutionResult {
-  if (target.stableId) {
-    const matches = nodes.filter((candidate) => candidate.id.hash === target.stableId && candidate.selectorHint);
-    if (matches.length === 1) return result(matches[0]!, 'stable-id');
-  }
-
-  if (target.role && target.name) {
-    const role = normalize(target.role);
-    const name = normalize(target.name);
-    const matches = nodes.filter((candidate) => (
+  const stableMatches = target.stableId
+    ? nodes.filter((candidate) => candidate.id.hash === target.stableId && candidate.selectorHint)
+    : [];
+  const role = target.role ? normalize(target.role) : undefined;
+  const name = target.name ? normalize(target.name) : undefined;
+  const semanticMatches = role && name
+    ? nodes.filter((candidate) => (
       normalize(candidate.role) === role && normalize(candidate.name) === name && candidate.selectorHint
-    ));
-    if (matches.length === 1) return result(matches[0]!, 'role-name');
+    ))
+    : [];
+
+  // INVARIANT: two independently grounded semantic identities may not be mixed.
+  // A selector can legitimately drift, but a stable ID for one element plus the
+  // exact role/name of another is evidence of planner field splicing, not healing.
+  if (stableMatches.length === 1 && semanticMatches.length === 1 && stableMatches[0] !== semanticMatches[0]) {
+    throw new ElementResolutionConflictError(
+      target,
+      stableMatches[0]!.selectorHint!,
+      semanticMatches[0]!.selectorHint!,
+    );
   }
+  if (stableMatches.length === 1) return result(stableMatches[0]!, 'stable-id');
+  if (semanticMatches.length === 1) return result(semanticMatches[0]!, 'role-name');
 
   const wantedText = target.text ?? target.name;
   if (wantedText) {

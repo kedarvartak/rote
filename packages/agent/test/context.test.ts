@@ -16,11 +16,14 @@ describe('assemblePlannerContext', () => {
       observation: 'textbox "Company" selector=#company',
       observationMode: 'diff',
       previousActions: [{ kind: 'click', selector: '#continue', expect: { selector_visible: '#continue' } }],
+      stateSummary: '{"selector":"#row-1","checked":true}',
     });
 
     expect(second.stablePrefix).toBe(first.stablePrefix);
     expect(second.volatileSuffix).not.toBe(first.volatileSuffix);
     expect(second.volatileSuffix).toContain('Compact observation (diff)');
+    expect(second.volatileSuffix).toContain('Current stateful controls:');
+    expect(second.volatileSuffix).toContain('#row-1');
   });
 
   it('puts action definitions before volatile observations', () => {
