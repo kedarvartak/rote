@@ -33,6 +33,12 @@ def row(task: str, repetition: int, call: int, outcome: str) -> dict:
 
 
 class BrowserUseCurveResumeTest(unittest.TestCase):
+    def test_initial_navigation_matches_the_protocol_without_an_llm_call(self) -> None:
+        protocol = {"page": {"initial_url": "http://127.0.0.1/start"}}
+        self.assertEqual(RUNNER.initial_navigation(protocol), [
+            {"navigate": {"url": "http://127.0.0.1/start", "new_tab": False}},
+        ])
+
     def test_exact_set_guard_checks_titles_at_apply_time(self) -> None:
         script = RUNNER.exact_set_guard_script(['Rote curve post 120', 'quoted " title'])
         self.assertIn('document.addEventListener(\'click\'', script)

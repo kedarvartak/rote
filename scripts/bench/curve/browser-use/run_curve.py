@@ -60,6 +60,11 @@ def run_protocol_command(command: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, cwd=ROOT, shell=True, check=False, text=True, capture_output=True)
 
 
+def initial_navigation(protocol: dict[str, Any]) -> list[dict[str, dict[str, Any]]]:
+    """Returns the unmeasured initial action matching Rote's pre-planning navigation."""
+    return [{"navigate": {"url": protocol["page"]["initial_url"], "new_tab": False}}]
+
+
 def action_kind(history_item: Any) -> str | None:
     """Returns the ordered Browser Use action names for one agent step."""
     output = getattr(history_item, "model_output", None)
@@ -166,7 +171,7 @@ async def run_once(
         "wp_admin_password": env["ROTE_CURVE_WP_ADMIN_PASSWORD"],
     }
     prompt = render_prompt(checkpoint["prompt_template"], bindings)
-    task = f"{prompt}\nStart at {protocol['page']['initial_url']}"
+    task = prompt
     # The independent database command is the symmetric verifier. Browser Use's
     # optional LLM judge is disabled so neither harness pays an extra subjective
     # grading call, while all task-planning provider calls remain measured.
@@ -174,6 +179,7 @@ async def run_once(
         task=task,
         llm=build_llm(protocol["provider"], protocol["model"]),
         sensitive_data=bindings,
+        initial_actions=initial_navigation(protocol),
         browser_profile=BrowserProfile(
             allowed_domains=["127.0.0.1"],
             window_size=protocol["page"]["viewport"],
