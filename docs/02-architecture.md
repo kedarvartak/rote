@@ -129,17 +129,19 @@ observation — "compare prices across three products". A real limit
 |---|---|---|
 | **Evict observations** | kills the dominant quadratic term | **built** (A4-adjacent; never claimed) |
 | **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built, exercised in CI** — an oversized grounded snapshot explicitly establishes the base, then ordinary-budget diffs resume (#67); WordPress ratio unmeasured |
-| **Prefix-cache `[stable][history]`** (B3) | 10× off the surviving quadratic term | **not built** — accounting prerequisite done (#57); see below |
+| **Prefix-cache `[stable][history]`** (B3) | 10× off the surviving quadratic term | **built, minimally qualified** — 1,024-token incremental hits repeat 2/2; hit-rate economics unmeasured ([T4](testing/T4-openai-cache-layout.md)) |
 | **Scheduled compaction** (B4) | history → O(1); curve → **linear** | not built (P2) |
 | **Replay** (B2) | 0 steps, 0 tokens | needs the distiller (P2) |
 
-### Caching: the claim is currently false
+### Caching: mechanism qualified, economic claim unproven
 
 The canonical P1 provider is OpenAI, whose prompt caching is automatic once an exact
 prefix clears the model threshold; Anthropic remains optional and would require explicit
-`cache_control` breakpoints that are not built. The stable/volatile split exists, but the
-real-page OpenAI probe reported no Rote cache reads, so the layout is **not qualified** and
-no caching benefit is claimed.
+`cache_control` breakpoints that are not built. T4 moved append-only action history ahead
+of current-page and observation churn. Two independent WP-N15 runs then reported a
+1,024-token incremental cache read and passed exact-title verification. That qualifies the
+mechanism, not the economics: only one incremental call per run hit, so no 10× task-level
+benefit is claimed.
 
 The accounting was also blind to it, and that is now fixed
 ([#57](https://github.com/kedarvartak/rote/issues/57)) — **the accounting had to land
