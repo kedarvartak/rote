@@ -62,12 +62,17 @@ after distillation:
 
 | Metric | Result | Unit |
 |---|---:|---|
-| Captured elements | 6,789 | elements/run |
-| Distilled nodes | 795 | nodes/run |
+| Captured elements | 6,785 | elements/run |
+| Distilled nodes | 792 | nodes/run |
 | Actionable nodes with selector hints | 115 | nodes/run |
-| Full compact observation | 47,269 | characters/run |
-| Approximate observation size | 11,818 | tokens/run |
+| Full compact observation | 47,214 | characters/run |
+| Approximate observation size | 11,804 | tokens/run |
 | Range across 15 runs | **0** | approximate tokens |
+
+These values were requalified across 15 fresh sessions on 2026-07-22 after the seed reset
+began deleting WordPress's stock “Hello world!” post. The corpus is now exactly the 120
+named benchmark posts rather than 120 named posts plus an unrelated first row. The zero
+range and size gate remain unchanged.
 
 This clears E1.1's ≥5K-token and ≥15-run stability criteria. It also clears every cache
 minimum currently documented in [02](../02-architecture.md#caching-the-claim-is-currently-false),

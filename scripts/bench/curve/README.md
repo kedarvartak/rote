@@ -9,7 +9,7 @@ E1.2 defines the instrument; E1.3/E1.4 collect evidence with it.
 
 | Input | Value |
 |---|---|
-| Protocol | `p1-g1-wordpress-v4-completion` |
+| Protocol | `p1-g1-wordpress-v5-corpus` |
 | Provider/model | OpenAI / `gpt-4.1-mini` |
 | Harnesses | Rote and Browser Use |
 | Repetitions | ≥15 per harness/checkpoint |
@@ -95,7 +95,7 @@ The curve runner uses the same pinned Browser Use 0.13.4 dependency as the head-
 runner and audits both OpenAI and optional Anthropic receipt shapes. The canonical
 `protocol.json` uses OpenAI and enumerates every long-cell target. V4 also states that
 selected posts disappearing after Apply is expected completion evidence; the independent
-verifier still decides final success. Superseded v3/v2 and the inaccessible Anthropic v1
+verifier still decides final success. Superseded v4/v3/v2 and the inaccessible Anthropic v1
 pin are retained as provenance artifacts. Browser Use exposes provider receipts through its `TokenCost.usage_history`; the
 runner maps every receipt timestamp to an enclosing agent step and fails if any receipt
 is missing or unmapped. The independent database verifier replaces Browser Use's optional

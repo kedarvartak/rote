@@ -1,4 +1,18 @@
 <?php
+// The stock image creates "Hello world!". Leaving it above the named corpus makes
+// checkbox/title association depend on unrelated fixture state rather than either harness.
+$all_statuses = ['publish', 'draft', 'pending', 'private', 'future', 'trash'];
+$existing_posts = get_posts([
+    'post_type' => 'post',
+    'post_status' => $all_statuses,
+    'posts_per_page' => -1,
+]);
+foreach ($existing_posts as $existing_post) {
+    if (!preg_match('/^Rote curve post \d{3}$/', $existing_post->post_title)) {
+        wp_delete_post($existing_post->ID, true);
+    }
+}
+
 // Deterministic benchmark corpus: enough rows to produce a real 10K+ token admin page.
 for ($index = 1; $index <= 120; $index++) {
     $title = sprintf('Rote curve post %03d', $index);
@@ -38,22 +52,22 @@ $admin = get_user_by('login', 'rote-admin');
 update_user_meta($admin->ID, 'edit_post_per_page', 100);
 update_user_meta($admin->ID, 'show_welcome_panel', 0);
 
-$published = new WP_Query([
+$published = get_posts([
     'post_type' => 'post',
     'post_status' => 'publish',
-    's' => 'Rote curve post',
     'posts_per_page' => -1,
 ]);
-$trashed = new WP_Query([
+$all_posts = get_posts([
     'post_type' => 'post',
-    'post_status' => 'trash',
-    's' => 'Rote curve post',
+    'post_status' => $all_statuses,
     'posts_per_page' => -1,
 ]);
-if ($published->found_posts !== 120 || $trashed->found_posts !== 0) {
+$invalid_titles = array_filter($all_posts, fn($post) => !preg_match('/^Rote curve post \d{3}$/', $post->post_title));
+if (count($published) !== 120 || count($all_posts) !== 120 || count($invalid_titles) !== 0) {
     throw new RuntimeException(sprintf(
-        'Seed invariant failed: expected 120 published and 0 trashed posts, got %d and %d',
-        $published->found_posts,
-        $trashed->found_posts
+        'Seed invariant failed: expected exactly 120 published benchmark posts and no other posts; got %d published, %d total, %d invalid',
+        count($published),
+        count($all_posts),
+        count($invalid_titles)
     ));
 }

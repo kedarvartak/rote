@@ -11,7 +11,7 @@ describe('G1 curve protocol', () => {
     )));
 
     expect(protocol).toEqual(expect.objectContaining({
-      protocol_id: 'p1-g1-wordpress-v4-completion',
+      protocol_id: 'p1-g1-wordpress-v5-corpus',
       provider: 'openai',
       model: 'gpt-4.1-mini',
     }));
@@ -28,6 +28,12 @@ describe('G1 curve protocol', () => {
   });
 
   it('retains superseded protocols as immutable provenance artifacts', async () => {
+    const completionV4 = parseCurveProtocol(JSON.parse(await readFile(
+      resolve('../../scripts/bench/curve/protocol-v4-completion.json'),
+      'utf8',
+    )));
+    expect(completionV4.protocol_id).toBe('p1-g1-wordpress-v4-completion');
+
     const groundedV3 = parseCurveProtocol(JSON.parse(await readFile(
       resolve('../../scripts/bench/curve/protocol-v3-grounded.json'),
       'utf8',
