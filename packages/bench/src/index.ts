@@ -21,3 +21,4 @@ export * from './curve-dry-run.js';
 export * from './browser-use-curve.js';
 export * from './rote-curve.js';
 export * from './curve-resume.js';
+export * from './curve-cache-preflight.js';

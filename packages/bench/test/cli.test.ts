@@ -34,6 +34,17 @@ describe('rote-bench CLI', () => {
     expect(JSON.parse(lines[0]!)).toEqual(expect.objectContaining({ record_kind: 'dry_run', task_id: 'WP-N07' }));
   });
 
+  it('writes a reproducible cache preflight from curve measurement rows', async () => {
+    const root = await tempDir();
+    const outPath = join(root, 'cache-preflight.json');
+    const recordsPath = resolve('../../docs/testing/data/T3-rote-openai-exploratory.jsonl');
+
+    await expect(main(['curve-cache-preflight', recordsPath, '--out', outPath, '--threshold', '1024'])).resolves.toBe(
+      `wrote ${outPath} (2/86 calls hit cache; go-layout-work)`,
+    );
+    await expect(readFile(outPath, 'utf8')).resolves.toContain('"layout_qualified": false');
+  });
+
   it('converts raw Browser Use receipts into validated curve measurement JSONL', async () => {
     const root = await tempDir();
     const rawPath = join(root, 'raw-calls.jsonl');

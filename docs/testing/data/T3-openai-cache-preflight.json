@@ -1,0 +1,16 @@
+{
+  "threshold_tokens": 1024,
+  "measurement_calls": 86,
+  "prompt_tokens": {
+    "min": 539,
+    "median": 806,
+    "max": 21433
+  },
+  "eligible_calls": 26,
+  "cache_hit_calls": 2,
+  "cache_hit_rate_all_calls": 0.023255813953488372,
+  "cache_hit_rate_eligible_calls": 0.07692307692307693,
+  "cache_read_tokens": 39552,
+  "decision": "go-layout-work",
+  "layout_qualified": false
+}
