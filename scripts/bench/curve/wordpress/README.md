@@ -2,7 +2,7 @@
 
 Deterministic local target selected by `docs/testing/T2-measurement-page-selection.md`
 for P1's cumulative-token curve. It runs the real WordPress 6.8.2 administration UI,
-seeds 120 published procurement-style posts, and configures the post table to show 100
+deletes stock/non-benchmark posts, seeds exactly 120 published procurement-style posts, and configures the post table to show 100
 rows. Images are pinned by immutable digest; no WordPress source is copied into Rote.
 
 ## Requirements
@@ -23,7 +23,8 @@ generates local database and administrator credentials in this directory's ignor
 checked into the repository.
 
 `--reset` deletes this benchmark stack's named volumes. Without it, `start.sh` is
-idempotent and restores all benchmark posts to their published state.
+idempotent, removes every non-benchmark post, restores all benchmark posts to their
+published state, and fails the exact corpus gate on any extra/missing/title/status drift.
 
 Reset task state between measured repetitions without restarting the stack:
 
@@ -61,8 +62,8 @@ The E1.2 protocol will parameterize one operation by task length:
 4. Apply it.
 
 Varying *k* yields a controllable 10–25 action range while every checkbox interaction
-starts from the same ~12K-token real administration page. The independent verifier reads
-WordPress's database through WP-CLI and requires the exact trashed title set—not merely
+starts from the same ~12K-token real administration page. `verify-corpus.sh` first requires exactly titles 001–120 with published status. The
+independent result verifier reads WordPress's database through WP-CLI and requires the exact trashed title set—not merely
 the right count:
 
 ```bash
