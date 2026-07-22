@@ -11,12 +11,15 @@ describe('G1 curve protocol', () => {
     )));
 
     expect(protocol).toEqual(expect.objectContaining({
-      protocol_id: 'p1-g1-wordpress-v3-grounded',
+      protocol_id: 'p1-g1-wordpress-v4-completion',
       provider: 'openai',
       model: 'gpt-4.1-mini',
     }));
     expect(protocol.page.verify_command_template).toContain('{{expected_post_titles_json}}');
     expect(protocol.checkpoints.map((checkpoint) => checkpoint.target_steps)).toEqual([7, 10, 15, 20, 25]);
+    expect(protocol.checkpoints.every((checkpoint) => checkpoint.prompt_template.includes(
+      'selected posts disappearing from All Posts is expected evidence',
+    ))).toBe(true);
     const records = parseCurveStepJsonl(renderCurveDryRun(protocol));
     expect(records).toHaveLength(77);
     expect(records[0]).toEqual(expect.objectContaining({ task_id: 'WP-N07', step_index: 1, record_kind: 'dry_run' }));
@@ -25,6 +28,12 @@ describe('G1 curve protocol', () => {
   });
 
   it('retains superseded protocols as immutable provenance artifacts', async () => {
+    const groundedV3 = parseCurveProtocol(JSON.parse(await readFile(
+      resolve('../../scripts/bench/curve/protocol-v3-grounded.json'),
+      'utf8',
+    )));
+    expect(groundedV3.protocol_id).toBe('p1-g1-wordpress-v3-grounded');
+
     const openAiV2 = parseCurveProtocol(JSON.parse(await readFile(
       resolve('../../scripts/bench/curve/protocol-v2-openai.json'),
       'utf8',
