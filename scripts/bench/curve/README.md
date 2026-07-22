@@ -112,6 +112,10 @@ set -a; source .env; set +a    # OPENAI_API_KEY must be non-empty
 For a non-publishable one-cell instrument probe, add `--checkpoint WP-N07
 --repetitions 1`. The command writes both `browser-use-raw-calls.jsonl` (unaltered
 Browser Use provider receipts) and `browser-use-curve.jsonl` (shared normalized rows).
+Like the Rote runner, Browser Use refuses to overwrite non-empty evidence and supports
+`--resume --max-new-runs 1`. Resume validates every existing run and fails on an
+incomplete tail rather than risking a repeated side effect. `--repetition <n>` pins one
+run id for paired collection.
 If normalization needs to be repeated without another paid run:
 
 ```bash
@@ -141,7 +145,21 @@ node --import tsx/esm scripts/bench/curve/rote/run-curve.ts \
 
 Long collection is resumable and append-safe. Existing non-empty output is never
 truncated: pass `--resume` to skip completed run ids, and optionally
-`--max-new-runs 1` to execute one atomic browser session per invocation.
+`--max-new-runs 1` to execute one atomic browser session per invocation. Both harnesses
+also accept `--repetition <n>` to target the same pair member exactly.
+
+For certification, run one matched pair at a time. If the second harness fails before
+recording, rerunning the command skips the already-completed first harness and retries the
+same repetition rather than advancing it:
+
+```bash
+BROWSER_USE_PYTHON=/tmp/rote-browser-use/bin/python \
+  scripts/bench/curve/run-next-pair.sh WP-N07 1
+```
+
+Repeat by checkpoint/repetition, preserving Rote → Browser Use alternation. Override
+`ROTE_CURVE_OUT` and `BROWSER_USE_CURVE_OUT` if the default `bench-out/curve` paths are
+not desired.
 
 For a non-publishable one-cell test with a model other than the pinned model, pass one
 `--checkpoint`, `--repetitions 1`, and `--openai-probe-model <model>`. The runner suffixes

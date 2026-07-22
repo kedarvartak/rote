@@ -23,6 +23,7 @@ interface Args {
   out: string;
   checkpoints: string[];
   repetitions?: number;
+  repetition?: number;
   probeModel?: string;
   resume: boolean;
   maxNewRuns?: number;
@@ -40,12 +41,14 @@ function parseArgs(argv: string[]): Args {
     if (flag === '--out' && value) result.out = value;
     else if (flag === '--checkpoint' && value) result.checkpoints.push(value);
     else if (flag === '--repetitions' && value && Number.isInteger(Number(value)) && Number(value) > 0) result.repetitions = Number(value);
+    else if (flag === '--repetition' && value && Number.isInteger(Number(value)) && Number(value) > 0) result.repetition = Number(value);
     else if (flag === '--openai-probe-model' && value) result.probeModel = value;
     else if (flag === '--max-new-runs' && value && Number.isInteger(Number(value)) && Number(value) > 0) result.maxNewRuns = Number(value);
     else throw new Error(`unknown or invalid option: ${String(flag)}`);
     index += 1;
   }
   if (!result.out) throw new Error('--out <records.jsonl> is required');
+  if (result.repetition !== undefined && result.repetitions !== undefined) throw new Error('--repetition and --repetitions are mutually exclusive');
   if (result.probeModel && (result.checkpoints.length !== 1 || result.repetitions !== 1)) {
     throw new Error('--openai-probe-model requires exactly one --checkpoint and --repetitions 1');
   }
@@ -121,7 +124,9 @@ async function main(): Promise<void> {
   ));
   if (checkpoints.length === 0) throw new Error('no protocol checkpoints selected');
   const wordpressEnv = readEnv(await readFile(WORDPRESS_ENV_PATH, 'utf8'));
-  const repetitions = args.repetitions ?? protocol.repetitions_per_harness;
+  const repetitions = args.repetition === undefined
+    ? Array.from({ length: args.repetitions ?? protocol.repetitions_per_harness }, (_, index) => index + 1)
+    : [args.repetition];
   await mkdir(dirname(resolve(args.out)), { recursive: true });
   const resumePlan = planCurveResume(await existingRecords(args.out), args.resume, args.out);
   const completed = resumePlan.completedRunIds;
@@ -129,7 +134,7 @@ async function main(): Promise<void> {
 
   let newRuns = 0;
   for (const checkpoint of checkpoints) {
-    for (let repetition = 1; repetition <= repetitions; repetition += 1) {
+    for (const repetition of repetitions) {
       const runId = `rote-${checkpoint.id}-r${String(repetition).padStart(2, '0')}`;
       if (completed.has(runId)) continue;
       console.log(`${checkpoint.id} repetition ${repetition}: starting`);

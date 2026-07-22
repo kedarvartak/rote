@@ -15,7 +15,7 @@ import shlex
 import subprocess
 from importlib import metadata
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[3]
@@ -191,17 +191,84 @@ async def run_once(
     return rows
 
 
+def completed_run_ids(raw_path: Path, protocol: dict[str, Any], resume: bool) -> set[str]:
+    """Validates prior raw receipts and returns atomically completed run ids."""
+    if not raw_path.exists() or raw_path.stat().st_size == 0:
+        return set()
+    if not resume:
+        raise RuntimeError(f"refusing to overwrite non-empty curve artifact {raw_path}; pass --resume")
+    checkpoints = {checkpoint["id"]: checkpoint for checkpoint in protocol["checkpoints"]}
+    rows_by_run: dict[str, list[dict[str, Any]]] = {}
+    for line_number, line in enumerate(raw_path.read_text().splitlines(), start=1):
+        if not line.strip():
+            raise RuntimeError(f"raw curve line {line_number} is blank")
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as error:
+            raise RuntimeError(f"raw curve line {line_number} is invalid JSON") from error
+        run_id = row.get("run_id")
+        checkpoint = checkpoints.get(row.get("task_id"))
+        repetition = row.get("repetition")
+        if checkpoint is None or not isinstance(repetition, int) or repetition < 1:
+            raise RuntimeError(f"raw curve line {line_number} has unknown task or repetition")
+        expected_run_id = f"browser-use-{checkpoint['id']}-r{repetition:02d}"
+        if run_id != expected_run_id:
+            raise RuntimeError(f"raw curve line {line_number} has unexpected run id {run_id!r}")
+        for field in ("protocol_id", "provider", "model"):
+            if row.get(field) != protocol[field]:
+                raise RuntimeError(f"raw curve line {line_number} mismatches protocol field {field}")
+        rows_by_run.setdefault(run_id, []).append(row)
+
+    completed: set[str] = set()
+    for run_id, rows in rows_by_run.items():
+        for index, row in enumerate(rows, start=1):
+            if row.get("call_index") != index:
+                raise RuntimeError(f"raw curve run {run_id} expected call {index}")
+            expected_outcome = "continued" if index < len(rows) else row.get("step_outcome")
+            if index < len(rows) and row.get("step_outcome") != expected_outcome:
+                raise RuntimeError(f"raw curve run {run_id} has an early terminal outcome")
+        final = rows[-1]
+        if final.get("step_outcome") not in ("success", "failure"):
+            raise RuntimeError(f"raw curve run {run_id} is incomplete; refusing ambiguous resume")
+        if not isinstance(final.get("verification_passed"), bool):
+            raise RuntimeError(f"raw curve run {run_id} has no final verification result")
+        completed.add(run_id)
+    return completed
+
+
+def pending_runs(
+    checkpoints: Iterable[dict[str, Any]], repetitions: Iterable[int], completed: set[str], max_new_runs: int | None
+) -> list[tuple[dict[str, Any], int]]:
+    """Plans the next ordered Browser Use runs without repeating completed side effects."""
+    pending = [
+        (checkpoint, repetition)
+        for checkpoint in checkpoints
+        for repetition in repetitions
+        if f"browser-use-{checkpoint['id']}-r{repetition:02d}" not in completed
+    ]
+    return pending if max_new_runs is None else pending[:max_new_runs]
+
+
 async def main() -> None:
     protocol = json.loads(PROTOCOL_PATH.read_text())
     parser = argparse.ArgumentParser(description="Capture Browser Use provider usage for the P1 G1 curve")
     parser.add_argument("--out", type=Path, required=True, help="output directory")
     parser.add_argument("--checkpoint", action="append", help="limit to a checkpoint id; repeatable")
-    parser.add_argument("--repetitions", type=int, help="override repetitions for a probe run")
+    parser.add_argument("--repetitions", type=int, help="override the target repetition count")
+    parser.add_argument("--repetition", type=int, help="run only this repetition (permits paired one-run collection)")
+    parser.add_argument("--resume", action="store_true", help="validate and append to an existing raw artifact")
+    parser.add_argument("--max-new-runs", type=int, help="stop after this many new atomic browser sessions")
     parser.add_argument("--max-extra-steps", type=int, default=5, help="retry allowance above target interaction complexity")
     args = parser.parse_args()
 
     if args.repetitions is not None and args.repetitions < 1:
         raise SystemExit("--repetitions must be positive")
+    if args.repetitions is not None and args.repetition is not None:
+        raise SystemExit("--repetition and --repetitions are mutually exclusive")
+    if args.repetition is not None and args.repetition < 1:
+        raise SystemExit("--repetition must be positive")
+    if args.max_new_runs is not None and args.max_new_runs < 1:
+        raise SystemExit("--max-new-runs must be positive")
     if args.max_extra_steps < 0:
         raise SystemExit("--max-extra-steps cannot be negative")
 
@@ -215,18 +282,19 @@ async def main() -> None:
     args.out.mkdir(parents=True, exist_ok=True)
     raw_path = args.out / "browser-use-raw-calls.jsonl"
     records_path = args.out / "browser-use-curve.jsonl"
-    raw_path.write_text("")
-    repetitions = args.repetitions or protocol["repetitions_per_harness"]
+    completed = completed_run_ids(raw_path, protocol, args.resume)
+    repetitions = [args.repetition] if args.repetition is not None else range(1, (args.repetitions or protocol["repetitions_per_harness"]) + 1)
+    plan = pending_runs(checkpoints, repetitions, completed, args.max_new_runs)
+    raw_path.touch(exist_ok=True)
 
     with raw_path.open("a") as raw_file:
-        for checkpoint in checkpoints:
-            for repetition in range(1, repetitions + 1):
-                rows = await run_once(checkpoint, protocol, repetition, args.max_extra_steps)
-                for row in rows:
-                    raw_file.write(json.dumps(row, separators=(",", ":")) + "\n")
-                raw_file.flush()
-                os.fsync(raw_file.fileno())
-                print(f"{checkpoint['id']} repetition {repetition}: {len(rows)} provider calls, {rows[-1]['step_outcome']}")
+        for checkpoint, repetition in plan:
+            rows = await run_once(checkpoint, protocol, repetition, args.max_extra_steps)
+            for row in rows:
+                raw_file.write(json.dumps(row, separators=(",", ":")) + "\n")
+            raw_file.flush()
+            os.fsync(raw_file.fileno())
+            print(f"{checkpoint['id']} repetition {repetition}: {len(rows)} provider calls, {rows[-1]['step_outcome']}")
 
     subprocess.run(
         ["node", str(BENCH_CLI), "curve-browser-use-records", str(raw_path), "--out", str(records_path)],
