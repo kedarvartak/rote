@@ -9,7 +9,7 @@ export interface CdpPageOptions {
 
 interface RuntimeEvaluateResult {
   result: { value?: unknown };
-  exceptionDetails?: { text?: string };
+  exceptionDetails?: { text?: string; exception?: { description?: string } };
 }
 
 export interface CdpActivitySample {
@@ -59,12 +59,36 @@ export class CdpPage {
       // every visibility bit onto the next element on real pages.
       const liveElements = document.documentElement.querySelectorAll('*');
       const clonedElements = clone.querySelectorAll('*');
+      const uniqueSelector = (element) => {
+        if (element.id) return '#' + CSS.escape(element.id);
+        const parts = [];
+        let current = element;
+        while (current && current !== document.documentElement) {
+          let part = current.tagName.toLowerCase();
+          const parent = current.parentElement;
+          if (!parent) break;
+          const sameTag = Array.from(parent.children).filter((sibling) => sibling.tagName === current.tagName);
+          if (sameTag.length > 1) part += ':nth-of-type(' + (sameTag.indexOf(current) + 1) + ')';
+          parts.unshift(part);
+          if (parent.id) {
+            parts.unshift('#' + CSS.escape(parent.id));
+            break;
+          }
+          current = parent;
+        }
+        const selector = parts.join(' > ');
+        return selector && document.querySelectorAll(selector).length === 1 ? selector : undefined;
+      };
       liveElements.forEach((live, index) => {
         const copied = clonedElements[index];
         if (!copied) return;
         const style = getComputedStyle(live);
         const visible = !live.hidden && style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0' && live.getClientRects().length > 0;
         copied.setAttribute('data-rote-visible', visible ? 'true' : 'false');
+        if (visible && live.matches('a, button, input, textarea, select, [role]')) {
+          const selector = uniqueSelector(live);
+          if (selector) copied.setAttribute('data-rote-selector', selector);
+        }
       });
       const liveControls = document.querySelectorAll('input, textarea, select');
       const clonedControls = clone.querySelectorAll('input, textarea, select');
@@ -116,11 +140,23 @@ export class CdpPage {
 
   /** Clicks an element by selector using the page's DOM event path. */
   async click(selector: string): Promise<void> {
-    await this.evaluateVoid(`(() => {
+    const href = await this.evaluate<string | null>(`(() => {
       const element = document.querySelector(${JSON.stringify(selector)});
-      if (!element) throw new Error("clickable element not found: ${escapeForTemplate(selector)}");
-      element.click();
+      return element instanceof HTMLAnchorElement && !element.download && element.target !== '_blank' ? element.href : null;
     })()`);
+    try {
+      await this.evaluateVoid(`(() => {
+        const element = document.querySelector(${JSON.stringify(selector)});
+        if (!element) throw new Error("clickable element not found: ${escapeForTemplate(selector)}");
+        element.click();
+      })()`);
+    } catch (error) {
+      // Navigation can destroy the Runtime context before CDP returns the click
+      // result. Reissuing the captured same-tab href makes the completed action
+      // observable instead of misclassifying a successful link as a fatal click.
+      if (!href) throw error;
+      await this.navigate(href);
+    }
   }
 
   /** Samples pending network requests and a monotonic DOM mutation version. */
@@ -170,7 +206,9 @@ async function evaluate<T>(client: CdpClient, expression: string): Promise<T> {
     returnByValue: true,
     awaitPromise: true,
   });
-  if (result.exceptionDetails) throw new Error(result.exceptionDetails.text ?? 'CDP evaluation failed');
+  if (result.exceptionDetails) {
+    throw new Error(result.exceptionDetails.exception?.description ?? result.exceptionDetails.text ?? 'CDP evaluation failed');
+  }
   return result.result.value as T;
 }
 

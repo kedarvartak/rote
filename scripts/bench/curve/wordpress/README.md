@@ -56,20 +56,14 @@ call an LLM.
 
 ## Candidate task and ground truth
 
-The E1.2 protocol will parameterize one operation by task length:
-
-1. Sign in.
-2. On the 100-row post list, select *k* named `Rote curve post NNN` checkboxes.
-3. Choose `Move to Trash` from the bulk-action select.
-4. Apply it.
-
-Varying *k* yields a controllable 10–25 action range while every checkbox interaction
-starts from the same ~12K-token real administration page. `verify-corpus.sh` first requires exactly titles 001–120 with published status. The
-independent result verifier reads WordPress's database through WP-CLI and requires the exact trashed title set—not merely
-the right count:
+The canonical protocol signs in, opens *k* named posts one at a time, appends `— reviewed`
+to each title, updates, and returns to All Posts. Varying *k* yields an 8–24 interaction
+range from the same real administration page without the rejected bulk-checkbox grounding
+failure. `verify-corpus.sh` first requires exactly titles 001–120 with published status.
+The result verifier then checks every title, content, and status:
 
 ```bash
-scripts/bench/curve/wordpress/verify-trash-posts.sh '["Rote curve post 120"]'
+scripts/bench/curve/wordpress/verify-reviewed-posts.sh '["Rote curve post 120"]'
 ```
 
 The curve protocol owns the exact step-count cells and task wording; this environment

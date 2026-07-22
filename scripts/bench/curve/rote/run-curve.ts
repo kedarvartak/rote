@@ -142,10 +142,10 @@ async function main(): Promise<void> {
       const backend = new LaunchingCdpBrowserBackend({ windowSize: protocol.page.viewport });
       try {
         const rawPage = await backend.openPage();
-        // WordPress keeps one background request open after login. The default
+        // WordPress keeps up to 15 background requests open in its editor. The default
         // remains zero everywhere else; this declared floor still requires a
         // mutation-quiet window before the next planner observation.
-        const page = new SettledBrowserPageSession(rawPage, { maxPendingRequests: 1 });
+        const page = new SettledBrowserPageSession(rawPage, { maxPendingRequests: 15 });
         await page.navigate(protocol.page.initial_url);
         const collector = new CurveRunCollector();
         let success = false;
@@ -179,7 +179,7 @@ async function main(): Promise<void> {
               },
             },
             recorder: collector,
-            maxSteps: checkpoint.target_steps + 5,
+            maxSteps: checkpoint.target_steps + 10,
           });
           success = result.success;
           if (!success) failureReason = result.summary;

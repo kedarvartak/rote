@@ -27,11 +27,11 @@ describe('rote-bench CLI', () => {
     const protocolPath = resolve('../../scripts/bench/curve/protocol.json');
 
     await expect(main(['curve-dry-run', protocolPath, '--out', outPath])).resolves.toBe(
-      `wrote ${outPath} (77 dry-run step records)`,
+      `wrote ${outPath} (80 dry-run step records)`,
     );
     const lines = (await readFile(outPath, 'utf8')).trim().split('\n');
-    expect(lines).toHaveLength(77);
-    expect(JSON.parse(lines[0]!)).toEqual(expect.objectContaining({ record_kind: 'dry_run', task_id: 'WP-N07' }));
+    expect(lines).toHaveLength(80);
+    expect(JSON.parse(lines[0]!)).toEqual(expect.objectContaining({ record_kind: 'dry_run', task_id: 'WP-N08' }));
   });
 
   it('writes a reproducible cache preflight from curve measurement rows', async () => {

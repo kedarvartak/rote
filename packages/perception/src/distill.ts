@@ -80,6 +80,8 @@ function nameOf(element: CapturedElement): string {
 }
 
 function selectorHint(element: CapturedElement): string | undefined {
+  const capturedSelector = element.attributes['data-rote-selector'];
+  if (capturedSelector) return capturedSelector;
   const id = element.attributes['id'];
   if (id) return `#${id}`;
   const name = element.attributes['name'];

@@ -87,6 +87,24 @@ describe('runBrowserAgent', () => {
     expect(result.tokenUsage.every((usage) => usage.source === 'planner')).toBe(true);
   });
 
+  it('starts a new grounded base when navigation changes the page URL', async () => {
+    const planner = new ScriptedPlanner([
+      { kind: 'navigate', url: 'mem://next' },
+      { kind: 'done', success: true, summary: 'done' },
+    ]);
+
+    await runBrowserAgent({
+      task: 'Navigate',
+      page: new FakePage(),
+      planner,
+      verifier: passVerifier,
+      observationMaxChars: 80,
+    });
+
+    expect(planner.requests.map((request) => request.observation.mode)).toEqual(['bootstrap', 'bootstrap']);
+    expect(planner.requests[1]?.page.url).toBe('mem://next');
+  });
+
   it('sends a diff after an explicit over-budget bootstrap observation', async () => {
     const planner = new ScriptedPlanner([
       { kind: 'click', selector: '#registration-submit', expect: { selector_visible: '#registration-submit' } },

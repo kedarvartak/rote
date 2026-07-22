@@ -15,6 +15,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
   const previousActions: BrowserAction[] = [];
   const steps: BrowserAgentStep[] = [];
   let previousNodes: DistilledNode[] | undefined;
+  let previousPageUrl: string | undefined;
   let finished = false;
   let repairsUsed = 0;
   let pendingRepair: BrowserExpectFailure | undefined;
@@ -24,12 +25,15 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       const startedAt = clock();
       const page = await options.page.capture();
       const nodes = distillPage(page);
+      // INVARIANT: a diff base belongs to one page identity. Reusing old-page
+      // nodes after navigation leaves the planner acting on controls that no longer exist.
       const observation = renderAdaptiveObservation(nodes, {
         maxChars: options.observationMaxChars,
         maxBootstrapChars: options.observationBootstrapMaxChars,
-        previousNodes,
+        previousNodes: previousPageUrl === page.url ? previousNodes : undefined,
       });
       previousNodes = nodes;
+      previousPageUrl = page.url;
       const pageState = { url: page.url, title: page.title };
       // A step that follows a failed postcondition is a scoped repair, and is billed
       // as one: docs/02 makes cheap recovery an efficiency claim, so repair spend has

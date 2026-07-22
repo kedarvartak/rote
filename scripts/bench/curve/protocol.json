@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "protocol_id": "p1-g1-wordpress-v6-accessible",
+  "protocol_id": "p1-g1-wordpress-v7-title-reviews",
   "provider": "openai",
   "model": "gpt-4.1-mini",
   "repetitions_per_harness": 15,
@@ -10,7 +10,7 @@
     "environment": "scripts/bench/curve/wordpress",
     "initial_url": "http://127.0.0.1:18081/wp-login.php?redirect_to=http%3A%2F%2F127.0.0.1%3A18081%2Fwp-admin%2Fedit.php",
     "reset_command": "scripts/bench/curve/wordpress/reset-state.sh",
-    "verify_command_template": "scripts/bench/curve/wordpress/verify-trash-posts.sh {{expected_post_titles_json}}",
+    "verify_command_template": "scripts/bench/curve/wordpress/verify-reviewed-posts.sh {{expected_post_titles_json}}",
     "viewport": {
       "width": 1920,
       "height": 1080
@@ -22,18 +22,44 @@
   ],
   "checkpoints": [
     {
-      "id": "WP-N07",
-      "target_steps": 7,
+      "id": "WP-N08",
+      "target_steps": 8,
       "selected_post_count": 1,
       "post_titles": [
         "Rote curve post 120"
       ],
-      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Move exactly this post to Trash using the bulk action: Rote curve post 120. Do not modify any other post. After applying the bulk action once, selected posts disappearing from All Posts is expected evidence that they moved to Trash. Do not search for them or repeat the bulk action; conclude the task complete. Independent exact-title verification determines final success.",
-      "expected_trash_count": 1
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 1 target post in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "expected_result_count": 1,
+      "operation_mode": "review_title_each"
     },
     {
-      "id": "WP-N10",
-      "target_steps": 10,
+      "id": "WP-N12",
+      "target_steps": 12,
+      "selected_post_count": 2,
+      "post_titles": [
+        "Rote curve post 120",
+        "Rote curve post 119"
+      ],
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 2 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "expected_result_count": 2,
+      "operation_mode": "review_title_each"
+    },
+    {
+      "id": "WP-N16",
+      "target_steps": 16,
+      "selected_post_count": 3,
+      "post_titles": [
+        "Rote curve post 120",
+        "Rote curve post 119",
+        "Rote curve post 118"
+      ],
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed, Rote curve post 118 → Rote curve post 118 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 3 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "expected_result_count": 3,
+      "operation_mode": "review_title_each"
+    },
+    {
+      "id": "WP-N20",
+      "target_steps": 20,
       "selected_post_count": 4,
       "post_titles": [
         "Rote curve post 120",
@@ -41,77 +67,24 @@
         "Rote curve post 118",
         "Rote curve post 117"
       ],
-      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Move exactly these posts to Trash using one bulk action: Rote curve post 120, Rote curve post 119, Rote curve post 118, Rote curve post 117. Do not modify any other post. After applying the bulk action once, selected posts disappearing from All Posts is expected evidence that they moved to Trash. Do not search for them or repeat the bulk action; conclude the task complete. Independent exact-title verification determines final success.",
-      "expected_trash_count": 4
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed, Rote curve post 118 → Rote curve post 118 — reviewed, Rote curve post 117 → Rote curve post 117 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 4 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "expected_result_count": 4,
+      "operation_mode": "review_title_each"
     },
     {
-      "id": "WP-N15",
-      "target_steps": 15,
-      "selected_post_count": 9,
+      "id": "WP-N24",
+      "target_steps": 24,
+      "selected_post_count": 5,
       "post_titles": [
         "Rote curve post 120",
         "Rote curve post 119",
         "Rote curve post 118",
         "Rote curve post 117",
-        "Rote curve post 116",
-        "Rote curve post 115",
-        "Rote curve post 114",
-        "Rote curve post 113",
-        "Rote curve post 112"
+        "Rote curve post 116"
       ],
-      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Move exactly these posts to Trash using one bulk action: Rote curve post 120, Rote curve post 119, Rote curve post 118, Rote curve post 117, Rote curve post 116, Rote curve post 115, Rote curve post 114, Rote curve post 113, Rote curve post 112. Before applying, confirm the selected checkbox names exactly match this list. Do not modify any other post. After applying the bulk action once, selected posts disappearing from All Posts is expected evidence that they moved to Trash. Do not search for them or repeat the bulk action; conclude the task complete. Independent exact-title verification determines final success.",
-      "expected_trash_count": 9
-    },
-    {
-      "id": "WP-N20",
-      "target_steps": 20,
-      "selected_post_count": 14,
-      "post_titles": [
-        "Rote curve post 120",
-        "Rote curve post 119",
-        "Rote curve post 118",
-        "Rote curve post 117",
-        "Rote curve post 116",
-        "Rote curve post 115",
-        "Rote curve post 114",
-        "Rote curve post 113",
-        "Rote curve post 112",
-        "Rote curve post 111",
-        "Rote curve post 110",
-        "Rote curve post 109",
-        "Rote curve post 108",
-        "Rote curve post 107"
-      ],
-      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Move exactly these posts to Trash using one bulk action: Rote curve post 120, Rote curve post 119, Rote curve post 118, Rote curve post 117, Rote curve post 116, Rote curve post 115, Rote curve post 114, Rote curve post 113, Rote curve post 112, Rote curve post 111, Rote curve post 110, Rote curve post 109, Rote curve post 108, Rote curve post 107. Before applying, confirm the selected checkbox names exactly match this list. Do not modify any other post. After applying the bulk action once, selected posts disappearing from All Posts is expected evidence that they moved to Trash. Do not search for them or repeat the bulk action; conclude the task complete. Independent exact-title verification determines final success.",
-      "expected_trash_count": 14
-    },
-    {
-      "id": "WP-N25",
-      "target_steps": 25,
-      "selected_post_count": 19,
-      "post_titles": [
-        "Rote curve post 120",
-        "Rote curve post 119",
-        "Rote curve post 118",
-        "Rote curve post 117",
-        "Rote curve post 116",
-        "Rote curve post 115",
-        "Rote curve post 114",
-        "Rote curve post 113",
-        "Rote curve post 112",
-        "Rote curve post 111",
-        "Rote curve post 110",
-        "Rote curve post 109",
-        "Rote curve post 108",
-        "Rote curve post 107",
-        "Rote curve post 106",
-        "Rote curve post 105",
-        "Rote curve post 104",
-        "Rote curve post 103",
-        "Rote curve post 102"
-      ],
-      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Move exactly these posts to Trash using one bulk action: Rote curve post 120, Rote curve post 119, Rote curve post 118, Rote curve post 117, Rote curve post 116, Rote curve post 115, Rote curve post 114, Rote curve post 113, Rote curve post 112, Rote curve post 111, Rote curve post 110, Rote curve post 109, Rote curve post 108, Rote curve post 107, Rote curve post 106, Rote curve post 105, Rote curve post 104, Rote curve post 103, Rote curve post 102. Before applying, confirm the selected checkbox names exactly match this list. Do not modify any other post. After applying the bulk action once, selected posts disappearing from All Posts is expected evidence that they moved to Trash. Do not search for them or repeat the bulk action; conclude the task complete. Independent exact-title verification determines final success.",
-      "expected_trash_count": 19
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed, Rote curve post 118 → Rote curve post 118 — reviewed, Rote curve post 117 → Rote curve post 117 — reviewed, Rote curve post 116 → Rote curve post 116 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 5 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "expected_result_count": 5,
+      "operation_mode": "review_title_each"
     }
   ]
 }
