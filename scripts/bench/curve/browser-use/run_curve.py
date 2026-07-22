@@ -107,6 +107,46 @@ def build_llm(provider: str, model: str) -> Any:
     return ChatOpenAI(model=model)
 
 
+def exact_set_guard_script(expected_titles: list[str]) -> str:
+    """Builds the browser-side guard shared with Rote's pre-Apply invariant."""
+    expected = json.dumps(expected_titles, separators=(",", ":"))
+    return f"""
+(() => {{
+  if (window.__roteExactSetGuardInstalled) return;
+  window.__roteExactSetGuardInstalled = true;
+  const expected = {expected};
+  document.addEventListener('click', (event) => {{
+    const target = event.target;
+    if (!(target instanceof Element) || !['doaction', 'doaction2'].includes(target.id)) return;
+    const selected = [...document.querySelectorAll('#the-list input[name="post[]"]:checked')]
+      .map((checkbox) => checkbox.closest('tr')?.querySelector('.row-title')?.textContent?.trim())
+      .filter(Boolean);
+    const missing = expected.filter((title) => !selected.includes(title));
+    const extra = selected.filter((title) => !expected.includes(title));
+    if (missing.length === 0 && extra.length === 0) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    let notice = document.querySelector('#rote-exact-set-guard');
+    if (!notice) {{
+      notice = document.createElement('div');
+      notice.id = 'rote-exact-set-guard';
+      notice.setAttribute('role', 'alert');
+      document.body.prepend(notice);
+    }}
+    notice.textContent = `Bulk Apply blocked: selected titles must exactly match the request. Missing: ${{missing.join(', ') || '(none)'}}. Extra: ${{extra.join(', ') || '(none)'}}.`;
+  }}, true);
+}})()
+"""
+
+
+async def install_exact_set_guard(agent: Any, expected_titles: list[str]) -> None:
+    """Installs Browser Use's symmetric pre-Apply exact-selection guard."""
+    session = await agent.browser_session.get_or_create_cdp_session()
+    await session.cdp_client.send.Runtime.evaluate(
+        params={"expression": exact_set_guard_script(expected_titles)}, session_id=session.session_id
+    )
+
+
 async def run_once(
     checkpoint: dict[str, Any],
     protocol: dict[str, Any],
@@ -142,7 +182,14 @@ async def run_once(
         use_judge=False,
         final_response_after_failure=False,
     )
-    history = await agent.run(max_steps=checkpoint["target_steps"] + max_extra_steps)
+
+    async def before_step(current_agent: Any) -> None:
+        await install_exact_set_guard(current_agent, checkpoint["post_titles"])
+
+    history = await agent.run(
+        max_steps=checkpoint["target_steps"] + max_extra_steps,
+        on_step_start=before_step,
+    )
 
     verify_command = protocol["page"]["verify_command_template"].replace(
         "{{expected_post_titles_json}}",

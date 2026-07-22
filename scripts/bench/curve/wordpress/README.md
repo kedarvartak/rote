@@ -3,7 +3,9 @@
 Deterministic local target selected by `docs/testing/T2-measurement-page-selection.md`
 for P1's cumulative-token curve. It runs the real WordPress 6.8.2 administration UI,
 deletes stock/non-benchmark posts, seeds exactly 120 published procurement-style posts, and configures the post table to show 100
-rows. Images are pinned by immutable digest; no WordPress source is copied into Rote.
+rows. A mounted must-use plugin mirrors WordPress's existing screen-reader checkbox text
+onto each input's `aria-label`, avoiding numeric-ID inference by either harness. Images are
+pinned by immutable digest; no WordPress source is copied into Rote.
 
 ## Requirements
 
