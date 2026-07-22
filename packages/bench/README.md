@@ -41,6 +41,7 @@ See `src/index.ts`. Highlights:
 - **`parseBrowserUseCurveRawJsonl` / `browserUseCurveRecordsFromRaw`** — retain and validate every Browser Use provider receipt, then normalize its Anthropic/OpenAI uncached/read/write/output buckets and cumulative totals into shared curve records.
 - **`rote-bench curve-browser-use-records <raw-calls.jsonl> --out <records.jsonl>`** — converts the external Python runner's raw receipts into validated measurement JSONL, failing on missing calls, impossible cache accounting, or unverifiable final outcomes.
 - **`roteCurveRecordsFromRun` / `renderRoteCurveRun`** — emit Rote's matching per-provider-call rows from an agent run, requiring one raw receipt per normalized usage and preserving observation/action/verification evidence.
+- **`planCurveResume`** — validates existing curve JSONL, refuses non-empty overwrite, and returns only fully completed run ids for append-safe one-run batching.
 
 ## Spec format
 
