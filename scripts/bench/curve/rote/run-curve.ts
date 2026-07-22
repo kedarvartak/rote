@@ -3,9 +3,14 @@ import { appendFile, mkdir, open, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { promisify } from 'node:util';
 import { SettledBrowserPageSession } from '../../../../packages/action/src/index.ts';
-import { runBrowserAgent, TaggedLlmBrowserPlanner } from '../../../../packages/agent/src/index.ts';
+import {
+  runBrowserAgent,
+  TaggedLlmBrowserPlanner,
+  type BrowserAgentRunRecorder,
+  type BrowserAgentStep,
+} from '../../../../packages/agent/src/index.ts';
 import { LaunchingCdpBrowserBackend } from '../../../../packages/browser/src/index.ts';
-import { parseCurveProtocol, renderRoteCurveRun } from '../../../../packages/bench/src/index.ts';
+import { parseCurveProtocol, planCurveResume, renderRoteCurveRun } from '../../../../packages/bench/src/index.ts';
 import { createTaggedLlmClientFromEnv, type LlmProvider } from '../../../../packages/llm/src/index.ts';
 
 const exec = promisify(execCallback);
@@ -18,17 +23,24 @@ interface Args {
   checkpoints: string[];
   repetitions?: number;
   probeModel?: string;
+  resume: boolean;
+  maxNewRuns?: number;
 }
 
 function parseArgs(argv: string[]): Args {
-  const result: Args = { out: '', checkpoints: [] };
+  const result: Args = { out: '', checkpoints: [], resume: false };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
+    if (flag === '--resume') {
+      result.resume = true;
+      continue;
+    }
     const value = argv[index + 1];
     if (flag === '--out' && value) result.out = value;
     else if (flag === '--checkpoint' && value) result.checkpoints.push(value);
     else if (flag === '--repetitions' && value && Number.isInteger(Number(value)) && Number(value) > 0) result.repetitions = Number(value);
     else if (flag === '--openai-probe-model' && value) result.probeModel = value;
+    else if (flag === '--max-new-runs' && value && Number.isInteger(Number(value)) && Number(value) > 0) result.maxNewRuns = Number(value);
     else throw new Error(`unknown or invalid option: ${String(flag)}`);
     index += 1;
   }
@@ -72,6 +84,25 @@ async function runCommand(command: string): Promise<boolean> {
   }
 }
 
+async function existingRecords(path: string): Promise<string | undefined> {
+  try {
+    return await readFile(path, 'utf8');
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined;
+    throw error;
+  }
+}
+
+class CurveRunCollector implements BrowserAgentRunRecorder {
+  readonly steps: BrowserAgentStep[] = [];
+
+  async recordStep(step: BrowserAgentStep): Promise<void> {
+    this.steps.push(step);
+  }
+
+  async finish(): Promise<void> {}
+}
+
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
   const frozen = parseCurveProtocol(JSON.parse(await readFile(PROTOCOL_PATH, 'utf8')));
@@ -91,10 +122,16 @@ async function main(): Promise<void> {
   const wordpressEnv = readEnv(await readFile(WORDPRESS_ENV_PATH, 'utf8'));
   const repetitions = args.repetitions ?? protocol.repetitions_per_harness;
   await mkdir(dirname(resolve(args.out)), { recursive: true });
-  await writeFile(args.out, '');
+  const resumePlan = planCurveResume(await existingRecords(args.out), args.resume, args.out);
+  const completed = resumePlan.completedRunIds;
+  if (resumePlan.initializeEmptyFile) await writeFile(args.out, '');
 
+  let newRuns = 0;
   for (const checkpoint of checkpoints) {
     for (let repetition = 1; repetition <= repetitions; repetition += 1) {
+      const runId = `rote-${checkpoint.id}-r${String(repetition).padStart(2, '0')}`;
+      if (completed.has(runId)) continue;
+      console.log(`${checkpoint.id} repetition ${repetition}: starting`);
       if (!await runCommand(protocol.page.reset_command)) throw new Error(`reset failed for ${checkpoint.id} repetition ${repetition}`);
       const backend = new LaunchingCdpBrowserBackend({ windowSize: protocol.page.viewport });
       try {
@@ -104,22 +141,31 @@ async function main(): Promise<void> {
         // mutation-quiet window before the next planner observation.
         const page = new SettledBrowserPageSession(rawPage, { maxPendingRequests: 1 });
         await page.navigate(protocol.page.initial_url);
-        const result = await runBrowserAgent({
-          task: bindPrompt(checkpoint.prompt_template, wordpressEnv),
-          page,
-          planner: new TaggedLlmBrowserPlanner(createTaggedLlmClientFromEnv({ provider, model: protocol.model })),
-          verifier: {
-            async verify() {
-              const command = protocol.page.verify_command_template.replace(
-                '{{expected_post_titles_json}}', shellQuote(JSON.stringify(checkpoint.post_titles)),
-              );
-              const passed = await runCommand(command);
-              return { success: passed, summary: passed ? 'database verification passed' : 'database verification failed' };
+        const collector = new CurveRunCollector();
+        let success = false;
+        let failureReason: string | undefined;
+        try {
+          const result = await runBrowserAgent({
+            task: bindPrompt(checkpoint.prompt_template, wordpressEnv),
+            page,
+            planner: new TaggedLlmBrowserPlanner(createTaggedLlmClientFromEnv({ provider, model: protocol.model })),
+            verifier: {
+              async verify() {
+                const command = protocol.page.verify_command_template.replace(
+                  '{{expected_post_titles_json}}', shellQuote(JSON.stringify(checkpoint.post_titles)),
+                );
+                const passed = await runCommand(command);
+                return { success: passed, summary: passed ? 'database verification passed' : 'database verification failed' };
+              },
             },
-          },
-          maxSteps: checkpoint.target_steps + 5,
-        });
-        const runId = `rote-${checkpoint.id}-r${String(repetition).padStart(2, '0')}`;
+            recorder: collector,
+            maxSteps: checkpoint.target_steps + 5,
+          });
+          success = result.success;
+          if (!success) failureReason = result.summary;
+        } catch (error) {
+          failureReason = error instanceof Error ? error.message : String(error);
+        }
         const jsonl = renderRoteCurveRun({
           protocolId: protocol.protocol_id,
           taskId: checkpoint.id,
@@ -128,14 +174,16 @@ async function main(): Promise<void> {
           runId,
           repetition,
           targetSteps: checkpoint.target_steps,
-          outcome: result.success ? 'success' : 'failure',
-          steps: result.steps,
+          outcome: success ? 'success' : 'failure',
+          steps: collector.steps,
         });
         await appendFile(args.out, jsonl, 'utf8');
         const file = await open(args.out, 'r');
         await file.sync();
         await file.close();
-        console.log(`${checkpoint.id} repetition ${repetition}: ${result.steps.length} agent steps, ${result.success ? 'success' : 'failure'}`);
+        console.log(`${checkpoint.id} repetition ${repetition}: ${collector.steps.length} agent steps, ${success ? 'success' : `failure (${failureReason})`}`);
+        newRuns += 1;
+        if (args.maxNewRuns !== undefined && newRuns >= args.maxNewRuns) return;
       } finally {
         await backend.close();
       }

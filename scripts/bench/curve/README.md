@@ -138,6 +138,10 @@ node --import tsx/esm scripts/bench/curve/rote/run-curve.ts \
   --out bench-out/curve/rote.jsonl
 ```
 
+Long collection is resumable and append-safe. Existing non-empty output is never
+truncated: pass `--resume` to skip completed run ids, and optionally
+`--max-new-runs 1` to execute one atomic browser session per invocation.
+
 For a non-publishable one-cell test with a model other than the pinned model, pass one
 `--checkpoint`, `--repetitions 1`, and `--openai-probe-model <model>`. The runner suffixes
 the protocol id with `-openai-instrument-probe`, so those rows cannot be mistaken for
