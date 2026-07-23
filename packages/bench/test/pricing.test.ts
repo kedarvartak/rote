@@ -50,6 +50,9 @@ describe('runCostUsd', () => {
     expect(runCostUsd(1_000_000, 0, price!)).toBeCloseTo(0.4, 10);
     expect(runCostUsd(0, 1_000_000, price!)).toBeCloseTo(1.6, 10);
     expect(runCostUsd(500_000, 500_000, price!)).toBeCloseTo(1.0, 10);
+    // GPT-4.1 mini's published cached-input rate is $0.10/MTok, not the
+    // generic 0.1x fallback used only when a model-specific rate is absent.
+    expect(runCostUsd(0, 0, price!, 1_000_000)).toBeCloseTo(0.1, 10);
   });
 
   it('costs nothing for a run that spent no tokens', () => {

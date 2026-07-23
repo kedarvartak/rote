@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "protocol_id": "p1-g1-wordpress-v8-tag-creation",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "subject_harness": "rote",
+  "baseline_harness": "browser-use",
+  "confidence": 0.95,
+  "resamples": 10000,
+  "min_successful_runs_per_cell": 15,
+  "complete_matched_repetitions": 15,
+  "slope_reduction_floor": 0.3,
+  "pricing": {
+    "version": "2026-07-15",
+    "source": "https://developers.openai.com/api/docs/pricing"
+  },
+  "cells": [
+    {
+      "task_id": "WP-N09",
+      "target_steps": 9,
+      "subject": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 47203.6,
+          "lower": 46999.93,
+          "upper": 47315.86666666667
+        },
+        "mean_uncached_input_tokens": 46222.26666666667,
+        "mean_cache_read_tokens": 981.3333333333334,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 429.3333333333333,
+        "latency_p50_ms": 34372,
+        "latency_p95_ms": 45567.899999999994,
+        "mean_cost_usd": 0.01927397333333333
+      },
+      "baseline": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 55104,
+          "lower": 55048.39833333333,
+          "upper": 55139.933333333334
+        },
+        "mean_uncached_input_tokens": 23360,
+        "mean_cache_read_tokens": 31744,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 1215.2666666666667,
+        "latency_p50_ms": 30591.29047393799,
+        "latency_p95_ms": 39071.547555923455,
+        "mean_cost_usd": 0.014462826666666668
+      },
+      "logical_input_reduction": {
+        "point": 0.14337253193960509,
+        "lower": 0.14093066450161176,
+        "upper": 0.1472648631264694
+      }
+    },
+    {
+      "task_id": "WP-N13",
+      "target_steps": 13,
+      "subject": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 51068.333333333336,
+          "lower": 50895.933333333334,
+          "upper": 51366
+        },
+        "mean_uncached_input_tokens": 44958.46666666667,
+        "mean_cache_read_tokens": 6109.866666666667,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 453.8,
+        "latency_p50_ms": 40513,
+        "latency_p95_ms": 76888.99999999999,
+        "mean_cost_usd": 0.019320453333333334
+      },
+      "baseline": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 68455.26666666666,
+          "lower": 68398.66500000001,
+          "upper": 68499.33333333333
+        },
+        "mean_uncached_input_tokens": 28775.266666666666,
+        "mean_cache_read_tokens": 39680,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 1714.3333333333333,
+        "latency_p50_ms": 39860.11362075806,
+        "latency_p95_ms": 60761.45296096802,
+        "mean_cost_usd": 0.018221040000000004
+      },
+      "logical_input_reduction": {
+        "point": 0.2539897100685703,
+        "lower": 0.2495686351639005,
+        "upper": 0.2566112264095768
+      }
+    },
+    {
+      "task_id": "WP-N17",
+      "target_steps": 17,
+      "subject": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 60331.26666666667,
+          "lower": 59599.525,
+          "upper": 61054.348333333335
+        },
+        "mean_uncached_input_tokens": 54682.2,
+        "mean_cache_read_tokens": 5649.066666666667,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 670,
+        "latency_p50_ms": 50670,
+        "latency_p95_ms": 59079.09999999999,
+        "mean_cost_usd": 0.02350978666666666
+      },
+      "baseline": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 82151.73333333334,
+          "lower": 82082.19333333333,
+          "upper": 82208.20166666666
+        },
+        "mean_uncached_input_tokens": 34535.73333333333,
+        "mean_cache_read_tokens": 47616,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 2203.6666666666665,
+        "latency_p50_ms": 51765.504360198975,
+        "latency_p95_ms": 71722.94650077818,
+        "mean_cost_usd": 0.02210176
+      },
+      "logical_input_reduction": {
+        "point": 0.26561176230000416,
+        "lower": 0.2567938512686803,
+        "upper": 0.27454857664051724
+      }
+    },
+    {
+      "task_id": "WP-N21",
+      "target_steps": 21,
+      "subject": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 69475.73333333334,
+          "lower": 68590.78333333334,
+          "upper": 70399.14333333333
+        },
+        "mean_uncached_input_tokens": 62768.53333333333,
+        "mean_cache_read_tokens": 6707.2,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 786.9333333333333,
+        "latency_p50_ms": 61595,
+        "latency_p95_ms": 106017.79999999999,
+        "mean_cost_usd": 0.02703722666666667
+      },
+      "baseline": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 95888,
+          "lower": 95798.39833333333,
+          "upper": 95974.60166666668
+        },
+        "mean_uncached_input_tokens": 40634.666666666664,
+        "mean_cache_read_tokens": 55253.333333333336,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 2368.3333333333335,
+        "latency_p50_ms": 57150.37274360657,
+        "latency_p95_ms": 89786.0230922699,
+        "mean_cost_usd": 0.025568533333333334
+      },
+      "logical_input_reduction": {
+        "point": 0.2754491351020635,
+        "lower": 0.26587083904816805,
+        "upper": 0.28471604529257155
+      }
+    },
+    {
+      "task_id": "WP-N25",
+      "target_steps": 25,
+      "subject": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 81203.2,
+          "lower": 80194.58666666667,
+          "upper": 82130.47499999999
+        },
+        "mean_uncached_input_tokens": 70826.66666666667,
+        "mean_cache_read_tokens": 10376.533333333333,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 1006.7333333333333,
+        "latency_p50_ms": 72027,
+        "latency_p95_ms": 85198.7,
+        "mean_cost_usd": 0.030979093333333332
+      },
+      "baseline": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 110131.46666666666,
+          "lower": 110023.33166666667,
+          "upper": 110222.60333333335
+        },
+        "mean_uncached_input_tokens": 46575.2,
+        "mean_cache_read_tokens": 63556.26666666667,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 2759.866666666667,
+        "latency_p50_ms": 67674.68523979187,
+        "latency_p95_ms": 100280.34775257109,
+        "mean_cost_usd": 0.029401493333333337
+      },
+      "logical_input_reduction": {
+        "point": 0.2626703116033443,
+        "lower": 0.25437210535880184,
+        "upper": 0.2720971834403769
+      }
+    }
+  ],
+  "slope": {
+    "subject_tokens_per_interaction": 2160.165,
+    "baseline_tokens_per_interaction": 3437.1916666666666,
+    "reduction": {
+      "point": 0.371531991960491,
+      "lower": 0.3559397584177956,
+      "upper": 0.3884455210220073
+    },
+    "passed": true
+  },
+  "a4": {
+    "full_observations": 225,
+    "bootstrap_observations": 240,
+    "diff_observations": 849,
+    "median_full_chars": 592,
+    "median_bootstrap_chars": 9270,
+    "median_diff_chars": 24,
+    "median_diff_reduction_vs_preceding_bootstrap": 0.9959287531806615
+  }
+}

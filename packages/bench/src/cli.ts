@@ -16,6 +16,7 @@ import { assembleHeadToHeadRecords, competitorRecordsFromRaw, readCompetitorRawR
 import { writeCurveDryRun } from './curve-dry-run.js';
 import { writeBrowserUseCurveRecords } from './browser-use-curve.js';
 import { writeCurveCachePreflight } from './curve-cache-preflight.js';
+import { writeCurveReport } from './curve-report.js';
 
 interface ReportOptions {
   out?: string;
@@ -55,6 +56,15 @@ export async function main(argv: string[]): Promise<string> {
     const options = parseCurvePreflightOptions(rest);
     const result = await writeCurveCachePreflight(subject, options.out, options.threshold);
     return `wrote ${options.out} (${result.cache_hit_calls}/${result.measurement_calls} calls hit cache; ${result.decision})`;
+  }
+  if (command === 'curve-report' && subject) {
+    const options = parseCurveReportOptions(rest);
+    const result = await writeCurveReport(subject, options.baseline, {
+      markdown: options.out,
+      svg: options.svg,
+      summary: options.summary,
+    }, { slopeReductionFloor: options.slopeFloor });
+    return `wrote ${options.out}, ${options.svg}, and ${options.summary} (slope reduction ${(result.slope.reduction.point * 100).toFixed(1)}%; ${result.slope.passed ? 'PASS' : 'FAIL'})`;
   }
   if ((command === 'serializer-report' || command === 'serializer-gate') && subject) {
     const options = parseSerializerOptions(rest);
@@ -159,6 +169,25 @@ async function cellsFromSpecAt(specPath: string) {
   const resolvedSpecPath = resolve(specPath);
   const spec = parseBenchmarkSpec(JSON.parse(await readFile(resolvedSpecPath, 'utf8')));
   return cellsFromSpec(spec, { specDir: dirname(resolvedSpecPath) });
+}
+
+function parseCurveReportOptions(args: string[]): { baseline: string; out: string; svg: string; summary: string; slopeFloor: number } {
+  const values = new Map<string, string>();
+  for (let index = 0; index < args.length; index += 2) {
+    const flag = args[index];
+    const value = args[index + 1];
+    if (!flag || !value || !['--baseline', '--out', '--svg', '--summary', '--slope-floor'].includes(flag)) {
+      throw new Error('curve-report requires --baseline <jsonl> --out <md> --svg <svg> --summary <json> [--slope-floor <ratio>]');
+    }
+    values.set(flag, value);
+  }
+  const baseline = values.get('--baseline'); const out = values.get('--out');
+  const svg = values.get('--svg'); const summary = values.get('--summary');
+  const slopeFloor = Number(values.get('--slope-floor') ?? '0.30');
+  if (!baseline || !out || !svg || !summary || !Number.isFinite(slopeFloor) || slopeFloor < 0 || slopeFloor > 1) {
+    throw new Error('curve-report requires --baseline <jsonl> --out <md> --svg <svg> --summary <json> [--slope-floor <ratio>]');
+  }
+  return { baseline, out, svg, summary, slopeFloor };
 }
 
 function parseCurvePreflightOptions(args: string[]): { out: string; threshold: number } {
@@ -282,5 +311,5 @@ function parseOptions(args: string[]): ReportOptions {
 }
 
 function usage(): string {
-  return 'usage: rote-bench curve-dry-run <protocol.json> --out records.jsonl | rote-bench curve-cache-preflight <records.jsonl> --out report.json [--threshold 1024] | rote-bench curve-browser-use-records <raw-calls.jsonl> --out records.jsonl | rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench curve-dry-run <protocol.json> --out records.jsonl | rote-bench curve-cache-preflight <records.jsonl> --out report.json [--threshold 1024] | rote-bench curve-report <rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg curve.svg --summary summary.json [--slope-floor 0.30] | rote-bench curve-browser-use-records <raw-calls.jsonl> --out records.jsonl | rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
 }

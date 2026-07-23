@@ -94,13 +94,20 @@ The publishable claim is that lower bound, not the mean: *"38% fewer tokens (95%
 
 ## The G1 report
 
-Tokens (per source), latency (avg/p50/p95 ms), and **$ per task** — priced from a dated,
-overridable table with the source URL recorded. An unpriced model is reported as
-`price unavailable`, **never $0**: a zero reads as "free" and quietly flatters whichever
-harness lacks a price.
+G1 fits an ordinary least-squares slope to each harness's five checkpoint mean cumulative
+logical-input totals. Its interval resamples complete matched repetitions 10,000 times
+with a fixed seed, preserving the paired collection design. The public gate requires the
+95% interval's lower bound to clear **30% slower growth**, at success parity and with at
+least 15 complete successful matched repetitions. This floor was set from the first honest
+matrix before optimization against it; see [T10](testing/T10-g1-cumulative-token-curve.md).
 
-Tokens and dollars are not the same number. Output tokens bill several times input, so a
-harness whose savings skew toward input saves less money than it saves tokens. Report both.
+The report also includes cache buckets, output tokens, latency (p50/p95 ms), and **$ per
+task** — priced from a dated table. An unpriced model is reported as `price unavailable`,
+**never $0**: zero reads as "free" and quietly flatters whichever harness lacks a price.
+
+Tokens and dollars are not the same number. Output tokens bill several times input and
+cache reads are discounted, so a harness can win logical tokens while losing dollars.
+T10 does exactly that: report both, and never phrase G1 as a cost win.
 
 ## Generalization (V2)
 

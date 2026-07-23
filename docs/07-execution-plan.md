@@ -32,18 +32,19 @@ drives sequencing:
 
 | Fact | Consequence for the plan |
 |---|---|
-| Eviction built; diff built-but-inert; cache and compaction not built | tier 0 is half-built and **entirely unmeasured** |
+| Eviction/diff built and G1-measured; cache layout minimally qualified; compaction not built | tier 0 clears G1 while cost/latency economics and G2 remain |
 | B1–B3 render ~537 chars; the selected WordPress page renders 89,114 chars (~22,279 approximate tok) identically across 15 fresh sessions ([T2](testing/T2-measurement-page-selection.md)) | The real-page prerequisite is now met; E1.2 can fix the curve protocol and E1.4 can collect provider-reported sizes |
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
 | #50/#51/#52 done; open: [#54](https://github.com/kedarvartak/rote/issues/54) (diff-derived postconditions) | Planner slips no longer poison success parity; live expects are honestly optional and final verification remains mandatory |
-| `@rote/cli` private at 0.0.0; README has no number; no demo | the launch package is all unstarted |
+| `@rote/cli` private at 0.0.0; README now carries G1; no demo | packaging and G2 still block launch |
 | B4–B6 benchmark tasks specified, not built | a G2 scope decision is required (E4.1) |
 
 ## P1 — the epics
 
-Six epics. E1 is deliberately first: **measure before building** — three of the four
-tier-0 levers have never been exercised, and the first task is the curve, not the code.
+Six epics. E1 ran first under **measure before building** and now passes G1. The remaining
+sequence must preserve that evidence while addressing G2 and launch packaging, not tune
+the frozen curve after seeing it.
 
 ```
 E1 curve (G1)  ──►  E3 cache layout  ──►  E4 level (G2)  ──►  E5 launch
@@ -61,11 +62,11 @@ on a real page, at success parity, on the **provider's own** cache accounting.
 | E1.1 | **Choose the measurement page.** Candidates: a self-hosted open-source portal (deterministic, no ToS risk) vs. a public site. Criteria: distilled observation ≥5K tokens; stable across ≥15 runs; a scriptable 10–25-step task with a ground-truth verify. Record the decision and why in `docs/testing/`. | 1 | — | [T2](testing/T2-measurement-page-selection.md): digest-pinned WordPress, 22,279 approximate tok, zero range across 15 sessions; locally seeded and database-verified | done |
 | E1.2 | **Define the curve protocol.** Task spec at n≈5/10/15/20/25 steps; per-step provider-reported usage (all three #57 buckets); JSONL schema with units; fixed seeds where applicable. | 1 | E1.1 | [`scripts/bench/curve/protocol.json`](../scripts/bench/curve/protocol.json) v3 fixes OpenAI `gpt-4.1-mini`, enumerates every long-cell target, and retains v2 plus inaccessible Anthropic v1 as archives; `curve-dry-run` emits and re-parses 77 valid non-evidentiary rows | done |
 | E1.3 | **Browser Use per-step usage capture.** Extend the existing runner to record usage per step, same pinned model, same task file (fairness rules in [03](03-benchmark.md)). Known risk: BU may not surface per-step usage — fallback is wrapping the provider client. | 2 | E1.2 | strict receipt capture/normalizer built; a real OpenAI WP-N07 probe emitted and verified all 7 calls without being presented as frozen-protocol evidence | done |
-| E1.4 | **Rote run of the same protocol.** This is the first live sighting of A4 and provider-reported real-page sizes. | 0.5 | E1.2, E1.9 | [T3](testing/T3-rote-openai-exploratory.md) found 15/20/25 failures; v3 guards fixed them, and [T7](testing/T7-browser-use-long-cell-qualification.md) rejects checkbox long cells; [T9](testing/T9-certification-stop-and-tag-qualification.md) stops v7 after 3/10 certification failures, then v8 tag creation passes 30/30 bounded sessions; the fresh ≥15-success/cell matrix remains | in progress — collection ready |
-| E1.5 | **Draw and publish.** The graph (cumulative tokens vs. steps, both harnesses), method note, raw JSONL downloadable. | 1 | E1.3, E1.4 | graph embedded in README with units and method link | blocked |
-| E1.6 | **Set the G1 threshold** from the first honest run, in public — [05](05-roadmap.md) leaves it deliberately unset until now. Update 05 in the same PR. | 0.5 | E1.5 | 05 names a number and its provenance | blocked |
-| E1.7 | **Findings record** (`docs/testing/T3-…`): provider-reported observation/prompt sizes, whether A4 fired, prompt sizes vs. cache minimums — the inputs E3 needs. | 0.5 | E1.4 | [T3](testing/T3-rote-openai-exploratory.md) commits raw rows and labels the one-run cells non-evidentiary; A4 fires and OpenAI cache reads appear on only 2/86 calls | done — exploratory findings only |
-| E1.8 | **Prove A4 on a real page.** The bootstrap → diff path is now exercised on a deterministic 10K-token fixture, but the −90%-on-the-constant claim remains untested live ([02 §What is unproven](02-architecture.md)). Measure diff-vs-full render sizes across the E1 protocol steps. | 1 | E1.4 | measured real-page diff/full ratio published alongside the curve | blocked |
+| E1.4 | **Rote run of the same protocol.** This is the first live sighting of A4 and provider-reported real-page sizes. | 0.5 | E1.2, E1.9 | [T10](testing/T10-g1-cumulative-token-curve.md) audits 15 complete matched v8 repetitions: 75/75 verified successes per harness | done |
+| E1.5 | **Draw and publish.** The graph (cumulative tokens vs. steps, both harnesses), method note, raw JSONL downloadable. | 1 | E1.3, E1.4 | README embeds the generated SVG and links method, raw receipts, normalized JSONL, and summary | done |
+| E1.6 | **Set the G1 threshold** from the first honest run, in public — [05](05-roadmap.md) leaves it deliberately unset until now. Update 05 in the same PR. | 0.5 | E1.5 | [05](05-roadmap.md) sets a 30% lower-confidence-bound slope floor from the first 37.2% result, before optimization | done |
+| E1.7 | **Findings record:** provider-reported prompt/cache buckets, whether A4 fired, and the inputs E3 needs. | 0.5 | E1.4 | T10 publishes all certification buckets; A4 emits 849 diffs and both harnesses' cache reads remain explicit | done |
+| E1.8 | **Prove A4 on a real page.** Measure diff render sizes against their preceding grounded bases across the E1 protocol. | 1 | E1.4 | T10 reports 849 diffs, 24-character median, and 99.6% median reduction vs. preceding grounded bootstrap | done |
 | E1.9 | **#67: bootstrap an oversized first observation safely.** The 40K-character page has no previous snapshot, so full misses the 4K budget and diff is impossible. Preserve a usable grounded base without configuring A4 away. | 1.5 | E1.2 | deterministic 10K-token test passes: explicit metered bootstrap is actionable, next small change is a diff; above the 100K-character cap fails before planning | done |
 
 ### E2 — Robustness at the planner boundary. ~3–4 days (+ stretch)

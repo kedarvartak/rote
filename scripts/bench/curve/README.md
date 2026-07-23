@@ -51,6 +51,27 @@ happens to use more internal calls. Every provider call is still recorded with i
 success merely because it used the target number of calls: it must conclude and pass the
 independent database verifier.
 
+## Audited report
+
+After collection, one deterministic command audits identity, cumulative accounting,
+terminal verification, success parity, and 15 complete matched repetitions; then emits
+the Markdown method table, SVG, and machine-readable 10,000-resample summary:
+
+```bash
+node packages/bench/bin/rote-bench.js curve-report bench-out/curve/rote.jsonl \
+  --baseline bench-out/curve/browser-use/browser-use-curve.jsonl \
+  --out bench-out/curve/report.md \
+  --svg bench-out/curve/g1.svg \
+  --summary bench-out/curve/summary.json \
+  --slope-floor 0.30
+```
+
+The 30% floor applies to the 95% confidence interval's lower bound for OLS slope
+reduction over the five checkpoint means. Bootstrap draws resample complete matched
+repetitions, preserving the paired collection design. The report also shows cache buckets,
+output, latency, dated model pricing, and A4 diff/base ratios; it does not turn a logical-
+token win into a cost claim.
+
 ## Per-step JSONL contract
 
 One line represents one provider call. Measurement rows require:
