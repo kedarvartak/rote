@@ -34,6 +34,8 @@ const HarnessCellSchema = z.object({
 export const CurveReportSummarySchema = z.object({
   schema_version: z.literal(1),
   protocol_id: z.string().min(1),
+  subject_protocol_id: z.string().min(1),
+  baseline_protocol_id: z.string().min(1),
   provider: z.string().min(1),
   model: z.string().min(1),
   subject_harness: z.string().min(1),
@@ -79,6 +81,8 @@ export interface BuildCurveReportOptions {
   confidence?: number;
   seed?: number;
   slopeReductionFloor?: number;
+  /** Exact suffix allowed only on intentionally versioned subject optimization evidence. */
+  subjectProtocolSuffix?: string;
 }
 
 type CurveMeasurementRecord = Extract<CurveStepRecord, { record_kind: 'measurement' }>;
@@ -112,7 +116,13 @@ export function buildCurveReport(
   const confidence = options.confidence ?? DEFAULT_CONFIDENCE;
   const seed = options.seed ?? DEFAULT_SEED;
   const slopeReductionFloor = options.slopeReductionFloor ?? 0.30;
-  const identity = auditSharedIdentity(subjectRecords, baselineRecords, subjectHarness, baselineHarness);
+  const identity = auditSharedIdentity(
+    subjectRecords,
+    baselineRecords,
+    subjectHarness,
+    baselineHarness,
+    options.subjectProtocolSuffix,
+  );
   const subjectRuns = auditRuns(asMeasurementRecords(subjectRecords), identity.model);
   const baselineRuns = auditRuns(asMeasurementRecords(baselineRecords), identity.model);
   const tasks = [...new Set(subjectRuns.map((run) => run.taskId))]
@@ -212,7 +222,7 @@ export function renderCurveReport(summary: CurveReportSummary): string {
   const lines = [
     '# G1 cumulative logical-input curve',
     '',
-    `Protocol \`${summary.protocol_id}\`; ${summary.provider}/\`${summary.model}\`; ${summary.complete_matched_repetitions} complete matched repetitions; ${(summary.confidence * 100).toFixed(0)}% seeded-bootstrap intervals (${summary.resamples.toLocaleString('en-US')} resamples).${summary.pricing ? ` Costs use the ${summary.pricing.version} published model rates (${summary.pricing.source}).` : ''}`,
+    `Protocol ${summary.subject_protocol_id === summary.baseline_protocol_id ? `\`${summary.protocol_id}\`` : `subject \`${summary.subject_protocol_id}\`, baseline \`${summary.baseline_protocol_id}\``}; ${summary.provider}/\`${summary.model}\`; ${summary.complete_matched_repetitions} complete matched repetitions; ${(summary.confidence * 100).toFixed(0)}% seeded-bootstrap intervals (${summary.resamples.toLocaleString('en-US')} resamples).${summary.pricing ? ` Costs use the ${summary.pricing.version} published model rates (${summary.pricing.source}).` : ''}`,
     '',
     `**Result: ${summary.slope.passed ? 'PASS' : 'FAIL'}.** ${summary.subject_harness} cumulative logical-input growth is ${pct(summary.slope.reduction.point)} slower than ${summary.baseline_harness} (${pct(summary.slope.reduction.lower)}–${pct(summary.slope.reduction.upper)}), against the public ${pct(summary.slope_reduction_floor)} lower-bound floor.`,
     '',
@@ -245,7 +255,7 @@ export function renderCurveReport(summary: CurveReportSummary): string {
     return `${pct(Math.abs(delta))} ${delta >= 0 ? 'higher' : 'lower'}`;
   };
   const costNote = longest.subject.mean_cost_usd !== null && longest.baseline.mean_cost_usd !== null
-    ? `At ${longest.task_id}, Rote's mean billed cost is ${relative(longest.subject.mean_cost_usd, longest.baseline.mean_cost_usd)} despite using fewer logical-input tokens, because Browser Use receives substantially more discounted cache reads. Rote's p50 latency is ${relative(longest.subject.latency_p50_ms, longest.baseline.latency_p50_ms)}. G1 is a logical-token growth claim, not a cost or latency win.`
+    ? `At ${longest.task_id}, Rote's mean billed cost is ${relative(longest.subject.mean_cost_usd, longest.baseline.mean_cost_usd)} and its p50 latency is ${relative(longest.subject.latency_p50_ms, longest.baseline.latency_p50_ms)}. Browser Use receives more discounted cache reads, so cost is reported independently from logical-token growth.`
     : `At ${longest.task_id}, model pricing is unavailable; G1 is a logical-token growth claim, not a cost or latency win.`;
   lines.push(
     '',
@@ -276,20 +286,42 @@ export function renderCurveSvg(summary: CurveReportSummary): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc"><title id="title">Cumulative logical input tokens by required interactions</title><desc id="desc">Rote grows more slowly than Browser Use across five WordPress tag-creation checkpoints. Error bars are 95 percent seeded-bootstrap intervals.</desc><rect width="100%" height="100%" fill="white"/><g font-family="system-ui,sans-serif" font-size="12" fill="#374151">${grid}${xTicks}<line x1="${left}" y1="${top}" x2="${left}" y2="${height - bottom}" stroke="#111827"/><line x1="${left}" y1="${height - bottom}" x2="${width - right}" y2="${height - bottom}" stroke="#111827"/><text x="${left + plotWidth / 2}" y="${height - 18}" text-anchor="middle" font-size="14">Required browser interactions</text><text transform="translate(20 ${top + plotHeight / 2}) rotate(-90)" text-anchor="middle" font-size="14">Cumulative logical input tokens</text><path d="${path('baseline')}" fill="none" stroke="#6b7280" stroke-width="3"/>${whiskers('baseline', '#6b7280')}<path d="${path('subject')}" fill="none" stroke="#2563eb" stroke-width="3"/>${whiskers('subject', '#2563eb')}<g transform="translate(${left + 15} ${top + 8})"><line x2="28" stroke="#2563eb" stroke-width="3"/><text x="36" y="4">Rote</text><line x1="95" x2="123" stroke="#6b7280" stroke-width="3"/><text x="131" y="4">Browser Use 0.13.6</text></g><text x="${width - right}" y="${top + 5}" text-anchor="end" font-weight="600">Slope reduction ${ (summary.slope.reduction.point * 100).toFixed(1)}%</text></g></svg>\n`;
 }
 
-function auditSharedIdentity(subject: readonly CurveStepRecord[], baseline: readonly CurveStepRecord[], subjectHarness: string, baselineHarness: string) {
+function auditSharedIdentity(
+  subject: readonly CurveStepRecord[],
+  baseline: readonly CurveStepRecord[],
+  subjectHarness: string,
+  baselineHarness: string,
+  subjectProtocolSuffix?: string,
+) {
   if (subject.length === 0 || baseline.length === 0) throw new Error('curve evidence cannot be empty');
   const first = subject[0]!;
-  const expected = { protocol_id: first.protocol_id, provider: first.provider, model: first.model };
-  for (const [label, records, harness] of [['subject', subject, subjectHarness], ['baseline', baseline, baselineHarness]] as const) {
+  const baselineProtocolId = baseline[0]!.protocol_id;
+  const subjectProtocolId = first.protocol_id;
+  const expectedSubjectProtocol = subjectProtocolSuffix
+    ? `${baselineProtocolId}${subjectProtocolSuffix}`
+    : baselineProtocolId;
+  if (subjectProtocolId !== expectedSubjectProtocol) {
+    throw new Error(`subject protocol ${subjectProtocolId} does not match expected ${expectedSubjectProtocol}`);
+  }
+  for (const [label, records, harness, protocolId] of [
+    ['subject', subject, subjectHarness, subjectProtocolId],
+    ['baseline', baseline, baselineHarness, baselineProtocolId],
+  ] as const) {
     for (const record of records) {
       if (record.record_kind !== 'measurement') throw new Error(`${label} contains non-measurement rows`);
       if (record.harness !== harness) throw new Error(`${label} row uses harness ${record.harness}, expected ${harness}`);
-      if (record.protocol_id !== expected.protocol_id || record.provider !== expected.provider || record.model !== expected.model) {
+      if (record.protocol_id !== protocolId || record.provider !== first.provider || record.model !== first.model) {
         throw new Error(`${label} mixes protocol/provider/model identity`);
       }
     }
   }
-  return expected;
+  return {
+    protocol_id: baselineProtocolId,
+    subject_protocol_id: subjectProtocolId,
+    baseline_protocol_id: baselineProtocolId,
+    provider: first.provider,
+    model: first.model,
+  };
 }
 
 function asMeasurementRecords(records: readonly CurveStepRecord[]): CurveMeasurementRecord[] {

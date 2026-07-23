@@ -1,7 +1,7 @@
 import { assertBrowserExpect, BrowserExpectationError, ElementResolutionConflictError, ElementResolutionError, resolveElementTarget, type ElementResolutionResult } from '@rote/action';
 import type { BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, type DistilledNode } from '@rote/perception';
-import { assemblePlannerContext } from './context.js';
+import { assemblePlannerContext, assertCacheStablePrefix } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
 import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
 
@@ -19,6 +19,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
   let finished = false;
   let repairsUsed = 0;
   let pendingRepair: BrowserExpectFailure | undefined;
+  let plannerStablePrefix: string | undefined;
 
   try {
     for (let step = 0; step < maxSteps; step += 1) {
@@ -48,6 +49,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         stateSummary: renderStatefulControls(nodes),
         ...(pendingRepair ? { repair: pendingRepair } : {}),
       });
+      plannerStablePrefix = assertCacheStablePrefix(plannerStablePrefix, context.stablePrefix);
       // INVARIANT: planner calls are always source-tagged for benchmark accounting.
       let planned = await options.planner.plan(source, {
         task: options.task,

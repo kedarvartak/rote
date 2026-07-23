@@ -17,6 +17,7 @@ import { writeCurveDryRun } from './curve-dry-run.js';
 import { writeBrowserUseCurveRecords } from './browser-use-curve.js';
 import { writeCurveCachePreflight } from './curve-cache-preflight.js';
 import { writeCurveReport } from './curve-report.js';
+import { writeCurveCacheEconomics } from './curve-cache-economics.js';
 
 interface ReportOptions {
   out?: string;
@@ -57,13 +58,24 @@ export async function main(argv: string[]): Promise<string> {
     const result = await writeCurveCachePreflight(subject, options.out, options.threshold);
     return `wrote ${options.out} (${result.cache_hit_calls}/${result.measurement_calls} calls hit cache; ${result.decision})`;
   }
+  if (command === 'curve-cache-report' && subject) {
+    const options = parseCurveCacheReportOptions(rest);
+    const result = await writeCurveCacheEconomics(subject, options.after, options.baseline, {
+      markdown: options.out, svg: options.svg, summary: options.summary,
+    }, { subjectProtocolSuffix: options.subjectProtocolSuffix });
+    const longest = result.cells.at(-1)!;
+    return `wrote ${options.out}, ${options.svg}, and ${options.summary} (long-cell cost reduction ${(longest.after_vs_before_cost_reduction.point * 100).toFixed(1)}%)`;
+  }
   if (command === 'curve-report' && subject) {
     const options = parseCurveReportOptions(rest);
     const result = await writeCurveReport(subject, options.baseline, {
       markdown: options.out,
       svg: options.svg,
       summary: options.summary,
-    }, { slopeReductionFloor: options.slopeFloor });
+    }, {
+      slopeReductionFloor: options.slopeFloor,
+      ...(options.subjectProtocolSuffix ? { subjectProtocolSuffix: options.subjectProtocolSuffix } : {}),
+    });
     return `wrote ${options.out}, ${options.svg}, and ${options.summary} (slope reduction ${(result.slope.reduction.point * 100).toFixed(1)}%; ${result.slope.passed ? 'PASS' : 'FAIL'})`;
   }
   if ((command === 'serializer-report' || command === 'serializer-gate') && subject) {
@@ -171,12 +183,29 @@ async function cellsFromSpecAt(specPath: string) {
   return cellsFromSpec(spec, { specDir: dirname(resolvedSpecPath) });
 }
 
-function parseCurveReportOptions(args: string[]): { baseline: string; out: string; svg: string; summary: string; slopeFloor: number } {
+function parseCurveCacheReportOptions(args: string[]): { after: string; baseline: string; out: string; svg: string; summary: string; subjectProtocolSuffix: string } {
+  const values = new Map<string, string>();
+  for (let index = 0; index < args.length; index += 2) {
+    const flag = args[index]; const value = args[index + 1];
+    if (!flag || !value || !['--after', '--baseline', '--out', '--svg', '--summary', '--subject-protocol-suffix'].includes(flag)) {
+      throw new Error('curve-cache-report requires --after, --baseline, --out, --svg, --summary, and --subject-protocol-suffix');
+    }
+    values.set(flag, value);
+  }
+  const after = values.get('--after'); const baseline = values.get('--baseline'); const out = values.get('--out');
+  const svg = values.get('--svg'); const summary = values.get('--summary'); const subjectProtocolSuffix = values.get('--subject-protocol-suffix');
+  if (!after || !baseline || !out || !svg || !summary || !subjectProtocolSuffix) {
+    throw new Error('curve-cache-report requires --after, --baseline, --out, --svg, --summary, and --subject-protocol-suffix');
+  }
+  return { after, baseline, out, svg, summary, subjectProtocolSuffix };
+}
+
+function parseCurveReportOptions(args: string[]): { baseline: string; out: string; svg: string; summary: string; slopeFloor: number; subjectProtocolSuffix?: string } {
   const values = new Map<string, string>();
   for (let index = 0; index < args.length; index += 2) {
     const flag = args[index];
     const value = args[index + 1];
-    if (!flag || !value || !['--baseline', '--out', '--svg', '--summary', '--slope-floor'].includes(flag)) {
+    if (!flag || !value || !['--baseline', '--out', '--svg', '--summary', '--slope-floor', '--subject-protocol-suffix'].includes(flag)) {
       throw new Error('curve-report requires --baseline <jsonl> --out <md> --svg <svg> --summary <json> [--slope-floor <ratio>]');
     }
     values.set(flag, value);
@@ -187,7 +216,8 @@ function parseCurveReportOptions(args: string[]): { baseline: string; out: strin
   if (!baseline || !out || !svg || !summary || !Number.isFinite(slopeFloor) || slopeFloor < 0 || slopeFloor > 1) {
     throw new Error('curve-report requires --baseline <jsonl> --out <md> --svg <svg> --summary <json> [--slope-floor <ratio>]');
   }
-  return { baseline, out, svg, summary, slopeFloor };
+  const subjectProtocolSuffix = values.get('--subject-protocol-suffix');
+  return { baseline, out, svg, summary, slopeFloor, ...(subjectProtocolSuffix ? { subjectProtocolSuffix } : {}) };
 }
 
 function parseCurvePreflightOptions(args: string[]): { out: string; threshold: number } {
@@ -311,5 +341,5 @@ function parseOptions(args: string[]): ReportOptions {
 }
 
 function usage(): string {
-  return 'usage: rote-bench curve-dry-run <protocol.json> --out records.jsonl | rote-bench curve-cache-preflight <records.jsonl> --out report.json [--threshold 1024] | rote-bench curve-report <rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg curve.svg --summary summary.json [--slope-floor 0.30] | rote-bench curve-browser-use-records <raw-calls.jsonl> --out records.jsonl | rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench curve-dry-run <protocol.json> --out records.jsonl | rote-bench curve-cache-preflight <records.jsonl> --out report.json [--threshold 1024] | rote-bench curve-cache-report <before-rote.jsonl> --after <after-rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg cost.svg --summary summary.json --subject-protocol-suffix <suffix> | rote-bench curve-report <rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg curve.svg --summary summary.json [--slope-floor 0.30] [--subject-protocol-suffix <suffix>] | rote-bench curve-browser-use-records <raw-calls.jsonl> --out records.jsonl | rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
 }

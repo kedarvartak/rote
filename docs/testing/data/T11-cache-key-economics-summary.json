@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "before_protocol_id": "p1-g1-wordpress-v8-tag-creation",
+  "after_protocol_id": "p1-g1-wordpress-v8-tag-creation-cache-key-v1-probe",
+  "baseline_protocol_id": "p1-g1-wordpress-v8-tag-creation",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "successful_runs_per_harness": 15,
+  "pricing": {
+    "version": "2026-07-15",
+    "source": "https://developers.openai.com/api/docs/pricing"
+  },
+  "cells": [
+    {
+      "task_id": "WP-N09",
+      "target_steps": 9,
+      "before": {
+        "mean_cost_usd": 0.01927397333333333,
+        "mean_logical_input": 47203.6,
+        "mean_cache_read": 981.3333333333334,
+        "cache_hit_rate": 0.03355704697986577
+      },
+      "after": {
+        "mean_cost_usd": 0.016839173333333336,
+        "mean_logical_input": 46960.066666666666,
+        "mean_cache_read": 8704,
+        "cache_hit_rate": 0.07534246575342465
+      },
+      "baseline": {
+        "mean_cost_usd": 0.01464136,
+        "mean_logical_input": 55130.6,
+        "mean_cache_read": 31308.8,
+        "cache_hit_rate": 0.9833333333333333
+      },
+      "after_vs_before_cost_reduction": {
+        "point": 0.12632579478509154,
+        "lower": 0.017205937516549186,
+        "upper": 0.24570306329704486,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "after_vs_baseline_cost_reduction": {
+        "point": -0.1501099169293929,
+        "lower": -0.29408497098612874,
+        "upper": 0.013009343723919639,
+        "confidence": 0.95,
+        "resamples": 10000
+      }
+    },
+    {
+      "task_id": "WP-N13",
+      "target_steps": 13,
+      "before": {
+        "mean_cost_usd": 0.019320453333333334,
+        "mean_logical_input": 51068.333333333336,
+        "mean_cache_read": 6109.866666666667,
+        "cache_hit_rate": 0.11734693877551021
+      },
+      "after": {
+        "mean_cost_usd": 0.012130693333333335,
+        "mean_logical_input": 51174.73333333333,
+        "mean_cache_read": 30276.266666666666,
+        "cache_hit_rate": 0.18781725888324874
+      },
+      "baseline": {
+        "mean_cost_usd": 0.018499360000000003,
+        "mean_logical_input": 68091.86666666667,
+        "mean_cache_read": 38647.46666666667,
+        "cache_hit_rate": 0.9733333333333334
+      },
+      "after_vs_before_cost_reduction": {
+        "point": 0.3721320548724184,
+        "lower": 0.22222389055741448,
+        "upper": 0.49727017197076395,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "after_vs_baseline_cost_reduction": {
+        "point": 0.3442641619313678,
+        "lower": 0.20222734152633914,
+        "upper": 0.46510242253798534,
+        "confidence": 0.95,
+        "resamples": 10000
+      }
+    },
+    {
+      "task_id": "WP-N17",
+      "target_steps": 17,
+      "before": {
+        "mean_cost_usd": 0.02350978666666666,
+        "mean_logical_input": 60331.26666666667,
+        "mean_cache_read": 5649.066666666667,
+        "cache_hit_rate": 0.07984790874524715
+      },
+      "after": {
+        "mean_cost_usd": 0.020058533333333337,
+        "mean_logical_input": 59983.13333333333,
+        "mean_cache_read": 16503.466666666667,
+        "cache_hit_rate": 0.1346153846153846
+      },
+      "baseline": {
+        "mean_cost_usd": 0.021991733333333333,
+        "mean_logical_input": 81862.26666666666,
+        "mean_cache_read": 47556.26666666667,
+        "cache_hit_rate": 1
+      },
+      "after_vs_before_cost_reduction": {
+        "point": 0.14680070824405578,
+        "lower": 0.02329295356471852,
+        "upper": 0.2722954719548058,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "after_vs_baseline_cost_reduction": {
+        "point": 0.08790575852744653,
+        "lower": -0.026243657618261765,
+        "upper": 0.21677363381928694,
+        "confidence": 0.95,
+        "resamples": 10000
+      }
+    },
+    {
+      "task_id": "WP-N21",
+      "target_steps": 21,
+      "before": {
+        "mean_cost_usd": 0.02703722666666667,
+        "mean_logical_input": 69475.73333333334,
+        "mean_cache_read": 6707.2,
+        "cache_hit_rate": 0.11526479750778816
+      },
+      "after": {
+        "mean_cost_usd": 0.023619440000000002,
+        "mean_logical_input": 69908.6,
+        "mean_cache_read": 18790.4,
+        "cache_hit_rate": 0.28173374613003094
+      },
+      "baseline": {
+        "mean_cost_usd": 0.02574592,
+        "mean_logical_input": 95952.26666666666,
+        "mean_cache_read": 55381.333333333336,
+        "cache_hit_rate": 0.9904761904761905
+      },
+      "after_vs_before_cost_reduction": {
+        "point": 0.12641040106677615,
+        "lower": 0.050277015674336276,
+        "upper": 0.21569935524517908,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "after_vs_baseline_cost_reduction": {
+        "point": 0.082594834443671,
+        "lower": 0.0029107695450918394,
+        "upper": 0.1753533532869794,
+        "confidence": 0.95,
+        "resamples": 10000
+      }
+    },
+    {
+      "task_id": "WP-N25",
+      "target_steps": 25,
+      "before": {
+        "mean_cost_usd": 0.030979093333333332,
+        "mean_logical_input": 81203.2,
+        "mean_cache_read": 10376.533333333333,
+        "cache_hit_rate": 0.15064935064935064
+      },
+      "after": {
+        "mean_cost_usd": 0.024612960000000003,
+        "mean_logical_input": 80100.66666666667,
+        "mean_cache_read": 29721.6,
+        "cache_hit_rate": 0.2755905511811024
+      },
+      "baseline": {
+        "mean_cost_usd": 0.02928722666666667,
+        "mean_logical_input": 109332.46666666666,
+        "mean_cache_read": 62924.8,
+        "cache_hit_rate": 0.9916666666666667
+      },
+      "after_vs_before_cost_reduction": {
+        "point": 0.2054977292212553,
+        "lower": 0.11308009284496733,
+        "upper": 0.3029547799750081,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "after_vs_baseline_cost_reduction": {
+        "point": 0.1596008635391447,
+        "lower": 0.06155403202581726,
+        "upper": 0.2616579664288677,
+        "confidence": 0.95,
+        "resamples": 10000
+      }
+    }
+  ]
+}

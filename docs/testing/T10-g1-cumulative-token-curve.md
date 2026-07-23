@@ -27,7 +27,7 @@ Logical input is `uncached input + cache reads + cache writes`; caching cannot m
 | WP-N25 | Rote | 70,827 | 10,377 | 0 | 1,007 | 72.0s / 85.2s | $0.0310 |
 | WP-N25 | Browser Use | 46,575 | 63,556 | 0 | 2,760 | 67.7s / 100.3s | $0.0294 |
 
-At WP-N25, Rote's mean billed cost is 5.4% higher despite using fewer logical-input tokens, because Browser Use receives substantially more discounted cache reads. Rote's p50 latency is 6.4% higher. G1 is a logical-token growth claim, not a cost or latency win.
+At WP-N25, Rote's mean billed cost is 5.4% higher and its p50 latency is 6.4% higher. Browser Use receives more discounted cache reads, so cost is reported independently from logical-token growth.
 
 A4 emitted 849 diffs (median 24 chars) and 240 grounded bootstraps (median 9270 chars). Relative to each diff's preceding grounded bootstrap, the median render-size reduction was 99.6%.
 

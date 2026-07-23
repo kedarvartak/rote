@@ -23,3 +23,4 @@ export * from './rote-curve.js';
 export * from './curve-resume.js';
 export * from './curve-cache-preflight.js';
 export * from './curve-report.js';
+export * from './curve-cache-economics.js';

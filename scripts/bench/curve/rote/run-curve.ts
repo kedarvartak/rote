@@ -25,16 +25,18 @@ interface Args {
   repetitions?: number;
   repetition?: number;
   probeModel?: string;
+  cacheLayoutProbe: boolean;
   resume: boolean;
   maxNewRuns?: number;
 }
 
 function parseArgs(argv: string[]): Args {
-  const result: Args = { out: '', checkpoints: [], resume: false };
+  const result: Args = { out: '', checkpoints: [], cacheLayoutProbe: false, resume: false };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
-    if (flag === '--resume') {
-      result.resume = true;
+    if (flag === '--resume' || flag === '--cache-layout-probe') {
+      if (flag === '--resume') result.resume = true;
+      else result.cacheLayoutProbe = true;
       continue;
     }
     const value = argv[index + 1];
@@ -49,6 +51,9 @@ function parseArgs(argv: string[]): Args {
   }
   if (!result.out) throw new Error('--out <records.jsonl> is required');
   if (result.repetition !== undefined && result.repetitions !== undefined) throw new Error('--repetition and --repetitions are mutually exclusive');
+  if (result.probeModel && result.cacheLayoutProbe) {
+    throw new Error('--openai-probe-model and --cache-layout-probe are mutually exclusive');
+  }
   if (result.probeModel && (result.checkpoints.length !== 1 || result.repetitions !== 1)) {
     throw new Error('--openai-probe-model requires exactly one --checkpoint and --repetitions 1');
   }
@@ -116,6 +121,10 @@ async function main(): Promise<void> {
     provider: 'openai',
     model: args.probeModel,
     repetitions_per_harness: 1,
+  } : args.cacheLayoutProbe ? {
+    ...frozen,
+    // Optimization evidence must not be mergeable with the frozen G1 matrix.
+    protocol_id: `${frozen.protocol_id}-cache-key-v1-probe`,
   } : frozen;
   const provider = protocol.provider as LlmProvider;
   if (provider !== 'anthropic' && provider !== 'openai') throw new Error(`unsupported provider: ${provider}`);

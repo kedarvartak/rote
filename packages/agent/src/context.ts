@@ -18,6 +18,15 @@ proves it. Never guess confirmation wording or selectors you have not seen, and 
 assert a value you just typed or text already on screen. Completion is checked
 independently at the end, so omitting "expect" is safe and preferred over guessing.`;
 
+/** Raised when volatile data would invalidate the planner's provider-cache prefix. */
+export class CacheLayoutImmutabilityError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'CacheLayoutImmutabilityError';
+  }
+}
+
+/** Stable and volatile inputs used to assemble one planner request. */
 export interface AssemblePlannerContextOptions {
   task: string;
   page: { url: string; title: string };
@@ -32,6 +41,7 @@ export interface AssemblePlannerContextOptions {
 
 /** Builds a cache-stable planner prefix and a per-step volatile suffix. */
 export function assemblePlannerContext(options: AssemblePlannerContextOptions): PlannerContext {
+  assertKnownLayoutFields(options);
   // see docs/02-architecture.md "Decision plane details" — stable material
   // stays before per-step state so provider prompt caches survive observation changes.
   const stablePrefix = `You are Rote's browser planner.
@@ -62,6 +72,26 @@ ${renderRepair(options.repair)}
 Compact observation (${options.observationMode}):
 ${options.observation}`;
   return { stablePrefix, volatileSuffix };
+}
+
+/** Fails if a planner prefix mutates after the first step of a run. */
+export function assertCacheStablePrefix(expected: string | undefined, actual: string): string {
+  if (expected !== undefined && expected !== actual) {
+    // INVARIANT: changing bytes above the stable/volatile line silently destroys
+    // provider cache locality while leaving correctness tests green.
+    throw new CacheLayoutImmutabilityError('planner stable prefix changed within one run');
+  }
+  return expected ?? actual;
+}
+
+function assertKnownLayoutFields(options: AssemblePlannerContextOptions): void {
+  const allowed = new Set(['task', 'page', 'observation', 'observationMode', 'previousActions', 'stateSummary', 'repair']);
+  const unknown = Object.keys(options).filter((key) => !allowed.has(key));
+  if (unknown.length > 0) {
+    throw new CacheLayoutImmutabilityError(
+      `unknown planner context fields could cross the cache-stability boundary: ${unknown.join(', ')}`,
+    );
+  }
 }
 
 /**
