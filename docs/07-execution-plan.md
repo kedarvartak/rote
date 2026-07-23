@@ -32,7 +32,7 @@ drives sequencing:
 
 | Fact | Consequence for the plan |
 |---|---|
-| Eviction/diff built and G1-measured; cache layout minimally qualified; compaction not built | tier 0 clears G1 while cost/latency economics and G2 remain |
+| Eviction/diff built and G1-measured; OpenAI cache layout economically qualified; compaction not built | tier 0 clears G1 and long-cell cost while G2 remains |
 | B1–B3 render ~537 chars; the selected WordPress page renders 89,114 chars (~22,279 approximate tok) identically across 15 fresh sessions ([T2](testing/T2-measurement-page-selection.md)) | The real-page prerequisite is now met; E1.2 can fix the curve protocol and E1.4 can collect provider-reported sizes |
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
@@ -83,16 +83,16 @@ and poison both gates.
 
 ### E3 — B3 cache layout, for real. ~4–5 days
 
-The mechanism [02](02-architecture.md) admits does not exist. Only meaningful on the E1
-page — our fixtures are below every provider's minimum cacheable prefix.
+The mechanism began as history-first ordering and is now economically qualified with
+exact-prefix routing on the E1 page. Small fixtures remain below provider cache minimums.
 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---|---|---|---|
 | E3.1 | **Preflight from E1.7 data:** confirm real-page prompts clear the model-dependent minimums (4096 Opus 4.8-class / 2048 Fable 5, Sonnet 4.6 / 1024 older Sonnets; OpenAI 1024). If not, stop and say so — do not ship a lever that cannot fire. | 0.5 | E1.7 | reproducible T3 report: 26/86 calls eligible, 2 hits (7.7% of eligible), 39,552 cache-read tokens; proceed to layout work without claiming qualification | done — go |
 | E3.2 | **OpenAI cache-layout qualification.** Automatic caching starts above 1024 tokens; arrange the immutable prefix so repeated real-page calls actually hit (measured via #57 buckets, cf. the 4027/4024 provider probe). | 2 | E3.1 | [T4](testing/T4-openai-cache-layout.md): history precedes page churn; 2/2 verified WP-N15 runs report a 1,024-token incremental cache read without padding or hiding logical input | done — mechanism only |
 | E3.3 | **Optional Anthropic qualification.** When a key is available, add explicit 5-minute `cache_control` breakpoints and verify the same layout; this is portability evidence, not a P1 blocker. | 0.5 | E3.2 | optional provider probe or explicit defer note | optional |
-| E3.4 | **Layout immutability tests.** Probes that plant a timestamp/run-id above the stable line and assert the build fails — the discipline is the moat ([04](04-competition.md)). | 1 | E3.2 | tests in the sacred suite; volatile-above-the-line fails | ready |
-| E3.5 | **Measure and report.** Hit rate and $ delta on the E1 protocol, priced per bucket (reads ~0.1×). Re-draw the curve with caching on. | 1 | E3.2, E3.4 | before/after curve published; cache-adjusted per [03](03-benchmark.md) | blocked |
+| E3.4 | **Layout immutability tests.** Probes that plant a timestamp/run-id above the stable line and assert the build fails — the discipline is the moat ([04](04-competition.md)). | 1 | E3.2 | sacred invariant tests reject unknown volatile metadata and any within-run stable-prefix byte change | done |
+| E3.5 | **Measure and report.** Hit rate and $ delta on the E1 protocol, priced per model-specific bucket. Re-draw the curve with caching on. | 1 | E3.2, E3.4 | [T11](testing/T11-cache-key-economics.md): 15-run fresh paired matrix; WP-N25 cost −20.5% vs frozen Rote and −16.0% vs Browser Use; WP-N09 still crosses parity | done |
 
 ### E4 — The level (gate G2). ~4–6 days, mostly run-babysitting
 

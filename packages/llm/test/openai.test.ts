@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type OpenAI from 'openai';
-import { OpenAiTaggedLlmClient } from '../src/index.js';
+import { OpenAiTaggedLlmClient, openAiPromptCacheKey } from '../src/index.js';
 
 describe('OpenAiTaggedLlmClient', () => {
   it('preserves stable/volatile prompt layout and source-tagged usage', async () => {
@@ -25,6 +25,7 @@ describe('OpenAiTaggedLlmClient', () => {
       instructions: 'stable action schema',
       input: 'current observation',
       max_output_tokens: 200,
+      prompt_cache_key: openAiPromptCacheKey('stable action schema'),
     });
     expect(result).toEqual({
       text: '{"kind":"done","success":true,"summary":"ok"}',
@@ -37,6 +38,12 @@ describe('OpenAiTaggedLlmClient', () => {
         usage: { input_tokens: 123, output_tokens: 17 },
       },
     });
+  });
+
+  it('keeps cache routing stable only for byte-identical immutable prefixes', () => {
+    expect(openAiPromptCacheKey('stable')).toBe(openAiPromptCacheKey('stable'));
+    expect(openAiPromptCacheKey('stable')).not.toBe(openAiPromptCacheKey('stable\nrun=2'));
+    expect(openAiPromptCacheKey('stable')).not.toContain('stable');
   });
 
   it('fails before a provider call when no OpenAI key is configured', () => {

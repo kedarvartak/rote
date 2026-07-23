@@ -107,7 +107,9 @@ task** — priced from a dated table. An unpriced model is reported as `price un
 
 Tokens and dollars are not the same number. Output tokens bill several times input and
 cache reads are discounted, so a harness can win logical tokens while losing dollars.
-T10 does exactly that: report both, and never phrase G1 as a cost win.
+Frozen T10 does exactly that and reports a cost loss. Post-G1 T11 then separately shows
+stable cache routing turning WP-N25 into a cost win while WP-N09 still crosses parity.
+Never back-project cache economics into the logical-token claim.
 
 ## Generalization (V2)
 

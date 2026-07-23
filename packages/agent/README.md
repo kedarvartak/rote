@@ -12,7 +12,8 @@ behind `BrowserPlannerClient`, while tests use deterministic scripted planners.
 - `runBrowserAgent(options)` — observe → plan → act loop until `done` or the step budget is exhausted; planner-declared success is gated by an injected verifier, and one unresolvable or semantically conflicting pre-action target gets a bounded correction grounded by complete current candidate objects.
 - `BrowserPlannerClient` — planner interface; calls are always tagged with `source: 'planner'`.
 - `TaggedLlmBrowserPlanner` — production planner adapter over `@rote/llm`; strictly parses one typed action, gives malformed output one scoped corrective call, and returns both the original and `repair`-tagged provider usage. Exhausting the bounded repair fails closed.
-- `assemblePlannerContext(options)` — separates cache-stable instructions/task/action schemas and orders append-only action history before volatile page/observation churn so OpenAI can reuse the growing exact prefix.
+- `assemblePlannerContext(options)` — separates cache-stable instructions/task/action schemas and orders append-only action history before volatile page/observation churn; unknown fields fail instead of silently crossing the cache boundary.
+- `assertCacheStablePrefix(expected, actual)` — enforces exact within-run prefix immutability before every planner call.
 - `runBrowserAgent(options)` — resets the adaptive observation base when URL identity changes, preventing old-page controls from surviving navigation as a misleading diff.
 - `normalizeBrowserAction(input)` — parses one action while returning auditable classifications for non-fatal optional-hint degradation.
 - `BrowserPageSession` — minimal page-action surface required by the loop.

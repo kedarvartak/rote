@@ -17,12 +17,12 @@ marks status; the authoritative table is [02 §Status](02-architecture.md).
 | | |
 |---|---|
 | **Built** | core schemas + Expect DSL · recorder · verified replay executor · CDP backend · perception (distill → stable IDs → budget) · **observation eviction** · agent loop · tagged LLM client · benchmark + accounting + head-to-head gate |
-| **Built, measured** | diff observations — T10 records 849 real WordPress diffs with 99.6% median render-size reduction against preceding grounded bases · minimally qualified stable-prefix cache layout |
+| **Built, measured** | diff observations — T10 records 849 real WordPress diffs with 99.6% median render-size reduction · stable-prefix cache routing — T11 cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% |
 | **Not built** | compaction · playbook distiller · matcher · site memory · model routing · speculation |
 
 We are in **P1 (V1)**: **tier 0, working memory.** G1 passes: 37.2% slower cumulative
 logical-input growth (95% CI 35.6–38.8%) at success parity. G2 (tokens-per-task level),
-packaging, and the demo remain; cost and latency do not yet win. **No number, no launch.**
+packaging, and the demo remain. Post-G1 cache routing wins long-cell cost, but the shortest cell still crosses parity. **No number, no launch.**
 
 ## The memory spine
 

@@ -44,6 +44,7 @@ See `src/index.ts`. Highlights:
 - **`planCurveResume`** — validates existing curve JSONL, refuses non-empty overwrite, and returns only fully completed run ids for append-safe one-run batching.
 - **`buildCurveCachePreflight` / `rote-bench curve-cache-preflight`** — report prompt-size eligibility and provider-observed cache hits from raw curve calls, separating “layout work can fire” from “layout is qualified.”
 - **`buildCurveReport` / `rote-bench curve-report`** — fail-closed audit of matched curve receipts, seeded-bootstrap cell and slope intervals, success parity, cache/cost/latency buckets, A4 ratios, and dependency-free Markdown/SVG/JSON publication.
+- **`buildCurveCacheEconomics` / `rote-bench curve-cache-report`** — audit versioned before/after cache evidence and publish model-priced hit-rate and cost confidence intervals plus a cost-curve SVG.
 
 ## Spec format
 

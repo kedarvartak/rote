@@ -62,7 +62,7 @@ confuse in an architecture doc; this is the boundary.
 | Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built** — the dominant quadratic term is already gone |
 | **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
-| **Cache-layout discipline** (B3) | 0 | **built, minimally qualified** — stable-prefix ordering produces repeatable 1,024-token OpenAI cache reads, while hit-rate economics remain unqualified ([T4](testing/T4-openai-cache-layout.md)) |
+| **Cache-layout discipline** (B3) | 0 | **built and economically qualified on OpenAI** — exact immutable prefixes receive deterministic cache-routing keys; WP-N25 cost falls 20.5% and clears Browser Use by 16.0% with both 95% intervals above zero ([T11](testing/T11-cache-key-economics.md)) |
 | **History compaction** (B4) | 0 | **not built** — required to make the curve linear rather than a smaller quadratic |
 | **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
 | **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
@@ -129,19 +129,20 @@ observation — "compare prices across three products". A real limit
 |---|---|---|
 | **Evict observations** | kills the dominant quadratic term | **built** (A4-adjacent; never claimed) |
 | **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built and measured** — 849 WordPress certification diffs have a 24-character median and 99.6% median reduction against their preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)) |
-| **Prefix-cache `[stable][history]`** (B3) | 10× off the surviving quadratic term | **built, minimally qualified** — 1,024-token incremental hits repeat 2/2; hit-rate economics unmeasured ([T4](testing/T4-openai-cache-layout.md)) |
+| **Prefix-cache `[stable][history]`** (B3) | discounted billing on the surviving prefix | **built and OpenAI-economics qualified** — exact-prefix routing cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% ([T11](testing/T11-cache-key-economics.md)) |
 | **Scheduled compaction** (B4) | history → O(1); curve → **linear** | not built (P2) |
 | **Replay** (B2) | 0 steps, 0 tokens | needs the distiller (P2) |
 
-### Caching: mechanism qualified, economic claim unproven
+### Caching: exact-prefix routing, measured economics
 
-The canonical P1 provider is OpenAI, whose prompt caching is automatic once an exact
-prefix clears the model threshold; Anthropic remains optional and would require explicit
-`cache_control` breakpoints that are not built. T4 moved append-only action history ahead
-of current-page and observation churn. Two independent WP-N15 runs then reported a
-1,024-token incremental cache read and passed exact-title verification. That qualifies the
-mechanism, not the economics: only one incremental call per run hit, so no 10× task-level
-benefit is claimed.
+OpenAI prompt caching is automatic once an exact prefix clears the model threshold. T4
+first moved append-only history ahead of page churn and minimally qualified a 1,024-token
+hit. T11 now hashes the exact stable prefix into `prompt_cache_key`, while runtime and
+sacred invariant checks reject volatile metadata or within-run prefix mutation. No prompt
+padding is added. In a fresh identically ordered paired matrix, WP-N25 cache reads rise
+10,377→29,722 tokens/run, Rote cost falls 20.5% (95% CI 11.3–30.3%), and Rote is 16.0%
+cheaper than Browser Use (6.2–26.2%). WP-N09 remains a cost loss whose interval crosses
+parity. Anthropic remains optional and would require explicit `cache_control` support.
 
 The accounting was also blind to it, and that is now fixed
 ([#57](https://github.com/kedarvartak/rote/issues/57)) — **the accounting had to land
@@ -194,10 +195,10 @@ preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)). The 
 contract remains fail-closed above 100,000 characters.
 
 This does **not** prove “they're quadratic, we're linear.” Rote is a smaller-growth
-quadratic until scheduled compaction exists. It also does not prove cost or latency wins:
-Browser Use's discounted cache reads make Rote 5.4% more expensive at WP-N25 despite the
-logical-token reduction. The eviction trade has not been stress-tested on a task requiring
-recall, and G2's cross-task token level remains unrun.
+quadratic until scheduled compaction exists. The frozen pre-cache-key matrix did not prove cost or latency wins. T11 subsequently makes
+Rote 16.0% cheaper than Browser Use at WP-N25 (95% CI 6.2–26.2%), but WP-N09 still loses
+and crosses parity: this is not a universal cost claim. The eviction trade has not been
+stress-tested on a task requiring recall, and G2's cross-task token level remains unrun.
 
 ## The control loop
 

@@ -72,6 +72,12 @@ repetitions, preserving the paired collection design. The report also shows cach
 output, latency, dated model pricing, and A4 diff/base ratios; it does not turn a logical-
 token win into a cost claim.
 
+Cache-layout evidence is versioned separately so it cannot be merged into frozen G1. Set
+`ROTE_CACHE_LAYOUT_PROBE=1` on paired collection; the Rote protocol ID gains
+`-cache-key-v1-probe` while Browser Use remains canonical. Compare the frozen and optimized
+matrices with `rote-bench curve-cache-report`; it emits before/after cost confidence
+intervals and a three-line billed-cost SVG.
+
 ## Per-step JSONL contract
 
 One line represents one provider call. Measurement rows require:

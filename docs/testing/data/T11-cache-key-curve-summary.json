@@ -1,0 +1,255 @@
+{
+  "schema_version": 1,
+  "protocol_id": "p1-g1-wordpress-v8-tag-creation",
+  "subject_protocol_id": "p1-g1-wordpress-v8-tag-creation-cache-key-v1-probe",
+  "baseline_protocol_id": "p1-g1-wordpress-v8-tag-creation",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "subject_harness": "rote",
+  "baseline_harness": "browser-use",
+  "confidence": 0.95,
+  "resamples": 10000,
+  "min_successful_runs_per_cell": 15,
+  "complete_matched_repetitions": 15,
+  "slope_reduction_floor": 0.3,
+  "pricing": {
+    "version": "2026-07-15",
+    "source": "https://developers.openai.com/api/docs/pricing"
+  },
+  "cells": [
+    {
+      "task_id": "WP-N09",
+      "target_steps": 9,
+      "subject": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 46960.066666666666,
+          "lower": 46640.12833333333,
+          "upper": 47228.13833333333
+        },
+        "mean_uncached_input_tokens": 38256.066666666666,
+        "mean_cache_read_tokens": 8704,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 416.46666666666664,
+        "latency_p50_ms": 35131,
+        "latency_p95_ms": 42510,
+        "mean_cost_usd": 0.016839173333333336
+      },
+      "baseline": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 55130.6,
+          "lower": 55115.066666666666,
+          "upper": 55146.46666666667
+        },
+        "mean_uncached_input_tokens": 23821.8,
+        "mean_cache_read_tokens": 31308.8,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 1238.6,
+        "latency_p50_ms": 31033.020973205566,
+        "latency_p95_ms": 47771.99244499206,
+        "mean_cost_usd": 0.01464136
+      },
+      "logical_input_reduction": {
+        "point": 0.14820323619429743,
+        "lower": 0.1433248241373732,
+        "upper": 0.15374769381028794
+      }
+    },
+    {
+      "task_id": "WP-N13",
+      "target_steps": 13,
+      "subject": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 51174.73333333333,
+          "lower": 50871.265,
+          "upper": 51612.205
+        },
+        "mean_uncached_input_tokens": 20898.466666666667,
+        "mean_cache_read_tokens": 30276.266666666666,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 464.8,
+        "latency_p50_ms": 35353,
+        "latency_p95_ms": 48988.499999999985,
+        "mean_cost_usd": 0.012130693333333335
+      },
+      "baseline": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 68091.86666666667,
+          "lower": 67280.45999999999,
+          "upper": 68519.8
+        },
+        "mean_uncached_input_tokens": 29444.4,
+        "mean_cache_read_tokens": 38647.46666666667,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 1785.5333333333333,
+        "latency_p50_ms": 44361.9167804718,
+        "latency_p95_ms": 69472.90360927577,
+        "mean_cost_usd": 0.018499360000000003
+      },
+      "logical_input_reduction": {
+        "point": 0.24844572724299918,
+        "lower": 0.2371560249720661,
+        "upper": 0.2569507119645032
+      }
+    },
+    {
+      "task_id": "WP-N17",
+      "target_steps": 17,
+      "subject": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 59983.13333333333,
+          "lower": 59426.729999999996,
+          "upper": 60574.471666666665
+        },
+        "mean_uncached_input_tokens": 43479.666666666664,
+        "mean_cache_read_tokens": 16503.466666666667,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 635.2,
+        "latency_p50_ms": 48395,
+        "latency_p95_ms": 54247.899999999994,
+        "mean_cost_usd": 0.020058533333333337
+      },
+      "baseline": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 81862.26666666666,
+          "lower": 81441.06166666666,
+          "upper": 82094.46999999999
+        },
+        "mean_uncached_input_tokens": 34306,
+        "mean_cache_read_tokens": 47556.26666666667,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 2196.0666666666666,
+        "latency_p50_ms": 57003.990173339844,
+        "latency_p95_ms": 99017.42150783536,
+        "mean_cost_usd": 0.021991733333333333
+      },
+      "logical_input_reduction": {
+        "point": 0.26726762187544284,
+        "lower": 0.2591138920021999,
+        "upper": 0.2749140448947104
+      }
+    },
+    {
+      "task_id": "WP-N21",
+      "target_steps": 21,
+      "subject": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 69908.6,
+          "lower": 69033.18,
+          "upper": 70753.60166666668
+        },
+        "mean_uncached_input_tokens": 51118.2,
+        "mean_cache_read_tokens": 18790.4,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 808.2,
+        "latency_p50_ms": 59928,
+        "latency_p95_ms": 71551.3,
+        "mean_cost_usd": 0.023619440000000002
+      },
+      "baseline": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 95952.26666666666,
+          "lower": 95860.195,
+          "upper": 96052.735
+        },
+        "mean_uncached_input_tokens": 40570.933333333334,
+        "mean_cache_read_tokens": 55381.333333333336,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 2487.133333333333,
+        "latency_p50_ms": 60164.710521698,
+        "latency_p95_ms": 79705.12049198148,
+        "mean_cost_usd": 0.02574592
+      },
+      "logical_input_reduction": {
+        "point": 0.27142315206727785,
+        "lower": 0.2626051106686858,
+        "upper": 0.2804546049297443
+      }
+    },
+    {
+      "task_id": "WP-N25",
+      "target_steps": 25,
+      "subject": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 80100.66666666667,
+          "lower": 78984.50666666668,
+          "upper": 81205.35333333333
+        },
+        "mean_uncached_input_tokens": 50379.066666666666,
+        "mean_cache_read_tokens": 29721.6,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 930.7333333333333,
+        "latency_p50_ms": 72540,
+        "latency_p95_ms": 87853.4,
+        "mean_cost_usd": 0.024612960000000003
+      },
+      "baseline": {
+        "successful_runs": 15,
+        "attempted_runs": 15,
+        "success_rate": 1,
+        "logical_input_tokens": {
+          "point": 109332.46666666666,
+          "lower": 107767.12333333334,
+          "upper": 110137.935
+        },
+        "mean_uncached_input_tokens": 46407.666666666664,
+        "mean_cache_read_tokens": 62924.8,
+        "mean_cache_write_tokens": 0,
+        "mean_output_tokens": 2769.8,
+        "latency_p50_ms": 76028.96785736084,
+        "latency_p95_ms": 118112.72397041312,
+        "mean_cost_usd": 0.02928722666666667
+      },
+      "logical_input_reduction": {
+        "point": 0.2673661437560175,
+        "lower": 0.25211427709039275,
+        "upper": 0.2800758368218628
+      }
+    }
+  ],
+  "slope": {
+    "subject_tokens_per_interaction": 2125.376666666667,
+    "baseline_tokens_per_interaction": 3406.6033333333326,
+    "reduction": {
+      "point": 0.3761009255553672,
+      "lower": 0.3567309701594311,
+      "upper": 0.39551394455437316
+    },
+    "passed": true
+  },
+  "a4": {
+    "full_observations": 225,
+    "bootstrap_observations": 240,
+    "diff_observations": 842,
+    "median_full_chars": 592,
+    "median_bootstrap_chars": 9270,
+    "median_diff_chars": 24,
+    "median_diff_reduction_vs_preceding_bootstrap": 0.9959287531806615
+  }
+}

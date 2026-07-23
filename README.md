@@ -86,9 +86,9 @@ masquerade as memory reduction.
 
 ![Rote vs Browser Use cumulative logical-input curve](docs/diagrams/g1-cumulative-logical-input.svg)
 
-At 25 required interactions, Rote uses 26.3% fewer logical-input tokens. This is not yet a
-cost or latency win: Browser Use receives more discounted cache reads, so Rote's mean bill
-at that cell is 5.4% higher and its p50 latency is 6.4% higher. G1 proves slower logical
+At 25 required interactions, Rote uses 26.3% fewer logical-input tokens. In this frozen
+pre-cache-key matrix, that is not a cost or latency win: Browser Use receives more
+discounted cache reads, so Rote's mean bill is 5.4% higher and p50 latency 6.4% higher. G1 proves slower logical
 context growth, not cheaper execution under today's prompt-cache economics.
 
 [Method and full table](docs/testing/T10-g1-cumulative-token-curve.md) ·
@@ -96,6 +96,26 @@ context growth, not cheaper execution under today's prompt-cache economics.
 [Browser Use raw receipts](docs/testing/data/T10-v8-certification-browser-use-raw.jsonl) ·
 [normalized Browser Use JSONL](docs/testing/data/T10-v8-certification-browser-use.jsonl) ·
 [machine-readable summary](docs/testing/data/T10-g1-curve-summary.json)
+
+### Cache economics follow-up
+
+After freezing G1, Rote began sending a SHA-256-derived `prompt_cache_key` for the exact
+immutable planner prefix. A fresh, identically ordered 15-run paired matrix preserves the
+logical curve (37.6% slower growth) while moving more of Rote's prompt into OpenAI's
+discounted cache bucket:
+
+![Billed cost before and after stable cache routing](docs/diagrams/e3-cache-key-cost.svg)
+
+At WP-N25, mean Rote cost falls **20.5%** (95% CI: 11.3–30.3%) and is **16.0% lower than
+Browser Use** (95% CI: 6.2–26.2%). The shortest WP-N09 cell still loses cost and its
+comparison interval crosses parity; this is a long-task cache win, not a universal one.
+Logical tokens are never relabeled as savings.
+
+[Cache method and table](docs/testing/T11-cache-key-economics.md) ·
+[optimized curve](docs/testing/T11-cache-key-optimized-curve.md) ·
+[optimized Rote JSONL](docs/testing/data/T11-cache-key-v1-rote.jsonl) ·
+[Browser Use raw receipts](docs/testing/data/T11-cache-key-v1-browser-use-raw.jsonl) ·
+[cache summary](docs/testing/data/T11-cache-key-economics-summary.json)
 
 ![Architecture](docs/diagrams/architecture.svg)
 
@@ -133,7 +153,7 @@ We are in **P1 = tier 0, working memory**. Its four levers, honestly:
 |---|---|
 | Observation eviction — keep what you did, not what you saw | **built** (and never claimed until now) |
 | Diff observations | **built and real-page measured** — 849 certification diffs have a 24-character median; median reduction vs. the preceding grounded base is 99.6% ([T10](docs/testing/T10-g1-cumulative-token-curve.md)) |
-| Cache layout | **built, minimally qualified** — stable-prefix ordering produces repeatable 1,024-token OpenAI cache reads, but hit-rate economics remain unqualified ([T4](docs/testing/T4-openai-cache-layout.md)) |
+| Cache layout | **built and economically qualified** — immutable-prefix routing cuts WP-N25 mean cost 20.5% and clears Browser Use by 16.0%, both with 95% intervals above zero ([T11](docs/testing/T11-cache-key-economics.md)) |
 | History compaction | not built — the lever that would make the curve linear rather than a smaller quadratic |
 
 Not built: the playbook distiller (V1 replays hand-written playbooks), the matcher, site
@@ -143,7 +163,7 @@ Skyvern ships record → codegen → zero-LLM replay → fallback today
 
 **No number, no launch.** G1 now passes its public 30% slope-reduction floor: 37.2%
 (95% CI 35.6–38.8%) at success parity. G2—the tokens-per-task level gate—has not run, and
-the cost/latency caveat above remains; Rote is not launch-ready.
+cache economics still lose at the shortest cell; Rote is not launch-ready.
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)
 

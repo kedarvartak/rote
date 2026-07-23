@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import OpenAI from 'openai';
 import type { TokenUsage, TokenUsageSource } from '@rote/core';
 import { TokenAccountingError, type TaggedLlmClient, type TaggedLlmRequest, type TaggedLlmResponse } from './types.js';
@@ -41,6 +42,11 @@ export function normalizeOpenAiUsage(source: TokenUsageSource, usage: OpenAI.Res
   };
 }
 
+/** Derives a privacy-preserving routing key from the exact immutable prompt prefix. */
+export function openAiPromptCacheKey(stablePrefix: string): string {
+  return `rote-${createHash('sha256').update(stablePrefix).digest('base64url')}`;
+}
+
 export interface OpenAiTaggedLlmClientOptions {
   /** Defaults to `OPENAI_API_KEY`. */
   apiKey?: string;
@@ -68,6 +74,9 @@ export class OpenAiTaggedLlmClient implements TaggedLlmClient {
       instructions: request.stablePrefix,
       input: request.volatileSuffix,
       max_output_tokens: request.maxTokens ?? 512,
+      // see docs/06-optimizations.md B3 — route identical immutable prefixes
+      // together without padding the prompt or changing logical-token accounting.
+      prompt_cache_key: openAiPromptCacheKey(request.stablePrefix),
     });
     return {
       text: response.output_text.trim(),

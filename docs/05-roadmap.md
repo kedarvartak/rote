@@ -55,7 +55,7 @@ need calibration time and would delay the number without changing its headline. 
 |---|---|---|
 | **A11 observation eviction** | kills the dominant quadratic term | **built** — and never claimed. Growth is 35 tok/step (one action JSON), not 135+ |
 | **A4 diff observations** | −~90% on the constant, real pages | **built and measured** — 849 WordPress certification diffs show 99.6% median render-size reduction vs. their preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)) |
-| **B3 cache layout** | 10× off the surviving quadratic | **built, minimally qualified** — T4 repeats a 1,024-token incremental hit in 2/2 verified runs; hit-rate and dollar impact remain unmeasured |
+| **B3 cache layout** | discounted provider billing on the surviving prefix | **built and economically qualified on OpenAI** — deterministic immutable-prefix routing cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% ([T11](testing/T11-cache-key-economics.md)) |
 | **B4 compaction** | history → O(1); **curve → linear** | not built |
 
 **Measure before building.** G1 now exercises A11/A4 on WordPress and reports B3 cache
@@ -89,11 +89,11 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 |---|---|
 | W1 browser + perception capture | done |
 | W2 distill, stable IDs, diff, render | **done and real-page measured** — T10 records 849 WordPress diffs and their grounded-base ratios |
-| W3 loop + context assembler | **done, including minimally qualified OpenAI history-first layout** — one incremental hit per T4 run; accounting remains provider-normalized (#57) |
+| W3 loop + context assembler | **done and OpenAI-economics qualified** — cache-key routing plus immutability guards preserve logical accounting and win long-cell billed cost in T11 |
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | W5 benchmark + the number | **G1 done** — 37.2% slower logical-input growth (95% CI 35.6–38.8%) at 75/75 success parity per harness; G2 remains |
 | W6 launch package | not started |
-| **W7 working memory (new)** | #57 accounting **done** → curve exploration **done** → OpenAI cache mechanism **qualified** → measure economics → compaction. The V1 headline |
+| **W7 working memory (new)** | #57 accounting **done** → G1 **passed** → OpenAI cache economics **qualified** → G2/packaging → compaction in P2 |
 
 **No longer blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49)
 and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` is now

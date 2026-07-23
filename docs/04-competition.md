@@ -245,9 +245,11 @@ appended wherever convenient, across the codebase. Retrofitting the guarantee me
 every writer and constraining it. Rote has one `ContextAssembler` that owns layout as an
 architectural rule.
 
-That is the same shape as invariant 1: **not clever code, an enforced constraint.** Those
-are the hard ones to copy, because copying them means changing how your codebase is allowed
-to be written.
+That is the same shape as invariant 1: **not clever code, an enforced constraint.** E3.4
+now enforces it at runtime and in the sacred suite: timestamp/run-ID fields and any
+within-run prefix byte change fail. T11 then measures the economic result rather than
+assuming discipline implies savings. Those constraints are hard to copy because copying
+them changes how a codebase is allowed to be written.
 
 ### The trust gate is the precondition, not a competing claim
 
