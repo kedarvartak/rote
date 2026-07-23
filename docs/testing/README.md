@@ -40,4 +40,5 @@ enough to be re-run and disagreed with.
 | [T5](T5-browser-use-completion.md) | 2026-07-22 | Prevent post-Apply disappearance from causing a false Browser Use conclusion | Fresh v4 WP-N07 pair passes in 7 calls/harness; instrument smoke only |
 | [T6](T6-wordpress-corpus-cleanup.md) | 2026-07-22 | Remove WordPress's unrelated stock post and gate the exact 120-title corpus | Stability remains zero-range; fresh v5 WP-N10 pair passes; instrument smoke only |
 | [T7](T7-browser-use-long-cell-qualification.md) | 2026-07-22 | Bound Browser Use exact-set long-cell reliability before certification | N15 can pass with accessible labels; N20 fails safely; bulk-checkbox long cells are a no-go |
-| [T8](T8-title-review-curve-smokes.md) | 2026-07-22 | Qualify non-checkbox title-review replacements across the full curve | All five paired cells pass exact all-120-post verification; certification collection ready |
+| [T8](T8-title-review-curve-smokes.md) | 2026-07-22 | Test non-checkbox title-review replacements across the full curve | Superseded by T9 after certification exposed 3/10 failures |
+| [T9](T9-certification-stop-and-tag-qualification.md) | 2026-07-23 | Stop unreliable v7 collection and qualify safe tag creation | Retain all v7 failures; v8 passes 30/30 bounded sessions across five cells |

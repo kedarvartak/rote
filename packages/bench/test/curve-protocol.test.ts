@@ -11,25 +11,31 @@ describe('G1 curve protocol', () => {
     )));
 
     expect(protocol).toEqual(expect.objectContaining({
-      protocol_id: 'p1-g1-wordpress-v7-title-reviews',
+      protocol_id: 'p1-g1-wordpress-v8-tag-creation',
       provider: 'openai',
       model: 'gpt-4.1-mini',
     }));
-    expect(protocol.page.verify_command_template).toContain('verify-reviewed-posts.sh');
-    expect(protocol.page.verify_command_template).toContain('{{expected_post_titles_json}}');
-    expect(protocol.checkpoints.map((checkpoint) => checkpoint.target_steps)).toEqual([8, 12, 16, 20, 24]);
-    expect(protocol.checkpoints.every((checkpoint) => checkpoint.operation_mode === 'review_title_each')).toBe(true);
+    expect(protocol.page.verify_command_template).toContain('verify-created-tags.sh');
+    expect(protocol.page.verify_command_template).toContain('{{expected_tag_names_json}}');
+    expect(protocol.checkpoints.map((checkpoint) => checkpoint.target_steps)).toEqual([9, 13, 17, 21, 25]);
+    expect(protocol.checkpoints.every((checkpoint) => checkpoint.operation_mode === 'create_tag_each')).toBe(true);
     expect(protocol.checkpoints.every((checkpoint) => checkpoint.prompt_template.includes(
-      'Do not change Content, status, or any other post.',
+      'Do not edit or delete posts, categories, or any other data.',
     ))).toBe(true);
     const records = parseCurveStepJsonl(renderCurveDryRun(protocol));
-    expect(records).toHaveLength(80);
-    expect(records[0]).toEqual(expect.objectContaining({ task_id: 'WP-N08', step_index: 1, record_kind: 'dry_run' }));
-    expect(records.at(-1)).toEqual(expect.objectContaining({ task_id: 'WP-N24', step_index: 24, record_kind: 'dry_run' }));
+    expect(records).toHaveLength(85);
+    expect(records[0]).toEqual(expect.objectContaining({ task_id: 'WP-N09', step_index: 1, record_kind: 'dry_run' }));
+    expect(records.at(-1)).toEqual(expect.objectContaining({ task_id: 'WP-N25', step_index: 25, record_kind: 'dry_run' }));
     expect(records.every((record) => record.record_kind === 'dry_run' && record.provider_usage.dry_run === true)).toBe(true);
   });
 
   it('retains superseded protocols as immutable provenance artifacts', async () => {
+    const titleReviewsV7 = parseCurveProtocol(JSON.parse(await readFile(
+      resolve('../../scripts/bench/curve/protocol-v7-title-reviews.json'),
+      'utf8',
+    )));
+    expect(titleReviewsV7.protocol_id).toBe('p1-g1-wordpress-v7-title-reviews');
+
     const accessibleV6 = parseCurveProtocol(JSON.parse(await readFile(
       resolve('../../scripts/bench/curve/protocol-v6-accessible.json'),
       'utf8',

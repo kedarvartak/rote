@@ -9,41 +9,41 @@ E1.2 defines the instrument; E1.3/E1.4 collect evidence with it.
 
 | Input | Value |
 |---|---|
-| Protocol | `p1-g1-wordpress-v7-title-reviews` |
+| Protocol | `p1-g1-wordpress-v8-tag-creation` |
 | Provider/model | OpenAI / `gpt-4.1-mini` |
 | Harnesses | Rote and Browser Use |
 | Repetitions | ≥15 per harness/checkpoint |
 | Page | WordPress 6.8.2 Posts admin, 120 seeded posts, 100 rows/page |
 | Reset | `wordpress/reset-state.sh` before every measured run |
 | Viewport | 1920 × 1080 CSS px for both harnesses |
-| Verification | all 120 titles, contents, and statuses via `wordpress/verify-reviewed-posts.sh` after every run |
+| Verification | exact tags plus unchanged 120-post corpus via `wordpress/verify-created-tags.sh` after every run |
 | Model seed | unavailable; pin everything else and report variance |
 
 Both harnesses receive the same rendered prompt, initial URL, page state, model, and
-named post set from [`protocol.json`](protocol.json). Both pre-navigate to the initial URL
+named work set from [`protocol.json`](protocol.json). Both pre-navigate to the initial URL
 before the first measured provider call; Browser Use uses `initial_actions` rather than
 being charged to interpret a URL embedded in task prose. Credentials are bound from the
 local ignored WordPress `.env`; they are never written into protocol or result artifacts.
 Run order must alternate harnesses within each checkpoint/repetition to prevent a provider
-or host warm-up trend from belonging mostly to one side. T7 retains the rejected
-bulk-checkbox workload as provenance. Canonical v7 uses ordinary title-edit controls and
-no custom Browser Use action repair or guard.
+or host warm-up trend from belonging mostly to one side. T7 retains rejected checkbox
+work; T9 rejects v7 after certification exposed title editor misclicks. Canonical v8 uses
+ordinary tag-creation controls with no custom Browser Use action repair or guard.
 
 ## Task-length checkpoints
 
-The task signs in and reviews *k* explicitly enumerated posts in order. For each post it
-opens the edit page, appends `— reviewed` to the title, updates, and returns to All Posts.
-Three login actions, four actions per post, and done produce `4k + 4` target interactions.
-The exact database verifier checks target titles and confirms every post's content/status
-and every non-target title remain unchanged.
+The task signs in, opens Tags from the large All Posts page, and creates *k* explicitly
+specified post tags in order. Each tag requires exact Name, Slug, Description, and submit
+actions. Three login actions, one navigation, four actions per tag, and done produce
+`4k + 5` target interactions. The database verifier checks exact tags, zero assignments,
+and the unchanged exact 120-post corpus.
 
-| Cell | Reviewed posts (*k*) | Target interactions | Why |
+| Cell | Created tags (*k*) | Target interactions | Why |
 |---|---:|---:|---|
-| WP-N08 | 1 | 8 | shortest authenticated edit flow |
-| WP-N12 | 2 | 12 | short |
-| WP-N16 | 3 | 16 | medium |
-| WP-N20 | 4 | 20 | long |
-| WP-N24 | 5 | 24 | longest |
+| WP-N09 | 1 | 9 | shortest authenticated creation flow |
+| WP-N13 | 2 | 13 | short |
+| WP-N17 | 3 | 17 | medium |
+| WP-N21 | 4 | 21 | long |
+| WP-N25 | 5 | 25 | longest |
 
 The x-axis is **required interaction complexity**, fixed by *k*, not whichever harness
 happens to use more internal calls. Every provider call is still recorded with its actual
@@ -87,7 +87,7 @@ a launch graph. It exists only to prove protocol expansion and JSONL plumbing.
 node packages/bench/bin/rote-bench.js curve-dry-run \
   scripts/bench/curve/protocol.json \
   --out bench-out/curve-dry-run.jsonl
-wc -l bench-out/curve-dry-run.jsonl   # 77
+wc -l bench-out/curve-dry-run.jsonl   # 85
 ```
 
 The command validates checkpoint arithmetic and uniqueness, emits one placeholder row for
@@ -116,7 +116,7 @@ set -a; source .env; set +a    # OPENAI_API_KEY must be non-empty
   --out bench-out/curve/browser-use
 ```
 
-For a non-publishable one-cell instrument probe, add `--checkpoint WP-N08
+For a non-publishable one-cell instrument probe, add `--checkpoint WP-N09
 --repetitions 1`. The command writes both `browser-use-raw-calls.jsonl` (unaltered
 Browser Use provider receipts) and `browser-use-curve.jsonl` (shared normalized rows).
 Like the Rote runner, Browser Use refuses to overwrite non-empty evidence and supports
@@ -161,7 +161,7 @@ same repetition rather than advancing it:
 
 ```bash
 BROWSER_USE_PYTHON=/tmp/rote-browser-use/bin/python \
-  scripts/bench/curve/run-next-pair.sh WP-N08 1
+  scripts/bench/curve/run-next-pair.sh WP-N09 1
 ```
 
 Repeat by checkpoint/repetition, preserving Rote → Browser Use alternation. Override
@@ -175,7 +175,7 @@ canonical comparison evidence.
 
 ## Oversized observation bootstrap
 
-The selected page's full observation is ~47K characters, above the 4K ordinary budget.
+The selected page's full observation is ~89K characters, above the 4K ordinary budget.
 [#67](https://github.com/kedarvartak/rote/issues/67) fixes the no-base case with one
 explicit `bootstrap` observation under a separate 100,000-character hard ceiling; its
 full size and budget overage are recorded and included in G1. The next small change is

@@ -13,6 +13,16 @@ foreach ($existing_posts as $existing_post) {
     }
 }
 
+// Tag-creation checkpoints require an empty taxonomy on every run; categories are a
+// separate taxonomy and remain untouched.
+$existing_tags = get_terms(['taxonomy' => 'post_tag', 'hide_empty' => false]);
+if (is_wp_error($existing_tags)) {
+    throw new RuntimeException($existing_tags->get_error_message());
+}
+foreach ($existing_tags as $existing_tag) {
+    wp_delete_term($existing_tag->term_id, 'post_tag');
+}
+
 // Deterministic benchmark corpus: enough rows to produce a real 10K+ token admin page.
 for ($index = 1; $index <= 120; $index++) {
     $title = sprintf('Rote curve post %03d', $index);

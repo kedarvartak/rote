@@ -190,16 +190,20 @@ async def run_once(
     )
 
     async def before_step(current_agent: Any) -> None:
-        await install_exact_set_guard(current_agent, checkpoint["post_titles"])
+        if checkpoint["operation_mode"] == "single_bulk":
+            await install_exact_set_guard(current_agent, checkpoint["post_titles"])
 
     history = await agent.run(
         max_steps=checkpoint["target_steps"] + max_extra_steps,
         on_step_start=before_step,
     )
 
+    expected_items = checkpoint["tag_names"] if checkpoint["operation_mode"] == "create_tag_each" else checkpoint["post_titles"]
+    expected_json = shlex.quote(json.dumps(expected_items, separators=(",", ":")))
     verify_command = protocol["page"]["verify_command_template"].replace(
-        "{{expected_post_titles_json}}",
-        shlex.quote(json.dumps(checkpoint["post_titles"], separators=(",", ":"))),
+        "{{expected_post_titles_json}}", expected_json
+    ).replace(
+        "{{expected_tag_names_json}}", expected_json
     )
     verified = run_protocol_command(verify_command).returncode == 0
     concluded = history.is_successful()

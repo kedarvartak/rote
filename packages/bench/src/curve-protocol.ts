@@ -4,26 +4,33 @@ const CurveCheckpointSchema = z.object({
   id: z.string().min(1),
   target_steps: z.number().int().positive(),
   selected_post_count: z.number().int().positive(),
-  post_titles: z.array(z.string().min(1)).min(1),
+  post_titles: z.array(z.string().min(1)).default([]),
+  tag_names: z.array(z.string().min(1)).default([]),
   prompt_template: z.string().min(1),
   expected_trash_count: z.number().int().nonnegative().optional(),
   expected_result_count: z.number().int().nonnegative().optional(),
-  operation_mode: z.enum(['single_bulk', 'review_title_each']).default('single_bulk'),
+  operation_mode: z.enum(['single_bulk', 'review_title_each', 'create_tag_each']).default('single_bulk'),
 }).superRefine((checkpoint, context) => {
-  if (checkpoint.post_titles.length !== checkpoint.selected_post_count) {
-    context.addIssue({ code: z.ZodIssueCode.custom, message: 'post_titles length must equal selected_post_count' });
+  const namedItems = checkpoint.operation_mode === 'create_tag_each' ? checkpoint.tag_names : checkpoint.post_titles;
+  if (namedItems.length !== checkpoint.selected_post_count) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: 'named item count must equal selected_post_count' });
   }
-  // Login (3) and done (1), plus either k checkbox clicks with shared bulk
-  // controls or an open/fill/update/return quartet per edited post.
-  const expectedSteps = checkpoint.operation_mode === 'review_title_each'
-    ? (4 * checkpoint.selected_post_count) + 4
-    : checkpoint.selected_post_count + 6;
+  if (checkpoint.operation_mode === 'create_tag_each' && checkpoint.post_titles.length > 0) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: 'tag checkpoints cannot contain post_titles' });
+  }
+  // Tag creation first opens Tags from the post list, then fills name, slug,
+  // description, and submits for each item. Login and done remain explicit.
+  const expectedSteps = checkpoint.operation_mode === 'create_tag_each'
+    ? (4 * checkpoint.selected_post_count) + 5
+    : checkpoint.operation_mode === 'review_title_each'
+      ? (4 * checkpoint.selected_post_count) + 4
+      : checkpoint.selected_post_count + 6;
   if (checkpoint.target_steps !== expectedSteps) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: `target_steps must equal ${expectedSteps} for ${checkpoint.operation_mode}` });
   }
-  const expectedCount = checkpoint.operation_mode === 'review_title_each'
-    ? checkpoint.expected_result_count
-    : checkpoint.expected_trash_count;
+  const expectedCount = checkpoint.operation_mode === 'single_bulk'
+    ? checkpoint.expected_trash_count
+    : checkpoint.expected_result_count;
   if (expectedCount !== checkpoint.selected_post_count) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: 'operation result count must equal selected_post_count' });
   }

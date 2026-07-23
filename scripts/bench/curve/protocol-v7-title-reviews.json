@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "protocol_id": "p1-g1-wordpress-v7-title-reviews",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "repetitions_per_harness": 15,
+  "model_seed": null,
+  "seed_policy": "The selected OpenAI endpoint exposes no deterministic sampling seed for this runner; pin provider, model, task order, page state, viewport, and repetitions, then report variance rather than inventing determinism.",
+  "page": {
+    "environment": "scripts/bench/curve/wordpress",
+    "initial_url": "http://127.0.0.1:18081/wp-login.php?redirect_to=http%3A%2F%2F127.0.0.1%3A18081%2Fwp-admin%2Fedit.php",
+    "reset_command": "scripts/bench/curve/wordpress/reset-state.sh",
+    "verify_command_template": "scripts/bench/curve/wordpress/verify-reviewed-posts.sh {{expected_post_titles_json}}",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "prompt_bindings": [
+    "wp_admin_user",
+    "wp_admin_password"
+  ],
+  "checkpoints": [
+    {
+      "id": "WP-N08",
+      "target_steps": 8,
+      "selected_post_count": 1,
+      "post_titles": [
+        "Rote curve post 120"
+      ],
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 1 target post in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "expected_result_count": 1,
+      "operation_mode": "review_title_each"
+    },
+    {
+      "id": "WP-N12",
+      "target_steps": 12,
+      "selected_post_count": 2,
+      "post_titles": [
+        "Rote curve post 120",
+        "Rote curve post 119"
+      ],
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 2 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "expected_result_count": 2,
+      "operation_mode": "review_title_each"
+    },
+    {
+      "id": "WP-N16",
+      "target_steps": 16,
+      "selected_post_count": 3,
+      "post_titles": [
+        "Rote curve post 120",
+        "Rote curve post 119",
+        "Rote curve post 118"
+      ],
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed, Rote curve post 118 → Rote curve post 118 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 3 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "expected_result_count": 3,
+      "operation_mode": "review_title_each"
+    },
+    {
+      "id": "WP-N20",
+      "target_steps": 20,
+      "selected_post_count": 4,
+      "post_titles": [
+        "Rote curve post 120",
+        "Rote curve post 119",
+        "Rote curve post 118",
+        "Rote curve post 117"
+      ],
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed, Rote curve post 118 → Rote curve post 118 — reviewed, Rote curve post 117 → Rote curve post 117 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 4 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "expected_result_count": 4,
+      "operation_mode": "review_title_each"
+    },
+    {
+      "id": "WP-N24",
+      "target_steps": 24,
+      "selected_post_count": 5,
+      "post_titles": [
+        "Rote curve post 120",
+        "Rote curve post 119",
+        "Rote curve post 118",
+        "Rote curve post 117",
+        "Rote curve post 116"
+      ],
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed, Rote curve post 118 → Rote curve post 118 — reviewed, Rote curve post 117 → Rote curve post 117 — reviewed, Rote curve post 116 → Rote curve post 116 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 5 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "expected_result_count": 5,
+      "operation_mode": "review_title_each"
+    }
+  ]
+}

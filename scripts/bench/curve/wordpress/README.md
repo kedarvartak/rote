@@ -56,14 +56,14 @@ call an LLM.
 
 ## Candidate task and ground truth
 
-The canonical protocol signs in, opens *k* named posts one at a time, appends `— reviewed`
-to each title, updates, and returns to All Posts. Varying *k* yields an 8–24 interaction
-range from the same real administration page without the rejected bulk-checkbox grounding
-failure. `verify-corpus.sh` first requires exactly titles 001–120 with published status.
-The result verifier then checks every title, content, and status:
+The canonical protocol signs in, opens Tags from All Posts, and creates *k* exact tags one
+at a time. Varying *k* yields a 9–25 interaction range without checkbox grounding or the
+title editor's adjacent destructive control. `verify-corpus.sh` requires exactly published
+posts 001–120. The result verifier requires exact tag names, slugs, descriptions, zero
+assignments, no extras, and the unchanged corpus:
 
 ```bash
-scripts/bench/curve/wordpress/verify-reviewed-posts.sh '["Rote curve post 120"]'
+scripts/bench/curve/wordpress/verify-created-tags.sh '["Rote certification tag 01"]'
 ```
 
 The curve protocol owns the exact step-count cells and task wording; this environment
