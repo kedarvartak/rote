@@ -42,3 +42,4 @@ enough to be re-run and disagreed with.
 | [T7](T7-browser-use-long-cell-qualification.md) | 2026-07-22 | Bound Browser Use exact-set long-cell reliability before certification | N15 can pass with accessible labels; N20 fails safely; bulk-checkbox long cells are a no-go |
 | [T8](T8-title-review-curve-smokes.md) | 2026-07-22 | Test non-checkbox title-review replacements across the full curve | Superseded by T9 after certification exposed 3/10 failures |
 | [T9](T9-certification-stop-and-tag-qualification.md) | 2026-07-23 | Stop unreliable v7 collection and qualify safe tag creation | Retain all v7 failures; v8 passes 30/30 bounded sessions across five cells |
+| [T10](T10-g1-cumulative-token-curve.md) | 2026-07-23 | Certify and publish G1 on the frozen v8 protocol | 37.2% slower logical-input growth (95% CI 35.6–38.8%); 75/75 verified successes per harness; cost/latency do not win |

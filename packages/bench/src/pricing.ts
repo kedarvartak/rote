@@ -13,13 +13,10 @@ import { z } from 'zod';
 /**
  * Cache-rate multipliers, applied to a model's base input rate.
  *
- * Published rates rather than folklore: cache **reads** bill at ~0.1x base on both
- * providers. Cache **writes** bill at 1.25x base for Anthropic's default 5-minute
- * TTL (2x for the 1-hour TTL, which `@rote/llm` refuses to normalize rather than
- * mis-price — see `normalizeAnthropicUsage`).
- *
- * These are multipliers, not absolute rates, because that is how both providers
- * document them — a model whose base price changes keeps its cache economics.
+ * Fallback rates for a table entry without model-specific cache prices. Anthropic
+ * reads currently bill at ~0.1x base and 5-minute writes at 1.25x (1-hour writes
+ * are 2x and refused by `@rote/llm` rather than mis-priced). OpenAI rates vary by
+ * model, so published entries such as GPT-4.1 mini override this fallback.
  */
 export const CACHE_READ_MULTIPLIER = 0.1;
 export const CACHE_WRITE_5M_MULTIPLIER = 1.25;
@@ -91,7 +88,11 @@ export const DEFAULT_PRICE_TABLE: PriceTable = PriceTableSchema.parse({
     // The `@rote/llm` OpenAI default. Not on the pricing page's headline table,
     // but its model page prices it and OpenAI's deprecations page lists no
     // shutdown date, so it is a live model a benchmark run can legitimately use.
-    'gpt-4.1-mini': { input_usd_per_mtok: 0.4, output_usd_per_mtok: 1.6 },
+    'gpt-4.1-mini': {
+      input_usd_per_mtok: 0.4,
+      cache_read_usd_per_mtok: 0.1,
+      output_usd_per_mtok: 1.6,
+    },
   },
 });
 

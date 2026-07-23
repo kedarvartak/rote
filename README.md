@@ -76,6 +76,27 @@ The first launch target is intentionally narrow and measurable:
 same browser tasks as Browser Use → fewer tokens → success parity → raw benchmark data
 ```
 
+## Measured working-memory curve
+
+Across 15 independently reset runs per harness/checkpoint on a real WordPress page,
+Rote's cumulative logical-input curve grows **37.2% more slowly than Browser Use 0.13.6**
+(95% seeded-bootstrap CI: **35.6–38.8%**), with 75/75 verified successes on each side.
+Logical input counts uncached + cache-read + cache-write tokens, so provider caching cannot
+masquerade as memory reduction.
+
+![Rote vs Browser Use cumulative logical-input curve](docs/diagrams/g1-cumulative-logical-input.svg)
+
+At 25 required interactions, Rote uses 26.3% fewer logical-input tokens. This is not yet a
+cost or latency win: Browser Use receives more discounted cache reads, so Rote's mean bill
+at that cell is 5.4% higher and its p50 latency is 6.4% higher. G1 proves slower logical
+context growth, not cheaper execution under today's prompt-cache economics.
+
+[Method and full table](docs/testing/T10-g1-cumulative-token-curve.md) ·
+[Rote JSONL](docs/testing/data/T10-v8-certification-rote.jsonl) ·
+[Browser Use raw receipts](docs/testing/data/T10-v8-certification-browser-use-raw.jsonl) ·
+[normalized Browser Use JSONL](docs/testing/data/T10-v8-certification-browser-use.jsonl) ·
+[machine-readable summary](docs/testing/data/T10-g1-curve-summary.json)
+
 ![Architecture](docs/diagrams/architecture.svg)
 
 ## Design invariants
@@ -97,7 +118,7 @@ procedures, and verification signals — so the next run starts warmer.
 
 ## Status
 
-**Early build — no launch number yet, and the curve above is not yet drawn against anyone.**
+**Early build — G1's working-memory curve passes; G2 and the launch package remain.**
 
 Built and working end to end: core schemas + Expect DSL, lossless recorder, verified
 replay executor, CDP browser backend, perception (distill → stable IDs → budget),
@@ -111,8 +132,8 @@ We are in **P1 = tier 0, working memory**. Its four levers, honestly:
 | Lever | State |
 |---|---|
 | Observation eviction — keep what you did, not what you saw | **built** (and never claimed until now) |
-| Diff observations | **built, CI-exercised** — grounded 10K-token bootstrap → diff works; real-page savings remain unmeasured (#67) |
-| Cache layout | **not built.** The docs marked it built; no `cache_control` is ever sent, and the accounting cannot see a cache hit ([#57](https://github.com/kedarvartak/rote/issues/57)) |
+| Diff observations | **built and real-page measured** — 849 certification diffs have a 24-character median; median reduction vs. the preceding grounded base is 99.6% ([T10](docs/testing/T10-g1-cumulative-token-curve.md)) |
+| Cache layout | **built, minimally qualified** — stable-prefix ordering produces repeatable 1,024-token OpenAI cache reads, but hit-rate economics remain unqualified ([T4](docs/testing/T4-openai-cache-layout.md)) |
 | History compaction | not built — the lever that would make the curve linear rather than a smaller quadratic |
 
 Not built: the playbook distiller (V1 replays hand-written playbooks), the matcher, site
@@ -120,9 +141,9 @@ memory, model routing, speculation. **Tier 1 is table stakes and we are late to 
 Skyvern ships record → codegen → zero-LLM replay → fallback today
 ([docs/04](docs/04-competition.md)). `docs/02-architecture.md` §Status is authoritative.
 
-**No number, no launch.** Two gates, neither run: the **curve** (cumulative tokens vs. task
-length, on the provider's own cache accounting) and the **level** (tokens-per-task at
-success parity). Until then this is a hypothesis with good arithmetic.
+**No number, no launch.** G1 now passes its public 30% slope-reduction floor: 37.2%
+(95% CI 35.6–38.8%) at success parity. G2—the tokens-per-task level gate—has not run, and
+the cost/latency caveat above remains; Rote is not launch-ready.
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)
 

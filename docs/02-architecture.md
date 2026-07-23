@@ -61,8 +61,8 @@ confuse in an architecture doc; this is the boundary.
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
 | Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built** — the dominant quadratic term is already gone |
-| **Diff observations** (A4) | 0 | **built and deterministically exercised** — a 10K-token fixture now runs grounded bootstrap → diff; real-page reduction remains unmeasured (#67) |
-| **Cache-layout discipline** (B3) | 0 | **not built** — the stable/volatile split exists, but no `cache_control` is ever sent. Its prerequisite, provider-normalized cache accounting, is **built** ([#57](https://github.com/kedarvartak/rote/issues/57)) |
+| **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
+| **Cache-layout discipline** (B3) | 0 | **built, minimally qualified** — stable-prefix ordering produces repeatable 1,024-token OpenAI cache reads, while hit-rate economics remain unqualified ([T4](testing/T4-openai-cache-layout.md)) |
 | **History compaction** (B4) | 0 | **not built** — required to make the curve linear rather than a smaller quadratic |
 | **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
 | **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
@@ -128,7 +128,7 @@ observation — "compare prices across three products". A real limit
 | Lever | Effect on the curve | Status |
 |---|---|---|
 | **Evict observations** | kills the dominant quadratic term | **built** (A4-adjacent; never claimed) |
-| **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built, exercised in CI** — an oversized grounded snapshot explicitly establishes the base, then ordinary-budget diffs resume (#67); WordPress ratio unmeasured |
+| **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built and measured** — 849 WordPress certification diffs have a 24-character median and 99.6% median reduction against their preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Prefix-cache `[stable][history]`** (B3) | 10× off the surviving quadratic term | **built, minimally qualified** — 1,024-token incremental hits repeat 2/2; hit-rate economics unmeasured ([T4](testing/T4-openai-cache-layout.md)) |
 | **Scheduled compaction** (B4) | history → O(1); curve → **linear** | not built (P2) |
 | **Replay** (B2) | 0 steps, 0 tokens | needs the distiller (P2) |
@@ -188,16 +188,16 @@ every ~*k* steps. **Cache-economics-scheduled**, not step-scheduled.
 
 ### What is unproven
 
-The curve has never been drawn against a competitor. The real-page protocol exposed and
-[#67](https://github.com/kedarvartak/rote/issues/67) fixed the first-snapshot bootstrap
-hole: when neither full nor diff fits the ordinary budget, Rote sends one explicitly
-metered grounded snapshot under a 100,000-character emergency ceiling, then resumes
-ordinary-budget diffs. Above that ceiling it fails before planning rather than asking the
-model to invent selectors from a count-only summary. This is deterministic-test evidence,
-not a live A4 win. "They're quadratic, we're linear" is inference from architecture, not
-measurement. Rote is a *smaller-constant quadratic*, not
-linear — linear needs compaction. Diffing's ~90% claim is untested at any real page size.
-The eviction trade has never been stress-tested on a task requiring recall.
+G1 now measures a 37.2% slower logical-input slope than Browser Use (95% CI 35.6–38.8%)
+and A4's 849 live WordPress diffs show 99.6% median render-size reduction against their
+preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)). The bootstrap
+contract remains fail-closed above 100,000 characters.
+
+This does **not** prove “they're quadratic, we're linear.” Rote is a smaller-growth
+quadratic until scheduled compaction exists. It also does not prove cost or latency wins:
+Browser Use's discounted cache reads make Rote 5.4% more expensive at WP-N25 despite the
+logical-token reduction. The eviction trade has not been stress-tested on a task requiring
+recall, and G2's cross-task token level remains unrun.
 
 ## The control loop
 

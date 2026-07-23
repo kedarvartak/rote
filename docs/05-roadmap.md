@@ -54,14 +54,13 @@ need calibration time and would delay the number without changing its headline. 
 | Lever | Effect on the curve | State |
 |---|---|---|
 | **A11 observation eviction** | kills the dominant quadratic term | **built** — and never claimed. Growth is 35 tok/step (one action JSON), not 135+ |
-| **A4 diff observations** | −~90% on the constant, real pages | **built, exercised in CI** — grounded 10K-token bootstrap → diff works; real WordPress ratio unmeasured (#67) |
+| **A4 diff observations** | −~90% on the constant, real pages | **built and measured** — 849 WordPress certification diffs show 99.6% median render-size reduction vs. their preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **B3 cache layout** | 10× off the surviving quadratic | **built, minimally qualified** — T4 repeats a 1,024-token incremental hit in 2/2 verified runs; hit-rate and dollar impact remain unmeasured |
 | **B4 compaction** | history → O(1); **curve → linear** | not built |
 
-**Measure before building.** Three of those four have never been exercised, and our
-fixtures cannot exercise them: too small for A4 to trigger, and under the minimum cacheable
-prefix (4096 tokens on Opus 4.8, 2048 on Sonnet 4.6, 1024 on older Sonnets — our calls are
-637–953). The first task is the curve, not the code.
+**Measure before building.** G1 now exercises A11/A4 on WordPress and reports B3 cache
+buckets without relabeling cache reads as savings. B4 remains deferred: the measured curve
+already clears G1, while compaction fights cache-prefix stability and needs scheduling.
 
 ### In / out
 
@@ -89,10 +88,10 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 | Workstream | State |
 |---|---|
 | W1 browser + perception capture | done |
-| W2 distill, stable IDs, diff, render | **done and deterministically exercised** — #67 adds grounded oversized bootstrap → diff; live WordPress measurement pending |
+| W2 distill, stable IDs, diff, render | **done and real-page measured** — T10 records 849 WordPress diffs and their grounded-base ratios |
 | W3 loop + context assembler | **done, including minimally qualified OpenAI history-first layout** — one incremental hit per T4 run; accounting remains provider-normalized (#57) |
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
-| W5 benchmark + the number | machinery done · **number not yet run** · **the curve not yet drawn** |
+| W5 benchmark + the number | **G1 done** — 37.2% slower logical-input growth (95% CI 35.6–38.8%) at 75/75 success parity per harness; G2 remains |
 | W6 launch package | not started |
 | **W7 working memory (new)** | #57 accounting **done** → curve exploration **done** → OpenAI cache mechanism **qualified** → measure economics → compaction. The V1 headline |
 
@@ -128,16 +127,17 @@ one benchmark, which is the point of running it before building. G2 alone is the
 a fight on the axis where we are late, against harnesses with years of head start on the
 same idea ([04](04-competition.md)). Lead with G1.
 
-**The threshold on G1 is deliberately unset.** We have never drawn the curve; inventing a
-target before the first measurement is how you end up tuning the benchmark to the claim.
-Set it from the first honest run, in public, before optimizing against it.
+**G1 threshold: at least 30% slower cumulative logical-input growth**, certified only when
+the 95% seeded-bootstrap interval's lower bound clears 30% at success parity. This was set
+from the first certification matrix, before any optimization against its result: v8
+measured 37.2% (95% CI 35.6–38.8%) over 15 complete matched repetitions ([T10](testing/T10-g1-cumulative-token-curve.md)). The rounded floor leaves a visible margin below the first point estimate while remaining materially larger than noise.
 
 ### Launch checklist
 
 - [ ] `npx` quickstart works on a clean machine with only an API key
 - [ ] Benchmark reproduction is one command; raw JSONL downloadable
-- [ ] Every efficiency claim carries a number, units, and a link to method
-- [ ] **The curve is a graph in the README**, with the method and the raw data
+- [x] Every published G1 efficiency claim carries a number, units, and a link to method
+- [x] **The curve is a graph in the README**, with the method and the raw data
 - [x] **#57 closed** — cache accounting is provider-normalized (uncached / cache-read / cache-write), priced per bucket, property-tested against both providers
 - [ ] Sacred invariant suite green; CI enforces changelog + lint + tests
 - [ ] Known limitations written honestly (no routing/speculation/learning yet; **no
