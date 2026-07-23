@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "protocol_id": "p1-g1-wordpress-v7-title-reviews",
+  "protocol_id": "p1-g1-wordpress-v8-tag-creation",
   "provider": "openai",
   "model": "gpt-4.1-mini",
   "repetitions_per_harness": 15,
@@ -10,7 +10,7 @@
     "environment": "scripts/bench/curve/wordpress",
     "initial_url": "http://127.0.0.1:18081/wp-login.php?redirect_to=http%3A%2F%2F127.0.0.1%3A18081%2Fwp-admin%2Fedit.php",
     "reset_command": "scripts/bench/curve/wordpress/reset-state.sh",
-    "verify_command_template": "scripts/bench/curve/wordpress/verify-reviewed-posts.sh {{expected_post_titles_json}}",
+    "verify_command_template": "scripts/bench/curve/wordpress/verify-created-tags.sh {{expected_tag_names_json}}",
     "viewport": {
       "width": 1920,
       "height": 1080
@@ -22,69 +22,74 @@
   ],
   "checkpoints": [
     {
-      "id": "WP-N08",
-      "target_steps": 8,
+      "id": "WP-N09",
+      "target_steps": 9,
       "selected_post_count": 1,
-      "post_titles": [
-        "Rote curve post 120"
+      "post_titles": [],
+      "tag_names": [
+        "Rote certification tag 01"
       ],
-      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 1 target post in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. From All Posts, open the Tags page. Create exactly these 1 post tags one at a time in the listed order: Rote certification tag 01 (slug rote-certification-tag-01, description “Deterministic certification marker 01.”). For each tag, fill Name, Slug, and Description exactly, click Add New Tag, and wait until the new tag appears before continuing. Do not edit or delete posts, categories, or any other data. There are exactly 1 target tags in this task. Do not infer or create any additional tag. After “Rote certification tag 01” appears in the tag table, immediately conclude success. Independent database verification checks the exact tag names, slugs, descriptions, zero post assignments, and the unchanged 120-post corpus.",
       "expected_result_count": 1,
-      "operation_mode": "review_title_each"
+      "operation_mode": "create_tag_each"
     },
     {
-      "id": "WP-N12",
-      "target_steps": 12,
+      "id": "WP-N13",
+      "target_steps": 13,
       "selected_post_count": 2,
-      "post_titles": [
-        "Rote curve post 120",
-        "Rote curve post 119"
+      "post_titles": [],
+      "tag_names": [
+        "Rote certification tag 01",
+        "Rote certification tag 02"
       ],
-      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 2 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. From All Posts, open the Tags page. Create exactly these 2 post tags one at a time in the listed order: Rote certification tag 01 (slug rote-certification-tag-01, description “Deterministic certification marker 01.”), Rote certification tag 02 (slug rote-certification-tag-02, description “Deterministic certification marker 02.”). For each tag, fill Name, Slug, and Description exactly, click Add New Tag, and wait until the new tag appears before continuing. Do not edit or delete posts, categories, or any other data. There are exactly 2 target tags in this task. Do not infer or create any additional tag. After “Rote certification tag 02” appears in the tag table, immediately conclude success. Independent database verification checks the exact tag names, slugs, descriptions, zero post assignments, and the unchanged 120-post corpus.",
       "expected_result_count": 2,
-      "operation_mode": "review_title_each"
+      "operation_mode": "create_tag_each"
     },
     {
-      "id": "WP-N16",
-      "target_steps": 16,
+      "id": "WP-N17",
+      "target_steps": 17,
       "selected_post_count": 3,
-      "post_titles": [
-        "Rote curve post 120",
-        "Rote curve post 119",
-        "Rote curve post 118"
+      "post_titles": [],
+      "tag_names": [
+        "Rote certification tag 01",
+        "Rote certification tag 02",
+        "Rote certification tag 03"
       ],
-      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed, Rote curve post 118 → Rote curve post 118 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 3 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. From All Posts, open the Tags page. Create exactly these 3 post tags one at a time in the listed order: Rote certification tag 01 (slug rote-certification-tag-01, description “Deterministic certification marker 01.”), Rote certification tag 02 (slug rote-certification-tag-02, description “Deterministic certification marker 02.”), Rote certification tag 03 (slug rote-certification-tag-03, description “Deterministic certification marker 03.”). For each tag, fill Name, Slug, and Description exactly, click Add New Tag, and wait until the new tag appears before continuing. Do not edit or delete posts, categories, or any other data. There are exactly 3 target tags in this task. Do not infer or create any additional tag. After “Rote certification tag 03” appears in the tag table, immediately conclude success. Independent database verification checks the exact tag names, slugs, descriptions, zero post assignments, and the unchanged 120-post corpus.",
       "expected_result_count": 3,
-      "operation_mode": "review_title_each"
+      "operation_mode": "create_tag_each"
     },
     {
-      "id": "WP-N20",
-      "target_steps": 20,
+      "id": "WP-N21",
+      "target_steps": 21,
       "selected_post_count": 4,
-      "post_titles": [
-        "Rote curve post 120",
-        "Rote curve post 119",
-        "Rote curve post 118",
-        "Rote curve post 117"
+      "post_titles": [],
+      "tag_names": [
+        "Rote certification tag 01",
+        "Rote certification tag 02",
+        "Rote certification tag 03",
+        "Rote certification tag 04"
       ],
-      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed, Rote curve post 118 → Rote curve post 118 — reviewed, Rote curve post 117 → Rote curve post 117 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 4 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. From All Posts, open the Tags page. Create exactly these 4 post tags one at a time in the listed order: Rote certification tag 01 (slug rote-certification-tag-01, description “Deterministic certification marker 01.”), Rote certification tag 02 (slug rote-certification-tag-02, description “Deterministic certification marker 02.”), Rote certification tag 03 (slug rote-certification-tag-03, description “Deterministic certification marker 03.”), Rote certification tag 04 (slug rote-certification-tag-04, description “Deterministic certification marker 04.”). For each tag, fill Name, Slug, and Description exactly, click Add New Tag, and wait until the new tag appears before continuing. Do not edit or delete posts, categories, or any other data. There are exactly 4 target tags in this task. Do not infer or create any additional tag. After “Rote certification tag 04” appears in the tag table, immediately conclude success. Independent database verification checks the exact tag names, slugs, descriptions, zero post assignments, and the unchanged 120-post corpus.",
       "expected_result_count": 4,
-      "operation_mode": "review_title_each"
+      "operation_mode": "create_tag_each"
     },
     {
-      "id": "WP-N24",
-      "target_steps": 24,
+      "id": "WP-N25",
+      "target_steps": 25,
       "selected_post_count": 5,
-      "post_titles": [
-        "Rote curve post 120",
-        "Rote curve post 119",
-        "Rote curve post 118",
-        "Rote curve post 117",
-        "Rote curve post 116"
+      "post_titles": [],
+      "tag_names": [
+        "Rote certification tag 01",
+        "Rote certification tag 02",
+        "Rote certification tag 03",
+        "Rote certification tag 04",
+        "Rote certification tag 05"
       ],
-      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. Review these posts one at a time in the listed order by changing only each post title as specified: Rote curve post 120 → Rote curve post 120 — reviewed, Rote curve post 119 → Rote curve post 119 — reviewed, Rote curve post 118 → Rote curve post 118 — reviewed, Rote curve post 117 → Rote curve post 117 — reviewed, Rote curve post 116 → Rote curve post 116 — reviewed. For each post, open its edit page, replace the Title field exactly, click Update, wait for the saved confirmation, and return to All Posts before continuing. Do not change Content, status, or any other post. After the last update, return to All Posts and conclude. Completed rows visibly end in “— reviewed”; do not reopen them. Independent database verification checks all 120 titles, contents, and statuses. There are exactly 5 target posts in this task. Do not infer or continue to any subsequent numbered post. Once the last listed reviewed title is visible back on All Posts, immediately conclude success.",
+      "prompt_template": "Sign in with username {{wp_admin_user}} and password {{wp_admin_password}}. From All Posts, open the Tags page. Create exactly these 5 post tags one at a time in the listed order: Rote certification tag 01 (slug rote-certification-tag-01, description “Deterministic certification marker 01.”), Rote certification tag 02 (slug rote-certification-tag-02, description “Deterministic certification marker 02.”), Rote certification tag 03 (slug rote-certification-tag-03, description “Deterministic certification marker 03.”), Rote certification tag 04 (slug rote-certification-tag-04, description “Deterministic certification marker 04.”), Rote certification tag 05 (slug rote-certification-tag-05, description “Deterministic certification marker 05.”). For each tag, fill Name, Slug, and Description exactly, click Add New Tag, and wait until the new tag appears before continuing. Do not edit or delete posts, categories, or any other data. There are exactly 5 target tags in this task. Do not infer or create any additional tag. After “Rote certification tag 05” appears in the tag table, immediately conclude success. Independent database verification checks the exact tag names, slugs, descriptions, zero post assignments, and the unchanged 120-post corpus.",
       "expected_result_count": 5,
-      "operation_mode": "review_title_each"
+      "operation_mode": "create_tag_each"
     }
   ]
 }

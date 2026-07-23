@@ -38,6 +38,7 @@ labeled `skip-changelog`.
 - **P1**: Make action `expect` optional and give a failed postcondition one scoped repair instead of ending the run — a mandatory expect forced the planner to predict confirmation text it had never seen, failing B2 0/7 with correct form submissions recorded as failures. B2 now passes 11/11 on `gpt-5.6-luna` and `gpt-5.6-sol` at roughly neutral token cost (#49, #50)
 
 ### Added
+- **P1**: Add exact WordPress tag-set verification that also requires zero assignments and the unchanged 120-post corpus, preventing tag completion from hiding collateral mutations (#97, #98).
 - **P1**: Make Browser Use curve evidence append-safe and resumable, add exact repetition targeting to both harnesses, and provide an atomic paired-run command so interrupted certification collection cannot silently overwrite receipts or desynchronize run order (#72, #86).
 - **P1**: Add a reproducible OpenAI cache preflight over raw curve calls; T3 has 26/86 prompts above the 1,024-token floor, 2/26 eligible hits (7.7%), and 39,552 cache-read tokens, so cache-layout work is a go while the current layout remains explicitly unqualified (#82, #83).
 - **P1**: Make real-page Rote collection append-safe and resumable in one-run batches, retain failures instead of aborting the matrix, and publish a five-checkpoint exploratory artifact that shows 7/10-step success, long-task reliability failures, 24–89-character A4 diffs, and only 2/86 OpenAI calls with cache reads—explicitly without a comparison claim (#72, #79).
@@ -54,6 +55,7 @@ labeled `skip-changelog`.
 - **P1**: OpenAI model prices in the head-to-head price table (GPT-5.6/5.5/5.4 families, `gpt-5.3-codex`, and the `@rote/llm` default `gpt-4.1-mini`), captured from OpenAI's published pricing on 2026-07-15, so `$/task` is reported rather than `price unavailable` on an OpenAI-driven run.
 
 ### Changed
+- **P1**: Stop v7 certification after 3/10 first-repetition failures and replace the unsafe title editor with v8's deterministic tag creation; retain every failed receipt and qualify all five new cells across 30/30 exact-verified sessions (#97, #98).
 - **P1**: Replace the uncertifiable bulk-checkbox curve with v7's independently verified title-review workflow; all five 8–24-interaction paired smokes pass while the verifier checks all 120 titles, contents, and statuses, so certification collection can begin (#92, #96).
 - **P1**: Upgrade the pinned Browser Use baseline to 0.13.6, expose full WordPress checkbox accessibility names, and apply the same exact-set pre-Apply safety condition as Rote; bounded qualification passes N15 but fails N20 safely, so reject the bulk-checkbox long cells instead of success-hunting and require #92's workload redesign before drawing the curve (#91, #93).
 - **P1**: Version the WordPress curve protocol to v4 and tell both harnesses that selected posts disappearing after Apply is expected completion evidence, preventing a verified Browser Use side effect from being misreported after pointless searching while retaining the independent exact-title gate (#87, #88).

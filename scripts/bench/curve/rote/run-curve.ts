@@ -156,7 +156,7 @@ async function main(): Promise<void> {
             page,
             planner: new TaggedLlmBrowserPlanner(createTaggedLlmClientFromEnv({ provider, model: protocol.model })),
             beforeAction({ action, nodes, resolvedSelector }) {
-              if (action.kind !== 'click' || !['#doaction', '#doaction2'].includes(resolvedSelector ?? '')) return;
+              if (checkpoint.operation_mode !== 'single_bulk' || action.kind !== 'click' || !['#doaction', '#doaction2'].includes(resolvedSelector ?? '')) return;
               const selected = new Set(nodes.filter((node) => node.state?.checked).map((node) => node.name));
               const expected = checkpoint.post_titles.map((title) => `Select ${title}`);
               const missing = expected.filter((name) => !selected.has(name));
@@ -171,9 +171,12 @@ async function main(): Promise<void> {
             },
             verifier: {
               async verify() {
-                const command = protocol.page.verify_command_template.replace(
-                  '{{expected_post_titles_json}}', shellQuote(JSON.stringify(checkpoint.post_titles)),
-                );
+                const expectedItems = checkpoint.operation_mode === 'create_tag_each'
+                  ? checkpoint.tag_names
+                  : checkpoint.post_titles;
+                const command = protocol.page.verify_command_template
+                  .replace('{{expected_post_titles_json}}', shellQuote(JSON.stringify(expectedItems)))
+                  .replace('{{expected_tag_names_json}}', shellQuote(JSON.stringify(expectedItems)));
                 const passed = await runCommand(command);
                 return { success: passed, summary: passed ? 'database verification passed' : 'database verification failed' };
               },

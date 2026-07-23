@@ -29,6 +29,7 @@ pnpm-debug.log*
 .env.*
 !.env.example
 
-# Rote artifacts (future)
+# Rote artifacts
 *.trajectory.jsonl
 .rote/
+bench-out/

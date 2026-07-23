@@ -1,5 +1,9 @@
 # T8 — Title-review curve workload qualification
 
+> **Superseded:** [T9](T9-certification-stop-and-tag-qualification.md) records 3/10
+> failures in the first certification repetition. V7 is rejected; its one-pair inference
+> below must not be used as reliability or comparison evidence.
+
 | Field | Value |
 |---|---|
 | Date | 2026-07-22 |
@@ -23,7 +27,7 @@ No checkbox guard or custom Browser Use repair participates.
 | WP-N12 | 2 | 12 | 12 | 8 | both pass |
 | WP-N16 | 3 | 16 | 18 | 13 | both pass |
 | WP-N20 | 4 | 20 | 20 | 14 | both pass |
-| WP-N24 | 5 | 24 | 24 | 17 | both pass |
+| WP-N24 | 5 | 24 | 25 | 17 | both pass |
 
 A bounded ten-step retry allowance remains visible in actual provider calls; it does not
 change target interaction complexity. Explicit target cardinality prevents either planner

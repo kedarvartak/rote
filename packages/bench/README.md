@@ -36,7 +36,7 @@ See `src/index.ts`. Highlights:
   warm-token reduction at or above threshold and no success-rate regression.
 - **`rote-bench report <spec.json>`** — renders a Markdown report from recorded
   `.rote/runs/<run_id>` artifacts and can export raw JSONL alongside it.
-- **`CurveProtocolSchema` / `CurveStepRecordSchema`** — validate P1 G1's real-page task checkpoints and per-provider-call JSONL, including all normalized cache buckets plus the raw provider receipt.
+- **`CurveProtocolSchema` / `CurveStepRecordSchema`** — validate P1 G1's operation-specific real-page checkpoints (bulk posts, title reviews, or tag creation) and per-provider-call JSONL, including normalized cache buckets plus the raw provider receipt.
 - **`rote-bench curve-dry-run <protocol.json> --out <records.jsonl>`** — expands every checkpoint into explicitly non-evidentiary zero-usage rows and parses them back before writing, proving the protocol/JSONL plumbing without fabricating a benchmark result.
 - **`parseBrowserUseCurveRawJsonl` / `browserUseCurveRecordsFromRaw`** — retain and validate every Browser Use provider receipt, then normalize its Anthropic/OpenAI uncached/read/write/output buckets and cumulative totals into shared curve records.
 - **`rote-bench curve-browser-use-records <raw-calls.jsonl> --out <records.jsonl>`** — converts the external Python runner's raw receipts into validated measurement JSONL, failing on missing calls, impossible cache accounting, or unverifiable final outcomes.
