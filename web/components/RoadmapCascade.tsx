@@ -22,8 +22,8 @@ const PHASES = [
     target: "2026 Q3",
     state: "now" as const,
     gates: [
-      { id: "G1", label: "the curve", verdict: "pass · 37.2%", ok: true },
-      { id: "G2", label: "the level", verdict: "not yet run", ok: false },
+      { id: "G1", label: "the curve", verdict: "✓ 37.2%", ok: true },
+      { id: "G2", label: "the level", verdict: "pending", ok: false },
     ],
   },
   {
@@ -213,14 +213,14 @@ function PhaseCard({ p, fill = false }: { p: (typeof PHASES)[number]; fill?: boo
         {p.gates && (
           <div className="mt-3 pt-3 border-t border-paper-ink/10 space-y-1.5">
             {p.gates.map((g) => (
-              <div key={g.id} className="flex items-center gap-2 font-mono text-[0.68rem]">
-                <span
-                  className={`w-1.5 h-1.5 rounded-full ${g.ok ? "bg-[#4c8f58]" : "bg-paper-ink/25"}`}
-                />
-                <span className="text-paper-ink/80">
+              <div
+                key={g.id}
+                className="flex items-baseline justify-between gap-3 font-mono text-[0.66rem] whitespace-nowrap"
+              >
+                <span className="text-paper-ink/70">
                   {g.id} · {g.label}
                 </span>
-                <span className={g.ok ? "text-[#4c8f58]" : "text-paper-ink/45"}>
+                <span className={g.ok ? "text-[#4c8f58]" : "text-paper-ink/40"}>
                   {g.verdict}
                 </span>
               </div>
