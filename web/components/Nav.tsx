@@ -23,19 +23,16 @@ export function Nav() {
   }, []);
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        scrolled
-          ? "bg-bg/85 backdrop-blur-md border-b hairline"
-          : "bg-transparent border-b border-transparent"
-      }`}
-    >
-      <div className="mx-auto max-w-6xl px-5 sm:px-8 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-baseline gap-2 group">
-          <span className="font-display text-2xl tracking-tight">rote</span>
-          <span className="font-mono text-[0.65rem] text-muted tracking-widest uppercase hidden sm:inline group-hover:text-copper-bright transition-colors">
-            memory manager
-          </span>
+    <div className="sticky top-3 sm:top-4 z-50 px-4 sm:px-8">
+      <header
+        className={`mx-auto max-w-3xl rounded-full border backdrop-blur-xl h-13 px-5 sm:px-7 flex items-center justify-between transition-all duration-500 ${
+          scrolled
+            ? "bg-bg/80 hairline shadow-lg shadow-black/30"
+            : "bg-bg/40 border-transparent"
+        }`}
+      >
+        <Link href="/" className="font-display text-2xl tracking-tight leading-none">
+          rote
         </Link>
         <nav className="flex items-center gap-1 sm:gap-2">
           {links.map((l) => {
@@ -47,7 +44,7 @@ export function Nav() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`px-2.5 sm:px-3 py-1.5 text-[0.82rem] rounded-sm transition-colors ${
+                className={`px-2.5 sm:px-3 py-1.5 text-[0.82rem] rounded-full transition-colors ${
                   active
                     ? "text-copper-bright"
                     : "text-ink-2 hover:text-ink"
@@ -58,7 +55,7 @@ export function Nav() {
             );
           })}
         </nav>
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }

@@ -417,6 +417,25 @@ export default function Home() {
                 <CurveChart />
               </div>
             </Reveal>
+            {/* the caveat sits between the two charts: G1 shows the token win,
+                this admits the cost gap, T11 below shows how it was closed */}
+            <Reveal delay={80}>
+              <div className="rounded-sm border border-blue/30 bg-blue/5 p-5 text-[0.85rem] leading-relaxed text-ink-2 max-w-3xl">
+                <p className="font-mono text-[0.65rem] uppercase tracking-widest text-blue-bright mb-2">
+                  the honest ledger
+                </p>
+                In this frozen matrix Rote was <i>not</i> cheaper: 5.4% more
+                expensive at WP-N25 with 6.4% higher p50 latency, because
+                Browser Use received more discounted cache reads. That gap is
+                what the run below was made to close — and on the shortest
+                cell, WP-N09, Rote still loses on billed cost. A long-task
+                win, not a universal one. Every claim carries its receipt in{" "}
+                <Link href="/docs/benchmarks" className="text-ink underline decoration-copper/60 underline-offset-2 hover:text-copper-bright transition-colors">
+                  the run reports
+                </Link>
+                .
+              </div>
+            </Reveal>
             <Reveal delay={100}>
               <div className="rounded-sm border hairline bg-surface p-5 sm:p-8">
                 <div className="flex flex-col lg:flex-row lg:items-baseline lg:justify-between gap-1 mb-7">
@@ -431,22 +450,6 @@ export default function Home() {
                   </p>
                 </div>
                 <CostChart />
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <div className="rounded-sm border border-blue/30 bg-blue/5 p-5 text-[0.85rem] leading-relaxed text-ink-2 max-w-3xl">
-                <p className="font-mono text-[0.65rem] uppercase tracking-widest text-blue-bright mb-2">
-                  the honest ledger
-                </p>
-                On the shortest cell, WP-N09, Rote still loses on billed cost —
-                and before cache-key routing it was 5.4% more expensive at
-                WP-N25 with 6.4% higher p50 latency. This is a long-task cache
-                win, not a universal one. Every claim on this site carries its
-                receipt in{" "}
-                <Link href="/docs/benchmarks" className="text-ink underline decoration-copper/60 underline-offset-2 hover:text-copper-bright transition-colors">
-                  the run reports
-                </Link>
-                .
               </div>
             </Reveal>
           </div>

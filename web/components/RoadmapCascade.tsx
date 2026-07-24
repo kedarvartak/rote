@@ -58,7 +58,7 @@ const PHASES = [
 
 const STATE = {
   done: { color: "#4c8f58", chip: "done" },
-  now: { color: "#c2751f", chip: "← you are here" },
+  now: { color: "#c2751f", chip: "← we are here" },
   planned: { color: "#8a8578", chip: "planned" },
 };
 
