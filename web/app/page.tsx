@@ -132,8 +132,10 @@ export default function Home() {
       <section className="dotgrid border-b hairline">
         <div className="mx-auto max-w-6xl px-5 sm:px-8 pt-16 sm:pt-28 pb-16 sm:pb-20">
           <Reveal>
-            <p className="eyebrow">rote · the memory manager for browser agents</p>
-            <h1 className="mt-6 font-display text-[2.6rem] sm:text-[4.4rem] leading-[1.08] tracking-tight">
+            <p className="font-display text-lg sm:text-xl text-copper-bright">
+              rote · the memory manager for browser agents
+            </p>
+            <h1 className="mt-5 font-display text-[2.6rem] sm:text-[4.4rem] leading-[1.08] tracking-tight">
               Every harness has memory.
               <br />
               <span className="text-ink-2">None of them manages it.</span>
