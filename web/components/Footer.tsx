@@ -2,7 +2,25 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="border-t hairline bg-surface/40">
+    <footer className="relative">
+      {/* horizon glow — strongest at the footer line, fading up into the page */}
+      <div
+        aria-hidden
+        className="pointer-events-none h-40 -mb-px"
+        style={{
+          background:
+            "radial-gradient(ellipse 95% 140% at 50% 100%, rgba(194,117,31,0.26), rgba(194,117,31,0.07) 52%, transparent 78%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="h-1.5"
+        style={{
+          background:
+            "repeating-linear-gradient(45deg, rgba(217,143,61,0.3) 0 5px, transparent 5px 10px)",
+        }}
+      />
+      <div className="border-t hairline bg-surface/40">
       <div className="mx-auto max-w-6xl px-5 sm:px-8 py-14">
         <div className="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
           <div>
@@ -42,6 +60,7 @@ export function Footer() {
             the memory manager for browser agents
           </p>
         </div>
+      </div>
       </div>
     </footer>
   );
