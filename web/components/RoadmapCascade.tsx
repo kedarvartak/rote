@@ -151,120 +151,69 @@ function PhaseCard({ p }: { p: (typeof PHASES)[number] }) {
 }
 
 /**
- * Dark rail: the phase arc as an append-only log — a single spine, solid
- * where committed, dashed where still planned, with the P1 exit gates drawn
- * as tick-gates on the line itself (the line does not continue until a
- * number passes them). Node = memory cell; the current cell breathes.
+ * Dark rail: the phase loom. Every curve leaves one trunk point on the left —
+ * placed level with the current phase — and fans out to its phase with
+ * horizontal tangents at both ends, so the bundle converges the way a wiring
+ * loom does. The current row is lit; everything else recedes.
  */
-const RAIL_Y = { P0: 18, P1: 64, G1: 96, G2: 118, P2: 152, P3: 196, P4: 240, P5: 284 };
+const ROW_PITCH = 46;
+const RAIL_TOP = 14;
+const TRUNK_X = 6;
+const DOT_X = 72;
 
 function Rail() {
-  const label = (p: (typeof PHASES)[number]) =>
-    p.state === "now" ? "#d98f3d" : p.state === "done" ? "#a9a69b" : "#7e7d75";
+  const items = PHASES.map((p, i) => ({ ...p, y: RAIL_TOP + i * ROW_PITCH }));
+  const trunkY = items.find((p) => p.state === "now")!.y;
+  const curveColor = (p: (typeof PHASES)[number], i: number) => {
+    if (p.state === "now") return { stroke: "#d98f3d", opacity: 1 };
+    if (p.state === "done") return { stroke: "#4c8f58", opacity: 0.75 };
+    // planned: copper fading with distance, last one bone like a loose thread
+    if (i === PHASES.length - 1) return { stroke: "#a9a69b", opacity: 0.55 };
+    return { stroke: "#c2751f", opacity: 0.5 - (i - 2) * 0.08 };
+  };
   return (
     <div className="hidden lg:block" aria-hidden>
       <svg
-        viewBox="0 0 250 306"
+        viewBox="0 0 250 260"
         className="w-full max-w-[250px] h-auto overflow-visible"
         fill="none"
         style={{ fontFamily: "var(--font-mono)" }}
       >
-        {/* spine: committed (solid) → current → gated (dashed until G2 passes) */}
-        <path
-          className="drawpath"
-          d={`M10 ${RAIL_Y.P0} V${RAIL_Y.P1}`}
-          stroke="#4c8f58"
-          strokeWidth="1.5"
-          pathLength={1}
-        />
-        <path
-          className="drawpath"
-          d={`M10 ${RAIL_Y.P1} V${RAIL_Y.G1 - 5}`}
-          stroke="#c2751f"
-          strokeWidth="1.5"
-          pathLength={1}
-          style={{ transitionDelay: "0.45s" }}
-        />
-        <path
-          className="drawpath"
-          d={`M10 ${RAIL_Y.G1 + 5} V${RAIL_Y.G2 - 5}`}
-          stroke="#c2751f"
-          strokeWidth="1.5"
-          strokeOpacity="0.55"
-          pathLength={1}
-          style={{ transitionDelay: "0.65s" }}
-        />
-        <path
-          className="drawpath"
-          d={`M10 ${RAIL_Y.G2 + 5} V${RAIL_Y.P5}`}
-          stroke="#7e7d75"
-          strokeOpacity="0.5"
-          strokeWidth="1.3"
-          strokeDasharray="3 5"
-          pathLength={1}
-          style={{ transitionDelay: "0.85s" }}
-        />
-
-        {/* phase nodes + labels */}
-        {PHASES.map((p) => {
-          const y = RAIL_Y[p.id as keyof typeof RAIL_Y];
-          const s = STATE[p.state];
+        {items.map((p, i) => {
+          const c = curveColor(p, i);
           const current = p.state === "now";
           return (
             <g key={p.id}>
-              {current && (
-                <rect
-                  x={3}
-                  y={y - 7}
-                  width={14}
-                  height={14}
-                  stroke="#c2751f"
-                  strokeWidth="1"
-                  className="pulse-ring"
-                />
-              )}
+              <path
+                className="drawpath"
+                d={`M${TRUNK_X} ${trunkY} C ${TRUNK_X + 34} ${trunkY}, ${DOT_X - 38} ${p.y}, ${DOT_X - 6} ${p.y}`}
+                stroke={c.stroke}
+                strokeOpacity={c.opacity}
+                strokeWidth={current ? 1.8 : 1.4}
+                pathLength={1}
+                style={{ transitionDelay: `${0.15 + i * 0.09}s` }}
+              />
               <rect
-                x={current ? 6.5 : 7.5}
-                y={current ? y - 3.5 : y - 2.5}
-                width={current ? 7 : 5}
-                height={current ? 7 : 5}
-                fill={s.color}
-                fillOpacity={p.state === "planned" ? 0.4 : 1}
-                stroke={p.state === "planned" ? s.color : "none"}
-                strokeOpacity="0.6"
+                x={DOT_X - 3}
+                y={p.y - (current ? 4 : 3)}
+                width={current ? 8 : 6}
+                height={current ? 8 : 6}
+                fill={c.stroke}
+                fillOpacity={current ? 1 : Math.min(1, c.opacity + 0.15)}
               />
               <text
-                x={30}
-                y={y + 3.5}
+                x={DOT_X + 14}
+                y={p.y + 3.5}
                 fontSize="10.5"
-                letterSpacing="1.6"
-                fill={label(p)}
+                letterSpacing="1.7"
+                fill={current ? "#e8e2d6" : "#7e7d75"}
                 fontWeight={current ? 500 : 400}
               >
                 {`${p.id} · ${p.theme.toUpperCase()}`}
               </text>
-              {current && (
-                <text x={30} y={y + 17} fontSize="8.5" letterSpacing="1.4" fill="#7e7d75">
-                  ← YOU ARE HERE
-                </text>
-              )}
             </g>
           );
         })}
-
-        {/* the two exit gates, drawn on the line */}
-        <g>
-          <path d={`M4 ${RAIL_Y.G1} H16`} stroke="#4c8f58" strokeWidth="1.5" />
-          <text x={30} y={RAIL_Y.G1 + 3} fontSize="8.5" letterSpacing="1.4" fill="#4c8f58">
-            G1 · THE CURVE · PASS 37.2%
-          </text>
-        </g>
-        <g>
-          <path d={`M4 ${RAIL_Y.G2} H16`} stroke="#7e7d75" strokeWidth="1.5" strokeOpacity="0.7" />
-          <text x={30} y={RAIL_Y.G2 + 3} fontSize="8.5" letterSpacing="1.4" fill="#7e7d75">
-            G2 · THE LEVEL · NOT YET RUN
-          </text>
-        </g>
       </svg>
     </div>
   );
