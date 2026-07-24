@@ -87,14 +87,17 @@ function Connector({ drop, edge, offsetClass = "" }: { drop: boolean; edge: Edge
   return (
     <div className={`hidden lg:block w-14 shrink-0 relative ${offsetClass}`} aria-hidden>
       {drop ? (
-        <svg viewBox="0 0 56 78" className="absolute top-4 left-0 w-14 overflow-visible" fill="none">
+        /* the thread crosses the gap, bends over the next card, and lands its
+           tip exactly on that card's top edge (offsets step uniformly, so the
+           landing y is the same for every pair) */
+        <svg viewBox="0 0 56 40" className="absolute top-4 left-0 w-14 overflow-visible" fill="none">
           <path
-            d="M-4 10 H16 C 40 10, 42 16, 42 38 V60"
+            d="M-4 10 H54 Q78 10 78 21 V23"
             style={{ transitionDelay: `${edge.delay}s` }}
             {...entrance}
             {...common}
           />
-          <path d="M36 55 L42 64 L48 55" {...common} strokeDasharray={undefined} />
+          <path d="M72 24 L78 32 L84 24" {...common} strokeDasharray={undefined} />
         </svg>
       ) : (
         <svg viewBox="0 0 56 24" className="absolute top-7 left-0 w-14 overflow-visible" fill="none">
