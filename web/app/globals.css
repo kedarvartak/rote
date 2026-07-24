@@ -78,10 +78,27 @@ body {
   *::before,
   *::after {
     animation-duration: 0.001s !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001s !important;
     transition-delay: 0s !important;
   }
+}
+
+/* ledger cells settling into the hero's context strip, one after another */
+@keyframes cell-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.cell-pop {
+  opacity: 0;
+  animation: cell-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* breathing halo around the current node on the roadmap rail */

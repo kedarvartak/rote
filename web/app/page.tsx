@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HeroLedger } from "@/components/HeroLedger";
+import { ContextStrip } from "@/components/ContextStrip";
 import { CurveChart } from "@/components/CurveChart";
 import { CostChart } from "@/components/CostChart";
 import { Reveal } from "@/components/Reveal";
@@ -130,68 +130,67 @@ export default function Home() {
     <div>
       {/* ---------------------------------------------------------- hero */}
       <section className="dotgrid border-b hairline">
-        <div className="mx-auto max-w-6xl px-5 sm:px-8 pt-16 sm:pt-24 pb-16 grid gap-12 lg:grid-cols-[1.1fr_1fr] items-center">
-          <div>
-            <Reveal>
-              <p className="eyebrow">rote · the memory manager for browser agents</p>
-              <h1 className="mt-5 font-display text-[2.6rem] sm:text-6xl leading-[1.05] tracking-tight">
-                Every harness has memory.
-                <br />
-                <em className="text-copper-bright">None of them manages it.</em>
-              </h1>
-              <p className="mt-6 text-ink-2 text-lg leading-relaxed max-w-[52ch]">
-                Browser agents treat the context window as a garbage dump —
-                append, and hope. Rote treats it as a managed resource: a
-                budget, an eviction policy, a layout contract, and a trust
-                gate on the way back in.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="/docs/benchmarks"
-                  className="rounded-sm bg-copper text-bg font-medium px-5 py-2.5 text-sm hover:bg-copper-bright transition-colors"
-                >
-                  See the numbers
-                </Link>
-                <Link
-                  href="/architecture"
-                  className="rounded-sm border hairline px-5 py-2.5 text-sm text-ink hover:border-copper/60 transition-colors"
-                >
-                  Read the architecture
-                </Link>
+        <div className="mx-auto max-w-6xl px-5 sm:px-8 pt-16 sm:pt-28 pb-16 sm:pb-20">
+          <Reveal>
+            <p className="eyebrow">rote · the memory manager for browser agents</p>
+            <h1 className="mt-6 font-display text-[2.6rem] sm:text-[4.4rem] leading-[1.08] tracking-tight">
+              Every harness has memory.
+              <br />
+              <span className="text-ink-2">None of them manages it.</span>
+            </h1>
+          </Reveal>
+          <Reveal delay={120}>
+            <div className="mt-8 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10">
+              <div className="max-w-[52ch]">
+                <p className="text-ink-2 text-lg leading-relaxed">
+                  Browser agents treat the context window as a garbage dump —
+                  append, and hope. Rote treats it as a managed resource: a
+                  budget, an eviction policy, a layout contract, and a trust
+                  gate on the way back in.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link
+                    href="/docs/benchmarks"
+                    className="rounded-sm bg-copper text-bg font-medium px-5 py-2.5 text-sm hover:bg-copper-bright transition-colors"
+                  >
+                    See the numbers
+                  </Link>
+                  <Link
+                    href="/architecture"
+                    className="rounded-sm border hairline px-5 py-2.5 text-sm text-ink hover:border-copper/60 transition-colors"
+                  >
+                    Read the architecture
+                  </Link>
+                </div>
               </div>
-            </Reveal>
-            <Reveal delay={200}>
-              <dl className="mt-12 grid grid-cols-3 gap-6 max-w-md">
+              <dl className="grid grid-cols-3 gap-8 lg:text-right shrink-0">
                 <div>
-                  <dt className="text-[0.68rem] font-mono uppercase tracking-widest text-muted">
-                    token growth
-                  </dt>
-                  <dd className="mt-1 font-display text-3xl text-copper-bright tabular-nums">
+                  <dd className="font-display text-4xl text-copper-bright tabular-nums">
                     37.2%
                   </dd>
-                  <dd className="text-[0.72rem] text-ink-2">
-                    slower than baseline
-                  </dd>
+                  <dt className="mt-1 text-[0.72rem] text-ink-2">
+                    slower token growth
+                  </dt>
                 </div>
                 <div>
-                  <dt className="text-[0.68rem] font-mono uppercase tracking-widest text-muted">
-                    success parity
+                  <dd className="font-display text-4xl tabular-nums">75/75</dd>
+                  <dt className="mt-1 text-[0.72rem] text-ink-2">
+                    verified successes
                   </dt>
-                  <dd className="mt-1 font-display text-3xl tabular-nums">75/75</dd>
-                  <dd className="text-[0.72rem] text-ink-2">verified, per harness</dd>
                 </div>
                 <div>
-                  <dt className="text-[0.68rem] font-mono uppercase tracking-widest text-muted">
-                    median diff
+                  <dd className="font-display text-4xl tabular-nums">99.6%</dd>
+                  <dt className="mt-1 text-[0.72rem] text-ink-2">
+                    smaller observations
                   </dt>
-                  <dd className="mt-1 font-display text-3xl tabular-nums">99.6%</dd>
-                  <dd className="text-[0.72rem] text-ink-2">smaller than a re-send</dd>
                 </div>
               </dl>
-            </Reveal>
-          </div>
-          <Reveal delay={300}>
-            <HeroLedger />
+            </div>
+          </Reveal>
+          <Reveal delay={240}>
+            <div className="mt-14 sm:mt-16">
+              <ContextStrip />
+            </div>
           </Reveal>
         </div>
       </section>
