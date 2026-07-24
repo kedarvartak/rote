@@ -150,49 +150,122 @@ function PhaseCard({ p }: { p: (typeof PHASES)[number] }) {
   );
 }
 
-/** Dark branching rail: the phase loom, lit by state. */
+/**
+ * Dark rail: the phase arc as an append-only log — a single spine, solid
+ * where committed, dashed where still planned, with the P1 exit gates drawn
+ * as tick-gates on the line itself (the line does not continue until a
+ * number passes them). Node = memory cell; the current cell breathes.
+ */
+const RAIL_Y = { P0: 18, P1: 64, G1: 96, G2: 118, P2: 152, P3: 196, P4: 240, P5: 284 };
+
 function Rail() {
-  const items = PHASES.map((p, i) => ({ ...p, y: 16 + i * 44 }));
+  const label = (p: (typeof PHASES)[number]) =>
+    p.state === "now" ? "#d98f3d" : p.state === "done" ? "#a9a69b" : "#7e7d75";
   return (
-    <div className="hidden lg:block relative" aria-hidden>
-      <svg viewBox="0 0 46 248" className="absolute left-0 top-0 h-[248px] w-[46px]" fill="none">
-        {items.map((p) => (
-          <path
-            key={p.id}
-            className="drawpath"
-            d={`M4 16 C 22 16, 20 ${p.y}, 40 ${p.y}`}
-            stroke={STATE[p.state].color}
-            strokeOpacity={p.state === "planned" ? 0.3 : 0.85}
-            strokeWidth="1.3"
-            pathLength={1}
-          />
-        ))}
-        <rect x="1.5" y="13.5" width="5" height="5" fill="#c2751f" />
+    <div className="hidden lg:block" aria-hidden>
+      <svg
+        viewBox="0 0 250 306"
+        className="w-full max-w-[250px] h-auto overflow-visible"
+        fill="none"
+        style={{ fontFamily: "var(--font-mono)" }}
+      >
+        {/* spine: committed (solid) → current → gated (dashed until G2 passes) */}
+        <path
+          className="drawpath"
+          d={`M10 ${RAIL_Y.P0} V${RAIL_Y.P1}`}
+          stroke="#4c8f58"
+          strokeWidth="1.5"
+          pathLength={1}
+        />
+        <path
+          className="drawpath"
+          d={`M10 ${RAIL_Y.P1} V${RAIL_Y.G1 - 5}`}
+          stroke="#c2751f"
+          strokeWidth="1.5"
+          pathLength={1}
+          style={{ transitionDelay: "0.45s" }}
+        />
+        <path
+          className="drawpath"
+          d={`M10 ${RAIL_Y.G1 + 5} V${RAIL_Y.G2 - 5}`}
+          stroke="#c2751f"
+          strokeWidth="1.5"
+          strokeOpacity="0.55"
+          pathLength={1}
+          style={{ transitionDelay: "0.65s" }}
+        />
+        <path
+          className="drawpath"
+          d={`M10 ${RAIL_Y.G2 + 5} V${RAIL_Y.P5}`}
+          stroke="#7e7d75"
+          strokeOpacity="0.5"
+          strokeWidth="1.3"
+          strokeDasharray="3 5"
+          pathLength={1}
+          style={{ transitionDelay: "0.85s" }}
+        />
+
+        {/* phase nodes + labels */}
+        {PHASES.map((p) => {
+          const y = RAIL_Y[p.id as keyof typeof RAIL_Y];
+          const s = STATE[p.state];
+          const current = p.state === "now";
+          return (
+            <g key={p.id}>
+              {current && (
+                <rect
+                  x={3}
+                  y={y - 7}
+                  width={14}
+                  height={14}
+                  stroke="#c2751f"
+                  strokeWidth="1"
+                  className="pulse-ring"
+                />
+              )}
+              <rect
+                x={current ? 6.5 : 7.5}
+                y={current ? y - 3.5 : y - 2.5}
+                width={current ? 7 : 5}
+                height={current ? 7 : 5}
+                fill={s.color}
+                fillOpacity={p.state === "planned" ? 0.4 : 1}
+                stroke={p.state === "planned" ? s.color : "none"}
+                strokeOpacity="0.6"
+              />
+              <text
+                x={30}
+                y={y + 3.5}
+                fontSize="10.5"
+                letterSpacing="1.6"
+                fill={label(p)}
+                fontWeight={current ? 500 : 400}
+              >
+                {`${p.id} · ${p.theme.toUpperCase()}`}
+              </text>
+              {current && (
+                <text x={30} y={y + 17} fontSize="8.5" letterSpacing="1.4" fill="#7e7d75">
+                  ← YOU ARE HERE
+                </text>
+              )}
+            </g>
+          );
+        })}
+
+        {/* the two exit gates, drawn on the line */}
+        <g>
+          <path d={`M4 ${RAIL_Y.G1} H16`} stroke="#4c8f58" strokeWidth="1.5" />
+          <text x={30} y={RAIL_Y.G1 + 3} fontSize="8.5" letterSpacing="1.4" fill="#4c8f58">
+            G1 · THE CURVE · PASS 37.2%
+          </text>
+        </g>
+        <g>
+          <path d={`M4 ${RAIL_Y.G2} H16`} stroke="#7e7d75" strokeWidth="1.5" strokeOpacity="0.7" />
+          <text x={30} y={RAIL_Y.G2 + 3} fontSize="8.5" letterSpacing="1.4" fill="#7e7d75">
+            G2 · THE LEVEL · NOT YET RUN
+          </text>
+        </g>
       </svg>
-      <ul className="ml-[52px]">
-        {items.map((p) => (
-          <li key={p.id} className="flex items-center gap-2.5 h-[44px] first:h-[30px] first:items-start first:pt-[9px]">
-            <span
-              className={`w-[5px] h-[5px] shrink-0 ${p.state === "now" ? "animate-pulse" : ""}`}
-              style={{
-                background: STATE[p.state].color,
-                opacity: p.state === "planned" ? 0.35 : 1,
-              }}
-            />
-            <span
-              className={`font-mono text-[0.66rem] tracking-[0.18em] uppercase whitespace-nowrap ${
-                p.state === "now"
-                  ? "text-copper-bright"
-                  : p.state === "done"
-                    ? "text-ink-2"
-                    : "text-muted"
-              }`}
-            >
-              {p.id} · {p.theme}
-            </span>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

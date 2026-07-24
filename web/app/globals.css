@@ -83,6 +83,24 @@ body {
   }
 }
 
+/* breathing halo around the current node on the roadmap rail */
+.pulse-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ring 3.2s ease-in-out infinite;
+}
+@keyframes ring {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.18);
+  }
+}
+
 /* connector/branch lines that draw themselves when their Reveal fires */
 .drawpath {
   stroke-dasharray: 1;
