@@ -110,7 +110,10 @@ robustness defects no longer block an honest success-parity measurement.
 **Blocking the launch:** `@rote/cli@0.1.0` now passes build→pack→clean-install and a
 provider-backed B1 smoke, but it is unpublished. The unscoped `rote` name is occupied and
 this environment cannot prove npm `@rote` scope ownership/authentication
-([T14](testing/T14-cli-package-candidate.md)); registry publication and the demo remain.
+([T14](testing/T14-cli-package-candidate.md)). Registry publication is the remaining
+launch blocker ([#107](https://github.com/kedarvartak/rote/issues/107)); the runnable demo
+and one-command evidence reproduction are complete. The final gate walk and exact closure
+procedure are recorded in [launch readiness](launch-readiness.md).
 
 ### Exit gate
 
@@ -144,7 +147,7 @@ measured 37.2% (95% CI 35.6–38.8%) over 15 complete matched repetitions ([T10]
 ### Launch checklist
 
 - [ ] `npx` quickstart works on a clean machine with only an API key
-- [ ] Benchmark reproduction is one command; raw JSONL downloadable
+- [x] Benchmark reproduction is one command (`npm run reproduce:g2`); raw JSONL/receipts are downloadable
 - [x] Every published G1/G2 efficiency claim carries a number, units, and a link to method
 - [x] **The curve is a graph in the README**, with the method and the raw data
 - [x] **#57 closed** — cache accounting is provider-normalized (uncached / cache-read / cache-write), priced per bucket, property-tested against both providers

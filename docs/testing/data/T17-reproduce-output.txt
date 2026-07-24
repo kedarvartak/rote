@@ -1,0 +1,5 @@
+
+> rote@0.0.0 reproduce:g2
+> node scripts/release/reproduce-g2.mjs
+
+G2 reproduction passed: Markdown and JSON match T13 byte-for-byte

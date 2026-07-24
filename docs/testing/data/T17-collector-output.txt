@@ -1,0 +1,2 @@
+B1 repetition 1: success logical=2661 output=182
+B1 rep 1: success logical=33910 output=756 in 20822ms

@@ -37,7 +37,7 @@ drives sequencing:
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
 | #50/#51/#52 done; open: [#54](https://github.com/kedarvartak/rote/issues/54) (diff-derived postconditions) | Planner slips no longer poison success parity; live expects are honestly optional and final verification remains mandatory |
-| `@rote/cli@0.1.0` tarball passes clean install + live B1; npm auth/scope ownership unconfirmed; no demo | registry publication and remaining packaging block launch |
+| `@rote/cli@0.1.0` tarball, live demo, and one-command evidence reproduction pass; npm auth/scope ownership unconfirmed | registry publication (#107) is the remaining launch blocker |
 | B4–B6 benchmark tasks specified, not built | B5 is the first post-G2 trust instrument; it did not move into the frozen level gate |
 
 ## P1 — the epics
@@ -109,11 +109,11 @@ exact-prefix routing on the E1 page. Small fixtures remain below provider cache 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---|---|---|---|
 | E5.1 | **Publish `@rote/cli`** (0.1.0): npm name check, `bin` wiring, quickstart. | 1.5 | E4 green | [T14](testing/T14-cli-package-candidate.md): one-package bundle, pack/install/bin automation, and tarball-installed live B1 pass; unscoped `rote` is occupied, registry `npx @rote/cli` awaits maintainer scope ownership + npm auth | package-ready; registry-blocked |
-| E5.2 | **README with the number:** curve graph, G1/G2 results, units, method links, reproduction one-liner. | 0.5 | E1.5, E4.5 | README carries G1 and G2 with method/evidence links and the B2 caveat; packaging reproduction remains E5.1 | done |
-| E5.3 | **Demo:** terminal recording of cold run → warm replay → drift repair on the fixture suite. | 1 | E5.1 | linked from README | blocked |
+| E5.2 | **README with the number:** curve graph, G1/G2 results, units, method links, reproduction one-liner. | 0.5 | E1.5, E4.5 | README carries G1/G2 and `npm run reproduce:g2`; CI requires byte-identical Markdown/JSON from raw T13 evidence | done |
+| E5.3 | **Demo:** terminal recording of cold run → explicit warm replay → drift detection and classified plain-agent fallback on the fixture suite. Scoped repair is not built and must not be staged. | 1 | E5.1 | [T16](testing/T16-launch-demo.md): 5-step cold, 5-step zero-token replay, real selector drift fails stale replay then cold verifies; cast + four raw runs linked from README | done |
 | E5.4 | **Known-limitations doc:** no distiller (tier 1 is V2), no routing/speculation, eviction trades recall for cost, weak-fit list from [01](01-problem.md). | 0.5 | — | [known-limitations](known-limitations.md) is linked from README and covers product, browser, safety, evidence, provider, package, and recovery boundaries | done |
 | E5.5 | **Licence check** on competitor dependencies (dependencies, not forks). | 0.5 | — | [third-party review](third-party-licenses.md) records direct licenses, confirms Browser Use is an unmodified MIT dependency, and sets re-review triggers | done |
-| E5.6 | **Launch checklist walk** ([05](05-roadmap.md)) + ship. | 1 | all E5 | every box checked or consciously waived in public | blocked |
+| E5.6 | **Launch checklist walk** ([05](05-roadmap.md)) + ship. | 1 | all E5 | every repository-controlled box is checked; registry-backed `npx` remains blocked on maintainer npm scope/auth in #107 | blocked on #107 |
 
 ### E6 — Hygiene, in parallel. ~3 days
 

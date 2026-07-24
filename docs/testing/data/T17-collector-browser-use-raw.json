@@ -1,0 +1,13 @@
+[
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 18038,
+    "cache_read_tokens": 15872,
+    "cache_write_tokens": 0,
+    "output_tokens": 756,
+    "duration_ms": 20822,
+    "repetition": 1,
+    "phase": "cold"
+  }
+]

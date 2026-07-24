@@ -1,0 +1,76 @@
+[
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 18038,
+    "cache_read_tokens": 15872,
+    "cache_write_tokens": 0,
+    "output_tokens": 756,
+    "duration_ms": 20822,
+    "repetition": 1,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Signed in to the reports portal with username 'analyst' and password '[REDACTED_FIXTURE_VALUE]', then successfully downloaded the latest report named 'quarterly-report.pdf'.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11214,
+          "prompt_cached_tokens": 0,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 309,
+          "total_tokens": 11523,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11315,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 196,
+          "total_tokens": 11511,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11381,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 251,
+          "total_tokens": 11632,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  }
+]

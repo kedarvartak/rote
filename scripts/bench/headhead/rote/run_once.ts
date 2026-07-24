@@ -58,8 +58,10 @@ async function main(): Promise<void> {
   if (!manifest && await exists(runDir)) {
     throw new Error(`${runId} has an incomplete artifact tail; refusing to overwrite append-only evidence`);
   }
+  // Bench collection runs from a source checkout; the published bin intentionally
+  // contains only built JavaScript and is exercised separately by the package smoke.
   const commandArgs = [
-    'packages/cli/bin/rote.js', 'run', task.prompt,
+    '--import', 'tsx/esm', 'packages/cli/src/cli-entry.ts', 'run', task.prompt,
     '--url', `http://127.0.0.1:${config.fixture_port}/${task.path}`,
     '--verify-text', task.verify_text,
     '--model', config.model,

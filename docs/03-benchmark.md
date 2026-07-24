@@ -163,17 +163,12 @@ The P1 cumulative-token curve has its own fixed real-page protocol and Browser U
 capture runbook in [`scripts/bench/curve/README.md`](../scripts/bench/curve/README.md).
 
 ```bash
-node scripts/bench/headhead/serve-fixtures.mjs 8080          # frozen pages
-for rep in $(seq 1 18); do
-  for task in B1 B2 B3; do
-    scripts/bench/headhead/run-next-pair.sh "$task" "$rep" # Rote then Browser Use
-  done
-done
-# Then neutralize raw rows per the runbook and audit the published matrix:
-rote-bench g2-report docs/testing/data/T13-g2-records.json \
-  --rote-manifests docs/testing/data/T13-g2-rote-manifests.json \
-  --browser-dumps docs/testing/data/T13-g2-browser-use-dumps.json \
-  --out /tmp/g2.md --summary /tmp/g2.json --min-runs 15
+# No-provider, byte-identical audit of the published raw evidence:
+npm run reproduce:g2
+
+# Full paid/resumable 18-repetition collection after runbook prerequisites:
+BROWSER_USE_PYTHON=/tmp/rote-browser-use/bin/python \
+  scripts/bench/headhead/run-certification.sh
 ```
 
 The frozen B1–B3 certification passes G2 at 54/54 verified successes per harness, with
@@ -183,8 +178,8 @@ receipts, and limitations.
 
 Live-run findings are recorded in [`docs/testing/`](testing/). T1's B2 design defect
 ([#49](https://github.com/kedarvartak/rote/issues/49)) and its two planner-boundary
-robustness findings (#51/#52) are fixed. The matrix is no longer blocked on those known
-success-parity defects; the next prerequisite is the real-page curve protocol in
-[07 E1](07-execution-plan.md#e1--the-curve-gate-g1-67-days).
+robustness findings (#51/#52) are fixed. The matrix is no longer blocked on those known success-parity defects. G1 and G2 are
+complete; registry-backed CLI publication is the remaining launch blocker
+([07 E5](07-execution-plan.md#e5--launch-package-45-days)).
 
 Next: [04 — Competition](04-competition.md)
