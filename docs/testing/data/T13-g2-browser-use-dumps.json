@@ -1,0 +1,4014 @@
+[
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10247,
+    "cache_read_tokens": 23680,
+    "cache_write_tokens": 0,
+    "output_tokens": 708,
+    "duration_ms": 16597,
+    "repetition": 1,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The user has successfully signed in to the reports portal using username 'analyst' and password 's3cret'. The latest report has been downloaded as 'quarterly-report.pdf'. Task completed as requested.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11214,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 240,
+          "total_tokens": 11454,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11321,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 203,
+          "total_tokens": 11524,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11392,
+          "prompt_cached_tokens": 7808,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 265,
+          "total_tokens": 11657,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10090,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 775,
+    "duration_ms": 18434,
+    "repetition": 2,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The user has been successfully signed in to the reports portal with username 'analyst'. The latest report has been downloaded successfully, confirmed by the message 'Report download complete: quarterly-report.pdf'. The task is complete.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11216,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 293,
+          "total_tokens": 11509,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11309,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 202,
+          "total_tokens": 11511,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11373,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 280,
+          "total_tokens": 11653,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10101,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 766,
+    "duration_ms": 17719,
+    "repetition": 3,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The user has been successfully signed in to the reports portal with username 'analyst'. The latest report has been downloaded as 'quarterly-report.pdf'. The task is complete.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11216,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 295,
+          "total_tokens": 11511,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11311,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 202,
+          "total_tokens": 11513,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11382,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 269,
+          "total_tokens": 11651,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10151,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 755,
+    "duration_ms": 17431,
+    "repetition": 4,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "You have successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded successfully, named 'quarterly-report.pdf'. If you need any further assistance, please let me know.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11218,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 249,
+          "total_tokens": 11467,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11333,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 211,
+          "total_tokens": 11544,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11408,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 295,
+          "total_tokens": 11703,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10087,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 764,
+    "duration_ms": 18201,
+    "repetition": 5,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded as 'quarterly-report.pdf'. Task completed as requested.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11216,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 305,
+          "total_tokens": 11521,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11305,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 197,
+          "total_tokens": 11502,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11374,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 262,
+          "total_tokens": 11636,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10086,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 693,
+    "duration_ms": 18077,
+    "repetition": 6,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The user has successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded, confirmed by the message: 'Report download complete: quarterly-report.pdf'. Task completed successfully.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11218,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 210,
+          "total_tokens": 11428,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11301,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 206,
+          "total_tokens": 11507,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11375,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 277,
+          "total_tokens": 11652,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10085,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 667,
+    "duration_ms": 17062,
+    "repetition": 7,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The user has been successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded successfully with the filename 'quarterly-report.pdf'. Task completed.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11216,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 211,
+          "total_tokens": 11427,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11302,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 186,
+          "total_tokens": 11488,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11375,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 270,
+          "total_tokens": 11645,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10094,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 768,
+    "duration_ms": 19039,
+    "repetition": 8,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The user has successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report was downloaded by clicking the 'Download latest report' button. The downloaded file is named 'quarterly-report.pdf'. Task completed successfully.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11218,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 276,
+          "total_tokens": 11494,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11307,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 198,
+          "total_tokens": 11505,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11377,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 294,
+          "total_tokens": 11671,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10070,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 750,
+    "duration_ms": 18215,
+    "repetition": 9,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "You have successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded as 'quarterly-report.pdf'. If you need any further assistance, please let me know.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11216,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 286,
+          "total_tokens": 11502,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11295,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 202,
+          "total_tokens": 11497,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11367,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 262,
+          "total_tokens": 11629,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10115,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 824,
+    "duration_ms": 19113,
+    "repetition": 10,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "You have successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded successfully as 'quarterly-report.pdf'.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11218,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 319,
+          "total_tokens": 11537,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11321,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 218,
+          "total_tokens": 11539,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11384,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 287,
+          "total_tokens": 11671,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10084,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 765,
+    "duration_ms": 17717,
+    "repetition": 11,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "You have been successfully signed in to the reports portal with username 'analyst'. The latest report has been downloaded successfully and is named 'quarterly-report.pdf'. If you need any further assistance, please let me know.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11216,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 293,
+          "total_tokens": 11509,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11307,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 195,
+          "total_tokens": 11502,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11369,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 277,
+          "total_tokens": 11646,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10103,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 788,
+    "duration_ms": 21412,
+    "repetition": 12,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The user was successfully signed in to the reports portal with username 'analyst'. The latest report was downloaded by clicking the 'Download latest report' button. The downloaded file is named 'quarterly-report.pdf'. Task completed successfully.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11216,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 315,
+          "total_tokens": 11531,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11315,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 194,
+          "total_tokens": 11509,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11380,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 279,
+          "total_tokens": 11659,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10107,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 749,
+    "duration_ms": 17196,
+    "repetition": 13,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Signed in to the reports portal with username 'analyst' and password 's3cret', then successfully downloaded the latest report named 'quarterly-report.pdf'. Task completed.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11220,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 317,
+          "total_tokens": 11537,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11314,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 200,
+          "total_tokens": 11514,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11381,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 232,
+          "total_tokens": 11613,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10067,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 789,
+    "duration_ms": 23125,
+    "repetition": 14,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "You have successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded successfully as 'quarterly-report.pdf'. If you need any further assistance, please let me know.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11216,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 307,
+          "total_tokens": 11523,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11298,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 198,
+          "total_tokens": 11496,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11361,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 284,
+          "total_tokens": 11645,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10105,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 679,
+    "duration_ms": 17434,
+    "repetition": 15,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "You have successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded successfully as 'quarterly-report.pdf'.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11218,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 249,
+          "total_tokens": 11467,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11312,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 185,
+          "total_tokens": 11497,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11383,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 245,
+          "total_tokens": 11628,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10110,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 698,
+    "duration_ms": 18943,
+    "repetition": 16,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "You have successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded as 'quarterly-report.pdf'. If you need any further assistance, please let me know.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11218,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 213,
+          "total_tokens": 11431,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11318,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 199,
+          "total_tokens": 11517,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11382,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 286,
+          "total_tokens": 11668,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10082,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 767,
+    "duration_ms": 20070,
+    "repetition": 17,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The user has successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded successfully, named 'quarterly-report.pdf'. Task completed as requested.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11216,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 279,
+          "total_tokens": 11495,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11305,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 196,
+          "total_tokens": 11501,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11369,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 292,
+          "total_tokens": 11661,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10082,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 798,
+    "duration_ms": 18730,
+    "repetition": 18,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b1-report.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "You have successfully signed in to the reports portal with username 'analyst' and password 's3cret'. The latest report has been downloaded successfully, named 'quarterly-report.pdf'. If you need any further assistance, please let me know.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b1-report.html",
+      "http://127.0.0.1:8080/b1-report.html#dashboard",
+      "http://127.0.0.1:8080/b1-report.html#dashboard"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11216,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 304,
+          "total_tokens": 11520,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11304,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 210,
+          "total_tokens": 11514,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11370,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 284,
+          "total_tokens": 11654,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10635,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 1001,
+    "duration_ms": 22091,
+    "repetition": 1,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' with email 'ap@northwind.test' has been successfully completed as confirmed by the final page message. All requested fields were filled and submitted correctly.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11435,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 419,
+          "total_tokens": 11854,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11611,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 292,
+          "total_tokens": 11903,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11525,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 290,
+          "total_tokens": 11815,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10712,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 1075,
+    "duration_ms": 25550,
+    "repetition": 2,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' with contact email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way, Portland, 97209, US', and phone number '503-555-0148' has been successfully completed and confirmed on the website.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11433,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 430,
+          "total_tokens": 11863,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11642,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 400,
+          "total_tokens": 12042,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11573,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 245,
+          "total_tokens": 11818,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10744,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 1148,
+    "duration_ms": 23855,
+    "repetition": 3,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' with contact email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way, Portland, 97209, US', and phone '503-555-0148' has been successfully completed and confirmed on the website.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11433,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 468,
+          "total_tokens": 11901,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11615,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 380,
+          "total_tokens": 11995,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11504,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 300,
+          "total_tokens": 11804,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 11018,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 1016,
+    "duration_ms": 23486,
+    "repetition": 4,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' with email 'ap@northwind.test' and other provided details has been successfully completed and confirmed on the final page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11435,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 444,
+          "total_tokens": 11879,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11644,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 312,
+          "total_tokens": 11956,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11747,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 260,
+          "total_tokens": 12007,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10862,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 1012,
+    "duration_ms": 20120,
+    "repetition": 5,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' with the provided details has been successfully completed. The confirmation page shows the company name and contact email as entered. No further steps are necessary.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11431,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 366,
+          "total_tokens": 11797,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11646,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 325,
+          "total_tokens": 11971,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11721,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 321,
+          "total_tokens": 12042,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10697,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 1041,
+    "duration_ms": 23525,
+    "repetition": 6,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' with email 'ap@northwind.test' has been successfully completed and confirmed on the page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11435,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 459,
+          "total_tokens": 11894,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11651,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 374,
+          "total_tokens": 12025,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11547,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 208,
+          "total_tokens": 11755,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10591,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 1039,
+    "duration_ms": 20029,
+    "repetition": 7,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' with email 'ap@northwind.test' has been successfully completed and confirmed on the website. All provided details were submitted correctly.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11435,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 386,
+          "total_tokens": 11821,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11600,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 345,
+          "total_tokens": 11945,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11492,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 308,
+          "total_tokens": 11800,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 11030,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 1151,
+    "duration_ms": 22430,
+    "repetition": 8,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for company 'Northwind Supply' with contact email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way, Portland, 97209, US', and phone number '503-555-0148' has been successfully submitted and confirmed on the website.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11433,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 458,
+          "total_tokens": 11891,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11663,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 357,
+          "total_tokens": 12020,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11742,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 336,
+          "total_tokens": 12078,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10648,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 1013,
+    "duration_ms": 22136,
+    "repetition": 9,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' with email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way, Portland, 97209, US', and phone '503-555-0148' has been successfully submitted and confirmed on the completion page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11437,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 338,
+          "total_tokens": 11775,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11616,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 379,
+          "total_tokens": 11995,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11531,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 296,
+          "total_tokens": 11827,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10645,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 931,
+    "duration_ms": 22454,
+    "repetition": 10,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' with email 'ap@northwind.test' has been successfully completed as confirmed by the completion message on the page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11431,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 351,
+          "total_tokens": 11782,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11634,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 363,
+          "total_tokens": 11997,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11516,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 217,
+          "total_tokens": 11733,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14516,
+    "cache_read_tokens": 31872,
+    "cache_write_tokens": 0,
+    "output_tokens": 1116,
+    "duration_ms": 22312,
+    "repetition": 11,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' with email 'ap@northwind.test' has been successfully completed. The confirmation page shows the registration is complete with the correct details submitted. No further actions are required.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11433,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 365,
+          "total_tokens": 11798,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11638,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 231,
+          "total_tokens": 11869,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11728,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 303,
+          "total_tokens": 12031,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11589,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 217,
+          "total_tokens": 11806,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10664,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 991,
+    "duration_ms": 21938,
+    "repetition": 12,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' with email 'ap@northwind.test' has been successfully completed as confirmed by the page message. All provided details were entered and submitted correctly.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11433,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 350,
+          "total_tokens": 11783,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11625,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 370,
+          "total_tokens": 11995,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11542,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 271,
+          "total_tokens": 11813,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10873,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 1053,
+    "duration_ms": 22413,
+    "repetition": 13,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' with email 'ap@northwind.test' has been successfully completed and confirmed on the page. All provided details were correctly submitted as requested.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11435,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 459,
+          "total_tokens": 11894,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11638,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 295,
+          "total_tokens": 11933,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11736,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 299,
+          "total_tokens": 12035,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10696,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 984,
+    "duration_ms": 23054,
+    "repetition": 14,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' with contact email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way, Portland, 97209, US', and phone '503-555-0148' has been successfully completed and confirmed on the website.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11435,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 362,
+          "total_tokens": 11797,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11647,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 382,
+          "total_tokens": 12029,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11550,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 240,
+          "total_tokens": 11790,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10785,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 1022,
+    "duration_ms": 26479,
+    "repetition": 15,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' with email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way, Portland, 97209, US', and phone '503-555-0148' has been successfully submitted and confirmed on the website.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11433,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 354,
+          "total_tokens": 11787,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11626,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 374,
+          "total_tokens": 12000,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11534,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 294,
+          "total_tokens": 11828,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10920,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 865,
+    "duration_ms": 21597,
+    "repetition": 16,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' with email 'ap@northwind.test' has been successfully completed and confirmed on the page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11431,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 376,
+          "total_tokens": 11807,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11608,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 286,
+          "total_tokens": 11894,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11689,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 203,
+          "total_tokens": 11892,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10705,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 1103,
+    "duration_ms": 21832,
+    "repetition": 17,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' with email 'ap@northwind.test' has been successfully completed as confirmed by the final page message. All requested information was entered and submitted correctly.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11435,
+          "prompt_cached_tokens": 8064,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 422,
+          "total_tokens": 11857,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11645,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 394,
+          "total_tokens": 12039,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11561,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 287,
+          "total_tokens": 11848,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 18773,
+    "cache_read_tokens": 15872,
+    "cache_write_tokens": 0,
+    "output_tokens": 943,
+    "duration_ms": 39130,
+    "repetition": 18,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' with email 'ap@northwind.test' has been successfully completed and confirmed on the page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11431,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 379,
+          "total_tokens": 11810,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11646,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 282,
+          "total_tokens": 11928,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11568,
+          "prompt_cached_tokens": 0,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 282,
+          "total_tokens": 11850,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10296,
+    "cache_read_tokens": 23680,
+    "cache_write_tokens": 0,
+    "output_tokens": 637,
+    "duration_ms": 18608,
+    "repetition": 1,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The search for 'alpha' was performed successfully, and the Alpha result was opened as requested. The page now shows 'Alpha product opened', confirming completion of the user request.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11194,
+          "prompt_cached_tokens": 7808,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 230,
+          "total_tokens": 11424,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11357,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 190,
+          "total_tokens": 11547,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11425,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 217,
+          "total_tokens": 11642,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10098,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 661,
+    "duration_ms": 16750,
+    "repetition": 2,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The user requested to search for 'alpha' in the catalog and open the Alpha result. This has been successfully completed: I searched for 'alpha', found the Alpha result, clicked on 'Open Alpha', and confirmed that the Alpha product is opened as shown on the page. No further actions are required.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11194,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 230,
+          "total_tokens": 11424,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11324,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 182,
+          "total_tokens": 11506,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11388,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 249,
+          "total_tokens": 11637,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10143,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 694,
+    "duration_ms": 16318,
+    "repetition": 3,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was found and successfully opened by clicking its button. The page confirms with 'Alpha product opened'. The user request is fully completed.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11196,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 269,
+          "total_tokens": 11465,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11341,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 198,
+          "total_tokens": 11539,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11414,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 227,
+          "total_tokens": 11641,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10140,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 742,
+    "duration_ms": 17891,
+    "repetition": 4,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was found and opened successfully. The page shows confirmation text 'Alpha product opened', fulfilling the user request.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11194,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 249,
+          "total_tokens": 11443,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11339,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 226,
+          "total_tokens": 11565,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11415,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 267,
+          "total_tokens": 11682,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10156,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 705,
+    "duration_ms": 16945,
+    "repetition": 5,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was found and opened successfully. The page shows confirmation with 'Alpha product opened'. Task completed as requested.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11194,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 262,
+          "total_tokens": 11456,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11349,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 187,
+          "total_tokens": 11536,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11421,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 256,
+          "total_tokens": 11677,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10172,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 696,
+    "duration_ms": 18770,
+    "repetition": 6,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was found and opened successfully. The page shows 'Alpha product opened', confirming completion of the user request.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11192,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 219,
+          "total_tokens": 11411,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11354,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 219,
+          "total_tokens": 11573,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11434,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 258,
+          "total_tokens": 11692,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10156,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 769,
+    "duration_ms": 19216,
+    "repetition": 7,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was found and opened successfully. The user request to search for 'alpha' and open its result is fully completed.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11192,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 283,
+          "total_tokens": 11475,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11353,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 208,
+          "total_tokens": 11561,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11419,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 278,
+          "total_tokens": 11697,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10175,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 685,
+    "duration_ms": 15672,
+    "repetition": 8,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was successfully opened as requested.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11196,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 218,
+          "total_tokens": 11414,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11359,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 216,
+          "total_tokens": 11575,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 251,
+          "total_tokens": 11679,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10145,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 661,
+    "duration_ms": 15764,
+    "repetition": 9,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was successfully opened by clicking its 'Open Alpha' button. The page now shows that the Alpha product is opened. The user request has been fully completed.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11192,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 217,
+          "total_tokens": 11409,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11343,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 197,
+          "total_tokens": 11540,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11418,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 247,
+          "total_tokens": 11665,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10121,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 694,
+    "duration_ms": 19176,
+    "repetition": 10,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was found and opened successfully. The page confirms with 'Alpha product opened'. The user request is fully completed.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11192,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 245,
+          "total_tokens": 11437,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11333,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 199,
+          "total_tokens": 11532,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11404,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 250,
+          "total_tokens": 11654,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10179,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 707,
+    "duration_ms": 16834,
+    "repetition": 11,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was successfully opened as requested.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11196,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 217,
+          "total_tokens": 11413,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11355,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 225,
+          "total_tokens": 11580,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11436,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 265,
+          "total_tokens": 11701,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10173,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 653,
+    "duration_ms": 20902,
+    "repetition": 12,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The search for 'alpha' was performed and the Alpha result was found and opened successfully. The page confirms this with 'Alpha product opened'. The user request is fully completed.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11196,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 215,
+          "total_tokens": 11411,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11360,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 187,
+          "total_tokens": 11547,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11425,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 251,
+          "total_tokens": 11676,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10175,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 704,
+    "duration_ms": 16183,
+    "repetition": 13,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was found and opened successfully. The page shows confirmation that the Alpha product is opened. The user request is fully completed.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11194,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 229,
+          "total_tokens": 11423,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11360,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 212,
+          "total_tokens": 11572,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11429,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 263,
+          "total_tokens": 11692,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10142,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 608,
+    "duration_ms": 15796,
+    "repetition": 14,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The search for 'alpha' was performed successfully, and the Alpha result was found and opened. The page now displays confirmation that the Alpha product is opened. The user request is fully completed.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11194,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 207,
+          "total_tokens": 11401,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11346,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 176,
+          "total_tokens": 11522,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11410,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 225,
+          "total_tokens": 11635,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10158,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 712,
+    "duration_ms": 18563,
+    "repetition": 15,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was found and opened successfully. The page shows confirmation with 'Alpha product opened'. The user request is complete.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11192,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 269,
+          "total_tokens": 11461,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11351,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 196,
+          "total_tokens": 11547,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11423,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 247,
+          "total_tokens": 11670,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10134,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 706,
+    "duration_ms": 17838,
+    "repetition": 16,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was found and opened successfully. The page confirms that the Alpha product is opened with visible text 'Alpha product opened'. The user request has been fulfilled.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11196,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 254,
+          "total_tokens": 11450,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11339,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 191,
+          "total_tokens": 11530,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11407,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 261,
+          "total_tokens": 11668,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10170,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 639,
+    "duration_ms": 15496,
+    "repetition": 17,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was found and opened successfully. The page confirms 'Alpha product opened'. Task completed as requested.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11194,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 203,
+          "total_tokens": 11397,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11353,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 215,
+          "total_tokens": 11568,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11431,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 221,
+          "total_tokens": 11652,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10166,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 757,
+    "duration_ms": 17820,
+    "repetition": 18,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b3-catalog.html",
+    "browser_use_version": "0.13.6",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The catalog was searched for 'alpha', and the Alpha result was located and opened successfully by clicking its button. The page confirms that the Alpha product is now opened. The user request to search for 'alpha' and open its result is fully completed.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html",
+      "http://127.0.0.1:8080/b3-catalog.html#product/alpha"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11196,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 267,
+          "total_tokens": 11463,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11351,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 217,
+          "total_tokens": 11568,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11427,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 273,
+          "total_tokens": 11700,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text_visible": true
+  }
+]

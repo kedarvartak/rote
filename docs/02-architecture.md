@@ -197,8 +197,11 @@ contract remains fail-closed above 100,000 characters.
 This does **not** prove “they're quadratic, we're linear.” Rote is a smaller-growth
 quadratic until scheduled compaction exists. The frozen pre-cache-key matrix did not prove cost or latency wins. T11 subsequently makes
 Rote 16.0% cheaper than Browser Use at WP-N25 (95% CI 6.2–26.2%), but WP-N09 still loses
-and crosses parity: this is not a universal cost claim. The eviction trade has not been
-stress-tested on a task requiring recall, and G2's cross-task token level remains unrun.
+and crosses parity: this is not a universal cost claim. The eviction trade has not been stress-tested on a task requiring recall. G2 now passes
+its frozen B1–B3 level gate at 100% success parity, with 77.3–93.3% logical-token
+reductions whose 95% matched-repetition intervals remain positive
+([T13](testing/T13-g2-certification.md)); B2 does not clear the catalog's 80% target, and
+the local fixtures do not establish production-site generality.
 
 ## The control loop
 

@@ -41,6 +41,7 @@ labeled `skip-changelog`.
 - **P1**: Make action `expect` optional and give a failed postcondition one scoped repair instead of ending the run — a mandatory expect forced the planner to predict confirmation text it had never seen, failing B2 0/7 with correct form submissions recorded as failures. B2 now passes 11/11 on `gpt-5.6-luna` and `gpt-5.6-sol` at roughly neutral token cost (#49, #50)
 
 ### Added
+- **P1**: Publish the frozen B1–B3 G2 certification with 108/108 verified sessions, matched-repetition token/cost/latency intervals, source-tagged accounting, raw provider receipts, and a fail-closed reproducible audit; report B2's missed 80% target instead of rounding the formal positive-margin pass into a broader claim (#103).
 - **P1**: Freeze G2 to deterministic B1–B3 and add exact-repetition, append-safe Rote→Browser Use paired collection with durable raw attempts, shared 1920×1080 setup, and resumable interruption recovery (#102).
 - **P1**: Add fail-closed cache-layout immutability guards, sacred timestamp/run-ID probes, and deterministic before/after cache economics reporting with model-priced confidence intervals and cost-curve SVG output (#100).
 - **P1**: Publish G1's audited real-page curve and raw receipts: Rote's cumulative logical-input slope grows 37.2% slower than Browser Use (95% CI 35.6–38.8%) at 75/75 verified successes per harness, while explicitly reporting that current billed cost and p50 latency remain higher (#72, #99).

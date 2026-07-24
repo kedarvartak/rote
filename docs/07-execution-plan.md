@@ -32,19 +32,19 @@ drives sequencing:
 
 | Fact | Consequence for the plan |
 |---|---|
-| Eviction/diff built and G1-measured; OpenAI cache layout economically qualified; compaction not built | tier 0 clears G1 and long-cell cost while G2 remains |
+| Eviction/diff built and G1-measured; OpenAI cache layout economically qualified; compaction not built | tier 0 clears G1, long-cell cost, and the frozen B1–B3 G2 level gate |
 | B1–B3 render ~537 chars; the selected WordPress page renders 89,114 chars (~22,279 approximate tok) identically across 15 fresh sessions ([T2](testing/T2-measurement-page-selection.md)) | The real-page prerequisite is now met; E1.2 can fix the curve protocol and E1.4 can collect provider-reported sizes |
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
 | #50/#51/#52 done; open: [#54](https://github.com/kedarvartak/rote/issues/54) (diff-derived postconditions) | Planner slips no longer poison success parity; live expects are honestly optional and final verification remains mandatory |
-| `@rote/cli` private at 0.0.0; README now carries G1; no demo | packaging and G2 still block launch |
-| B4–B6 benchmark tasks specified, not built | a G2 scope decision is required (E4.1) |
+| `@rote/cli` private at 0.0.0; README carries G1/G2; no demo | packaging now blocks launch |
+| B4–B6 benchmark tasks specified, not built | B5 is the first post-G2 trust instrument; it did not move into the frozen level gate |
 
 ## P1 — the epics
 
 Six epics. E1 ran first under **measure before building** and now passes G1. The remaining
-sequence must preserve that evidence while addressing G2 and launch packaging, not tune
-the frozen curve after seeing it.
+sequence preserved that evidence through G2 and must now package the measured build, not
+tune the frozen results after seeing them.
 
 ```
 E1 curve (G1)  ──►  E3 cache layout  ──►  E4 level (G2)  ──►  E5 launch
@@ -100,16 +100,16 @@ exact-prefix routing on the E1 page. Small fixtures remain below provider cache 
 |---|---|---|---|---|---|
 | E4.1 | **G2 scope decision:** certify the already-built deterministic B1–B3 suite now; defer B5 drift. Building a new fixture after seeing G1 would mix benchmark construction with the level gate, while B1–B3 already span authenticated download, long form entry, and search/extraction. B5 remains the first post-G2 trust/drift instrument, not deleted scope. | 0.5 | — | decision recorded here and in [05](05-roadmap.md) before collection | done |
 | E4.2 | **B5 drift fixture:** B2 with scripted DOM mutations between runs; grades repair and silent-failure rate. | 2 | E4.1 | fixture + mutation script deterministic in CI | deferred until after initial G2 |
-| E4.3 | **Certification runs:** ≥15/harness/task, seeded bootstrap (10k resamples), lower bound vs. floor. | 1–2 | E2.1, E2.2 | append-safe exact-repetition paired instrument ready; `launch-gate` passes or fails loudly; raw evidence kept | ready |
-| E4.4 | **Symmetric verification audit:** confirm competitor runs are graded by our own rule (success = concluded **and** live-page verification text) on real output, not just in code review. | 1 | E4.3 | audit note in `docs/testing/` | blocked |
-| E4.5 | **G2 report:** tokens per source, latency avg/p50/p95 ms, $ per task from the dated price table; `price unavailable` never $0. | 0.5 | E4.3 | report generated from raw data by one command | blocked |
+| E4.3 | **Certification runs:** ≥15/harness/task, seeded bootstrap (10k resamples), lower bound vs. floor. | 1–2 | E2.1, E2.2 | 18 matched repetitions; 108/108 verified sessions; all three lower bounds positive; raw evidence retained in [T13](testing/T13-g2-certification.md) | done — G2 pass |
+| E4.4 | **Symmetric verification audit:** confirm competitor runs are graded by our own rule (success = concluded **and** live-page verification text) on real output, not just in code review. | 1 | E4.3 | report command cross-checks 54 manifests and 54 dumps; all Browser Use successes concluded and matched live text; 163 receipts retained | done |
+| E4.5 | **G2 report:** tokens per source, latency avg/p50/p95 ms, $ per task from the dated price table; `price unavailable` never $0. | 0.5 | E4.3 | `g2-report` regenerates Markdown + JSON from raw evidence; B2's missed 80% target is explicit | done |
 
 ### E5 — Launch package. ~4–5 days
 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---|---|---|---|
-| E5.1 | **Publish `@rote/cli`** (0.1.0): npm name check, `bin` wiring, quickstart. | 1.5 | E4 green | `npx rote run <task>` works on a clean machine with only an API key | blocked |
-| E5.2 | **README with the number:** curve graph, G1/G2 results, units, method links, reproduction one-liner. | 0.5 | E1.5, E4.5 | every claim carries a number + link | blocked |
+| E5.1 | **Publish `@rote/cli`** (0.1.0): npm name check, `bin` wiring, quickstart. | 1.5 | E4 green | `npx rote run <task>` works on a clean machine with only an API key | ready |
+| E5.2 | **README with the number:** curve graph, G1/G2 results, units, method links, reproduction one-liner. | 0.5 | E1.5, E4.5 | README carries G1 and G2 with method/evidence links and the B2 caveat; packaging reproduction remains E5.1 | done |
 | E5.3 | **Demo:** terminal recording of cold run → warm replay → drift repair on the fixture suite. | 1 | E5.1 | linked from README | blocked |
 | E5.4 | **Known-limitations doc:** no distiller (tier 1 is V2), no routing/speculation, eviction trades recall for cost, weak-fit list from [01](01-problem.md). | 0.5 | — | honest, linked from README | ready |
 | E5.5 | **Licence check** on competitor dependencies (dependencies, not forks). | 0.5 | — | recorded | ready |

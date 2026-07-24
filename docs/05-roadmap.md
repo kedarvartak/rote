@@ -91,9 +91,9 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 | W2 distill, stable IDs, diff, render | **done and real-page measured** — T10 records 849 WordPress diffs and their grounded-base ratios |
 | W3 loop + context assembler | **done and OpenAI-economics qualified** — cache-key routing plus immutability guards preserve logical accounting and win long-cell billed cost in T11 |
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
-| W5 benchmark + the number | **G1 done** — 37.2% slower logical-input growth (95% CI 35.6–38.8%) at 75/75 success parity per harness; G2 remains |
+| W5 benchmark + the number | **done** — G1: 37.2% slower logical-input growth (95% CI 35.6–38.8%); G2: 77.3–93.3% lower logical tokens/task, all intervals positive, at 54/54 parity per harness |
 | W6 launch package | not started |
-| **W7 working memory (new)** | #57 accounting **done** → G1 **passed** → OpenAI cache economics **qualified** → G2/packaging → compaction in P2 |
+| **W7 working memory (new)** | #57 accounting **done** → G1/G2 **passed** → OpenAI cache economics **qualified** → packaging → compaction in P2 |
 
 **No longer blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49)
 and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` is now
@@ -108,7 +108,7 @@ Both still fail closed when no safe action can be resolved. The known planner-bo
 robustness defects no longer block an honest success-parity measurement.
 
 **Blocking the launch:** `packages/cli` is private at `0.0.0` and unpublished, so the
-`npx rote run` quickstart does not exist; the README has no number in it; no demo.
+`npx rote run` quickstart does not exist; no demo or consolidated known-limitations page.
 
 ### Exit gate
 
@@ -122,10 +122,12 @@ Two gates. The first is the headline; the second keeps the first honest.
 > survives variance (≥15 runs/harness; bootstrap lower bound above the floor —
 > [03](03-benchmark.md)).
 
-**G2 launch scope is frozen to B1–B3 before collection.** These are the three built,
-deterministic tasks: authenticated download, long form entry, and search/extraction. B5
-drift remains important but is deferred until after the initial level result; implementing
-a new fixture now would mix benchmark construction with the gate being judged.
+**G2 passed on the scope frozen before collection:** B1–B3, the three built deterministic
+tasks covering authenticated download, long form entry, and search/extraction. Across 18
+matched repetitions, both harnesses passed 54/54 attempts and all logical-token reduction
+intervals remain positive (77.3–93.3% point estimates). B2 does not clear the catalog's
+80% target ([T13](testing/T13-g2-certification.md)). B5 drift remains the first post-G2
+trust instrument.
 
 **No number, no launch.** If G1 fails, the memory thesis is wrong and we say so — it costs
 one benchmark, which is the point of running it before building. G2 alone is the old gate:
@@ -141,10 +143,10 @@ measured 37.2% (95% CI 35.6–38.8%) over 15 complete matched repetitions ([T10]
 
 - [ ] `npx` quickstart works on a clean machine with only an API key
 - [ ] Benchmark reproduction is one command; raw JSONL downloadable
-- [x] Every published G1 efficiency claim carries a number, units, and a link to method
+- [x] Every published G1/G2 efficiency claim carries a number, units, and a link to method
 - [x] **The curve is a graph in the README**, with the method and the raw data
 - [x] **#57 closed** — cache accounting is provider-normalized (uncached / cache-read / cache-write), priced per bucket, property-tested against both providers
-- [ ] Sacred invariant suite green; CI enforces changelog + lint + tests
+- [x] Sacred invariant suite green; CI enforces changelog + lint + tests
 - [ ] Known limitations written honestly (no routing/speculation/learning yet; **no
       distiller — tier 1 is V2**; eviction trades recall for cost)
 - [ ] Licence check on competitor comparisons (dependencies, not forks)
