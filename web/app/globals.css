@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0e1114;
+  --color-surface: #151a20;
+  --color-surface-2: #1b222b;
+  --color-ink: #e8e2d6;
+  --color-ink-2: #a9a69b;
+  --color-muted: #7e7d75;
+  --color-copper: #c2751f;
+  --color-copper-bright: #d98f3d;
+  --color-blue: #4b8cc8;
+  --color-blue-bright: #6ea6d8;
+  --color-good: #5faf6d;
+  --color-paper: #f4f1e9;
+  --color-paper-ink: #22211d;
+
+  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(194, 117, 31, 0.35);
+}
+
+/* hairline utility — the ledger rule */
+.hairline {
+  border-color: rgba(232, 226, 214, 0.1);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-copper-bright);
+}
+
+/* reveal-on-scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+}
+
+/* faint dot grid for hero — memory-cell texture */
+.dotgrid {
+  background-image: radial-gradient(rgba(232, 226, 214, 0.055) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-copper-bright);
+  outline-offset: 3px;
+  border-radius: 2px;
+}

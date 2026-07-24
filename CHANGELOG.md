@@ -9,6 +9,9 @@ labeled `skip-changelog`.
 
 ## [Unreleased]
 
+### Added
+- **P1**: Add `web/` — the product website (Next.js 15 + Tailwind v4, all routes static): a landing page with an animated tier-0 eviction hero and the G1/T11 headline numbers, an architecture page built from docs/02 embedding the design diagrams, and a docs section (overview, benchmarks & runs with audited figures from `docs/testing/data/`, packages, roadmap) (#TBD)
+
 ### Docs
 - **P1**: Close the vacuous live-expect finding by documenting the shipped contract: replay steps retain authored postconditions, live planner expects are optional because forced future-state claims become guesses or tautologies, and independent final verification alone gates success; keep diff-derived postconditions explicitly open in #54 (#50, #75).
 - **P1**: Add `docs/07-execution-plan.md` — the work breakdown that turns docs/05's strategy into tasks. Six P1 epics (the curve/G1, planner-boundary robustness for #51/#52, B3 cache layout, the level/G2, launch package, hygiene) with stable task IDs, dependencies, acceptance criteria, day estimates, a week-by-week sequence targeting the 2026-Q3 launch, P2 entry criteria, and a RAID log. Rule of precedence stated in the doc: 05 owns strategy and gates, 07 owns tasks; disagreements fix both in one PR.
