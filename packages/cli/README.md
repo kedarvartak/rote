@@ -26,7 +26,7 @@ self-report—must show.
 
 ## Public API
 
-- **`rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>)`** — launches Chrome and prefers an exact-environment verified replay when `--replay-candidate <candidate.json>` is supplied; fingerprint mismatch short-circuits to the compact cold planner with a classified fallback. Optional: `--model`, `--max-steps`, `--chrome-path`, `--settle-timeout-ms`, and paired `--viewport-width`/`--viewport-height`.
+- **`rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>)`** — launches Chrome and prefers an exact-environment verified replay when `--replay-candidate <candidate.json>` is supplied; fingerprint mismatch short-circuits to the compact cold planner; failed or errored replay also restarts the cold path from the pinned initial URL with a classified reason. Optional: `--model`, `--max-steps`, `--chrome-path`, `--settle-timeout-ms`, and paired `--viewport-width`/`--viewport-height`.
 - **`rote runs ls`** — lists every run under `.rote/runs`, one per line,
   with outcome and task spec. A run with no `manifest.json` yet (still in
   progress, or abandoned by a kill) is listed as `in-progress` rather than
@@ -77,6 +77,9 @@ candidate. A mismatch never reaches replay.
 - npm's unscoped `rote` name belongs to an unrelated package. The release candidate is
   `@rote/cli`; registry-backed `npx` remains blocked on scope ownership/authentication.
 - Chrome/Chromium must already be installed or supplied with `--chrome-path`.
+- Cold fallback re-navigates the initial URL, but cannot generically undo server-side side
+  effects made before a replay failure. Only use replay for workflows whose authored
+  assertions and site reset semantics make retry safe.
 
 ## Running tests
 

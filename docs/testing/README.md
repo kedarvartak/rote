@@ -47,3 +47,4 @@ enough to be re-run and disagreed with.
 | [T12](T12-g2-b1-b3-instrument-smoke.md) | 2026-07-24 | Freeze B1–B3 and qualify the cache-aware append-safe G2 instrument | 3/3 paired tasks pass exact live verification; certification collection ready |
 | [T13](T13-g2-certification.md) | 2026-07-24 | Certify the frozen B1–B3 G2 level at success parity | G2 passes 108/108 sessions; reductions 77.3–93.3%; B2 does not clear the 80% catalog target |
 | [T14](T14-cli-package-candidate.md) | 2026-07-24 | Prove the 0.1.0 CLI tarball installs and runs without the monorepo | clean pack/bin and live B1 pass; registry publish blocked on npm scope ownership/auth |
+| [T15](T15-replay-fallback.md) | 2026-07-24 | Exercise the invariant-2 exit after an exact-fingerprint replay assertion fails | failed replay remains failed; classified cold fallback completes and verifies B1 |

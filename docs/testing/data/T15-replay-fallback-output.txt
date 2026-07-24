@@ -1,0 +1,6 @@
+success: task verification passed
+run: 16c9aaa6-56a3-474a-8989-bc9dd071e13a
+phase: cold
+fallback: replay_failed (selector "#never-present" not visible)
+steps: 5
+tokens: 2661 input + 186 output

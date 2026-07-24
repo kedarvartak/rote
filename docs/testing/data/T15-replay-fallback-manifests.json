@@ -1,0 +1,120 @@
+[
+  {
+    "run_id": "16c9aaa6-56a3-474a-8989-bc9dd071e13a",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T12:33:58.368Z",
+    "ended_at": "2026-07-24T12:34:07.561Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 28
+      }
+    ]
+  },
+  {
+    "run_id": "84b9604b-6eb9-43eb-bba1-f885138c6e93",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-24T12:33:58.025Z",
+    "ended_at": "2026-07-24T12:33:58.366Z",
+    "token_usage": []
+  }
+]

@@ -203,6 +203,12 @@ reductions whose 95% matched-repetition intervals remain positive
 ([T13](testing/T13-g2-certification.md)); B2 does not clear the catalog's 80% target, and
 the local fixtures do not establish production-site generality.
 
+Manual exact-fingerprint candidates now return to the plain agent when replay fails or
+throws, with the classification and detail retained. That cold path re-navigates the
+pinned initial URL ([T15](testing/T15-replay-fallback.md)). It cannot generically roll back a server-side mutation made before the
+failure; safe replay therefore still depends on assertion placement and task/site reset
+semantics until transactional recovery exists.
+
 ## The control loop
 
 ```ts

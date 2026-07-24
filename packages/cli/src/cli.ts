@@ -38,17 +38,25 @@ export async function main(
     // just produced (docs/05 W5 repetition runner); normal use assigns a random id.
     const runId = process.env['ROTE_RUN_ID'];
     const result = await dependencies.runBrowserTask(runId ? { ...options, runId } : options);
-    if (!result.success) throw new Error(`browser task failed (run ${result.runId}): ${result.summary}`);
+    const fallback = formatFallback(result);
+    if (!result.success) {
+      throw new Error(`browser task failed (run ${result.runId}): ${result.summary}${fallback ? `; ${fallback}` : ''}`);
+    }
     return [
       `success: ${result.summary}`,
       `run: ${result.runId}`,
       `phase: ${result.phase}`,
-      ...(result.fallbackReason ? [`fallback: ${result.fallbackReason}`] : []),
+      ...(fallback ? [fallback] : []),
       `steps: ${result.steps}`,
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,
     ].join('\n');
   }
   throw new Error(`usage: rote runs ls | rote runs show <run_id> | ${runUsage()} | ${candidateUsage()}`);
+}
+
+function formatFallback(result: BrowserTaskResult): string | undefined {
+  if (!result.fallbackReason) return undefined;
+  return `fallback: ${result.fallbackReason}${result.fallbackDetail ? ` (${result.fallbackDetail})` : ''}`;
 }
 
 function parseCandidateOptions(args: string[]): { url: string; params: Record<string, unknown>; outPath: string } {

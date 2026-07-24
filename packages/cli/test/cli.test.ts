@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { main, type CliDependencies } from '../src/index.js';
+import { main, type BrowserTaskResult, type CliDependencies } from '../src/index.js';
 
-function dependencies(result = { runId: 'run-1', success: true, summary: 'report downloaded', steps: 4, inputTokens: 120, outputTokens: 20, phase: 'cold' as const }) {
+function dependencies(result: BrowserTaskResult = { runId: 'run-1', success: true, summary: 'report downloaded', steps: 4, inputTokens: 120, outputTokens: 20, phase: 'cold' as const }) {
   return { runBrowserTask: vi.fn(async () => result) } satisfies CliDependencies;
 }
 
@@ -66,6 +66,17 @@ describe('rote run', () => {
     expect(deps.runBrowserTask.mock.calls[0]?.[0]).not.toHaveProperty('runId');
   });
 
+  it('prints the retained replay failure classification after cold fallback', async () => {
+    const deps = dependencies({
+      runId: 'cold-2', success: true, summary: 'cold completed', steps: 1,
+      inputTokens: 10, outputTokens: 2, phase: 'cold',
+      fallbackReason: 'replay_failed', fallbackDetail: 'verify text absent',
+    });
+    await expect(main([
+      'run', 'Do the task', '--url', 'https://portal.test', '--verify-text', 'Complete',
+    ], '.rote', deps)).resolves.toContain('fallback: replay_failed (verify text absent)');
+  });
+
   it('requires a starting URL', async () => {
     await expect(main(['run', 'Do the task'], '.rote', dependencies())).rejects.toThrow(
       'rote run <task> --url <url>',
@@ -81,12 +92,14 @@ describe('rote run', () => {
       inputTokens: 50,
       outputTokens: 10,
       phase: 'cold' as const,
+      fallbackReason: 'replay_error',
+      fallbackDetail: 'replay transport broke',
     });
 
     await expect(main([
       'run', 'Do the task', '--url', 'https://portal.test', '--verify-text', 'Complete',
     ], '.rote', deps)).rejects.toThrow(
-      'browser task failed (run run-failed): planner exceeded maxSteps=2',
+      'browser task failed (run run-failed): planner exceeded maxSteps=2; fallback: replay_error (replay transport broke)',
     );
   });
 });
