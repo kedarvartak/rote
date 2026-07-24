@@ -204,7 +204,7 @@ export default function Home() {
             eyebrow="docs/01 · the problem"
             title={
               <>
-                The quadratic <span className="text-copper-bright">nobody names</span>
+                The quadratic <span className="text-copper-bright text-[1.08em]">nobody names</span>
               </>
             }
             lede={
@@ -257,7 +257,7 @@ export default function Home() {
                 The context window is RAM. Observations are pages, dropping
                 them is eviction, diffing is delta encoding, the prompt cache
                 is L2, compaction is GC.{" "}
-                <span className="text-copper-bright">
+                <span className="text-copper-bright text-[1.08em]">
                   Every one of those has a manager in an OS. None of them has
                   one in a browser agent.
                 </span>
@@ -391,7 +391,7 @@ export default function Home() {
               eyebrow="T10 · exit gate G1 · PASS"
               title={
                 <>
-                  The curve, <span className="text-copper-bright">measured</span>
+                  The curve, <span className="text-copper-bright text-[1.08em]">measured</span>
                 </>
               }
               lede={
@@ -524,7 +524,7 @@ export default function Home() {
               <div>
                 <p className="font-display text-2xl">
                   The wedge is the cost curve.{" "}
-                  <span className="text-copper-bright">The precondition is auditable determinism.</span>
+                  <span className="text-copper-bright text-[1.08em]">The precondition is auditable determinism.</span>
                 </p>
                 <p className="mt-2 text-ink-2 text-sm">
                   The compounding asset is the accumulated, verified memory itself.
