@@ -9,6 +9,9 @@ labeled `skip-changelog`.
 
 ## [Unreleased]
 
+### Added
+- **P1**: Add `web/` — the product website (Next.js 15 + Tailwind v4, all routes static): a landing page with an animated tier-0 eviction hero and the G1/T11 headline numbers, an architecture page built from docs/02 embedding the design diagrams, and a docs section (overview, benchmarks & runs with audited figures from `docs/testing/data/`, packages, roadmap) (#101)
+
 ### Docs
 - **P1**: Publish the launch-blocking limitations contract and third-party review: state that learning, compaction, routing, transactional rollback, broad browser/site/provider support, and npm publication are absent; record G2 token/latency misses; and confirm Browser Use remains an unmodified MIT dependency with no competitor code or assets vendored (#106).
 - **P1**: Close the vacuous live-expect finding by documenting the shipped contract: replay steps retain authored postconditions, live planner expects are optional because forced future-state claims become guesses or tautologies, and independent final verification alone gates success; keep diff-derived postconditions explicitly open in #54 (#50, #75).

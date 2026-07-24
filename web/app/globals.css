@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0e1114;
+  --color-surface: #151a20;
+  --color-surface-2: #1b222b;
+  --color-ink: #e8e2d6;
+  --color-ink-2: #a9a69b;
+  --color-muted: #7e7d75;
+  --color-copper: #c2751f;
+  --color-copper-bright: #d98f3d;
+  --color-blue: #4b8cc8;
+  --color-blue-bright: #6ea6d8;
+  --color-good: #5faf6d;
+  --color-paper: #f4f1e9;
+  --color-paper-ink: #22211d;
+
+  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: clip;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(194, 117, 31, 0.35);
+}
+
+/* hairline utility — the ledger rule */
+.hairline {
+  border-color: rgba(232, 226, 214, 0.1);
+}
+
+/* section kicker — same voice as the titles, one register quieter */
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--color-copper-bright);
+}
+
+/* reveal-on-scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001s !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+    transition-delay: 0s !important;
+  }
+}
+
+/* ledger cells settling into the hero's context strip, one after another */
+@keyframes cell-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.cell-pop {
+  opacity: 0;
+  animation: cell-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* breathing halo around the current node on the roadmap rail */
+.pulse-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ring 3.2s ease-in-out infinite;
+}
+@keyframes ring {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.18);
+  }
+}
+
+/* connector/branch lines that draw themselves when their Reveal fires */
+.drawpath {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.25s;
+}
+.reveal.is-visible .drawpath {
+  stroke-dashoffset: 0;
+}
+
+/* dashed lines can't use the dashoffset draw-in (it would override their dash
+   pattern) — they fade up instead, on the same reveal trigger */
+.fadepath {
+  opacity: 0;
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible .fadepath {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fadepath {
+    opacity: 1;
+    transition: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawpath {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+}
+
+/* faint dot grid for hero — memory-cell texture */
+.dotgrid {
+  background-image: radial-gradient(rgba(232, 226, 214, 0.055) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-copper-bright);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
