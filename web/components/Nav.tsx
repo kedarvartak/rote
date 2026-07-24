@@ -23,9 +23,9 @@ export function Nav() {
   }, []);
 
   return (
-    <div className="sticky top-3 sm:top-4 z-50 pl-4 pr-16 sm:pl-8 sm:pr-16 xl:px-8">
+    <div className="sticky top-3 sm:top-4 z-50 pl-4 pr-16 sm:pl-8 sm:pr-16 xl:px-8 pointer-events-none">
       <header
-        className={`mx-auto max-w-3xl rounded-full border backdrop-blur-xl h-12 sm:h-13 px-4 sm:px-7 flex items-center justify-between transition-all duration-500 ${
+        className={`pointer-events-auto mx-auto max-w-3xl rounded-full border backdrop-blur-xl h-12 sm:h-13 px-4 sm:px-7 flex items-center justify-between transition-all duration-500 ${
           scrolled
             ? "bg-bg/80 hairline shadow-lg shadow-black/30"
             : "bg-bg/40 border-transparent"
