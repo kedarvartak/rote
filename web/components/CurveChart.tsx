@@ -15,9 +15,9 @@ const CELLS = [
   { steps: 25, rote: 81203, bu: 110131, red: "26.3% [25.4–27.2]" },
 ];
 
-const W = 640;
-const H = 360;
-const M = { top: 24, right: 118, bottom: 42, left: 56 };
+const W = 960;
+const H = 420;
+const M = { top: 26, right: 132, bottom: 46, left: 64 };
 const X_MIN = 8;
 const X_MAX = 26;
 const Y_MAX = 120000;

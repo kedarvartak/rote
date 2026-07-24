@@ -15,9 +15,9 @@ const ROWS = [
   { cell: "WP-N25", before: 0.03098, after: 0.02461, bu: 0.02929, note: "20.5% cost cut · 16.0% cheaper than Browser Use" },
 ];
 
-const W = 640;
-const ROW_H = 52;
-const M = { top: 8, right: 24, bottom: 34, left: 76 };
+const W = 960;
+const ROW_H = 62;
+const M = { top: 10, right: 32, bottom: 38, left: 88 };
 const H = M.top + ROWS.length * ROW_H + M.bottom;
 const X_MIN = 0.01;
 const X_MAX = 0.033;

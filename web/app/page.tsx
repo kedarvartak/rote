@@ -400,31 +400,41 @@ export default function Home() {
               }
             />
           </Reveal>
-          <div className="mt-12 grid gap-12 lg:grid-cols-2 items-start">
+          <div className="mt-12 space-y-10">
             <Reveal>
-              <div className="rounded-sm border hairline bg-surface p-5">
-                <p className="text-sm text-ink-2 mb-1">
-                  Cumulative logical input per task, by task length
-                </p>
-                <p className="font-display text-2xl mb-4">
-                  <span className="text-copper-bright">37.2% slower growth</span>{" "}
-                  <span className="text-ink-2 text-base">[95% CI 35.6–38.8] vs a 30% launch floor</span>
-                </p>
+              <div className="rounded-sm border hairline bg-surface p-5 sm:p-8">
+                <div className="flex flex-col lg:flex-row lg:items-baseline lg:justify-between gap-1 mb-7">
+                  <p className="font-display text-2xl sm:text-3xl">
+                    <span className="text-copper-bright">37.2% slower growth</span>{" "}
+                    <span className="text-ink-2 text-base sm:text-lg">
+                      [95% CI 35.6–38.8] vs a 30% launch floor
+                    </span>
+                  </p>
+                  <p className="text-sm text-ink-2 lg:shrink-0">
+                    Cumulative logical input per task, by task length
+                  </p>
+                </div>
                 <CurveChart />
               </div>
             </Reveal>
-            <Reveal delay={120}>
-              <div className="rounded-sm border hairline bg-surface p-5">
-                <p className="text-sm text-ink-2 mb-1">
-                  T11 · mean billed cost per task, before → after cache-key routing
-                </p>
-                <p className="font-display text-2xl mb-4">
-                  <span className="text-copper-bright">16.0% cheaper</span>{" "}
-                  <span className="text-ink-2 text-base">than Browser Use at WP-N25</span>
-                </p>
+            <Reveal delay={100}>
+              <div className="rounded-sm border hairline bg-surface p-5 sm:p-8">
+                <div className="flex flex-col lg:flex-row lg:items-baseline lg:justify-between gap-1 mb-7">
+                  <p className="font-display text-2xl sm:text-3xl">
+                    <span className="text-copper-bright">16.0% cheaper</span>{" "}
+                    <span className="text-ink-2 text-base sm:text-lg">
+                      than Browser Use at WP-N25
+                    </span>
+                  </p>
+                  <p className="text-sm text-ink-2 lg:shrink-0">
+                    T11 · mean billed cost per task, before → after cache-key routing
+                  </p>
+                </div>
                 <CostChart />
               </div>
-              <div className="mt-5 rounded-sm border border-blue/30 bg-blue/5 p-5 text-[0.85rem] leading-relaxed text-ink-2">
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="rounded-sm border border-blue/30 bg-blue/5 p-5 text-[0.85rem] leading-relaxed text-ink-2 max-w-3xl">
                 <p className="font-mono text-[0.65rem] uppercase tracking-widest text-blue-bright mb-2">
                   the honest ledger
                 </p>
