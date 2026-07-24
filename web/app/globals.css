@@ -83,6 +83,22 @@ body {
   }
 }
 
+/* connector/branch lines that draw themselves when their Reveal fires */
+.drawpath {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.25s;
+}
+.reveal.is-visible .drawpath {
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawpath {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+}
+
 /* faint dot grid for hero — memory-cell texture */
 .dotgrid {
   background-image: radial-gradient(rgba(232, 226, 214, 0.055) 1px, transparent 1px);

@@ -3,6 +3,7 @@ import { HeroLedger } from "@/components/HeroLedger";
 import { CurveChart } from "@/components/CurveChart";
 import { CostChart } from "@/components/CostChart";
 import { Reveal } from "@/components/Reveal";
+import { RoadmapCascade } from "@/components/RoadmapCascade";
 
 const B2_TOKENS = [637, 677, 716, 759, 800, 839, 876, 917, 953];
 
@@ -97,15 +98,6 @@ const INVARIANTS = [
     name: "Every model call tagged",
     body: "All usage flows through one client wrapper with a source tag — planner, matcher, slot, repair, verify, distill. Untagged calls fail lint.",
   },
-];
-
-const PHASES = [
-  { id: "P0", theme: "Foundations", headline: "recorder, replay, verified core", state: "done" },
-  { id: "P1", theme: "Working memory", headline: "the first browser agent with a managed context window", state: "here" },
-  { id: "P2", theme: "The harness that learns", headline: "your 50th task on a site costs a fraction of your 1st", state: "next" },
-  { id: "P3", theme: "Speculation", headline: "warm flows bounded by think-time only", state: "planned" },
-  { id: "P4", theme: "Fleet & enterprise", headline: "10K tasks/day, audited, lowest $ per task", state: "planned" },
-  { id: "P5", theme: "Platform", headline: "the efficiency substrate other agents build on", state: "planned" },
 ];
 
 function SectionHead({
@@ -477,38 +469,11 @@ export default function Home() {
             <SectionHead
               eyebrow="docs/05 · roadmap"
               title="From a managed window to a substrate"
-              lede="One phase at a time, each behind an exit gate with a number on it. No number, no launch."
+              lede="No number, no launch — and the next number is G2's."
             />
           </Reveal>
-          <div className="mt-12 overflow-x-auto">
-            <ol className="flex gap-4 min-w-max pb-2">
-              {PHASES.map((p, i) => (
-                <Reveal key={p.id} delay={i * 80}>
-                  <li
-                    className={`w-56 rounded-sm border p-5 h-full ${
-                      p.state === "here"
-                        ? "border-copper bg-copper/10"
-                        : p.state === "done"
-                          ? "border-good/40 bg-surface"
-                          : "hairline bg-surface"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-sm text-copper-bright">{p.id}</span>
-                      <span className={`font-mono text-[0.6rem] uppercase tracking-widest ${
-                        p.state === "here" ? "text-copper-bright" : p.state === "done" ? "text-good" : "text-muted"
-                      }`}>
-                        {p.state === "here" ? "← you are here" : p.state}
-                      </span>
-                    </div>
-                    <h3 className="mt-2 font-medium text-[0.95rem]">{p.theme}</h3>
-                    <p className="mt-2 text-[0.78rem] text-ink-2 leading-relaxed">
-                      &ldquo;{p.headline}&rdquo;
-                    </p>
-                  </li>
-                </Reveal>
-              ))}
-            </ol>
+          <div className="mt-14">
+            <RoadmapCascade />
           </div>
           <Reveal>
             <div className="mt-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 rounded-sm border hairline bg-surface p-7">
