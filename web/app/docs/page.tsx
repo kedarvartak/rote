@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Docs — Rote",
   description:
     "What Rote is, the three amnesias it fixes, the trust gate, and where to find the run reports.",
 };

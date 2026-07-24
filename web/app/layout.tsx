@@ -22,7 +22,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rote — the memory manager for browser agents",
+  title: "rote",
   description:
     "Every agent harness has memory. None of them manages it. Rote treats the context window as a managed resource — budget, eviction, layout, and a trust gate on the way back in.",
 };

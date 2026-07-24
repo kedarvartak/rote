@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
-  title: "Roadmap & status — Rote",
   description:
     "The phase arc from P0 foundations to a P5 platform, with the exit gates drawn on the line — what shipped, what's designed, and what blocks launch.",
 };

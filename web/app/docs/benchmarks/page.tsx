@@ -3,7 +3,6 @@ import { CurveChart } from "@/components/CurveChart";
 import { CostChart } from "@/components/CostChart";
 
 export const metadata: Metadata = {
-  title: "Benchmarks & runs — Rote",
   description:
     "G1's cumulative logical-input curve, the T11 cache-key economics, supporting measurements, and the honest losses — with receipts.",
 };

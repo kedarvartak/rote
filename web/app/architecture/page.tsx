@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
-  title: "Architecture — Rote",
   description:
     "The memory spine, the four planes, the control loop, the perception pipeline, the context assembler, the repair ladder, and the package map — how Rote manages a browser agent's context window.",
 };

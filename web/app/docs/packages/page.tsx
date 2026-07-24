@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Packages — Rote",
   description:
     "The Rote monorepo: ten TypeScript packages from a zero-I/O core to the CLI, with pure logic in the middle and side effects at the edges.",
 };
