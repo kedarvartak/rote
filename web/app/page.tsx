@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ContextStrip } from "@/components/ContextStrip";
+import { HeroDemo } from "@/components/HeroDemo";
 import { CurveChart } from "@/components/CurveChart";
 import { CostChart } from "@/components/CostChart";
 import { Reveal } from "@/components/Reveal";
@@ -189,7 +189,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={240}>
             <div className="mt-14 sm:mt-16">
-              <ContextStrip />
+              <HeroDemo />
             </div>
           </Reveal>
         </div>
