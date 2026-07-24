@@ -217,29 +217,33 @@ export default function Home() {
             }
           />
         </Reveal>
-        <div className="mt-12 grid gap-10 lg:grid-cols-2 items-start">
-          <Reveal>
-            <div className="rounded-sm border hairline bg-surface p-5">
-              <p className="font-mono text-[0.68rem] tracking-widest uppercase text-muted mb-4">
+        <div className="mt-12 grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:items-stretch items-start">
+          <Reveal className="h-full">
+            {/* stretches to the right column's height: the bar rows spread
+                across the extra room so the growth reads at full size */}
+            <div className="h-full rounded-sm border hairline bg-surface p-5 sm:p-7 flex flex-col">
+              <p className="font-mono text-[0.68rem] tracking-widest uppercase text-muted mb-5">
                 fixture B2 · input tokens per call · frozen pages
               </p>
-              <div className="space-y-1.5">
+              <div className="flex-1 flex flex-col justify-between gap-2">
                 {B2_TOKENS.map((t, i) => (
                   <div key={i} className="flex items-center gap-3">
-                    <span className="font-mono text-[0.68rem] text-muted w-12 tabular-nums">
+                    <span className="font-mono text-[0.68rem] text-muted w-12 tabular-nums shrink-0">
                       step {i + 1}
                     </span>
-                    <div
-                      className="h-3 rounded-[2px] bg-blue/70"
-                      style={{ width: `${(t / 953) * 100 * 0.78}%` }}
-                    />
-                    <span className="font-mono text-[0.68rem] text-ink-2 tabular-nums">
+                    <div className="flex-1">
+                      <div
+                        className="h-3.5 rounded-[2px] bg-blue/70"
+                        style={{ width: `${(t / 953) * 100 * 0.92}%` }}
+                      />
+                    </div>
+                    <span className="font-mono text-[0.68rem] text-ink-2 tabular-nums shrink-0">
                       {t}
                     </span>
                   </div>
                 ))}
               </div>
-              <p className="mt-4 text-[0.8rem] text-ink-2 leading-relaxed">
+              <p className="mt-5 pt-4 border-t hairline text-[0.8rem] text-ink-2 leading-relaxed">
                 +38% per-call growth over ten steps — and 21% of the run&apos;s
                 input bill is re-reading text it already sent, on a page that
                 distills to ten nodes.
