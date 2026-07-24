@@ -21,8 +21,10 @@ marks status; the authoritative table is [02 §Status](02-architecture.md).
 | **Not built** | compaction · playbook distiller · matcher · site memory · model routing · speculation |
 
 We are in **P1 (V1)**: **tier 0, working memory.** G1 passes: 37.2% slower cumulative
-logical-input growth (95% CI 35.6–38.8%) at success parity. G2 (tokens-per-task level),
-packaging, and the demo remain. Post-G1 cache routing wins long-cell cost, but the shortest cell still crosses parity. **No number, no launch.**
+logical-input growth (95% CI 35.6–38.8%) at success parity. G2 also passes its frozen
+positive-margin level gate, with B2's missed 80% catalog target published. The CLI package
+candidate works, but registry publication and the demo remain. Post-G1 cache routing wins
+long-cell cost while the shortest cell still crosses parity. **No number, no launch.**
 
 ## The memory spine
 
@@ -44,6 +46,8 @@ packaging, and the demo remain. Post-G1 cache routing wins long-cell cost, but t
 | [05 — Roadmap](05-roadmap.md) | Where we are; V1 scope and gates; P0–P5; open questions |
 | [06 — Optimizations](06-optimizations.md) | The master catalog: every optimization, its tier, its status, and the evidence |
 | [07 — Execution plan](07-execution-plan.md) | The work breakdown: P1 epics and tasks with dependencies, acceptance criteria, estimates, and the RAID log. 05 owns strategy; 07 owns tasks |
+| [Known limitations](known-limitations.md) | Current product, browser, safety, evidence, provider, and packaging limits |
+| [Third-party licenses](third-party-licenses.md) | Direct package licenses, competitor dependency/fork decision, and release obligations |
 | [testing/](testing/) | Numbered records of tests against **real** Rote — live browser, live model, live key |
 
 
