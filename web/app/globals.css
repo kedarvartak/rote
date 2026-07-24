@@ -1,22 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0e1114;
-  --color-surface: #151a20;
-  --color-surface-2: #1b222b;
-  --color-ink: #e8e2d6;
-  --color-ink-2: #a9a69b;
-  --color-muted: #7e7d75;
-  --color-copper: #c2751f;
-  --color-copper-bright: #d98f3d;
-  --color-blue: #4b8cc8;
-  --color-blue-bright: #6ea6d8;
-  --color-good: #5faf6d;
-  --color-paper: #f4f1e9;
-  --color-paper-ink: #22211d;
+  /* near-black cool-neutral canvas — cinematic, lets the field glow */
+  --color-bg: #08090a;
+  --color-bg-2: #0d0e10;
+  --color-bg-3: #131417;
+  --color-ink: #f3f2ef;
+  --color-ink-2: #97968f;
+  --color-ink-3: #5c5b56;
+  --color-copper: #c8813a;
+  --color-copper-soft: #d69a5c;
+  --color-blue: #5695cc;
+  --color-good: #6bbf7b;
+  --color-paper: #f3f1ea;
+  --color-paper-ink: #1b1a17;
 
-  --font-display: var(--font-fraunces), Georgia, serif;
-  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  /* aliases — keep the docs/architecture pages cohesive with the new palette */
+  --color-surface: #0d0e10;
+  --color-surface-2: #131417;
+  --color-copper-bright: #d69a5c;
+  --color-blue-bright: #7db0e0;
+  --color-muted: #5c5b56;
+
+  --font-display: var(--font-space), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
@@ -32,179 +39,127 @@ body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-}
-
-/* film grain over everything — keeps the dark field from reading flat */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  letter-spacing: -0.006em;
 }
 
 ::selection {
-  background: rgba(194, 117, 31, 0.35);
+  background: rgba(200, 129, 58, 0.28);
+  color: #fff;
 }
 
-/* Fraunces: soft off, wonk on — the quirky letterforms are the point */
-.wonk {
-  font-variation-settings: "SOFT" 0, "WONK" 1;
-}
-
+/* hairline — the only structural line on the page */
 .hairline {
-  border-color: rgba(232, 226, 214, 0.1);
+  border-color: rgba(243, 242, 239, 0.08);
 }
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-copper-bright);
+  color: var(--color-ink-2);
 }
 
-/* crop marks on data cards — the "measured artifact" frame */
-.frame-ticks {
-  position: relative;
-}
-.frame-ticks::before,
-.frame-ticks::after {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  pointer-events: none;
-}
-.frame-ticks::before {
-  top: -1px;
-  left: -1px;
-  border-top: 1.5px solid var(--color-copper);
-  border-left: 1.5px solid var(--color-copper);
-}
-.frame-ticks::after {
-  bottom: -1px;
-  right: -1px;
-  border-bottom: 1.5px solid var(--color-copper);
-  border-right: 1.5px solid var(--color-copper);
+.display {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+  font-weight: 500;
 }
 
-/* reveal-on-scroll */
+/* ---- foreground motion: restrained, slow, single-purpose ---- */
+
+/* fade-and-rise on scroll */
 .reveal {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(22px);
   transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
-.reveal.is-visible {
+.reveal.in {
   opacity: 1;
   transform: none;
 }
 
-/* section rule that draws in when its Reveal fires */
-.rule-draw {
-  width: 3.5rem;
-  height: 2px;
-  background: var(--color-copper);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
-}
-.reveal.is-visible .rule-draw {
-  transform: scaleX(1);
-}
-
-/* hero headline: word-by-word rise */
-@keyframes rise {
+/* hero: mask-wipe + blur settle, staggered per line */
+@keyframes settle {
   from {
     opacity: 0;
-    transform: translateY(0.5em);
+    transform: translateY(0.36em);
+    filter: blur(10px);
   }
   to {
     opacity: 1;
     transform: none;
+    filter: blur(0);
   }
 }
-.hero-word {
-  display: inline-block;
+.settle {
   opacity: 0;
-  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: settle 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ambient layer: evicted tokens drifting up and out of the window */
-@keyframes drift {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  12% {
-    opacity: var(--cell-o, 0.4);
-  }
-  85% {
-    opacity: var(--cell-o, 0.4);
-  }
-  100% {
-    transform: translateY(-46vh);
-    opacity: 0;
-  }
+/* thin rule that draws itself */
+.rule {
+  height: 1px;
+  background: rgba(243, 242, 239, 0.14);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
 }
-.ambient-cell {
-  position: absolute;
-  border-radius: 2px;
-  animation: drift linear infinite;
+.reveal.in .rule {
+  transform: scaleX(1);
 }
-@keyframes breathe {
+
+/* copper index dot that breathes */
+@keyframes pulse {
   0%,
   100% {
-    opacity: 0.55;
-    transform: scale(1);
+    opacity: 0.4;
   }
   50% {
     opacity: 1;
-    transform: scale(1.12);
   }
 }
-.ambient-glow {
+.pulse {
+  animation: pulse 3.4s ease-in-out infinite;
+}
+
+/* soft link with a sliding underline */
+.ulink {
+  position: relative;
+  color: var(--color-ink);
+  transition: color 0.3s;
+}
+.ulink::after {
+  content: "";
   position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  animation: breathe 14s ease-in-out infinite;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ulink:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
-/* ledger ticker */
-@keyframes ticker {
-  to {
-    transform: translateX(-50%);
-  }
-}
-.ticker-track {
-  display: flex;
-  width: max-content;
-  animation: ticker 52s linear infinite;
-}
-.ticker-track:hover {
-  animation-play-state: paused;
-}
-
-/* nav underline */
-.nav-link {
-  background-image: linear-gradient(
-    var(--color-copper-bright),
-    var(--color-copper-bright)
-  );
-  background-repeat: no-repeat;
-  background-size: 0% 1px;
-  background-position: 0 calc(100% - 4px);
+.pill {
   transition:
-    background-size 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.2s;
+    background-color 0.3s,
+    color 0.3s,
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.nav-link:hover {
-  background-size: 100% 1px;
+.pill:hover {
+  transform: translateY(-1px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -216,17 +171,15 @@ body::before {
     transform: none;
     transition: none;
   }
-  .rule-draw {
+  .rule {
     transform: scaleX(1);
     transition: none;
   }
-  .hero-word {
+  .settle {
     opacity: 1;
     animation: none;
   }
-  .ambient-cell,
-  .ambient-glow,
-  .ticker-track {
+  .pulse {
     animation: none;
   }
   *,
@@ -238,15 +191,9 @@ body::before {
   }
 }
 
-/* faint dot grid — memory-cell texture */
-.dotgrid {
-  background-image: radial-gradient(rgba(232, 226, 214, 0.055) 1px, transparent 1px);
-  background-size: 22px 22px;
-}
-
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--color-copper-bright);
-  outline-offset: 3px;
-  border-radius: 2px;
+  outline: 2px solid var(--color-copper-soft);
+  outline-offset: 4px;
+  border-radius: 3px;
 }

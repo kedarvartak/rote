@@ -106,7 +106,7 @@ function Column({
         <div
           className="pointer-events-none absolute inset-x-0 bottom-0 h-10"
           style={{
-            background: "linear-gradient(to bottom, transparent, #151a20)",
+            background: "linear-gradient(to bottom, transparent, #0d0e10)",
           }}
         />
       </div>

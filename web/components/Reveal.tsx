@@ -21,7 +21,7 @@ export function Reveal({
       (entries) => {
         for (const e of entries) {
           if (e.isIntersecting) {
-            el.classList.add("is-visible");
+            el.classList.add("in");
             io.disconnect();
           }
         }

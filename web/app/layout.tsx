@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
-import { Ambient } from "@/components/Ambient";
+import { MemoryField } from "@/components/MemoryField";
 
-const fraunces = Fraunces({
+const space = Space_Grotesk({
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  axes: ["SOFT", "WONK", "opsz"],
-  variable: "--font-fraunces",
+  weight: ["500", "600", "700"],
+  variable: "--font-space",
 });
 
-const plexSans = IBM_Plex_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-plex-sans",
+  weight: ["400", "500"],
+  variable: "--font-inter",
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -36,10 +35,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${plexSans.variable} ${plexMono.variable}`}
+      className={`${space.variable} ${inter.variable} ${plexMono.variable}`}
     >
       <body className="min-h-screen flex flex-col">
-        <Ambient />
+        <MemoryField />
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />

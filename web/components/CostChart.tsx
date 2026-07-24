@@ -77,11 +77,11 @@ export function CostChart() {
                 {r.cell}
               </text>
               {/* before → after */}
-              <line x1={x(r.before)} x2={x(r.after)} y1={cy} y2={cy} stroke="#c2751f" strokeWidth={2} opacity={0.55} />
-              <circle cx={x(r.before)} cy={cy} r={6} fill="#151a20" stroke="#c2751f" strokeWidth={2} />
-              <circle cx={x(r.after)} cy={cy} r={6.5} fill="#c2751f" stroke="#151a20" strokeWidth={2} />
+              <line x1={x(r.before)} x2={x(r.after)} y1={cy} y2={cy} stroke="#c8813a" strokeWidth={2} opacity={0.55} />
+              <circle cx={x(r.before)} cy={cy} r={6} fill="#0d0e10" stroke="#c8813a" strokeWidth={2} />
+              <circle cx={x(r.after)} cy={cy} r={6.5} fill="#c8813a" stroke="#0d0e10" strokeWidth={2} />
               {/* Browser Use reference tick */}
-              <rect x={x(r.bu) - 1.5} y={cy - 9} width={3} height={18} rx={1} fill="#4b8cc8" />
+              <rect x={x(r.bu) - 1.5} y={cy - 9} width={3} height={18} rx={1} fill="#5695cc" />
               {/* direct label on the after mark */}
               <text
                 x={x(r.after)}
