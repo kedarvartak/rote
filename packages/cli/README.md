@@ -71,6 +71,9 @@ candidate. A mismatch never reaches replay.
 
 ## Known v1 limitations
 
+The full launch contract is [`docs/known-limitations.md`](../../docs/known-limitations.md).
+In particular:
+
 - No integrated replay selection, distillation, or repair commands yet.
 - V1 verification currently supports visible text and URL substring checks; richer live
   Expect DSL wiring lands with action-plane hardening.

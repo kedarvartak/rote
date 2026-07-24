@@ -179,9 +179,10 @@ Skyvern ships record → codegen → zero-LLM replay → fallback today
 **No number, no launch.** G1 passes its public 30% slope-reduction floor: 37.2%
 (95% CI 35.6–38.8%) at success parity. G2 also passes its positive-margin level gate on
 B1–B3, though B2 misses the catalog's 80% target and cache economics still lose at G1's
-shortest cell. The 0.1.0 CLI tarball now passes a clean-install live smoke, but registry
-publication is blocked on npm scope ownership/authentication; the demo and consolidated
-limitations publication also remain. See [T14](docs/testing/T14-cli-package-candidate.md).
+shortest cell. The 0.1.0 CLI tarball now passes clean-install and live fallback smokes,
+but registry publication is blocked on npm scope ownership/authentication; the demo also
+remains. Read the [known limitations](docs/known-limitations.md) before trying Rote and see
+[T14](docs/testing/T14-cli-package-candidate.md) for packaging evidence.
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)
 
@@ -199,6 +200,8 @@ Solid packages exist today; dashed packages are the target composition described
 | [05 — Roadmap](docs/05-roadmap.md) | Where we are; V1 scope and gates; P0–P5; open questions |
 | [06 — Optimizations](docs/06-optimizations.md) | The master catalog: every optimization, tier, status, evidence |
 | [07 — Execution plan](docs/07-execution-plan.md) | The work breakdown: epics, tasks, dependencies, acceptance criteria, RAID |
+| [Known limitations](docs/known-limitations.md) | What is not built, weak-fit tasks, safety/operations boundaries, and the exact evidence scope |
+| [Third-party licenses](docs/third-party-licenses.md) | CLI and benchmark dependency/fork review plus release obligations |
 | [testing/](docs/testing/) | Records of tests against real Rote — live browser, live model, live key |
 
 ## Contributing

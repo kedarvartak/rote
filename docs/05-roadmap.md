@@ -110,8 +110,7 @@ robustness defects no longer block an honest success-parity measurement.
 **Blocking the launch:** `@rote/cli@0.1.0` now passes build→pack→clean-install and a
 provider-backed B1 smoke, but it is unpublished. The unscoped `rote` name is occupied and
 this environment cannot prove npm `@rote` scope ownership/authentication
-([T14](testing/T14-cli-package-candidate.md)); no demo or consolidated known-limitations
-page exists yet.
+([T14](testing/T14-cli-package-candidate.md)); registry publication and the demo remain.
 
 ### Exit gate
 
@@ -150,9 +149,9 @@ measured 37.2% (95% CI 35.6–38.8%) over 15 complete matched repetitions ([T10]
 - [x] **The curve is a graph in the README**, with the method and the raw data
 - [x] **#57 closed** — cache accounting is provider-normalized (uncached / cache-read / cache-write), priced per bucket, property-tested against both providers
 - [x] Sacred invariant suite green; CI enforces changelog + lint + tests
-- [ ] Known limitations written honestly (no routing/speculation/learning yet; **no
+- [x] [Known limitations](known-limitations.md) written honestly (no routing/speculation/learning yet; **no
       distiller — tier 1 is V2**; eviction trades recall for cost)
-- [ ] Licence check on competitor comparisons (dependencies, not forks)
+- [x] [Licence check](third-party-licenses.md) confirms competitor dependencies, not forks
 
 ## P2 — V2: tiers 1 and 2, the harness that learns (~8–10 weeks)
 

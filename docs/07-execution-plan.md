@@ -111,8 +111,8 @@ exact-prefix routing on the E1 page. Small fixtures remain below provider cache 
 | E5.1 | **Publish `@rote/cli`** (0.1.0): npm name check, `bin` wiring, quickstart. | 1.5 | E4 green | [T14](testing/T14-cli-package-candidate.md): one-package bundle, pack/install/bin automation, and tarball-installed live B1 pass; unscoped `rote` is occupied, registry `npx @rote/cli` awaits maintainer scope ownership + npm auth | package-ready; registry-blocked |
 | E5.2 | **README with the number:** curve graph, G1/G2 results, units, method links, reproduction one-liner. | 0.5 | E1.5, E4.5 | README carries G1 and G2 with method/evidence links and the B2 caveat; packaging reproduction remains E5.1 | done |
 | E5.3 | **Demo:** terminal recording of cold run → warm replay → drift repair on the fixture suite. | 1 | E5.1 | linked from README | blocked |
-| E5.4 | **Known-limitations doc:** no distiller (tier 1 is V2), no routing/speculation, eviction trades recall for cost, weak-fit list from [01](01-problem.md). | 0.5 | — | honest, linked from README | ready |
-| E5.5 | **Licence check** on competitor dependencies (dependencies, not forks). | 0.5 | — | recorded | ready |
+| E5.4 | **Known-limitations doc:** no distiller (tier 1 is V2), no routing/speculation, eviction trades recall for cost, weak-fit list from [01](01-problem.md). | 0.5 | — | [known-limitations](known-limitations.md) is linked from README and covers product, browser, safety, evidence, provider, package, and recovery boundaries | done |
+| E5.5 | **Licence check** on competitor dependencies (dependencies, not forks). | 0.5 | — | [third-party review](third-party-licenses.md) records direct licenses, confirms Browser Use is an unmodified MIT dependency, and sets re-review triggers | done |
 | E5.6 | **Launch checklist walk** ([05](05-roadmap.md)) + ship. | 1 | all E5 | every box checked or consciously waived in public | blocked |
 
 ### E6 — Hygiene, in parallel. ~3 days
