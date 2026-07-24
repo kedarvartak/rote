@@ -1,8 +1,28 @@
 # @rote/cli
 
 The `rote` command-line interface. It inspects recorded runs and launches recorded,
-verified cold browser-agent tasks against local Chrome. Later milestones add integrated
-replay selection, distillation, status, and diff commands.
+verified cold browser-agent tasks against local Chrome. The 0.1.0 package bundles internal
+Rote workspaces into JavaScript, so consumers do not need the monorepo or a TypeScript
+runtime. Later milestones add integrated replay selection, distillation, status, and diff
+commands.
+
+## Quickstart
+
+Prerequisites: Node 20+, Chrome/Chromium, and one provider key. The scoped package is
+prepared but not registry-published until npm scope ownership is confirmed; see
+[T14](../../docs/testing/T14-cli-package-candidate.md).
+
+```bash
+export OPENAI_API_KEY=...
+npx @rote/cli@0.1.0 run "Confirm that the page says Rote quickstart ready." \
+  --url 'data:text/html,<h1>Rote quickstart ready</h1>' \
+  --verify-text 'Rote quickstart ready' \
+  --model gpt-4.1-mini --max-steps 3
+```
+
+The data URL is a safe local smoke (measured at one step and 366 input + 24 output tokens).
+For real work, replace it with a page you are authorized to automate and a success signal that the live page—not the agent's
+self-report—must show.
 
 ## Public API
 
@@ -54,11 +74,13 @@ candidate. A mismatch never reaches replay.
 - No integrated replay selection, distillation, or repair commands yet.
 - V1 verification currently supports visible text and URL substring checks; richer live
   Expect DSL wiring lands with action-plane hardening.
-- The `rote` bin relays into a `node --import tsx/esm` child for the same
-  reason as `@rote/recorder`'s bin — see that package's README.
+- npm's unscoped `rote` name belongs to an unrelated package. The release candidate is
+  `@rote/cli`; registry-backed `npx` remains blocked on scope ownership/authentication.
+- Chrome/Chromium must already be installed or supplied with `--chrome-path`.
 
 ## Running tests
 
 ```bash
 npm test --workspace @rote/cli
+npm run test:package # build, pack, clean-install, and invoke the published bin shape
 ```

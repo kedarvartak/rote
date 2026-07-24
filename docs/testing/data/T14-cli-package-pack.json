@@ -1,0 +1,51 @@
+[
+  {
+    "id": "@rote/cli@0.1.0",
+    "name": "@rote/cli",
+    "version": "0.1.0",
+    "size": 98602,
+    "unpackedSize": 372064,
+    "shasum": "1ed10163f1000887ced54428973d64cdb228dfc4",
+    "integrity": "sha512-3FV3OhWiISWw76ZhOv1xS1BcBtgRz/TPqUrToz8812viM02r3xDZxQQFhr2U2GqcLt1TepM6iaHheSwNV9oNhg==",
+    "filename": "rote-cli-0.1.0.tgz",
+    "files": [
+      {
+        "path": "README.md",
+        "size": 4040,
+        "mode": 420
+      },
+      {
+        "path": "bin/rote.js",
+        "size": 212,
+        "mode": 493
+      },
+      {
+        "path": "dist/cli-entry.js",
+        "size": 109947,
+        "mode": 420
+      },
+      {
+        "path": "dist/cli-entry.js.LEGAL.txt",
+        "size": 0,
+        "mode": 420
+      },
+      {
+        "path": "dist/cli-entry.js.map",
+        "size": 255768,
+        "mode": 420
+      },
+      {
+        "path": "dist/LICENSE",
+        "size": 1069,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 1028,
+        "mode": 420
+      }
+    ],
+    "entryCount": 7,
+    "bundled": []
+  }
+]
