@@ -196,7 +196,7 @@ export default function ArchitecturePage() {
           <p className="eyebrow">docs/02 · architecture</p>
           <h1 className="mt-4 font-display text-4xl sm:text-5xl tracking-tight leading-[1.08] max-w-3xl">
             The context window as a{" "}
-            <em className="text-copper-bright">managed resource</em>
+            <span className="text-copper-bright">managed resource</span>
           </h1>
           <p className="mt-5 text-ink-2 text-lg leading-relaxed max-w-2xl">
             The context window is RAM. Observations are pages, dropping them is

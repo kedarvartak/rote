@@ -128,7 +128,7 @@ export default function BenchmarksPage() {
         <p className="font-mono text-[0.65rem] uppercase tracking-widest text-blue-bright mb-2">
           honest caveat
         </p>
-        In this frozen pre-cache-key matrix Rote was <i>not</i> cheaper: at
+        In this frozen pre-cache-key matrix Rote was not cheaper: at
         WP-N25 its mean billed cost was 5.4% higher ($0.0310 vs $0.0294) and
         p50 latency 6.4% higher (72.0s vs 67.7s), because Browser Use received
         more discounted cache reads. That gap is what T11 was run to close.

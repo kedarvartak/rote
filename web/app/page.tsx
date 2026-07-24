@@ -204,13 +204,13 @@ export default function Home() {
             eyebrow="docs/01 · the problem"
             title={
               <>
-                The quadratic <em className="text-copper-bright">nobody names</em>
+                The quadratic <span className="text-copper-bright">nobody names</span>
               </>
             }
             lede={
               <>
-                A run of <i>n</i> steps re-sends its whole history every step:
-                1 + 2 + … + <i>n</i> prompt-units, so cost is O(n²) in task
+                A run of n steps re-sends its whole history every step:
+                1 + 2 + … + n prompt-units, so cost is O(n²) in task
                 length. Everything the field competes on shrinks the per-step
                 prompt. That lowers the constant.{" "}
                 <span className="text-ink">Nobody has touched the exponent.</span>
@@ -257,10 +257,10 @@ export default function Home() {
                 The context window is RAM. Observations are pages, dropping
                 them is eviction, diffing is delta encoding, the prompt cache
                 is L2, compaction is GC.{" "}
-                <em className="text-copper-bright">
+                <span className="text-copper-bright">
                   Every one of those has a manager in an OS. None of them has
                   one in a browser agent.
-                </em>
+                </span>
               </blockquote>
               <p className="text-ink-2 leading-relaxed">
                 Rote&apos;s tier-0 policy is one sentence:{" "}
@@ -272,7 +272,7 @@ export default function Home() {
                 a diff against the last grounded bootstrap.
               </p>
               <p className="text-ink-2 leading-relaxed">
-                The name is the thesis: <i>rote</i> — doing something from
+                The name is the thesis: rote — doing something from
                 memory, by repetition, without re-deriving it. Memoization
                 applied to agent trajectories, invalidated by assertion rather
                 than TTL.
@@ -391,12 +391,12 @@ export default function Home() {
               eyebrow="T10 · exit gate G1 · PASS"
               title={
                 <>
-                  The curve, <em className="text-copper-bright">measured</em>
+                  The curve, <span className="text-copper-bright">measured</span>
                 </>
               }
               lede={
                 <>
-                  Cumulative <i>logical</i> input — uncached input + cache
+                  Cumulative logical input — uncached input + cache
                   reads + cache writes, so provider caching cannot masquerade
                   as memory reduction. gpt-4.1-mini, 15 matched repetitions
                   per cell, 75/75 verified successes per harness, 95%
@@ -429,7 +429,7 @@ export default function Home() {
                 <p className="font-mono text-[0.65rem] uppercase tracking-widest text-blue-bright mb-2">
                   the honest ledger
                 </p>
-                In this frozen matrix Rote was <i>not</i> cheaper: 5.4% more
+                In this frozen matrix Rote was not cheaper: 5.4% more
                 expensive at WP-N25 with 6.4% higher p50 latency, because
                 Browser Use received more discounted cache reads. That gap is
                 what the run below was made to close — and on the shortest
@@ -492,7 +492,7 @@ export default function Home() {
               <tbody className="divide-y hairline">
                 {INVARIANTS.map((inv) => (
                   <tr key={inv.n} className="align-top hover:bg-surface/70 transition-colors group">
-                    <td className="px-4 py-4 font-display italic text-xl text-copper-bright/80 group-hover:text-copper-bright transition-colors">
+                    <td className="px-4 py-4 font-display text-xl text-copper-bright/80 group-hover:text-copper-bright transition-colors">
                       {inv.n}
                     </td>
                     <td className="px-4 py-4 font-medium text-ink">{inv.name}</td>
@@ -524,7 +524,7 @@ export default function Home() {
               <div>
                 <p className="font-display text-2xl">
                   The wedge is the cost curve.{" "}
-                  <em className="text-copper-bright">The precondition is auditable determinism.</em>
+                  <span className="text-copper-bright">The precondition is auditable determinism.</span>
                 </p>
                 <p className="mt-2 text-ink-2 text-sm">
                   The compounding asset is the accumulated, verified memory itself.

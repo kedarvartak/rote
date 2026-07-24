@@ -204,7 +204,7 @@ function PhaseCard({ p, fill = false }: { p: (typeof PHASES)[number]; fill?: boo
       </div>
       <div className="p-4">
         <h3 className="font-medium text-ink text-[1.02rem]">{p.theme}</h3>
-        <p className="mt-1.5 font-display italic text-[0.95rem] leading-snug text-ink-2">
+        <p className="mt-1.5 font-display text-[0.95rem] leading-snug text-ink-2">
           {p.line}
         </p>
         <p className="mt-3 font-mono text-[0.68rem] tracking-widest uppercase text-muted">
@@ -315,7 +315,7 @@ export function RoadmapCascade() {
         <div className="bg-surface/70 border hairline p-6 sm:p-9 rounded-sm">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
             <div>
-              <p className="font-display italic text-copper-bright text-xl">
+              <p className="font-display text-copper-bright text-xl">
                 One phase at a time.
               </p>
               <h3 className="font-display text-3xl sm:text-[2.4rem] leading-tight tracking-tight mt-1 text-ink">

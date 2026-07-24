@@ -19,7 +19,7 @@ export default function DocsOverview() {
             Rote is the memory manager for browser agents.
           </span>{" "}
           Agent harnesses all have memory — history arrays, screenshot piles,
-          selector caches. What none of them has is a <i>manager</i>: something
+          selector caches. What none of them has is a manager: something
           that decides what stays in the context window, what leaves, what
           comes back, and what has to be proven before it's trusted. The
           window is treated as a garbage dump — append, and hope. Rote treats
@@ -27,7 +27,7 @@ export default function DocsOverview() {
           contract, and a trust gate on the way back in.
         </p>
         <p>
-          The name is the thesis. <i>Rote</i>: doing something from memory, by
+          The name is the thesis. Rote: doing something from memory, by
           repetition, without re-deriving it. Technically, it is memoization
           applied to agent trajectories — cache the result of expensive
           exploration, keyed by task class and environment fingerprint,

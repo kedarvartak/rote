@@ -228,7 +228,7 @@ export default function RoadmapPage() {
                         {e.state === "done" && <span className="text-good"> · done</span>}
                       </span>
                     </div>
-                    <p className="mt-2.5 font-display italic text-lg text-ink-2">
+                    <p className="mt-2.5 font-display text-lg text-ink-2">
                       &ldquo;{e.quote}&rdquo;
                     </p>
                     <ul className="mt-4 space-y-2 text-[0.88rem] text-ink-2 leading-relaxed">

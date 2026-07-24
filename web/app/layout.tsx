@@ -6,7 +6,6 @@ import { Footer } from "@/components/Footer";
 
 const newsreader = Newsreader({
   subsets: ["latin"],
-  style: ["normal", "italic"],
   variable: "--font-newsreader",
 });
 
