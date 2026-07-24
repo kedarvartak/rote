@@ -1,10 +1,8 @@
 # @rote/web
 
 The product website for Rote — a landing page telling the tier-0 story, an
-architecture page built from `docs/02`, and a docs section whose benchmark pages
+architecture page built from `docs/02` (diagrams drawn natively in-site), and a docs section whose benchmark pages
 render the real run reports (T10/G1, T11) with figures traced to
-`docs/testing/data/`. Diagrams under `public/diagrams/` are copied from
-`docs/diagrams/`; re-copy them when the source SVGs regenerate.
 
 ## Stack
 
