@@ -1,0 +1,20 @@
+=== 1/3 cold: compact planner explores and verifies ===
+success: task verification passed
+run: 04deab6c-68ea-4c59-aff7-735319aff260
+phase: cold
+steps: 5
+tokens: 2661 input + 182 output
+=== 2/3 warm: exact candidate replays with zero model tokens ===
+success: verified browser replay passed
+run: 31a7dc55-22ff-4c8a-8ec9-db9dc654913c
+phase: warm
+steps: 5
+tokens: 0 input + 0 output
+=== 3/3 drift: stale assertion fails, classified cold fallback verifies ===
+success: task verification passed
+run: 0fd4152a-d2bd-4fe0-b313-f5a78f6f513d
+phase: cold
+fallback: replay_failed (selector "#login-form" not visible)
+steps: 5
+tokens: 2720 input + 190 output
+demo artifacts: /tmp/rote-launch-work/bench-out/launch-demo-1QdzeK

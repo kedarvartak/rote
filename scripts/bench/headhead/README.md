@@ -13,6 +13,8 @@ claim on whole tasks.
 | `rote-plan.json` | The Rote side: a `rote-bench run` command plan whose prompts/URLs/verify text are checked against `tasks.json` by `packages/bench/test/browser-use-adapter.test.ts`. |
 | `serve-fixtures.mjs` | Serves `fixtures/sites` on a fixed port so both harnesses hit byte-identical frozen pages. |
 | `browser-use/run_browser_use.py` | The Browser Use side. Out-of-process (it is a Python library), imported as a dependency, never forked. Emits raw runs only. |
+| `run-certification.sh` | One resumable command: fixture server, 18×B1–B3 paired collection, neutralization, audit, gate, Markdown, and JSON. |
+| `assemble-certification-evidence.mjs` | Cross-run manifest/trajectory/dump assembly; refuses count mismatches before reporting. |
 
 The Python runner does **not** write the neutral records. It emits raw per-run
 rows; `rote-bench competitor-records` maps them, stamping fairness provenance
@@ -31,79 +33,52 @@ every adapter is held to the same mapping.
   records still declare the model you wrote in `sources.json`.
 - Decide honestly whether the counts are cache-adjusted (see *Cache adjustment*).
 
-## 1. Serve the frozen fixtures
-
-```bash
-node scripts/bench/headhead/serve-fixtures.mjs 8080
-```
-
-## 2. Collect matched attempts atomically
-
-Install the pinned Browser Use dependency once, then execute one exact pair at a time:
+## 1. Install the pinned competitor once
 
 ```bash
 python3 -m venv /tmp/rote-browser-use
 /tmp/rote-browser-use/bin/pip install -r scripts/bench/headhead/browser-use/requirements.txt
 set -a; source .env; set +a
+```
 
+## 2. Collect, audit, and report in one command
+
+```bash
 BROWSER_USE_PYTHON=/tmp/rote-browser-use/bin/python \
-  scripts/bench/headhead/run-next-pair.sh B1 1
+  scripts/bench/headhead/run-certification.sh
 ```
 
-Repeat B1–B3 for repetitions 1–18, with repetition outermost and task order B1→B3.
-Each invocation runs Rote then Browser Use, durably records each completed attempt, and
-is safe to rerun: `--resume` skips an exact completed task/repetition rather than
-success-hunting. Rote retains standard `.rote` manifests plus neutral raw rows; Browser
-Use retains `raw-runs.json` plus per-attempt diagnostics.
+The command starts the frozen fixture server, runs repetitions 1–18 with repetition
+outermost and B1→B3 task order, preserves Rote→Browser Use ordering in every pair,
+assembles raw manifests/trajectories/dumps, neutralizes both harnesses, executes the gate,
+and writes audited Markdown plus JSON under `bench-out/g2-certification/evidence/`.
 
-Both harnesses start at the same URL through unmeasured navigation and use the pinned
-1920×1080 viewport. Browser Use is `browser-use==0.13.6`, imported as a dependency with
-its default agent behavior—never forked or patched.
+Collection remains atomic and resumable. Re-running the same command skips exact completed
+attempts rather than replacing them or success-hunting; incomplete append-only tails still
+fail for operator review. Override only the output location with `G2_OUT`. A repetition
+count below 15 is rejected because it cannot certify G2.
 
-This writes `raw-runs.json` plus a per-run dump under `raw/` (usage, visited
-URLs, errors, final result, and the installed browser-use version). Publish
-`raw/` with the report — `docs/03`: "publish raw JSONL + analysis. Credibility in
-this space comes from reproducibility."
+Both harnesses start at the same URL through unmeasured navigation and use 1920×1080.
+Browser Use is `browser-use==0.13.6`, imported with default agent behavior—never forked or
+patched. `cache_adjusted=true` is emitted only from measured uncached/read/write buckets.
+Missing receipts, model mismatch, evidence-count mismatch, failed parity, or a nonpositive
+interval fails the command.
 
-`raw-runs.example.json` shows the emitted shape and is what CI ingests; it is an
-illustrative example, **not** a real capture and not evidence of anything.
+`raw-runs.example.json` is illustrative, **not** evidence. A complete paid run retains
+`raw-runs.json`, every Browser Use diagnostic dump, every Rote manifest/trajectory, neutral
+records, gate output, report, and machine summary.
 
-## 3. Map both raw files to neutral records
+## 3. Reproduce the published result without a provider call
 
 ```bash
-node packages/bench/bin/rote-bench.js competitor-records bench-out/g2/rote/raw-runs.json \
-  --harness rote --model gpt-4.1-mini --cache-adjusted true \
-  --config-notes "Rote current main, exact provider cache buckets, 1920x1080" \
-  --out bench-out/g2/rote.json
-
-node packages/bench/bin/rote-bench.js competitor-records bench-out/g2/browser-use/raw-runs.json \
-  --harness browser-use --model gpt-4.1-mini --cache-adjusted true \
-  --config-notes "browser-use 0.13.6, defaults, exact provider cache buckets, max_steps=25, 1920x1080" \
-  --out bench-out/g2/browser-use.json
+npm ci
+npm run reproduce:g2
 ```
 
-`cache-adjusted=true` is valid only because both raw shapes contain measured uncached,
-cache-read, and cache-write buckets. The gate now rejects `false`; a provenance boolean
-without bucket evidence cannot certify G2.
-
-## 4. Assemble and run the gate
-
-```bash
-cat > bench-out/g2/sources.json <<'JSON'
-{
-  "subject": { "harness": "rote", "records": "rote.json" },
-  "competitors": [{ "harness": "browser-use", "records": "browser-use.json" }]
-}
-JSON
-
-node packages/bench/bin/rote-bench.js records bench-out/g2/sources.json --out bench-out/g2/records.json
-node packages/bench/bin/rote-bench.js headhead bench-out/g2/records.json --subject rote --out bench-out/g2/headhead.md
-node packages/bench/bin/rote-bench.js launch-gate bench-out/g2/records.json --subject rote --min-runs 15
-```
-
-The gate passes only at success parity, with ≥15 successful runs per harness, and
-a bootstrap confidence range whose **lower bound** clears the floor. The publishable
-claim is that lower bound, not the mean.
+This re-audits the downloadable T13 raw evidence and requires regenerated Markdown and
+JSON to match the committed report byte-for-byte. The gate passes only at success parity,
+with ≥15 successful runs per harness and a bootstrap lower bound above the floor; the
+claim is the interval, not just the mean.
 
 ## Grading (what counts as a success)
 

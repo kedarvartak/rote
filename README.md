@@ -132,14 +132,37 @@ do not establish production-site, learned-memory, or cross-provider wins.
 [G2 method, audit, and raw evidence](docs/testing/T13-g2-certification.md) ·
 [machine summary](docs/testing/data/T13-g2-summary.json)
 
+### Reproduce and watch
+
+Re-audit the published G2 raw evidence and reproduce its Markdown/JSON byte-for-byte:
+
+```bash
+npm ci
+npm run reproduce:g2
+```
+
+The paid 18-repetition collection is also one resumable command; see the
+[head-to-head runbook](scripts/bench/headhead/README.md). To watch the current product
+boundary—cold exploration, explicit zero-token replay, then selector drift detected and
+sent to the plain agent—open the [terminal recording](docs/demo/launch-demo.cast) or run:
+
+```bash
+export OPENAI_API_KEY=...
+scripts/demo/run-launch-demo.sh
+```
+
+The candidate in this demo is hand-written, not learned, and drift uses full fallback,
+not scoped repair. [Method and raw demo artifacts](docs/testing/T16-launch-demo.md).
+
 ![Architecture](docs/diagrams/architecture.svg)
 
 ## Design invariants
 
 1. **Never silently wrong** — every replayed step is assertion-gated; a final verify block
    must pass or the run escalates the repair ladder.
-2. **Never worse than baseline** — full-agent fallback always exists. A Rote miss costs one
-   cheap match call.
+2. **Never worse than baseline** — a mismatched, failed, or errored explicit replay returns
+   to the plain agent with a recorded classification. Generic rollback of prior server-side
+   effects is not built.
 3. **Never cross environments** — a structural fingerprint (tool inventory, target-system
    identity) is a hard gate. A playbook learned on staging can't fire on prod.
 4. **Everything versioned** — playbooks and repair patches are append-only, auditable,
@@ -153,7 +176,7 @@ procedures, and verification signals — so the next run starts warmer.
 
 ## Status
 
-**Early build — G1 and G2 pass; the launch package remains.**
+**Early build — G1 and G2 pass; npm registry publication remains.**
 
 Built and working end to end: core schemas + Expect DSL, lossless recorder, verified
 replay executor, CDP browser backend, perception (distill → stable IDs → budget),
@@ -200,6 +223,7 @@ Solid packages exist today; dashed packages are the target composition described
 | [05 — Roadmap](docs/05-roadmap.md) | Where we are; V1 scope and gates; P0–P5; open questions |
 | [06 — Optimizations](docs/06-optimizations.md) | The master catalog: every optimization, tier, status, evidence |
 | [07 — Execution plan](docs/07-execution-plan.md) | The work breakdown: epics, tasks, dependencies, acceptance criteria, RAID |
+| [Launch readiness](docs/launch-readiness.md) | Final P1 gate walk, sole registry blocker, and exact release-closure procedure |
 | [Known limitations](docs/known-limitations.md) | What is not built, weak-fit tasks, safety/operations boundaries, and the exact evidence scope |
 | [Third-party licenses](docs/third-party-licenses.md) | CLI and benchmark dependency/fork review plus release obligations |
 | [testing/](docs/testing/) | Records of tests against real Rote — live browser, live model, live key |

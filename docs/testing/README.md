@@ -48,3 +48,5 @@ enough to be re-run and disagreed with.
 | [T13](T13-g2-certification.md) | 2026-07-24 | Certify the frozen B1–B3 G2 level at success parity | G2 passes 108/108 sessions; reductions 77.3–93.3%; B2 does not clear the 80% catalog target |
 | [T14](T14-cli-package-candidate.md) | 2026-07-24 | Prove the 0.1.0 CLI tarball installs and runs without the monorepo | clean pack/bin and live B1 pass; registry publish blocked on npm scope ownership/auth |
 | [T15](T15-replay-fallback.md) | 2026-07-24 | Exercise the invariant-2 exit after an exact-fingerprint replay assertion fails | failed replay remains failed; classified cold fallback completes and verifies B1 |
+| [T16](T16-launch-demo.md) | 2026-07-24 | Record the shipped product boundary from cold exploration through replay and real selector drift | cold verifies; explicit replay uses zero tokens; stale replay fails and classified cold fallback verifies |
+| [T17](T17-one-command-reproduction.md) | 2026-07-24 | Make paid G2 collection and no-provider published-evidence reproduction one command each | byte-identical T13 reproduction passes; fresh post-package B1 pair verifies both source runners |

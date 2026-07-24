@@ -1,0 +1,92 @@
+[
+  {
+    "run_id": "g2-rote-b1-r01",
+    "seq": 0,
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "usage": {
+      "input_tokens": 457,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 38,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 495
+    }
+  },
+  {
+    "run_id": "g2-rote-b1-r01",
+    "seq": 1,
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "usage": {
+      "input_tokens": 491,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 38,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 529
+    }
+  },
+  {
+    "run_id": "g2-rote-b1-r01",
+    "seq": 2,
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "usage": {
+      "input_tokens": 528,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 39,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 567
+    }
+  },
+  {
+    "run_id": "g2-rote-b1-r01",
+    "seq": 3,
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "usage": {
+      "input_tokens": 558,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 43,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 601
+    }
+  },
+  {
+    "run_id": "g2-rote-b1-r01",
+    "seq": 4,
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "usage": {
+      "input_tokens": 627,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 24,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 651
+    }
+  }
+]

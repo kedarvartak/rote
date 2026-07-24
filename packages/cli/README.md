@@ -24,6 +24,9 @@ The data URL is a safe local smoke (measured at one step and 366 input + 24 outp
 For real work, replace it with a page you are authorized to automate and a success signal that the live page—not the agent's
 self-report—must show.
 
+A provider-backed cold→zero-token replay→selector-drift fallback demo is runnable from the
+repository with `scripts/demo/run-launch-demo.sh`; see [T16](../../docs/testing/T16-launch-demo.md).
+
 ## Public API
 
 - **`rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>)`** — launches Chrome and prefers an exact-environment verified replay when `--replay-candidate <candidate.json>` is supplied; fingerprint mismatch short-circuits to the compact cold planner; failed or errored replay also restarts the cold path from the pinned initial URL with a classified reason. Optional: `--model`, `--max-steps`, `--chrome-path`, `--settle-timeout-ms`, and paired `--viewport-width`/`--viewport-height`.
