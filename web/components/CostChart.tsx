@@ -29,7 +29,7 @@ export function CostChart() {
   const [hover, setHover] = useState<number | null>(null);
 
   return (
-    <div className="relative">
+    <div>
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1 mb-3 text-[0.75rem] text-ink-2">
         <span className="inline-flex items-center gap-2">
           <span className="w-3 h-3 rounded-full border-2 border-copper inline-block" /> Rote, before cache key
@@ -41,6 +41,8 @@ export function CostChart() {
           <span className="w-1 h-3.5 bg-blue inline-block rounded-[1px]" /> Browser Use
         </span>
       </div>
+      <div className="overflow-x-auto">
+      <div className="relative min-w-[36rem]">
       <svg
         viewBox={`0 0 ${W} ${H}`}
         className="w-full h-auto"
@@ -110,6 +112,8 @@ export function CostChart() {
           <p className="text-ink-2">{ROWS[hover].note}</p>
         </div>
       )}
+      </div>
+      </div>
     </div>
   );
 }

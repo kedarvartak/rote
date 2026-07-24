@@ -71,7 +71,7 @@ export function CurveChart() {
   const h = hover === null ? null : CELLS[hover];
 
   return (
-    <div className="relative">
+    <div>
       <div className="flex items-center gap-5 mb-3 text-[0.75rem] text-ink-2">
         <span className="inline-flex items-center gap-2">
           <span className="w-4 h-0.5 rounded bg-blue inline-block" /> Browser Use 0.13.6
@@ -80,6 +80,8 @@ export function CurveChart() {
           <span className="w-4 h-0.5 rounded bg-copper inline-block" /> Rote
         </span>
       </div>
+      <div className="overflow-x-auto">
+      <div className="relative min-w-[40rem]">
       <svg
         ref={ref}
         viewBox={`0 0 ${W} ${H}`}
@@ -201,6 +203,8 @@ export function CurveChart() {
           <p className="text-ink-2">reduction {h.red}</p>
         </div>
       )}
+      </div>
+      </div>
     </div>
   );
 }

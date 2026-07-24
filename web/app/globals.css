@@ -29,6 +29,7 @@ html {
 }
 
 body {
+  overflow-x: clip;
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);

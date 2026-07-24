@@ -137,8 +137,8 @@ export default function Home() {
               <br />
               <span className="text-ink-2">None of them manages it.</span>
             </h1>
-            <p className="mt-6 font-display text-xl sm:text-[1.7rem] leading-snug text-copper-bright">
-              rote · the memory manager for browser agents
+            <p className="mt-6 font-display text-2xl sm:text-[2.1rem] leading-snug text-copper-bright">
+              the memory manager for browser agents
             </p>
           </Reveal>
           <Reveal delay={120}>
@@ -165,9 +165,9 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-              <dl className="grid grid-cols-3 gap-8 lg:text-right shrink-0">
+              <dl className="grid grid-cols-3 gap-4 sm:gap-8 lg:text-right shrink-0">
                 <div>
-                  <dd className="font-display text-4xl text-copper-bright tabular-nums">
+                  <dd className="font-display text-3xl sm:text-4xl text-copper-bright tabular-nums">
                     37.2%
                   </dd>
                   <dt className="mt-1 text-[0.72rem] text-ink-2">
@@ -175,13 +175,13 @@ export default function Home() {
                   </dt>
                 </div>
                 <div>
-                  <dd className="font-display text-4xl tabular-nums">75/75</dd>
+                  <dd className="font-display text-3xl sm:text-4xl tabular-nums">75/75</dd>
                   <dt className="mt-1 text-[0.72rem] text-ink-2">
                     verified successes
                   </dt>
                 </div>
                 <div>
-                  <dd className="font-display text-4xl tabular-nums">99.6%</dd>
+                  <dd className="font-display text-3xl sm:text-4xl tabular-nums">99.6%</dd>
                   <dt className="mt-1 text-[0.72rem] text-ink-2">
                     smaller observations
                   </dt>
