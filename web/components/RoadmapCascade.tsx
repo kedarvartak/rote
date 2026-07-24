@@ -66,36 +66,115 @@ const STATE = {
 const STEP_OFFSET = ["", "lg:mt-12", "lg:mt-24"];
 const ELBOW_OFFSET = ["", "", "lg:mt-12"];
 
-/** Connector between steps: an elbow dropping into the next card (row one) or a flat arrow (row two). */
-function Connector({ drop, offsetClass = "" }: { drop: boolean; offsetClass?: string }) {
+type Edge = { dashed: boolean; color: string; delay: number };
+
+/**
+ * Connector between steps — drawn with the loom's vocabulary: one smooth
+ * thread with horizontal tangents, a soft sweep into the next card, and a
+ * small chevron head. Solid = traversed, dashed copper = in flight,
+ * dashed grey = planned.
+ */
+function Connector({ drop, edge, offsetClass = "" }: { drop: boolean; edge: Edge; offsetClass?: string }) {
+  const common = {
+    stroke: edge.color,
+    strokeWidth: 1.5,
+    strokeLinecap: "round" as const,
+    strokeDasharray: edge.dashed ? "2 7" : undefined,
+  };
+  const entrance = edge.dashed
+    ? { className: "fadepath" }
+    : { className: "drawpath", pathLength: 1 };
   return (
-    <div className={`hidden lg:block w-11 shrink-0 relative ${offsetClass}`} aria-hidden>
+    <div className={`hidden lg:block w-14 shrink-0 relative ${offsetClass}`} aria-hidden>
       {drop ? (
-        <svg viewBox="0 0 44 72" className="absolute top-4 left-0 w-11 overflow-visible" fill="none">
+        <svg viewBox="0 0 56 78" className="absolute top-4 left-0 w-14 overflow-visible" fill="none">
           <path
-            className="drawpath"
-            d="M-2 8 H26 Q36 8 36 18 V56"
-            stroke="#c2751f"
-            strokeWidth="1.5"
-            pathLength={1}
+            d="M-4 10 H16 C 40 10, 42 16, 42 38 V60"
+            style={{ transitionDelay: `${edge.delay}s` }}
+            {...entrance}
+            {...common}
           />
-          <path d="M31 51 L36 58 L41 51" stroke="#c2751f" strokeWidth="1.5" />
+          <path d="M36 55 L42 64 L48 55" {...common} strokeDasharray={undefined} />
         </svg>
       ) : (
-        <svg viewBox="0 0 44 24" className="absolute top-8 left-0 w-11 overflow-visible" fill="none">
-          <path className="drawpath" d="M-2 12 H38" stroke="#c2751f" strokeWidth="1.5" pathLength={1} />
-          <path d="M33 7 L40 12 L33 17" stroke="#c2751f" strokeWidth="1.5" />
+        <svg viewBox="0 0 56 24" className="absolute top-7 left-0 w-14 overflow-visible" fill="none">
+          <path
+            d="M-4 12 H44"
+            style={{ transitionDelay: `${edge.delay}s` }}
+            {...entrance}
+            {...common}
+          />
+          <path d="M39 6 L48 12 L39 18" {...common} strokeDasharray={undefined} />
         </svg>
       )}
     </div>
   );
 }
 
-function PhaseCard({ p }: { p: (typeof PHASES)[number] }) {
+/**
+ * The return thread from P2 down and across to P3 — the staircase landing.
+ * Fixed corner sweeps at both ends, a percentage-width line between them,
+ * all dashed grey: this stretch of the path is still planned.
+ */
+function WrapConnector() {
+  const c = "#8a8578";
+  return (
+    <div className="hidden lg:flex h-16 mt-2" aria-hidden>
+      {/* left corner: down into P3 */}
+      <div className="w-20 shrink-0 relative">
+        <svg viewBox="0 0 80 64" className="absolute inset-0 w-full h-full overflow-visible" fill="none">
+          <path
+            className="fadepath"
+            d="M80 28 H30 C 14 28, 12 34, 12 44 V52"
+            stroke={c}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeDasharray="2 7"
+            style={{ transitionDelay: "1.5s" }}
+          />
+          <path d="M6 47 L12 56 L18 47" stroke={c} strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      </div>
+      {/* stretch: percentage-width line, same dash voice */}
+      <div className="flex-1 relative">
+        <svg className="absolute inset-0 w-full h-full" fill="none">
+          <line
+            className="fadepath"
+            x1="0"
+            y1="28"
+            x2="100%"
+            y2="28"
+            stroke={c}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeDasharray="2 7"
+            style={{ transitionDelay: "1.3s" }}
+          />
+        </svg>
+      </div>
+      {/* right corner: receives the stub falling from P2 and turns left */}
+      <div className="w-20 shrink-0 relative">
+        <svg viewBox="0 0 80 64" className="absolute inset-0 w-full h-full overflow-visible" fill="none">
+          <path
+            className="fadepath"
+            d="M42 0 C 42 18, 38 28, 22 28 H0"
+            stroke={c}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeDasharray="2 7"
+            style={{ transitionDelay: "1.1s" }}
+          />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function PhaseCard({ p, fill = false }: { p: (typeof PHASES)[number]; fill?: boolean }) {
   const s = STATE[p.state];
   return (
     <article
-      className={`h-full border bg-white/40 ${
+      className={`${fill ? "h-full" : ""} border bg-white/40 ${
         p.state === "now"
           ? "border-copper/70 shadow-[0_2px_24px_rgba(194,117,31,0.16)]"
           : "border-paper-ink/15"
@@ -248,25 +327,67 @@ export function RoadmapCascade() {
             </Link>
           </div>
 
-          {/* staircase row one: P0 → P2, stepping down */}
-          <div className="flex flex-col gap-4 lg:flex-row lg:gap-0 lg:items-start">
+          {/* staircase row one: P0 → P2, stepping down; solid = traversed, dashed = in flight */}
+          <div className="flex flex-col gap-4 lg:flex-row lg:gap-0 lg:items-stretch">
             {row1.map((p, i) => (
               <div key={p.id} className="contents">
-                {i > 0 && <Connector drop offsetClass={ELBOW_OFFSET[i]} />}
-                <div className={`lg:flex-1 min-w-0 ${STEP_OFFSET[i]}`}>
+                {i > 0 && (
+                  <Connector
+                    drop
+                    offsetClass={ELBOW_OFFSET[i]}
+                    edge={
+                      i === 1
+                        ? { dashed: false, color: "#c2751f", delay: 0.5 }
+                        : { dashed: true, color: "#c2751f", delay: 0.75 }
+                    }
+                  />
+                )}
+                <div
+                  className={`lg:flex-1 min-w-0 ${STEP_OFFSET[i]} ${
+                    i === row1.length - 1 ? "lg:self-stretch lg:flex lg:flex-col" : ""
+                  }`}
+                >
                   <PhaseCard p={p} />
+                  {/* exit stub: falls from P2's bottom edge to the row's floor,
+                      where the wrap corner picks it up — survives any card height */}
+                  {i === row1.length - 1 && (
+                    <div className="hidden lg:block grow relative min-h-4" aria-hidden>
+                      <svg className="absolute inset-y-0 right-0 w-[76px] h-full" fill="none">
+                        <line
+                          className="fadepath"
+                          x1="38"
+                          y1="0"
+                          x2="38"
+                          y2="100%"
+                          stroke="#8a8578"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeDasharray="2 7"
+                          style={{ transitionDelay: "0.95s" }}
+                        />
+                      </svg>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
 
-          {/* row two: P3 → P5, the level shelf the staircase lands on */}
-          <div className="mt-4 lg:mt-12 flex flex-col gap-4 lg:flex-row lg:gap-0 lg:items-stretch">
+          {/* the landing: a return thread from P2 down to P3 */}
+          <WrapConnector />
+
+          {/* row two: P3 → P5, the level shelf — still planned, still dashed */}
+          <div className="mt-4 lg:mt-0 flex flex-col gap-4 lg:flex-row lg:gap-0 lg:items-stretch">
             {row2.map((p, i) => (
               <div key={p.id} className="contents">
-                {i > 0 && <Connector drop={false} />}
+                {i > 0 && (
+                  <Connector
+                    drop={false}
+                    edge={{ dashed: true, color: "#8a8578", delay: 1.7 + i * 0.2 }}
+                  />
+                )}
                 <div className="lg:flex-1 min-w-0">
-                  <PhaseCard p={p} />
+                  <PhaseCard p={p} fill />
                 </div>
               </div>
             ))}

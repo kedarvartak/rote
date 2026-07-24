@@ -110,6 +110,22 @@ body {
 .reveal.is-visible .drawpath {
   stroke-dashoffset: 0;
 }
+
+/* dashed lines can't use the dashoffset draw-in (it would override their dash
+   pattern) — they fade up instead, on the same reveal trigger */
+.fadepath {
+  opacity: 0;
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible .fadepath {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fadepath {
+    opacity: 1;
+    transition: none;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .drawpath {
     stroke-dashoffset: 0;
