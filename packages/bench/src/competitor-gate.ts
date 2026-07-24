@@ -72,6 +72,43 @@ export function bootstrapReductionInterval(
   };
 }
 
+/**
+ * Estimates a reduction interval by resampling matched repetition pairs.
+ * Both vectors must use identical repetition order; pairing preserves shared
+ * provider and machine conditions rather than treating alternated runs as independent.
+ */
+export function bootstrapMatchedReductionInterval(
+  subjectValues: readonly number[],
+  baselineValues: readonly number[],
+  options: BootstrapOptions = {},
+): ReductionInterval {
+  if (subjectValues.length !== baselineValues.length || subjectValues.length === 0) {
+    throw new Error('matched bootstrap requires equal non-empty vectors');
+  }
+  const resamples = options.resamples ?? DEFAULT_RESAMPLES;
+  const confidence = options.confidence ?? DEFAULT_CONFIDENCE;
+  const random = mulberry32(options.seed ?? BOOTSTRAP_SEED);
+  const draws: number[] = [];
+  for (let sample = 0; sample < resamples; sample += 1) {
+    let subjectTotal = 0; let baselineTotal = 0;
+    for (let draw = 0; draw < subjectValues.length; draw += 1) {
+      const index = Math.floor(random() * subjectValues.length);
+      subjectTotal += subjectValues[index]!;
+      baselineTotal += baselineValues[index]!;
+    }
+    draws.push(reduction(subjectTotal / subjectValues.length, baselineTotal / baselineValues.length));
+  }
+  draws.sort((a, b) => a - b);
+  const alpha = (1 - confidence) / 2;
+  return {
+    point: reduction(mean(subjectValues), mean(baselineValues)),
+    lower: percentile(draws, alpha),
+    upper: percentile(draws, 1 - alpha),
+    confidence,
+    resamples,
+  };
+}
+
 export interface LaunchGateOptions {
   /**
    * Minimum reduction the *lower bound* of the range must clear. docs/05 W5 asks

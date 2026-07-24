@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "protocol_id": "p1-g2-fixtures-v1-b1-b3",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "browser_use_version": "0.13.6",
+  "min_successful_runs": 15,
+  "gate_passed": true,
+  "tasks": [
+    {
+      "task": "B1",
+      "rote_successes": 18,
+      "rote_attempts": 18,
+      "baseline_successes": 18,
+      "baseline_attempts": 18,
+      "logical_token_reduction": {
+        "point": 0.9181753328470547,
+        "lower": 0.9177363401219332,
+        "upper": 0.9188640074682853,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "cost_reduction": {
+        "point": 0.8228711710818644,
+        "lower": 0.8211793692124221,
+        "upper": 0.8253004036903381,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "latency_reduction": {
+        "point": 0.47604442252215895,
+        "lower": 0.4429075390568774,
+        "upper": 0.50671446742544,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "rote_level": {
+        "mean_tokens": 2835.6111111111113,
+        "mean_latency_ms": 9737.277777777777,
+        "p50_latency_ms": 9635.5,
+        "p95_latency_ms": 11051.349999999999,
+        "mean_cost_usd": 0.0013500444444444443
+      },
+      "baseline_level": {
+        "mean_tokens": 34654.72222222222,
+        "mean_latency_ms": 18584.166666666668,
+        "p50_latency_ms": 18208,
+        "p95_latency_ms": 21668.949999999997,
+        "mean_cost_usd": 0.007621822222222223
+      },
+      "clears_80_percent_target": true
+    },
+    {
+      "task": "B2",
+      "rote_successes": 18,
+      "rote_attempts": 18,
+      "baseline_successes": 18,
+      "baseline_attempts": 18,
+      "logical_token_reduction": {
+        "point": 0.7730202507881082,
+        "lower": 0.7685324248857668,
+        "upper": 0.78119115361495,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "cost_reduction": {
+        "point": 0.5615062653403952,
+        "lower": 0.5466454423176569,
+        "upper": 0.5808683428615661,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "latency_reduction": {
+        "point": 0.13928058977784386,
+        "lower": 0.030532325805916718,
+        "upper": 0.2230737355280488,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "rote_level": {
+        "mean_tokens": 8248.166666666666,
+        "mean_latency_ms": 20295.333333333332,
+        "p50_latency_ms": 19048,
+        "p95_latency_ms": 25413.299999999985,
+        "mean_cost_usd": 0.0037715333333333337
+      },
+      "baseline_level": {
+        "mean_tokens": 36338.77777777778,
+        "mean_latency_ms": 23579.5,
+        "p50_latency_ms": 22421.5,
+        "p95_latency_ms": 28376.649999999983,
+        "mean_cost_usd": 0.00860111111111111
+      },
+      "clears_80_percent_target": false
+    },
+    {
+      "task": "B3",
+      "rote_successes": 18,
+      "rote_attempts": 18,
+      "baseline_successes": 18,
+      "baseline_attempts": 18,
+      "logical_token_reduction": {
+        "point": 0.9330784214703124,
+        "lower": 0.924205385336427,
+        "upper": 0.9387950299972254,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "cost_reduction": {
+        "point": 0.8543018871256877,
+        "lower": 0.8357120803588055,
+        "upper": 0.8663281926580157,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "latency_reduction": {
+        "point": 0.5545555124593854,
+        "lower": 0.5134970282028541,
+        "upper": 0.5883628694677494,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "rote_level": {
+        "mean_tokens": 2319,
+        "mean_latency_ms": 7783.944444444444,
+        "p50_latency_ms": 7297,
+        "p95_latency_ms": 10391.849999999997,
+        "mean_cost_usd": 0.0010999333333333336
+      },
+      "baseline_level": {
+        "mean_tokens": 34652.5,
+        "mean_latency_ms": 17474.555555555555,
+        "p50_latency_ms": 17382.5,
+        "p95_latency_ms": 19468.899999999998,
+        "mean_cost_usd": 0.007549400000000001
+      },
+      "clears_80_percent_target": true
+    }
+  ],
+  "rote_mean_tokens_by_source": [
+    {
+      "task": "B1",
+      "source": "planner",
+      "mean_tokens": 2835.6111111111113
+    },
+    {
+      "task": "B2",
+      "source": "planner",
+      "mean_tokens": 8248.166666666666
+    },
+    {
+      "task": "B3",
+      "source": "planner",
+      "mean_tokens": 2319
+    }
+  ],
+  "verification_audit": {
+    "rote_manifests": 54,
+    "browser_use_dumps": 54,
+    "browser_use_receipts": 163,
+    "all_rote_successes_verified": true,
+    "all_browser_successes_concluded_and_verified": true
+  },
+  "pricing": {
+    "version": "2026-07-15",
+    "source": "https://platform.claude.com/docs/en/about-claude/models/overview + https://developers.openai.com/api/docs/pricing"
+  }
+}

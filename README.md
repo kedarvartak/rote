@@ -117,6 +117,21 @@ Logical tokens are never relabeled as savings.
 [Browser Use raw receipts](docs/testing/data/T11-cache-key-v1-browser-use-raw.jsonl) ·
 [cache summary](docs/testing/data/T11-cache-key-economics-summary.json)
 
+### Tokens-per-task level
+
+On the frozen B1–B3 deterministic suite, Rote and Browser Use each passed **54/54**
+independently verified attempts. Rote reduced logical tokens per completed task by
+**91.8% on B1** (95% CI 91.8–91.9%), **77.3% on B2** (76.9–78.1%), and **93.3% on B3**
+(92.4–93.9%). The matched-repetition intervals all clear the formal positive-margin G2
+gate. B2 does **not** clear the benchmark catalog's 80% target, so these results are not
+an “80%+ on every task” claim.
+
+These are controlled local fixtures, while G1 is the real-WordPress length result. They
+do not establish production-site, learned-memory, or cross-provider wins.
+
+[G2 method, audit, and raw evidence](docs/testing/T13-g2-certification.md) ·
+[machine summary](docs/testing/data/T13-g2-summary.json)
+
 ![Architecture](docs/diagrams/architecture.svg)
 
 ## Design invariants
@@ -138,7 +153,7 @@ procedures, and verification signals — so the next run starts warmer.
 
 ## Status
 
-**Early build — G1's working-memory curve passes; G2 and the launch package remain.**
+**Early build — G1 and G2 pass; the launch package remains.**
 
 Built and working end to end: core schemas + Expect DSL, lossless recorder, verified
 replay executor, CDP browser backend, perception (distill → stable IDs → budget),
@@ -161,9 +176,11 @@ memory, model routing, speculation. **Tier 1 is table stakes and we are late to 
 Skyvern ships record → codegen → zero-LLM replay → fallback today
 ([docs/04](docs/04-competition.md)). `docs/02-architecture.md` §Status is authoritative.
 
-**No number, no launch.** G1 now passes its public 30% slope-reduction floor: 37.2%
-(95% CI 35.6–38.8%) at success parity. G2—the tokens-per-task level gate—has not run, and
-cache economics still lose at the shortest cell; Rote is not launch-ready.
+**No number, no launch.** G1 passes its public 30% slope-reduction floor: 37.2%
+(95% CI 35.6–38.8%) at success parity. G2 also passes its positive-margin level gate on
+B1–B3, though B2 misses the catalog's 80% target and cache economics still lose at G1's
+shortest cell. Packaging, a clean-machine quickstart, demo, and limitations publication
+still block launch.
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)
 

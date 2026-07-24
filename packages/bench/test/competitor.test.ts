@@ -10,7 +10,7 @@ import {
   summarizeHarnessRuns,
   type CompetitorRunRecord,
 } from '../src/competitor.js';
-import { bootstrapReductionInterval, evaluateLaunchGate } from '../src/competitor-gate.js';
+import { bootstrapMatchedReductionInterval, bootstrapReductionInterval, evaluateLaunchGate } from '../src/competitor-gate.js';
 import type { BenchCell } from '../src/types.js';
 import { manifest } from './helpers.js';
 
@@ -152,6 +152,19 @@ function runs(harness: string, task: string, tokens: readonly number[]): Competi
 function spread(center: number, jitter: number, n: number): number[] {
   return Array.from({ length: n }, (_, i) => center + ((i % 5) - 2) * jitter);
 }
+
+describe('bootstrapMatchedReductionInterval', () => {
+  it('preserves matched proportional repetition pairs', () => {
+    const interval = bootstrapMatchedReductionInterval([10, 20, 30], [100, 200, 300]);
+    expect(interval.point).toBeCloseTo(0.9);
+    expect(interval.lower).toBeCloseTo(0.9);
+    expect(interval.upper).toBeCloseTo(0.9);
+  });
+
+  it('rejects unmatched vectors', () => {
+    expect(() => bootstrapMatchedReductionInterval([10], [100, 200])).toThrow(/equal non-empty vectors/);
+  });
+});
 
 describe('bootstrapReductionInterval', () => {
   it('reports a lower bound above zero when the distributions are clearly separated', () => {

@@ -78,6 +78,20 @@ describe('rote-bench CLI', () => {
     }));
   });
 
+  it('reproduces the published G2 audit byte-for-byte', async () => {
+    const root = await tempDir();
+    const report = join(root, 'g2.md'); const summary = join(root, 'g2.json');
+    const data = resolve('../../docs/testing/data');
+    await expect(main([
+      'g2-report', join(data, 'T13-g2-records.json'),
+      '--rote-manifests', join(data, 'T13-g2-rote-manifests.json'),
+      '--browser-dumps', join(data, 'T13-g2-browser-use-dumps.json'),
+      '--out', report, '--summary', summary, '--min-runs', '15',
+    ])).resolves.toBe(`wrote ${report} and ${summary} (G2 PASS)`);
+    await expect(readFile(report, 'utf8')).resolves.toBe(await readFile(resolve('../../docs/testing/T13-g2-level-report.md'), 'utf8'));
+    await expect(readFile(summary, 'utf8')).resolves.toBe(await readFile(join(data, 'T13-g2-summary.json'), 'utf8'));
+  });
+
   it('writes a synthetic benchmark pack and evaluates the M3 gate', async () => {
     const root = await tempDir();
     const specPath = join(root, 'bench-spec.json');

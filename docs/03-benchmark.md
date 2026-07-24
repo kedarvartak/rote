@@ -29,6 +29,12 @@ can win by replaying wrongly.
 
 ## Metrics
 
+These are catalog targets for the full repeated-task/replay suite. P1's tier-0 G2 gate is
+narrower by design: success parity plus a positive cache-adjusted token-reduction lower
+bound on B1–B3; cost and latency are reported but not gated. Missing a catalog target must
+still be published—as T13 does for B2 tokens and all three latency cells—rather than being
+rounded into a broader pass claim.
+
 | Metric | Definition | Pass / kill |
 |---|---|---|
 | **Token reduction** | warm ÷ baseline-rerun, cache-adjusted | pass ≥80%; kill <50% |
@@ -158,13 +164,22 @@ capture runbook in [`scripts/bench/curve/README.md`](../scripts/bench/curve/READ
 
 ```bash
 node scripts/bench/headhead/serve-fixtures.mjs 8080          # frozen pages
-rote-bench run   scripts/bench/headhead/rote-plan.json --out bench-out/rote
-python scripts/bench/headhead/browser-use/run_browser_use.py --out bench-out/browser-use
-rote-bench competitor-records bench-out/browser-use/raw-runs.json --harness browser-use \
-  --model <same model> --cache-adjusted <true|false> --out bench-out/browser-use.json
-rote-bench records     bench-out/sources.json  --out bench-out/records.json
-rote-bench launch-gate bench-out/records.json  --min-runs 15
+for rep in $(seq 1 18); do
+  for task in B1 B2 B3; do
+    scripts/bench/headhead/run-next-pair.sh "$task" "$rep" # Rote then Browser Use
+  done
+done
+# Then neutralize raw rows per the runbook and audit the published matrix:
+rote-bench g2-report docs/testing/data/T13-g2-records.json \
+  --rote-manifests docs/testing/data/T13-g2-rote-manifests.json \
+  --browser-dumps docs/testing/data/T13-g2-browser-use-dumps.json \
+  --out /tmp/g2.md --summary /tmp/g2.json --min-runs 15
 ```
+
+The frozen B1–B3 certification passes G2 at 54/54 verified successes per harness, with
+matched-repetition logical-token reductions of 91.8%, 77.3%, and 93.3%. B2 does not clear
+the catalog's 80% target; see [T13](testing/T13-g2-certification.md) for intervals, raw
+receipts, and limitations.
 
 Live-run findings are recorded in [`docs/testing/`](testing/). T1's B2 design defect
 ([#49](https://github.com/kedarvartak/rote/issues/49)) and its two planner-boundary

@@ -189,8 +189,9 @@ stays token-based; latency and $ are reported, not gated, in V1 (docs/05 P3).
   the dated price table (captured 2026-07-15) and pure cost arithmetic.
 - **`mean` / `percentile` / `reduction`** (`stats.ts`) — pure, shared by the
   aggregation and the gate's bootstrap.
-- **`bootstrapReductionInterval`** — pure, deterministic (fixed seed) reduction
-  point estimate plus confidence range from each harness's per-run token totals.
+- **`bootstrapReductionInterval` / `bootstrapMatchedReductionInterval`** — pure,
+  deterministic reduction intervals for independent samples or exact repetition pairs.
+- **`buildG2Report` / `writeG2Report`** — fail-closed raw-evidence identity and live-verification audit, matched token/cost/latency intervals, absolute levels, and source accounting.
 - **`evaluateLaunchGate`** — the W5 gate: a comparison passes only at success
   parity, with enough successful runs, and a range lower bound at/above the floor.
 
@@ -198,6 +199,8 @@ stays token-based; latency and $ are reported, not gated, in V1 (docs/05 P3).
 rote-bench records sources.json --out bench-out/records.json
 rote-bench headhead bench-out/records.json --subject rote --prices prices.json --out bench-out/headhead.md
 rote-bench launch-gate bench-out/records.json --subject rote --min-token-reduction 0.3 --min-runs 15
+rote-bench g2-report bench-out/records.json --rote-manifests manifests.json \
+  --browser-dumps browser-dumps.json --out g2.md --summary g2.json --min-runs 15
 ```
 
 ### Assembling records from real runs

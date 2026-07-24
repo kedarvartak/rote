@@ -1,0 +1,4699 @@
+[
+  {
+    "run_id": "g2-rote-b1-r01",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:43:53.002Z",
+    "ended_at": "2026-07-24T10:44:04.860Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 532,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 28
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r02",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:45:43.129Z",
+    "ended_at": "2026-07-24T10:45:52.787Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r03",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:47:35.760Z",
+    "ended_at": "2026-07-24T10:47:44.884Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r04",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:49:22.708Z",
+    "ended_at": "2026-07-24T10:49:32.838Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r05",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:51:13.339Z",
+    "ended_at": "2026-07-24T10:51:22.952Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r06",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:53:02.548Z",
+    "ended_at": "2026-07-24T10:53:11.829Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r07",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:54:51.327Z",
+    "ended_at": "2026-07-24T10:55:01.981Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 21
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r08",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:56:40.211Z",
+    "ended_at": "2026-07-24T10:56:48.520Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      },
+      {
+        "source": "planner",
+        "input_tokens": 477,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 25
+      },
+      {
+        "source": "planner",
+        "input_tokens": 501,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 26
+      },
+      {
+        "source": "planner",
+        "input_tokens": 518,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 29
+      },
+      {
+        "source": "planner",
+        "input_tokens": 573,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 26
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r09",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:58:23.155Z",
+    "ended_at": "2026-07-24T10:58:32.332Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r10",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:00:05.140Z",
+    "ended_at": "2026-07-24T11:00:14.134Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r11",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:01:52.963Z",
+    "ended_at": "2026-07-24T11:02:02.795Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 29
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r12",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:03:39.117Z",
+    "ended_at": "2026-07-24T11:03:49.323Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 27
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r13",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:05:30.153Z",
+    "ended_at": "2026-07-24T11:05:39.834Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r14",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:07:31.705Z",
+    "ended_at": "2026-07-24T11:07:40.948Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 27
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r15",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:09:23.034Z",
+    "ended_at": "2026-07-24T11:09:32.081Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r16",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:11:17.033Z",
+    "ended_at": "2026-07-24T11:11:27.016Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r17",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:13:09.174Z",
+    "ended_at": "2026-07-24T11:13:18.746Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 28
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b1-r18",
+    "task_spec": "Sign in to the reports portal with username \"analyst\" and password \"s3cret\", then download the latest report.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:14:56.714Z",
+    "ended_at": "2026-07-24T11:15:07.623Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 491,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 528,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 558,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 43
+      },
+      {
+        "source": "planner",
+        "input_tokens": 627,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r01",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:44:25.884Z",
+    "ended_at": "2026-07-24T10:44:44.878Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 26
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r02",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:46:15.586Z",
+    "ended_at": "2026-07-24T10:46:36.919Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 661,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 697,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r03",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:48:07.008Z",
+    "ended_at": "2026-07-24T10:48:26.110Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 697,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r04",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:49:54.543Z",
+    "ended_at": "2026-07-24T10:50:16.448Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 24
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r05",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:51:45.615Z",
+    "ended_at": "2026-07-24T10:52:09.399Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r06",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:53:34.569Z",
+    "ended_at": "2026-07-24T10:53:52.728Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 23
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r07",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:55:23.632Z",
+    "ended_at": "2026-07-24T10:55:41.642Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 31
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r08",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:57:12.119Z",
+    "ended_at": "2026-07-24T10:57:29.991Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 661,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 697,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 27
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r09",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:58:54.755Z",
+    "ended_at": "2026-07-24T10:59:11.403Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 26
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r10",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:00:37.828Z",
+    "ended_at": "2026-07-24T11:00:55.396Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 25
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r11",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:02:24.928Z",
+    "ended_at": "2026-07-24T11:02:43.735Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r12",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:04:14.914Z",
+    "ended_at": "2026-07-24T11:04:32.021Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 26
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r13",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:06:01.533Z",
+    "ended_at": "2026-07-24T11:06:36.179Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 27
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r14",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:08:08.686Z",
+    "ended_at": "2026-07-24T11:08:27.333Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 31
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r15",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:09:54.117Z",
+    "ended_at": "2026-07-24T11:10:14.517Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 31
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r16",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:11:50.642Z",
+    "ended_at": "2026-07-24T11:12:10.489Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r17",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:13:43.583Z",
+    "ended_at": "2026-07-24T11:14:03.262Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 893,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 26
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r18",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:15:31.073Z",
+    "ended_at": "2026-07-24T11:15:53.881Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 614,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 654,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 693,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 736,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 777,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 816,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 853,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 889,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 930,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 878,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 36
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r01",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:45:11.650Z",
+    "ended_at": "2026-07-24T10:45:19.972Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 457,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 39
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 25
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r02",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:47:07.124Z",
+    "ended_at": "2026-07-24T10:47:14.617Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 20
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r03",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:48:54.145Z",
+    "ended_at": "2026-07-24T10:49:01.832Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 21
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r04",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:50:44.209Z",
+    "ended_at": "2026-07-24T10:50:51.223Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 17
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r05",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:52:34.137Z",
+    "ended_at": "2026-07-24T10:52:41.435Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 20
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r06",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:54:21.012Z",
+    "ended_at": "2026-07-24T10:54:28.104Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r07",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:56:06.440Z",
+    "ended_at": "2026-07-24T10:56:16.448Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 640,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 677,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 17
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r08",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:57:56.632Z",
+    "ended_at": "2026-07-24T10:58:03.071Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 21
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r09",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T10:59:38.388Z",
+    "ended_at": "2026-07-24T10:59:44.763Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 29
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r10",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:01:22.067Z",
+    "ended_at": "2026-07-24T11:01:29.266Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 20
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r11",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:03:10.341Z",
+    "ended_at": "2026-07-24T11:03:17.884Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 21
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r12",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:04:58.092Z",
+    "ended_at": "2026-07-24T11:05:05.104Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 17
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r13",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:07:03.415Z",
+    "ended_at": "2026-07-24T11:07:11.035Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 21
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r14",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:08:55.231Z",
+    "ended_at": "2026-07-24T11:09:02.527Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 17
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r15",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:10:45.912Z",
+    "ended_at": "2026-07-24T11:10:53.198Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r16",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:12:36.906Z",
+    "ended_at": "2026-07-24T11:12:46.002Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 17
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r17",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:14:29.652Z",
+    "ended_at": "2026-07-24T11:14:36.416Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 17
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b3-r18",
+    "task_spec": "Search the catalog for \"alpha\" and open the Alpha result.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-24T11:16:37.859Z",
+    "ended_at": "2026-07-24T11:16:50.426Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 414,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 450,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 35
+      },
+      {
+        "source": "planner",
+        "input_tokens": 520,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 603,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 640,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 677,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 714,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 18
+      }
+    ]
+  }
+]
