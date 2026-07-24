@@ -42,7 +42,8 @@ export interface BrowserTaskResult {
   inputTokens: number;
   outputTokens: number;
   phase: 'cold' | 'warm';
-  fallbackReason?: 'fingerprint_mismatch';
+  fallbackReason?: 'fingerprint_mismatch' | 'replay_failed' | 'replay_error';
+  fallbackDetail?: string;
 }
 
 export interface BrowserTaskBackend {
@@ -114,14 +115,25 @@ export async function runBrowserTask(
       ? new SettledBrowserPageSession(rawPage, { timeoutMs: options.settleTimeoutMs })
       : rawPage;
 
+    let replayFallback: Pick<BrowserTaskResult, 'fallbackReason' | 'fallbackDetail'> | undefined;
     if (selection.phase === 'warm' && candidate) {
       const replay = dependencies.runReplay ?? runVerifiedBrowserReplay;
-      return await replay({ candidate, page, fingerprint, options, target });
+      try {
+        const result = await replay({ candidate, page, fingerprint, options, target });
+        if (result.success) return result;
+        replayFallback = { fallbackReason: 'replay_failed', fallbackDetail: result.summary };
+      } catch (error) {
+        replayFallback = { fallbackReason: 'replay_error', fallbackDetail: asError(error).message };
+      }
+      // INVARIANT: a selected cheap path may fail, but it cannot strand the task
+      // (see docs/02-architecture.md "Invariants"). Cold execution navigates from the pinned initial URL before planning.
     }
 
     const cold = await runColdBrowserTask(options, target, page, fingerprint, dependencies.planner);
-    const fallbackReason = 'fallbackReason' in selection ? selection.fallbackReason : undefined;
-    return { ...cold, ...(fallbackReason ? { fallbackReason } : {}) };
+    const fingerprintFallback = 'fallbackReason' in selection
+      ? { fallbackReason: selection.fallbackReason }
+      : undefined;
+    return { ...cold, ...(replayFallback ?? fingerprintFallback) };
   } finally {
     const closeable = rawPage as (BrowserPageSession & { close?: () => void }) | undefined;
     closeable?.close?.();
