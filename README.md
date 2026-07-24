@@ -179,8 +179,9 @@ Skyvern ships record → codegen → zero-LLM replay → fallback today
 **No number, no launch.** G1 passes its public 30% slope-reduction floor: 37.2%
 (95% CI 35.6–38.8%) at success parity. G2 also passes its positive-margin level gate on
 B1–B3, though B2 misses the catalog's 80% target and cache economics still lose at G1's
-shortest cell. Packaging, a clean-machine quickstart, demo, and limitations publication
-still block launch.
+shortest cell. The 0.1.0 CLI tarball now passes a clean-install live smoke, but registry
+publication is blocked on npm scope ownership/authentication; the demo and consolidated
+limitations publication also remain. See [T14](docs/testing/T14-cli-package-candidate.md).
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)
 

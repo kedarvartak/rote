@@ -37,7 +37,7 @@ drives sequencing:
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
 | #50/#51/#52 done; open: [#54](https://github.com/kedarvartak/rote/issues/54) (diff-derived postconditions) | Planner slips no longer poison success parity; live expects are honestly optional and final verification remains mandatory |
-| `@rote/cli` private at 0.0.0; README carries G1/G2; no demo | packaging now blocks launch |
+| `@rote/cli@0.1.0` tarball passes clean install + live B1; npm auth/scope ownership unconfirmed; no demo | registry publication and remaining packaging block launch |
 | B4–B6 benchmark tasks specified, not built | B5 is the first post-G2 trust instrument; it did not move into the frozen level gate |
 
 ## P1 — the epics
@@ -108,7 +108,7 @@ exact-prefix routing on the E1 page. Small fixtures remain below provider cache 
 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---|---|---|---|
-| E5.1 | **Publish `@rote/cli`** (0.1.0): npm name check, `bin` wiring, quickstart. | 1.5 | E4 green | `npx rote run <task>` works on a clean machine with only an API key | ready |
+| E5.1 | **Publish `@rote/cli`** (0.1.0): npm name check, `bin` wiring, quickstart. | 1.5 | E4 green | [T14](testing/T14-cli-package-candidate.md): one-package bundle, pack/install/bin automation, and tarball-installed live B1 pass; unscoped `rote` is occupied, registry `npx @rote/cli` awaits maintainer scope ownership + npm auth | package-ready; registry-blocked |
 | E5.2 | **README with the number:** curve graph, G1/G2 results, units, method links, reproduction one-liner. | 0.5 | E1.5, E4.5 | README carries G1 and G2 with method/evidence links and the B2 caveat; packaging reproduction remains E5.1 | done |
 | E5.3 | **Demo:** terminal recording of cold run → warm replay → drift repair on the fixture suite. | 1 | E5.1 | linked from README | blocked |
 | E5.4 | **Known-limitations doc:** no distiller (tier 1 is V2), no routing/speculation, eviction trades recall for cost, weak-fit list from [01](01-problem.md). | 0.5 | — | honest, linked from README | ready |

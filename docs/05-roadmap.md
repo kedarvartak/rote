@@ -107,8 +107,11 @@ is dropped with a recorded classification into the existing semantic resolution 
 Both still fail closed when no safe action can be resolved. The known planner-boundary
 robustness defects no longer block an honest success-parity measurement.
 
-**Blocking the launch:** `packages/cli` is private at `0.0.0` and unpublished, so the
-`npx rote run` quickstart does not exist; no demo or consolidated known-limitations page.
+**Blocking the launch:** `@rote/cli@0.1.0` now passes build→pack→clean-install and a
+provider-backed B1 smoke, but it is unpublished. The unscoped `rote` name is occupied and
+this environment cannot prove npm `@rote` scope ownership/authentication
+([T14](testing/T14-cli-package-candidate.md)); no demo or consolidated known-limitations
+page exists yet.
 
 ### Exit gate
 
