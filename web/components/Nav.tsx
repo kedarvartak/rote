@@ -47,7 +47,7 @@ export function Nav() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`px-2.5 sm:px-3 py-1.5 text-[0.82rem] rounded-sm transition-colors ${
+                className={`nav-link px-2.5 sm:px-3 py-1.5 text-[0.82rem] rounded-sm ${
                   active
                     ? "text-copper-bright"
                     : "text-ink-2 hover:text-ink"

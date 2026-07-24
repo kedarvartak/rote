@@ -3,6 +3,26 @@ import { HeroLedger } from "@/components/HeroLedger";
 import { CurveChart } from "@/components/CurveChart";
 import { CostChart } from "@/components/CostChart";
 import { Reveal } from "@/components/Reveal";
+import { CountUp } from "@/components/CountUp";
+import { QuoteTicker } from "@/components/QuoteTicker";
+
+/** Staggered word-by-word entrance for the hero headline. */
+function Words({ text, from = 0 }: { text: string; from?: number }) {
+  return (
+    <>
+      {text.split(" ").map((w, i) => (
+        <span
+          key={i}
+          className="hero-word"
+          style={{ animationDelay: `${from + i * 90}ms` }}
+        >
+          {w}
+          {" "}
+        </span>
+      ))}
+    </>
+  );
+}
 
 const B2_TOKENS = [637, 677, 716, 759, 800, 839, 876, 917, 953];
 
@@ -120,10 +140,11 @@ function SectionHead({
   return (
     <div className="max-w-2xl">
       <p className="eyebrow">{eyebrow}</p>
-      <h2 className="mt-3 font-display text-3xl sm:text-4xl leading-[1.12] tracking-tight">
+      <h2 className="mt-3 font-display wonk text-3xl sm:text-4xl leading-[1.08] tracking-tight">
         {title}
       </h2>
-      {lede && <p className="mt-4 text-ink-2 leading-relaxed">{lede}</p>}
+      <div className="rule-draw mt-5" aria-hidden />
+      {lede && <p className="mt-5 text-ink-2 leading-relaxed">{lede}</p>}
     </div>
   );
 }
@@ -137,10 +158,17 @@ export default function Home() {
           <div>
             <Reveal>
               <p className="eyebrow">rote · the memory manager for browser agents</p>
-              <h1 className="mt-5 font-display text-[2.6rem] sm:text-6xl leading-[1.05] tracking-tight">
-                Every harness has memory.
-                <br />
-                <em className="text-copper-bright">None of them manages it.</em>
+              <h1
+                className="mt-5 font-display wonk text-[2.8rem] sm:text-[4.1rem] leading-[1.02] tracking-tight"
+                aria-label="Every harness has memory. None of them manages it."
+              >
+                <span aria-hidden className="contents">
+                  <Words text="Every harness has memory." />
+                  <br />
+                  <em className="text-copper-bright">
+                    <Words text="None of them manages it." from={520} />
+                  </em>
+                </span>
               </h1>
               <p className="mt-6 text-ink-2 text-lg leading-relaxed max-w-[52ch]">
                 Browser agents treat the context window as a garbage dump —
@@ -170,7 +198,7 @@ export default function Home() {
                     token growth
                   </dt>
                   <dd className="mt-1 font-display text-3xl text-copper-bright tabular-nums">
-                    37.2%
+                    <CountUp to={37.2} decimals={1} suffix="%" />
                   </dd>
                   <dd className="text-[0.72rem] text-ink-2">
                     slower than baseline
@@ -180,24 +208,32 @@ export default function Home() {
                   <dt className="text-[0.68rem] font-mono uppercase tracking-widest text-muted">
                     success parity
                   </dt>
-                  <dd className="mt-1 font-display text-3xl tabular-nums">75/75</dd>
+                  <dd className="mt-1 font-display text-3xl tabular-nums">
+                    <CountUp to={75} suffix="/75" />
+                  </dd>
                   <dd className="text-[0.72rem] text-ink-2">verified, per harness</dd>
                 </div>
                 <div>
                   <dt className="text-[0.68rem] font-mono uppercase tracking-widest text-muted">
                     median diff
                   </dt>
-                  <dd className="mt-1 font-display text-3xl tabular-nums">99.6%</dd>
+                  <dd className="mt-1 font-display text-3xl tabular-nums">
+                    <CountUp to={99.6} decimals={1} suffix="%" />
+                  </dd>
                   <dd className="text-[0.72rem] text-ink-2">smaller than a re-send</dd>
                 </div>
               </dl>
             </Reveal>
           </div>
           <Reveal delay={300}>
-            <HeroLedger />
+            <div className="frame-ticks p-3 sm:p-4">
+              <HeroLedger />
+            </div>
           </Reveal>
         </div>
       </section>
+
+      <QuoteTicker />
 
       {/* ---------------------------------------------- the quadratic */}
       <section className="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
@@ -222,7 +258,7 @@ export default function Home() {
         </Reveal>
         <div className="mt-12 grid gap-10 lg:grid-cols-2 items-start">
           <Reveal>
-            <div className="rounded-sm border hairline bg-surface p-5">
+            <div className="frame-ticks rounded-sm border hairline bg-surface p-5">
               <p className="font-mono text-[0.68rem] tracking-widest uppercase text-muted mb-4">
                 fixture B2 · input tokens per call · frozen pages
               </p>
@@ -405,7 +441,7 @@ export default function Home() {
           </Reveal>
           <div className="mt-12 grid gap-12 lg:grid-cols-2 items-start">
             <Reveal>
-              <div className="rounded-sm border hairline bg-surface p-5">
+              <div className="frame-ticks rounded-sm border hairline bg-surface p-5">
                 <p className="text-sm text-ink-2 mb-1">
                   Cumulative logical input per task, by task length
                 </p>
@@ -417,7 +453,7 @@ export default function Home() {
               </div>
             </Reveal>
             <Reveal delay={120}>
-              <div className="rounded-sm border hairline bg-surface p-5">
+              <div className="frame-ticks rounded-sm border hairline bg-surface p-5">
                 <p className="text-sm text-ink-2 mb-1">
                   T11 · mean billed cost per task, before → after cache-key routing
                 </p>

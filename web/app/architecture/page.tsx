@@ -101,7 +101,7 @@ export default function ArchitecturePage() {
       <header className="pt-16 sm:pt-24 pb-12 border-b hairline">
         <Reveal>
           <p className="eyebrow">docs/02 · architecture</p>
-          <h1 className="mt-4 font-display text-4xl sm:text-5xl tracking-tight leading-[1.08] max-w-3xl">
+          <h1 className="mt-4 font-display wonk text-4xl sm:text-5xl tracking-tight leading-[1.08] max-w-3xl">
             The context window as a{" "}
             <em className="text-copper-bright">managed resource</em>
           </h1>
@@ -119,7 +119,7 @@ export default function ArchitecturePage() {
       <section className="py-16 sm:py-20">
         <Reveal>
           <p className="eyebrow">where the code lives</p>
-          <h2 className="mt-3 font-display text-3xl">The four planes</h2>
+          <h2 className="mt-3 font-display wonk text-3xl">The four planes</h2>
         </Reveal>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {PLANES.map((p, i) => (
@@ -138,7 +138,7 @@ export default function ArchitecturePage() {
         <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
           <Reveal>
             <p className="eyebrow">the control loop</p>
-            <h2 className="mt-3 font-display text-3xl leading-tight">
+            <h2 className="mt-3 font-display wonk text-3xl leading-tight">
               Replay when confident, plan when not, verify always
             </h2>
             <p className="mt-4 text-ink-2 leading-relaxed">
@@ -179,7 +179,7 @@ export default function ArchitecturePage() {
         <div className="grid gap-12 lg:grid-cols-2 items-start">
           <Reveal>
             <p className="eyebrow">the context assembler</p>
-            <h2 className="mt-3 font-display text-3xl leading-tight">
+            <h2 className="mt-3 font-display wonk text-3xl leading-tight">
               One module owns the layout
             </h2>
             <p className="mt-4 text-ink-2 leading-relaxed">
@@ -227,7 +227,7 @@ export default function ArchitecturePage() {
       <section className="py-16 sm:py-20 border-t hairline">
         <Reveal>
           <p className="eyebrow">failure is a first-class path</p>
-          <h2 className="mt-3 font-display text-3xl">The repair ladder</h2>
+          <h2 className="mt-3 font-display wonk text-3xl">The repair ladder</h2>
         </Reveal>
         <div className="mt-10 grid gap-5 sm:grid-cols-3">
           {LADDER.map((r, i) => (
@@ -256,7 +256,7 @@ export default function ArchitecturePage() {
       <section className="py-16 sm:py-20 border-t hairline">
         <Reveal>
           <p className="eyebrow">docs/diagrams · from the design constitution</p>
-          <h2 className="mt-3 font-display text-3xl">The notebook pages</h2>
+          <h2 className="mt-3 font-display wonk text-3xl">The notebook pages</h2>
           <p className="mt-4 text-ink-2 max-w-2xl leading-relaxed">
             Hand-drawn with the rest of the design docs and regenerated when
             the architecture changes — a stale diagram is a bug. Solid strokes

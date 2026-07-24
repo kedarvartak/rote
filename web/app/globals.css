@@ -15,7 +15,7 @@
   --color-paper: #f4f1e9;
   --color-paper-ink: #22211d;
 
-  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
   --font-sans: var(--font-plex-sans), system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
@@ -35,11 +35,26 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* film grain over everything — keeps the dark field from reading flat */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 ::selection {
   background: rgba(194, 117, 31, 0.35);
 }
 
-/* hairline utility — the ledger rule */
+/* Fraunces: soft off, wonk on — the quirky letterforms are the point */
+.wonk {
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+}
+
 .hairline {
   border-color: rgba(232, 226, 214, 0.1);
 }
@@ -50,6 +65,31 @@ body {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-copper-bright);
+}
+
+/* crop marks on data cards — the "measured artifact" frame */
+.frame-ticks {
+  position: relative;
+}
+.frame-ticks::before,
+.frame-ticks::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+.frame-ticks::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1.5px solid var(--color-copper);
+  border-left: 1.5px solid var(--color-copper);
+}
+.frame-ticks::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1.5px solid var(--color-copper);
+  border-right: 1.5px solid var(--color-copper);
 }
 
 /* reveal-on-scroll */
@@ -65,6 +105,108 @@ body {
   transform: none;
 }
 
+/* section rule that draws in when its Reveal fires */
+.rule-draw {
+  width: 3.5rem;
+  height: 2px;
+  background: var(--color-copper);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+}
+.reveal.is-visible .rule-draw {
+  transform: scaleX(1);
+}
+
+/* hero headline: word-by-word rise */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-word {
+  display: inline-block;
+  opacity: 0;
+  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ambient layer: evicted tokens drifting up and out of the window */
+@keyframes drift {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: var(--cell-o, 0.4);
+  }
+  85% {
+    opacity: var(--cell-o, 0.4);
+  }
+  100% {
+    transform: translateY(-46vh);
+    opacity: 0;
+  }
+}
+.ambient-cell {
+  position: absolute;
+  border-radius: 2px;
+  animation: drift linear infinite;
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+.ambient-glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  animation: breathe 14s ease-in-out infinite;
+}
+
+/* ledger ticker */
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker 52s linear infinite;
+}
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* nav underline */
+.nav-link {
+  background-image: linear-gradient(
+    var(--color-copper-bright),
+    var(--color-copper-bright)
+  );
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0 calc(100% - 4px);
+  transition:
+    background-size 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.2s;
+}
+.nav-link:hover {
+  background-size: 100% 1px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -73,6 +215,19 @@ body {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  .rule-draw {
+    transform: scaleX(1);
+    transition: none;
+  }
+  .hero-word {
+    opacity: 1;
+    animation: none;
+  }
+  .ambient-cell,
+  .ambient-glow,
+  .ticker-track {
+    animation: none;
   }
   *,
   *::before,
@@ -83,7 +238,7 @@ body {
   }
 }
 
-/* faint dot grid for hero — memory-cell texture */
+/* faint dot grid — memory-cell texture */
 .dotgrid {
   background-image: radial-gradient(rgba(232, 226, 214, 0.055) 1px, transparent 1px);
   background-size: 22px 22px;

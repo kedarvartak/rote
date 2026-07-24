@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { Newsreader, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { Ambient } from "@/components/Ambient";
 
-const newsreader = Newsreader({
+const fraunces = Fraunces({
   subsets: ["latin"],
   style: ["normal", "italic"],
-  variable: "--font-newsreader",
+  axes: ["SOFT", "WONK", "opsz"],
+  variable: "--font-fraunces",
 });
 
 const plexSans = IBM_Plex_Sans({
@@ -34,9 +36,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${newsreader.variable} ${plexSans.variable} ${plexMono.variable}`}
+      className={`${fraunces.variable} ${plexSans.variable} ${plexMono.variable}`}
     >
       <body className="min-h-screen flex flex-col">
+        <Ambient />
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />

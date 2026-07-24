@@ -94,7 +94,7 @@ export default function RoadmapPage() {
   return (
     <article className="pb-20 max-w-3xl">
       <p className="eyebrow">docs/05 · roadmap</p>
-      <h1 className="mt-3 font-display text-4xl tracking-tight">
+      <h1 className="mt-3 font-display wonk text-4xl tracking-tight">
         Roadmap &amp; status
       </h1>
       <p className="mt-5 text-ink-2 leading-relaxed">
@@ -139,7 +139,7 @@ export default function RoadmapPage() {
         </table>
       </div>
 
-      <h2 className="mt-12 font-display text-2xl">Built and working end-to-end</h2>
+      <h2 className="mt-12 font-display wonk text-2xl">Built and working end-to-end</h2>
       <ul className="mt-4 grid gap-x-8 gap-y-2 sm:grid-cols-2 text-[0.87rem] text-ink-2 leading-relaxed">
         {BUILT.map((b) => (
           <li key={b} className="flex gap-2.5">
@@ -149,7 +149,7 @@ export default function RoadmapPage() {
         ))}
       </ul>
 
-      <h2 className="mt-12 font-display text-2xl">Not built — on purpose, on the record</h2>
+      <h2 className="mt-12 font-display wonk text-2xl">Not built — on purpose, on the record</h2>
       <p className="mt-3 text-ink-2 text-[0.9rem] leading-relaxed">
         The roadmap rule is executor before distiller, never build ahead of the
         phase. The docs mark what is designed versus real, and the gaps are
@@ -164,7 +164,7 @@ export default function RoadmapPage() {
         ))}
       </div>
 
-      <h2 className="mt-12 font-display text-2xl">What blocks launch</h2>
+      <h2 className="mt-12 font-display wonk text-2xl">What blocks launch</h2>
       <p className="mt-3 text-ink-2 text-[0.9rem] leading-relaxed">
         G1 passed at 37.2%; G2 — the tokens-per-task level win at success
         parity — has not yet run. The packages are private at 0.0.0, so the{" "}
