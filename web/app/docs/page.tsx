@@ -11,7 +11,7 @@ export default function DocsOverview() {
   return (
     <article className="pb-20 max-w-3xl">
       <p className="eyebrow">overview</p>
-      <h1 className="mt-3 font-display wonk text-4xl tracking-tight">What Rote is</h1>
+      <h1 className="mt-3 font-display text-4xl tracking-tight">What Rote is</h1>
 
       <div className="mt-6 space-y-5 text-ink-2 leading-relaxed">
         <p>
@@ -35,7 +35,7 @@ export default function DocsOverview() {
         </p>
       </div>
 
-      <h2 className="mt-12 font-display wonk text-2xl">The three amnesias</h2>
+      <h2 className="mt-12 font-display text-2xl">The three amnesias</h2>
       <div className="mt-4 overflow-x-auto rounded-sm border hairline">
         <table className="w-full text-[0.85rem] leading-relaxed">
           <thead>
@@ -75,7 +75,7 @@ export default function DocsOverview() {
         state, never by the absence of an exception.
       </p>
 
-      <h2 className="mt-12 font-display wonk text-2xl">Try it</h2>
+      <h2 className="mt-12 font-display text-2xl">Try it</h2>
       <p className="mt-3 text-ink-2 leading-relaxed">
         The <code className="font-mono text-[0.85em] text-copper-bright">rote</code>{" "}
         CLI launches verified cold browser tasks and prefers exact-fingerprint,
@@ -96,7 +96,7 @@ rote runs show <run_id>
 rote candidate create`}</code>
       </pre>
 
-      <h2 className="mt-12 font-display wonk text-2xl">Where to go next</h2>
+      <h2 className="mt-12 font-display text-2xl">Where to go next</h2>
       <ul className="mt-4 space-y-3">
         {[
           { href: "/architecture", title: "Architecture", body: "The memory spine, the control loop, the context assembler, the repair ladder." },

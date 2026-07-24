@@ -154,7 +154,7 @@ export function CurveChart() {
             key={key}
             d={linePath(key)}
             fill="none"
-            stroke={key === "rote" ? "#c8813a" : "#5695cc"}
+            stroke={key === "rote" ? "#c2751f" : "#4b8cc8"}
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -166,8 +166,8 @@ export function CurveChart() {
         ))}
         {CELLS.map((c, i) => (
           <g key={c.steps} opacity={drawn ? 1 : 0} style={{ transition: `opacity 0.4s ${0.5 + i * 0.15}s` }}>
-            <circle cx={x(c.steps)} cy={y(c.bu)} r={hover === i ? 5.5 : 4} fill="#5695cc" stroke="#0d0e10" strokeWidth={2} />
-            <circle cx={x(c.steps)} cy={y(c.rote)} r={hover === i ? 5.5 : 4} fill="#c8813a" stroke="#0d0e10" strokeWidth={2} />
+            <circle cx={x(c.steps)} cy={y(c.bu)} r={hover === i ? 5.5 : 4} fill="#4b8cc8" stroke="#151a20" strokeWidth={2} />
+            <circle cx={x(c.steps)} cy={y(c.rote)} r={hover === i ? 5.5 : 4} fill="#c2751f" stroke="#151a20" strokeWidth={2} />
           </g>
         ))}
 

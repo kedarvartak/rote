@@ -36,7 +36,7 @@ export default function BenchmarksPage() {
   return (
     <article className="pb-20 max-w-3xl">
       <p className="eyebrow">docs/03 · the evidence</p>
-      <h1 className="mt-3 font-display wonk text-4xl tracking-tight">
+      <h1 className="mt-3 font-display text-4xl tracking-tight">
         Benchmarks &amp; runs
       </h1>
       <p className="mt-5 text-ink-2 leading-relaxed">
@@ -51,7 +51,7 @@ export default function BenchmarksPage() {
       </p>
 
       {/* methodology */}
-      <h2 className="mt-12 font-display wonk text-2xl">Methodology</h2>
+      <h2 className="mt-12 font-display text-2xl">Methodology</h2>
       <ul className="mt-4 space-y-2.5 text-[0.9rem] text-ink-2 leading-relaxed list-disc pl-5 marker:text-copper">
         <li>
           Baseline: <span className="text-ink">Browser Use 0.13.6</span>, the
@@ -81,7 +81,7 @@ export default function BenchmarksPage() {
       </ul>
 
       {/* G1 */}
-      <h2 className="mt-14 font-display wonk text-2xl" id="g1">
+      <h2 className="mt-14 font-display text-2xl" id="g1">
         T10 · Exit gate G1 — the cumulative-token curve{" "}
         <span className="font-mono text-sm text-good align-middle">PASS</span>
       </h2>
@@ -135,7 +135,7 @@ export default function BenchmarksPage() {
       </div>
 
       {/* T11 */}
-      <h2 className="mt-14 font-display wonk text-2xl" id="t11">
+      <h2 className="mt-14 font-display text-2xl" id="t11">
         T11 · Cache-key economics — the cost win
       </h2>
       <p className="mt-3 text-ink-2 leading-relaxed">
@@ -185,7 +185,7 @@ export default function BenchmarksPage() {
       </p>
 
       {/* supporting */}
-      <h2 className="mt-14 font-display wonk text-2xl">Supporting measurements</h2>
+      <h2 className="mt-14 font-display text-2xl">Supporting measurements</h2>
       <div className="mt-5 space-y-4">
         {[
           {
@@ -218,7 +218,7 @@ export default function BenchmarksPage() {
       </div>
 
       {/* gates */}
-      <h2 className="mt-14 font-display wonk text-2xl">The two exit gates</h2>
+      <h2 className="mt-14 font-display text-2xl">The two exit gates</h2>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <div className="rounded-sm border border-good/40 bg-surface p-5">
           <div className="flex items-baseline justify-between">

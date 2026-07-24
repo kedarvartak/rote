@@ -9,21 +9,11 @@ render the real run reports (T10/G1, T11) with figures traced to
 ## Stack
 
 Next.js 15 (App Router, all routes static) + Tailwind CSS v4. No other runtime
-dependencies. The design is minimal and type-forward; all motion lives in the
-background:
-
-- `components/MemoryField.tsx` — the signature: a generative canvas field of
-  memory cells lit by two slow-orbiting lights (the product metaphor as ambient
-  motion). Pure canvas + rAF; DPR-aware, pauses when hidden, renders one static
-  frame under `prefers-reduced-motion`.
-- `components/CurveChart.tsx` / `CostChart.tsx` — hand-rolled SVG charts with
-  hover tooltips.
-- `components/HeroLedger.tsx` — the live append-vs-managed context demo.
-- `components/Reveal.tsx` / `CountUp.tsx` — restrained scroll reveals and
-  count-up figures, all reduced-motion safe.
-
-Fonts (Space Grotesk display, Inter body, IBM Plex Mono) are self-hosted via
-`next/font`.
+dependencies: charts are hand-rolled SVG components (`components/CurveChart.tsx`,
+`components/CostChart.tsx`), scroll reveals use an IntersectionObserver
+(`components/Reveal.tsx`), and the hero context-window animation is
+`components/HeroLedger.tsx`. Fonts (Newsreader, IBM Plex Sans/Mono) are
+self-hosted via `next/font`.
 
 ## Run
 

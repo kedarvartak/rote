@@ -3,419 +3,536 @@ import { HeroLedger } from "@/components/HeroLedger";
 import { CurveChart } from "@/components/CurveChart";
 import { CostChart } from "@/components/CostChart";
 import { Reveal } from "@/components/Reveal";
-import { CountUp } from "@/components/CountUp";
 
-const B2 = [637, 677, 716, 759, 800, 839, 876, 917, 953];
+const B2_TOKENS = [637, 677, 716, 759, 800, 839, 876, 917, 953];
 
 const TIERS = [
   {
     id: "0",
-    name: "Working",
+    name: "Working memory",
     scope: "within one run",
-    line: "It forgets what it already sent this run — so cost grows with the square of task length.",
-    status: "Built · measured",
-    live: true,
+    forgets: "what it already sent this run",
+    bill: "cost is O(n²) in task length",
+    field: "Nobody builds it. Rote's wedge — built and measured.",
+    built: true,
   },
   {
     id: "1",
-    name: "Episodic",
+    name: "Episodic memory",
     scope: "across runs of a task",
-    line: "It forgets the procedure that worked yesterday — so run #50 costs what run #1 cost.",
-    status: "Designed · P2",
-    live: false,
+    forgets: "the procedure that worked yesterday",
+    bill: "run #50 costs what run #1 cost",
+    field: "The field ships unverified replay. Rote adds the trust gate. (P2)",
+    built: false,
   },
   {
     id: "2",
-    name: "Semantic",
+    name: "Semantic memory",
     scope: "across tasks on a site",
-    line: "It forgets how the site behaves at all — so every task re-learns the portal.",
-    status: "Designed · P2",
-    live: false,
+    forgets: "how the site behaves at all",
+    bill: "every task re-learns the portal",
+    field: "Nobody. Site memory is designed, not built. (P2)",
+    built: false,
   },
 ];
 
 const LEVERS = [
-  { tag: "A11", name: "Observation eviction", line: "Prior observations leave the window; the action ledger stays. Growth falls from ~172 to ~37 tokens per step.", status: "Built" },
-  { tag: "A4", name: "Diff observations", line: "After a grounded bootstrap, each step sends only a diff — median 24 chars, 99.6% smaller than a re-send.", status: "Built" },
-  { tag: "B3", name: "Cache-layout discipline", line: "Nothing above the stable line may mutate, so the immutable prefix bills at the discounted cache rate.", status: "Built" },
-  { tag: "B4", name: "History compaction", line: "Summarize the far tail under budget — the one lever that turns the curve from quadratic to linear.", status: "Deferred to P2" },
+  {
+    tag: "A11",
+    name: "Observation eviction",
+    effect: "kills the dominant quadratic term",
+    detail:
+      "Prior observations leave the window; the action ledger stays. Growth drops from ~172 to ~37 tokens per step.",
+    status: "Built",
+  },
+  {
+    tag: "A4",
+    name: "Diff observations",
+    effect: "~90% off the constant",
+    detail:
+      "After a grounded bootstrap, each step sends a diff. In G1: 849 diffs, median 24 chars, median render-size reduction 99.6%.",
+    status: "Built · measured",
+  },
+  {
+    tag: "B3",
+    name: "Cache-layout discipline",
+    effect: "discounted billing on the surviving prefix",
+    detail:
+      "Nothing above the stable line may ever mutate. The immutable prefix routes through prompt_cache_key — a 20.5% cost cut at WP-N25.",
+    status: "Built · qualified on OpenAI",
+  },
+  {
+    tag: "B4",
+    name: "History compaction",
+    effect: "turns the curve from quadratic to linear",
+    detail:
+      "Summarize the far tail of the action ledger under budget. The one tier-0 lever still on the bench — deliberately deferred to P2.",
+    status: "Not built",
+  },
 ];
 
 const INVARIANTS = [
-  { name: "Never silently wrong", body: "No path reports success when a verify or expect check failed. Success is decided by page state, never by the absence of an exception." },
-  { name: "Never worse than baseline", body: "Fallback to the plain agent is always reachable and clean. A miss costs one cheap match call, and the fallback logs why it fired." },
-  { name: "Never cross environments", body: "A structural fingerprint is a hard gate before any fuzzy matching. A playbook learned on staging can't fire on prod." },
-  { name: "Everything versioned", body: "Store mutations are append-only. Playbooks and repair patches are auditable, diffable, exportable as human-readable YAML." },
-  { name: "Every model call tagged", body: "All usage flows through one client wrapper with a source tag. Untagged calls fail lint." },
+  {
+    n: "I",
+    name: "Never silently wrong",
+    body: "No code path may report success when a verify or expect check failed. Success is decided by page state, never by the absence of an exception.",
+  },
+  {
+    n: "II",
+    name: "Never worse than baseline",
+    body: "Fallback to the plain agent is always reachable and clean. A Rote miss costs one cheap match call, and the fallback logs why it fired.",
+  },
+  {
+    n: "III",
+    name: "Never cross environments",
+    body: "A structural fingerprint is a hard gate before any fuzzy matching. A playbook learned on staging can't fire on prod.",
+  },
+  {
+    n: "IV",
+    name: "Everything versioned",
+    body: "Store mutations are append-only. Playbooks and repair patches are auditable, diffable, and exportable as human-readable YAML.",
+  },
+  {
+    n: "V",
+    name: "Every model call tagged",
+    body: "All usage flows through one client wrapper with a source tag — planner, matcher, slot, repair, verify, distill. Untagged calls fail lint.",
+  },
 ];
 
 const PHASES = [
-  { id: "P0", theme: "Foundations", line: "recorder, verified replay, invariant suite", state: "done" },
-  { id: "P1", theme: "Working memory", line: "the first browser agent with a managed context window", state: "here" },
-  { id: "P2", theme: "The harness that learns", line: "your 50th task on a site costs a fraction of your 1st", state: "next" },
-  { id: "P3", theme: "Speculation", line: "warm flows bounded by think-time only", state: "later" },
-  { id: "P4", theme: "Fleet & enterprise", line: "10K tasks a day, audited, lowest cost per task", state: "later" },
-  { id: "P5", theme: "Platform", line: "the efficiency substrate other agents build on", state: "later" },
+  { id: "P0", theme: "Foundations", headline: "recorder, replay, verified core", state: "done" },
+  { id: "P1", theme: "Working memory", headline: "the first browser agent with a managed context window", state: "here" },
+  { id: "P2", theme: "The harness that learns", headline: "your 50th task on a site costs a fraction of your 1st", state: "next" },
+  { id: "P3", theme: "Speculation", headline: "warm flows bounded by think-time only", state: "planned" },
+  { id: "P4", theme: "Fleet & enterprise", headline: "10K tasks/day, audited, lowest $ per task", state: "planned" },
+  { id: "P5", theme: "Platform", headline: "the efficiency substrate other agents build on", state: "planned" },
 ];
 
-/** Editorial section shell: a narrow sticky label column beside spacious content. */
-function Section({
-  label,
-  index,
-  children,
-  className = "",
+function SectionHead({
+  eyebrow,
+  title,
+  lede,
 }: {
-  label: string;
-  index: string;
-  children: React.ReactNode;
-  className?: string;
+  eyebrow: string;
+  title: React.ReactNode;
+  lede?: React.ReactNode;
 }) {
   return (
-    <section className={`mx-auto max-w-7xl px-6 sm:px-10 py-24 sm:py-36 ${className}`}>
-      <div className="grid gap-10 lg:grid-cols-[15rem_1fr]">
-        <Reveal className="lg:sticky lg:top-28 self-start">
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-[0.7rem] text-copper">{index}</span>
-            <span className="eyebrow">{label}</span>
-          </div>
-          <div className="rule mt-5 w-full max-w-[10rem]" aria-hidden />
-        </Reveal>
-        <div className="min-w-0">{children}</div>
-      </div>
-    </section>
+    <div className="max-w-2xl">
+      <p className="eyebrow">{eyebrow}</p>
+      <h2 className="mt-3 font-display text-3xl sm:text-4xl leading-[1.12] tracking-tight">
+        {title}
+      </h2>
+      {lede && <p className="mt-4 text-ink-2 leading-relaxed">{lede}</p>}
+    </div>
   );
 }
 
 export default function Home() {
   return (
     <div>
-      {/* ───────────────────────────────────────────── hero */}
-      <section className="relative mx-auto max-w-7xl px-6 sm:px-10 pt-20 sm:pt-32 pb-24">
-        <p className="eyebrow settle" style={{ animationDelay: "0.1s" }}>
-          Memory manager · browser agents
-        </p>
-        <h1 className="display mt-8 text-[3rem] sm:text-[5.5rem] leading-[0.98] max-w-[16ch]">
-          <span className="settle inline-block" style={{ animationDelay: "0.2s" }}>
-            Every harness
-          </span>{" "}
-          <span className="settle inline-block" style={{ animationDelay: "0.35s" }}>
-            has memory.
-          </span>
-          <br />
-          <span
-            className="settle inline-block text-ink-2"
-            style={{ animationDelay: "0.6s" }}
-          >
-            None manages it.
-          </span>
-        </h1>
-        <div
-          className="settle max-w-xl mt-10"
-          style={{ animationDelay: "0.9s" }}
-        >
-          <p className="text-lg text-ink-2 leading-relaxed">
-            Browser agents treat the context window as a garbage dump — append,
-            and hope. Rote manages it: a budget, an eviction policy, a layout
-            contract, and a trust gate on the way back in.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center gap-7">
-            <Link
-              href="/docs/benchmarks"
-              className="pill rounded-full bg-ink text-bg text-sm font-medium px-6 py-3 hover:bg-copper hover:text-bg"
-            >
-              See the numbers
-            </Link>
-            <Link href="/architecture" className="ulink text-sm text-ink-2 hover:text-ink">
-              Read the architecture →
-            </Link>
-          </div>
-        </div>
-
-        {/* quiet stat strip */}
-        <div
-          className="settle mt-24 grid grid-cols-2 sm:grid-cols-4 gap-y-10 gap-x-8 border-t hairline pt-10"
-          style={{ animationDelay: "1.1s" }}
-        >
-          {[
-            { v: <CountUp to={37.2} decimals={1} suffix="%" />, l: "slower token growth" },
-            { v: <><CountUp to={75} />/75</>, l: "verified successes" },
-            { v: <CountUp to={99.6} decimals={1} suffix="%" />, l: "smaller observations" },
-            { v: <CountUp to={20.5} decimals={1} suffix="%" />, l: "cost cut at 25 steps" },
-          ].map((s, i) => (
-            <div key={i}>
-              <div className="display text-4xl sm:text-5xl tabular-nums text-ink">
-                {s.v}
+      {/* ---------------------------------------------------------- hero */}
+      <section className="dotgrid border-b hairline">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8 pt-16 sm:pt-24 pb-16 grid gap-12 lg:grid-cols-[1.1fr_1fr] items-center">
+          <div>
+            <Reveal>
+              <p className="eyebrow">rote · the memory manager for browser agents</p>
+              <h1 className="mt-5 font-display text-[2.6rem] sm:text-6xl leading-[1.05] tracking-tight">
+                Every harness has memory.
+                <br />
+                <em className="text-copper-bright">None of them manages it.</em>
+              </h1>
+              <p className="mt-6 text-ink-2 text-lg leading-relaxed max-w-[52ch]">
+                Browser agents treat the context window as a garbage dump —
+                append, and hope. Rote treats it as a managed resource: a
+                budget, an eviction policy, a layout contract, and a trust
+                gate on the way back in.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/docs/benchmarks"
+                  className="rounded-sm bg-copper text-bg font-medium px-5 py-2.5 text-sm hover:bg-copper-bright transition-colors"
+                >
+                  See the numbers
+                </Link>
+                <Link
+                  href="/architecture"
+                  className="rounded-sm border hairline px-5 py-2.5 text-sm text-ink hover:border-copper/60 transition-colors"
+                >
+                  Read the architecture
+                </Link>
               </div>
-              <div className="mt-2 text-[0.8rem] text-ink-2">{s.l}</div>
-            </div>
-          ))}
+            </Reveal>
+            <Reveal delay={200}>
+              <dl className="mt-12 grid grid-cols-3 gap-6 max-w-md">
+                <div>
+                  <dt className="text-[0.68rem] font-mono uppercase tracking-widest text-muted">
+                    token growth
+                  </dt>
+                  <dd className="mt-1 font-display text-3xl text-copper-bright tabular-nums">
+                    37.2%
+                  </dd>
+                  <dd className="text-[0.72rem] text-ink-2">
+                    slower than baseline
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[0.68rem] font-mono uppercase tracking-widest text-muted">
+                    success parity
+                  </dt>
+                  <dd className="mt-1 font-display text-3xl tabular-nums">75/75</dd>
+                  <dd className="text-[0.72rem] text-ink-2">verified, per harness</dd>
+                </div>
+                <div>
+                  <dt className="text-[0.68rem] font-mono uppercase tracking-widest text-muted">
+                    median diff
+                  </dt>
+                  <dd className="mt-1 font-display text-3xl tabular-nums">99.6%</dd>
+                  <dd className="text-[0.72rem] text-ink-2">smaller than a re-send</dd>
+                </div>
+              </dl>
+            </Reveal>
+          </div>
+          <Reveal delay={300}>
+            <HeroLedger />
+          </Reveal>
         </div>
       </section>
 
-      {/* ───────────────────────────────────────────── the quadratic */}
-      <Section label="The problem" index="01" className="border-t hairline">
+      {/* ---------------------------------------------- the quadratic */}
+      <section className="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
         <Reveal>
-          <h2 className="display text-4xl sm:text-6xl leading-[1.02] max-w-[13ch]">
-            Everyone lowers the constant.
-          </h2>
-          <p className="display text-4xl sm:text-6xl leading-[1.02] max-w-[13ch] text-ink-2 mt-2">
-            Nobody touches the exponent.
-          </p>
+          <SectionHead
+            eyebrow="docs/01 · the problem"
+            title={
+              <>
+                The quadratic <em className="text-copper-bright">nobody names</em>
+              </>
+            }
+            lede={
+              <>
+                A run of <i>n</i> steps re-sends its whole history every step:
+                1 + 2 + … + <i>n</i> prompt-units, so cost is O(n²) in task
+                length. Everything the field competes on shrinks the per-step
+                prompt. That lowers the constant.{" "}
+                <span className="text-ink">Nobody has touched the exponent.</span>
+              </>
+            }
+          />
         </Reveal>
-        <Reveal delay={100}>
-          <p className="mt-10 text-lg text-ink-2 leading-relaxed max-w-2xl">
-            A run of <i>n</i> steps re-sends its whole history every step:
-            1 + 2 + … + <i>n</i> prompt-units. Cost is quadratic in task length.
-            Compression shrinks the per-step prompt — it lowers the constant,
-            not the exponent.
-          </p>
-        </Reveal>
-        <Reveal delay={150}>
-          <div className="mt-14 max-w-2xl">
-            <div className="flex items-baseline justify-between mb-5">
-              <span className="font-mono text-[0.72rem] uppercase tracking-[0.18em] text-ink-3">
-                fixture B2 · input tokens per call
-              </span>
-              <span className="font-mono text-sm text-copper">+38%</span>
+        <div className="mt-12 grid gap-10 lg:grid-cols-2 items-start">
+          <Reveal>
+            <div className="rounded-sm border hairline bg-surface p-5">
+              <p className="font-mono text-[0.68rem] tracking-widest uppercase text-muted mb-4">
+                fixture B2 · input tokens per call · frozen pages
+              </p>
+              <div className="space-y-1.5">
+                {B2_TOKENS.map((t, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <span className="font-mono text-[0.68rem] text-muted w-12 tabular-nums">
+                      step {i + 1}
+                    </span>
+                    <div
+                      className="h-3 rounded-[2px] bg-blue/70"
+                      style={{ width: `${(t / 953) * 100 * 0.78}%` }}
+                    />
+                    <span className="font-mono text-[0.68rem] text-ink-2 tabular-nums">
+                      {t}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-[0.8rem] text-ink-2 leading-relaxed">
+                +38% per-call growth over ten steps — and 21% of the run&apos;s
+                input bill is re-reading text it already sent, on a page that
+                distills to ten nodes.
+              </p>
             </div>
-            <div className="flex items-end gap-2 h-28">
-              {B2.map((t, i) => (
-                <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                  <div
-                    className="w-full bg-ink-2/25"
-                    style={{ height: `${(t / 953) * 100}%` }}
-                  />
-                  <span className="font-mono text-[0.6rem] text-ink-3 tabular-nums">
-                    {t}
-                  </span>
-                </div>
-              ))}
+          </Reveal>
+          <Reveal delay={120}>
+            <div className="space-y-6 lg:pt-2">
+              <blockquote className="border-l-2 border-copper pl-5 font-display text-xl sm:text-2xl leading-snug text-ink">
+                The context window is RAM. Observations are pages, dropping
+                them is eviction, diffing is delta encoding, the prompt cache
+                is L2, compaction is GC.{" "}
+                <em className="text-copper-bright">
+                  Every one of those has a manager in an OS. None of them has
+                  one in a browser agent.
+                </em>
+              </blockquote>
+              <p className="text-ink-2 leading-relaxed">
+                Rote&apos;s tier-0 policy is one sentence:{" "}
+                <span className="text-ink font-medium">
+                  keep what you did, not what you saw.
+                </span>{" "}
+                The action ledger survives — ~37 tokens per step. Stale
+                observations leave the window, and the current page arrives as
+                a diff against the last grounded bootstrap.
+              </p>
+              <p className="text-ink-2 leading-relaxed">
+                The name is the thesis: <i>rote</i> — doing something from
+                memory, by repetition, without re-deriving it. Memoization
+                applied to agent trajectories, invalidated by assertion rather
+                than TTL.
+              </p>
             </div>
-            <p className="mt-6 text-[0.95rem] text-ink-2 leading-relaxed">
-              21% of that run&apos;s input bill is re-reading text it already
-              sent — on a page that distills to ten nodes.
-            </p>
-          </div>
-        </Reveal>
-      </Section>
+          </Reveal>
+        </div>
+      </section>
 
-      {/* ───────────────────────────────────────────── the policy / live demo */}
-      <Section label="The policy" index="02" className="border-t hairline">
-        <Reveal>
-          <h2 className="display text-4xl sm:text-6xl leading-[1.02] max-w-[15ch]">
-            Keep what you did, not what you saw.
-          </h2>
-          <p className="mt-10 text-lg text-ink-2 leading-relaxed max-w-2xl">
-            The action ledger survives — about 37 tokens a step. Stale
-            observations leave the window, and the current page arrives as a
-            diff against the last grounded bootstrap. Two windows running the
-            same task, one appending, one managed:
-          </p>
-        </Reveal>
-        <Reveal delay={120}>
-          <div className="mt-14">
-            <HeroLedger />
-          </div>
-        </Reveal>
-      </Section>
-
-      {/* ───────────────────────────────────────────── three tiers */}
-      <Section label="The spine" index="03" className="border-t hairline">
-        <Reveal>
-          <h2 className="display text-4xl sm:text-6xl leading-[1.02] max-w-[14ch]">
-            Three amnesias. Three tiers.
-          </h2>
-          <p className="mt-8 text-lg text-ink-2 leading-relaxed max-w-2xl">
-            Browser agents forget at three timescales and pay again at every
-            one. Rote manages each — and every tier is assertion-gated on the
-            way back in, because memory that might be wrong is worse than no
-            memory.
-          </p>
-        </Reveal>
-        <div className="mt-16 border-t hairline">
-          {TIERS.map((t, i) => (
-            <Reveal key={t.id} delay={i * 90}>
-              <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_9rem_1fr_auto] gap-x-5 gap-y-2 items-baseline py-8 border-b hairline group">
-                <span className="display text-3xl text-ink-3 group-hover:text-copper transition-colors duration-500">
-                  {t.id}
-                </span>
-                <div>
-                  <div className="display text-xl text-ink">{t.name}</div>
-                  <div className="font-mono text-[0.7rem] text-ink-3 mt-1">{t.scope}</div>
-                </div>
-                <p className="col-span-2 sm:col-span-1 text-[0.98rem] text-ink-2 leading-relaxed max-w-xl">
-                  {t.line}
-                </p>
-                <span
-                  className={`col-start-2 sm:col-start-4 font-mono text-[0.68rem] uppercase tracking-widest ${
-                    t.live ? "text-good" : "text-ink-3"
+      {/* ------------------------------------------------ memory spine */}
+      <section className="border-y hairline bg-surface/40">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
+          <Reveal>
+            <SectionHead
+              eyebrow="docs/02 · the memory spine"
+              title="Three amnesias, three tiers"
+              lede="Browser agents forget at three timescales and pay again at every one. Each tier is a memory Rote manages — and every tier is assertion-gated on the way back in, because memory that might be wrong is worse than no memory."
+            />
+          </Reveal>
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {TIERS.map((t, i) => (
+              <Reveal key={t.id} delay={i * 120}>
+                <article
+                  className={`h-full rounded-sm border p-6 flex flex-col gap-3 transition-colors ${
+                    t.built
+                      ? "border-copper/50 bg-surface hover:border-copper"
+                      : "hairline bg-surface/60 hover:border-ink-2/30"
                   }`}
                 >
-                  {t.status}
-                </span>
-              </div>
-            </Reveal>
-          ))}
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[0.7rem] tracking-widest text-muted">
+                      TIER {t.id}
+                    </span>
+                    <span
+                      className={`font-mono text-[0.62rem] tracking-widest uppercase px-2 py-0.5 rounded-[2px] border ${
+                        t.built
+                          ? "text-copper-bright border-copper/50"
+                          : "text-muted border-ink-2/20"
+                      }`}
+                    >
+                      {t.built ? "P1 · now" : "designed"}
+                    </span>
+                  </div>
+                  <h3 className="font-display text-2xl">{t.name}</h3>
+                  <dl className="text-[0.83rem] leading-relaxed space-y-2 text-ink-2">
+                    <div>
+                      <dt className="font-mono text-[0.62rem] uppercase tracking-widest text-muted">scope</dt>
+                      <dd>{t.scope}</dd>
+                    </div>
+                    <div>
+                      <dt className="font-mono text-[0.62rem] uppercase tracking-widest text-muted">what it forgets</dt>
+                      <dd>{t.forgets}</dd>
+                    </div>
+                    <div>
+                      <dt className="font-mono text-[0.62rem] uppercase tracking-widest text-muted">the bill</dt>
+                      <dd className="text-ink">{t.bill}</dd>
+                    </div>
+                  </dl>
+                  <p className="mt-auto pt-2 text-[0.8rem] text-ink-2 border-t hairline">
+                    {t.field}
+                  </p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal delay={150}>
+            <p className="mt-8 max-w-2xl text-ink-2 leading-relaxed">
+              <span className="font-mono text-[0.7rem] uppercase tracking-widest text-copper-bright mr-2">
+                trust gate
+              </span>
+              Not a fourth tier — the precondition for all three. Reuse
+              without verification is a machine for repeating a mistake at
+              volume.
+            </p>
+          </Reveal>
         </div>
-      </Section>
+      </section>
 
-      {/* ───────────────────────────────────────────── four levers */}
-      <Section label="Tier 0" index="04" className="border-t hairline">
+      {/* ------------------------------------------------- four levers */}
+      <section className="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
         <Reveal>
-          <h2 className="display text-4xl sm:text-6xl leading-[1.02] max-w-[12ch]">
-            Four levers on the curve.
-          </h2>
-          <p className="mt-8 text-lg text-ink-2 leading-relaxed max-w-2xl">
-            Working memory is the wedge nobody else builds. Three levers are
-            live; the fourth is named, not shipped.
-          </p>
+          <SectionHead
+            eyebrow="docs/05 · tier 0"
+            title="Four levers on the curve"
+            lede="Working memory is the wedge nobody else builds. Three of the four levers are live; the honest ledger says so about the fourth."
+          />
         </Reveal>
-        <div className="mt-16 grid gap-px sm:grid-cols-2">
+        <div className="mt-12 grid gap-px bg-ink/10 border hairline rounded-sm overflow-hidden sm:grid-cols-2">
           {LEVERS.map((l, i) => (
-            <Reveal key={l.tag} delay={i * 80}>
-              <div className="py-8 sm:px-8 sm:first:pl-0 h-full">
+            <Reveal key={l.tag} delay={i * 90} className="h-full">
+              <article className="h-full bg-surface p-6 hover:bg-surface-2 transition-colors">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-sm text-copper">{l.tag}</span>
+                  <span className="font-mono text-copper-bright text-sm">{l.tag}</span>
                   <span
-                    className={`font-mono text-[0.66rem] uppercase tracking-widest ${
-                      l.status.startsWith("Built") ? "text-good" : "text-ink-3"
+                    className={`font-mono text-[0.62rem] uppercase tracking-widest ${
+                      l.status === "Not built" ? "text-muted" : "text-good"
                     }`}
                   >
                     {l.status}
                   </span>
                 </div>
-                <h3 className="display text-xl mt-4">{l.name}</h3>
-                <p className="mt-3 text-[0.95rem] text-ink-2 leading-relaxed">{l.line}</p>
-              </div>
+                <h3 className="mt-3 font-display text-xl">{l.name}</h3>
+                <p className="mt-1 text-[0.85rem] text-copper-bright/90">{l.effect}</p>
+                <p className="mt-3 text-[0.85rem] text-ink-2 leading-relaxed">{l.detail}</p>
+              </article>
             </Reveal>
           ))}
         </div>
-      </Section>
+      </section>
 
-      {/* ───────────────────────────────────────────── the numbers */}
-      <Section label="The evidence" index="05" className="border-t hairline">
-        <Reveal>
-          <div className="flex items-baseline gap-4 flex-wrap">
-            <h2 className="display text-4xl sm:text-6xl leading-none">37.2%</h2>
-            <span className="font-mono text-[0.7rem] uppercase tracking-widest text-good">
-              G1 · pass
-            </span>
+      {/* -------------------------------------------------- the number */}
+      <section className="border-y hairline bg-surface/40">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
+          <Reveal>
+            <SectionHead
+              eyebrow="T10 · exit gate G1 · PASS"
+              title={
+                <>
+                  The curve, <em className="text-copper-bright">measured</em>
+                </>
+              }
+              lede={
+                <>
+                  Cumulative <i>logical</i> input — uncached input + cache
+                  reads + cache writes, so provider caching cannot masquerade
+                  as memory reduction. gpt-4.1-mini, 15 matched repetitions
+                  per cell, 75/75 verified successes per harness, 95%
+                  seeded-bootstrap CIs.
+                </>
+              }
+            />
+          </Reveal>
+          <div className="mt-12 grid gap-12 lg:grid-cols-2 items-start">
+            <Reveal>
+              <div className="rounded-sm border hairline bg-surface p-5">
+                <p className="text-sm text-ink-2 mb-1">
+                  Cumulative logical input per task, by task length
+                </p>
+                <p className="font-display text-2xl mb-4">
+                  <span className="text-copper-bright">37.2% slower growth</span>{" "}
+                  <span className="text-ink-2 text-base">[95% CI 35.6–38.8] vs a 30% launch floor</span>
+                </p>
+                <CurveChart />
+              </div>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="rounded-sm border hairline bg-surface p-5">
+                <p className="text-sm text-ink-2 mb-1">
+                  T11 · mean billed cost per task, before → after cache-key routing
+                </p>
+                <p className="font-display text-2xl mb-4">
+                  <span className="text-copper-bright">16.0% cheaper</span>{" "}
+                  <span className="text-ink-2 text-base">than Browser Use at WP-N25</span>
+                </p>
+                <CostChart />
+              </div>
+              <div className="mt-5 rounded-sm border border-blue/30 bg-blue/5 p-5 text-[0.85rem] leading-relaxed text-ink-2">
+                <p className="font-mono text-[0.65rem] uppercase tracking-widest text-blue-bright mb-2">
+                  the honest ledger
+                </p>
+                On the shortest cell, WP-N09, Rote still loses on billed cost —
+                and before cache-key routing it was 5.4% more expensive at
+                WP-N25 with 6.4% higher p50 latency. This is a long-task cache
+                win, not a universal one. Every claim on this site carries its
+                receipt in{" "}
+                <Link href="/docs/benchmarks" className="text-ink underline decoration-copper/60 underline-offset-2 hover:text-copper-bright transition-colors">
+                  the run reports
+                </Link>
+                .
+              </div>
+            </Reveal>
           </div>
-          <p className="mt-6 text-lg text-ink-2 leading-relaxed max-w-2xl">
-            Cumulative <i>logical</i> input grows 37.2% slower than Browser Use
-            (95% CI 35.6–38.8), at 75/75 verified successes per harness. Logical
-            input counts cache reads and writes, so provider caching can&apos;t
-            masquerade as memory reduction.
-          </p>
-        </Reveal>
-        <Reveal delay={100}>
-          <div className="mt-14 rounded-xl border hairline bg-bg-2/60 p-6 sm:p-8">
-            <p className="text-sm text-ink-2 mb-6">
-              Cumulative logical input per task, by task length
-            </p>
-            <CurveChart />
-          </div>
-        </Reveal>
-        <Reveal delay={120}>
-          <div className="mt-8 rounded-xl border hairline bg-bg-2/60 p-6 sm:p-8">
-            <p className="text-sm text-ink-2 mb-6">
-              Mean billed cost per task — before and after cache-key routing
-            </p>
-            <CostChart />
-          </div>
-        </Reveal>
-        <Reveal delay={140}>
-          <p className="mt-8 text-[0.95rem] text-ink-2 leading-relaxed max-w-2xl">
-            The honest ledger: on the shortest task Rote still loses on cost, and
-            before cache-key routing it ran hotter on latency. This is a
-            long-task win, not a universal one — and every figure here carries
-            its receipt in{" "}
-            <Link href="/docs/benchmarks" className="ulink text-ink">
-              the run reports
-            </Link>
-            .
-          </p>
-        </Reveal>
-      </Section>
+        </div>
+      </section>
 
-      {/* ───────────────────────────────────────────── invariants */}
-      <Section label="The guarantees" index="06" className="border-t hairline">
+      {/* -------------------------------------------------- invariants */}
+      <section className="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
         <Reveal>
-          <h2 className="display text-4xl sm:text-6xl leading-[1.02] max-w-[14ch]">
-            Five invariants, encoded in tests.
-          </h2>
+          <SectionHead
+            eyebrow="the sacred invariant suite"
+            title="Five invariants, encoded in tests"
+            lede="Non-negotiable, never “just this once.” Every one is enforced by the sacred invariant suite that touches every executor exit path."
+          />
         </Reveal>
-        <div className="mt-14 border-t hairline">
+        <div className="mt-12 divide-y hairline border-y hairline">
           {INVARIANTS.map((inv, i) => (
-            <Reveal key={inv.name} delay={i * 70}>
-              <div className="grid sm:grid-cols-[1.5rem_1fr] gap-x-6 gap-y-2 py-7 border-b hairline">
-                <span className="font-mono text-[0.72rem] text-copper pt-1">
-                  {String(i + 1).padStart(2, "0")}
+            <Reveal key={inv.n} delay={i * 60}>
+              <div className="py-6 grid gap-2 sm:grid-cols-[8rem_16rem_1fr] sm:gap-6 items-baseline group">
+                <span className="font-display italic text-2xl text-copper-bright/80 group-hover:text-copper-bright transition-colors">
+                  {inv.n}
                 </span>
-                <div className="grid sm:grid-cols-[18rem_1fr] gap-x-8 gap-y-1">
-                  <h3 className="display text-lg">{inv.name}</h3>
-                  <p className="text-[0.95rem] text-ink-2 leading-relaxed">{inv.body}</p>
-                </div>
+                <h3 className="font-medium">{inv.name}</h3>
+                <p className="text-[0.9rem] text-ink-2 leading-relaxed">{inv.body}</p>
               </div>
             </Reveal>
           ))}
         </div>
-      </Section>
+      </section>
 
-      {/* ───────────────────────────────────────────── roadmap */}
-      <Section label="The arc" index="07" className="border-t hairline">
-        <Reveal>
-          <h2 className="display text-4xl sm:text-6xl leading-[1.02] max-w-[16ch]">
-            From a managed window to a substrate.
-          </h2>
-        </Reveal>
-        <div className="mt-14 border-t hairline">
-          {PHASES.map((p, i) => (
-            <Reveal key={p.id} delay={i * 60}>
-              <div
-                className={`grid grid-cols-[3.5rem_1fr_auto] gap-x-5 items-baseline py-6 border-b hairline ${
-                  p.state === "here" ? "" : "opacity-80"
-                }`}
-              >
-                <span
-                  className={`font-mono text-sm ${
-                    p.state === "here" ? "text-copper" : "text-ink-3"
-                  }`}
-                >
-                  {p.id}
-                </span>
-                <div>
-                  <span className="text-ink">{p.theme}</span>
-                  <span className="hidden sm:inline text-ink-3"> — “{p.line}”</span>
-                </div>
-                <span className="font-mono text-[0.66rem] uppercase tracking-widest text-ink-3">
-                  {p.state === "here" ? (
-                    <span className="text-copper">now</span>
-                  ) : p.state === "done" ? (
-                    <span className="text-good">done</span>
-                  ) : (
-                    p.state
-                  )}
-                </span>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal delay={100}>
-          <div className="mt-16 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-8">
-            <p className="display text-3xl sm:text-4xl leading-[1.1] max-w-[18ch]">
-              The wedge is the cost curve. The precondition is auditable
-              determinism.
-            </p>
-            <Link
-              href="/docs"
-              className="pill rounded-full bg-ink text-bg text-sm font-medium px-6 py-3 hover:bg-copper shrink-0"
-            >
-              Read the docs
-            </Link>
+      {/* ----------------------------------------------------- roadmap */}
+      <section className="border-t hairline bg-surface/40">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
+          <Reveal>
+            <SectionHead
+              eyebrow="docs/05 · roadmap"
+              title="From a managed window to a substrate"
+              lede="One phase at a time, each behind an exit gate with a number on it. No number, no launch."
+            />
+          </Reveal>
+          <div className="mt-12 overflow-x-auto">
+            <ol className="flex gap-4 min-w-max pb-2">
+              {PHASES.map((p, i) => (
+                <Reveal key={p.id} delay={i * 80}>
+                  <li
+                    className={`w-56 rounded-sm border p-5 h-full ${
+                      p.state === "here"
+                        ? "border-copper bg-copper/10"
+                        : p.state === "done"
+                          ? "border-good/40 bg-surface"
+                          : "hairline bg-surface"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-sm text-copper-bright">{p.id}</span>
+                      <span className={`font-mono text-[0.6rem] uppercase tracking-widest ${
+                        p.state === "here" ? "text-copper-bright" : p.state === "done" ? "text-good" : "text-muted"
+                      }`}>
+                        {p.state === "here" ? "← you are here" : p.state}
+                      </span>
+                    </div>
+                    <h3 className="mt-2 font-medium text-[0.95rem]">{p.theme}</h3>
+                    <p className="mt-2 text-[0.78rem] text-ink-2 leading-relaxed">
+                      &ldquo;{p.headline}&rdquo;
+                    </p>
+                  </li>
+                </Reveal>
+              ))}
+            </ol>
           </div>
-        </Reveal>
-      </Section>
+          <Reveal>
+            <div className="mt-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 rounded-sm border hairline bg-surface p-7">
+              <div>
+                <p className="font-display text-2xl">
+                  The wedge is the cost curve.{" "}
+                  <em className="text-copper-bright">The precondition is auditable determinism.</em>
+                </p>
+                <p className="mt-2 text-ink-2 text-sm">
+                  The compounding asset is the accumulated, verified memory itself.
+                </p>
+              </div>
+              <div className="flex gap-3 shrink-0">
+                <Link
+                  href="/docs"
+                  className="rounded-sm bg-copper text-bg font-medium px-5 py-2.5 text-sm hover:bg-copper-bright transition-colors"
+                >
+                  Read the docs
+                </Link>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
     </div>
   );
 }

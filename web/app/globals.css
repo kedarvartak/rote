@@ -1,29 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  /* near-black cool-neutral canvas — cinematic, lets the field glow */
-  --color-bg: #08090a;
-  --color-bg-2: #0d0e10;
-  --color-bg-3: #131417;
-  --color-ink: #f3f2ef;
-  --color-ink-2: #97968f;
-  --color-ink-3: #5c5b56;
-  --color-copper: #c8813a;
-  --color-copper-soft: #d69a5c;
-  --color-blue: #5695cc;
-  --color-good: #6bbf7b;
-  --color-paper: #f3f1ea;
-  --color-paper-ink: #1b1a17;
+  --color-bg: #0e1114;
+  --color-surface: #151a20;
+  --color-surface-2: #1b222b;
+  --color-ink: #e8e2d6;
+  --color-ink-2: #a9a69b;
+  --color-muted: #7e7d75;
+  --color-copper: #c2751f;
+  --color-copper-bright: #d98f3d;
+  --color-blue: #4b8cc8;
+  --color-blue-bright: #6ea6d8;
+  --color-good: #5faf6d;
+  --color-paper: #f4f1e9;
+  --color-paper-ink: #22211d;
 
-  /* aliases — keep the docs/architecture pages cohesive with the new palette */
-  --color-surface: #0d0e10;
-  --color-surface-2: #131417;
-  --color-copper-bright: #d69a5c;
-  --color-blue-bright: #7db0e0;
-  --color-muted: #5c5b56;
-
-  --font-display: var(--font-space), system-ui, sans-serif;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
@@ -39,127 +32,37 @@ body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  font-size: 1.0625rem;
-  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.006em;
 }
 
 ::selection {
-  background: rgba(200, 129, 58, 0.28);
-  color: #fff;
+  background: rgba(194, 117, 31, 0.35);
 }
 
-/* hairline — the only structural line on the page */
+/* hairline utility — the ledger rule */
 .hairline {
-  border-color: rgba(243, 242, 239, 0.08);
+  border-color: rgba(232, 226, 214, 0.1);
 }
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-ink-2);
+  color: var(--color-copper-bright);
 }
 
-.display {
-  font-family: var(--font-display);
-  letter-spacing: -0.03em;
-  font-weight: 500;
-}
-
-/* ---- foreground motion: restrained, slow, single-purpose ---- */
-
-/* fade-and-rise on scroll */
+/* reveal-on-scroll */
 .reveal {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translateY(18px);
   transition:
-    opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.reveal.in {
+.reveal.is-visible {
   opacity: 1;
   transform: none;
-}
-
-/* hero: mask-wipe + blur settle, staggered per line */
-@keyframes settle {
-  from {
-    opacity: 0;
-    transform: translateY(0.36em);
-    filter: blur(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: blur(0);
-  }
-}
-.settle {
-  opacity: 0;
-  animation: settle 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* thin rule that draws itself */
-.rule {
-  height: 1px;
-  background: rgba(243, 242, 239, 0.14);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
-}
-.reveal.in .rule {
-  transform: scaleX(1);
-}
-
-/* copper index dot that breathes */
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-.pulse {
-  animation: pulse 3.4s ease-in-out infinite;
-}
-
-/* soft link with a sliding underline */
-.ulink {
-  position: relative;
-  color: var(--color-ink);
-  transition: color 0.3s;
-}
-.ulink::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  height: 1px;
-  width: 100%;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.ulink:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-.pill {
-  transition:
-    background-color 0.3s,
-    color 0.3s,
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.pill:hover {
-  transform: translateY(-1px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -171,17 +74,6 @@ body {
     transform: none;
     transition: none;
   }
-  .rule {
-    transform: scaleX(1);
-    transition: none;
-  }
-  .settle {
-    opacity: 1;
-    animation: none;
-  }
-  .pulse {
-    animation: none;
-  }
   *,
   *::before,
   *::after {
@@ -191,9 +83,15 @@ body {
   }
 }
 
+/* faint dot grid for hero — memory-cell texture */
+.dotgrid {
+  background-image: radial-gradient(rgba(232, 226, 214, 0.055) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--color-copper-soft);
-  outline-offset: 4px;
-  border-radius: 3px;
+  outline: 2px solid var(--color-copper-bright);
+  outline-offset: 3px;
+  border-radius: 2px;
 }

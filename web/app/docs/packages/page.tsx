@@ -73,7 +73,7 @@ export default function PackagesPage() {
   return (
     <article className="pb-20">
       <p className="eyebrow">the monorepo</p>
-      <h1 className="mt-3 font-display wonk text-4xl tracking-tight">Packages</h1>
+      <h1 className="mt-3 font-display text-4xl tracking-tight">Packages</h1>
       <p className="mt-5 text-ink-2 leading-relaxed max-w-2xl">
         TypeScript strict, Node ≥ 20, ESM only. Zod schemas are the single
         source of truth for types. Pure logic — pruning, fingerprinting,

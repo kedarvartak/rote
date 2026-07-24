@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
+import { Newsreader, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
-import { MemoryField } from "@/components/MemoryField";
 
-const space = Space_Grotesk({
+const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-space",
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
 });
 
-const inter = Inter({
+const plexSans = IBM_Plex_Sans({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-inter",
+  weight: ["400", "500", "600"],
+  variable: "--font-plex-sans",
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -35,10 +34,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${space.variable} ${inter.variable} ${plexMono.variable}`}
+      className={`${newsreader.variable} ${plexSans.variable} ${plexMono.variable}`}
     >
       <body className="min-h-screen flex flex-col">
-        <MemoryField />
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
