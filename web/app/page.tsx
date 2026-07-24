@@ -76,27 +76,32 @@ const INVARIANTS = [
   {
     n: "I",
     name: "Never silently wrong",
-    body: "No code path may report success when a verify or expect check failed. Success is decided by page state, never by the absence of an exception.",
+    rule: "No code path may report success when a verify or expect check failed — success is decided by page state, never by the absence of an exception.",
+    enforcement: "The sacred invariant suite touches every executor exit path.",
   },
   {
     n: "II",
     name: "Never worse than baseline",
-    body: "Fallback to the plain agent is always reachable and clean. A Rote miss costs one cheap match call, and the fallback logs why it fired.",
+    rule: "Fallback to the plain agent is always reachable and clean; a Rote miss costs one cheap match call.",
+    enforcement: "Fallback paths log why they fired — classification, not just that.",
   },
   {
     n: "III",
     name: "Never cross environments",
-    body: "A structural fingerprint is a hard gate before any fuzzy matching. A playbook learned on staging can't fire on prod.",
+    rule: "A playbook learned on staging can never fire on prod.",
+    enforcement: "The structural fingerprint is a hard gate before any fuzzy matching.",
   },
   {
     n: "IV",
     name: "Everything versioned",
-    body: "Store mutations are append-only. Playbooks and repair patches are auditable, diffable, and exportable as human-readable YAML.",
+    rule: "Store mutations are append-only — no in-place edits of playbooks or patches, ever.",
+    enforcement: "Auditable, diffable, exportable as human-readable YAML.",
   },
   {
     n: "V",
     name: "Every model call tagged",
-    body: "All usage flows through one client wrapper with a source tag — planner, matcher, slot, repair, verify, distill. Untagged calls fail lint.",
+    rule: "All usage flows through one client wrapper with a source tag — planner, matcher, slot, repair, verify, distill.",
+    enforcement: "Direct SDK calls outside the wrapper fail lint.",
   },
 ];
 
@@ -447,19 +452,40 @@ export default function Home() {
             lede="Non-negotiable, never “just this once.” Every one is enforced by the sacred invariant suite that touches every executor exit path."
           />
         </Reveal>
-        <div className="mt-12 divide-y hairline border-y hairline">
-          {INVARIANTS.map((inv, i) => (
-            <Reveal key={inv.n} delay={i * 60}>
-              <div className="py-6 grid gap-2 sm:grid-cols-[8rem_16rem_1fr] sm:gap-6 items-baseline group">
-                <span className="font-display italic text-2xl text-copper-bright/80 group-hover:text-copper-bright transition-colors">
-                  {inv.n}
-                </span>
-                <h3 className="font-medium">{inv.name}</h3>
-                <p className="text-[0.9rem] text-ink-2 leading-relaxed">{inv.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        <Reveal delay={80}>
+          <div className="mt-12 overflow-x-auto rounded-sm border hairline">
+            <table className="w-full text-[0.9rem] min-w-[44rem]">
+              <thead className="bg-surface border-b hairline text-left">
+                <tr>
+                  <th className="px-4 py-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal w-14">
+                    №
+                  </th>
+                  <th className="px-4 py-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal w-56">
+                    Invariant
+                  </th>
+                  <th className="px-4 py-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal">
+                    The rule
+                  </th>
+                  <th className="px-4 py-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal w-72">
+                    Enforced by
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y hairline">
+                {INVARIANTS.map((inv) => (
+                  <tr key={inv.n} className="align-top hover:bg-surface/70 transition-colors group">
+                    <td className="px-4 py-4 font-display italic text-xl text-copper-bright/80 group-hover:text-copper-bright transition-colors">
+                      {inv.n}
+                    </td>
+                    <td className="px-4 py-4 font-medium text-ink">{inv.name}</td>
+                    <td className="px-4 py-4 text-ink-2 leading-relaxed">{inv.rule}</td>
+                    <td className="px-4 py-4 text-ink-2 leading-relaxed">{inv.enforcement}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Reveal>
       </section>
 
       {/* ----------------------------------------------------- roadmap */}
