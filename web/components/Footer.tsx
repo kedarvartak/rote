@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer className="border-t hairline bg-surface/40">
       <div className="mx-auto max-w-6xl px-5 sm:px-8 py-14">
-        <div className="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div>
             <p className="font-display text-2xl tracking-tight">rote</p>
             <p className="mt-3 text-sm text-ink-2 leading-relaxed max-w-[30ch]">
@@ -32,6 +32,31 @@ export function Footer() {
               Early build — P1, tier 0. G1 passes at 37.2% slower
               logical-input growth; G2 remains.
             </p>
+          </div>
+          <div className="text-sm">
+            <p className="eyebrow mb-3.5">Connect</p>
+            <ul className="space-y-2.5 text-ink-2">
+              <li>
+                <a
+                  className="hover:text-copper-bright transition-colors"
+                  href="https://github.com/kedarvartak/rote"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GitHub — star the repo ★
+                </a>
+              </li>
+              <li>
+                <a
+                  className="hover:text-copper-bright transition-colors"
+                  href="https://cal.com/kedar-vartak"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Talk to me — book a call
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         <div className="mt-12 pt-6 border-t hairline flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
