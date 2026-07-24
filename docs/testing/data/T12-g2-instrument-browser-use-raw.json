@@ -1,0 +1,35 @@
+[
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 10113,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 736,
+    "duration_ms": 18964,
+    "repetition": 1,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10703,
+    "cache_read_tokens": 23936,
+    "cache_write_tokens": 0,
+    "output_tokens": 1026,
+    "duration_ms": 21499,
+    "repetition": 1,
+    "phase": "cold"
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 10146,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 690,
+    "duration_ms": 17753,
+    "repetition": 1,
+    "phase": "cold"
+  }
+]

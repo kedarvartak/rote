@@ -122,6 +122,11 @@ Two gates. The first is the headline; the second keeps the first honest.
 > survives variance (≥15 runs/harness; bootstrap lower bound above the floor —
 > [03](03-benchmark.md)).
 
+**G2 launch scope is frozen to B1–B3 before collection.** These are the three built,
+deterministic tasks: authenticated download, long form entry, and search/extraction. B5
+drift remains important but is deferred until after the initial level result; implementing
+a new fixture now would mix benchmark construction with the gate being judged.
+
 **No number, no launch.** If G1 fails, the memory thesis is wrong and we say so — it costs
 one benchmark, which is the point of running it before building. G2 alone is the old gate:
 a fight on the axis where we are late, against harnesses with years of head start on the

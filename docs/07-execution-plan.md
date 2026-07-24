@@ -98,9 +98,9 @@ exact-prefix routing on the E1 page. Small fixtures remain below provider cache 
 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---|---|---|---|
-| E4.1 | **G2 scope decision:** launch on B1–B3 only, or build B5 (drift) first? [04](04-competition.md) argues B5/T5 is the wedge instrument; it is also unbuilt. Recorded decision with the trade-off. | 0.5 | — | decision in this doc + 05 | decision |
-| E4.2 | **B5 drift fixture** (if chosen): B2 with scripted DOM mutations between runs; grades the repair path and the silent-failure rate. | 2 | E4.1 | fixture + mutation script deterministic in CI | blocked |
-| E4.3 | **Certification runs:** ≥15/harness/task, seeded bootstrap (10k resamples), lower bound vs. floor — machinery exists, has never been run to completion. | 1–2 | E2.1, E2.2 | `launch-gate` passes or fails loudly; raw JSONL kept | blocked |
+| E4.1 | **G2 scope decision:** certify the already-built deterministic B1–B3 suite now; defer B5 drift. Building a new fixture after seeing G1 would mix benchmark construction with the level gate, while B1–B3 already span authenticated download, long form entry, and search/extraction. B5 remains the first post-G2 trust/drift instrument, not deleted scope. | 0.5 | — | decision recorded here and in [05](05-roadmap.md) before collection | done |
+| E4.2 | **B5 drift fixture:** B2 with scripted DOM mutations between runs; grades repair and silent-failure rate. | 2 | E4.1 | fixture + mutation script deterministic in CI | deferred until after initial G2 |
+| E4.3 | **Certification runs:** ≥15/harness/task, seeded bootstrap (10k resamples), lower bound vs. floor. | 1–2 | E2.1, E2.2 | append-safe exact-repetition paired instrument ready; `launch-gate` passes or fails loudly; raw evidence kept | ready |
 | E4.4 | **Symmetric verification audit:** confirm competitor runs are graded by our own rule (success = concluded **and** live-page verification text) on real output, not just in code review. | 1 | E4.3 | audit note in `docs/testing/` | blocked |
 | E4.5 | **G2 report:** tokens per source, latency avg/p50/p95 ms, $ per task from the dated price table; `price unavailable` never $0. | 0.5 | E4.3 | report generated from raw data by one command | blocked |
 

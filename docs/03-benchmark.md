@@ -52,8 +52,11 @@ is only an instrument — **it informs us only if it is built to be indifferent 
 - **Same task specs, same model, same pages.** Both harnesses read one task file
   (`scripts/bench/headhead/tasks.json`); a test asserts the Rote plan agrees with it. The
   model is pinned there, not left to a default.
-- **Cache-adjusted counts.** Agents get cheaper on rerun via prompt caching alone. We
-  must beat that honestly. The headline is Rote-warm vs baseline-**run-N**, never run-1.
+- **Cache-adjusted counts.** Agents get cheaper on rerun via prompt caching alone. Token
+totals therefore use logical input (`uncached + cache read + cache write`) plus output,
+while dollars price each bucket at its model-specific rate. A boolean with no measured
+bucket split is not cache adjustment and cannot pass G2. The headline is Rote-warm vs
+baseline-**run-N**, never run-1.
 - **Competitors are dependencies, never forks.** A fork we control is a fork we could
   tune. Their config is best-effort and documented.
 - **Grade the competitor by our own rule** (below).

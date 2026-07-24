@@ -21,17 +21,21 @@ import {
  * + configs + raw data", CLAUDE.md "benchmark adapters import competitors as
  * dependencies, not forks").
  */
-export const HeadToHeadSubjectSchema = z.object({
-  /** Path to a benchmark spec (see spec.ts) naming the recorded Rote run ids. */
-  spec: z.string().min(1),
-  /** Model the Rote runs used, recorded for fairness provenance. */
-  model: z.string().min(1),
-  /** Whether the Rote token counts are cache-adjusted (docs/03). */
-  cache_adjusted: z.boolean(),
-  /** Harness label; defaults to `rote`. */
-  harness: z.string().min(1).default('rote'),
-  config_notes: z.string().optional(),
-});
+export const HeadToHeadSubjectSchema = z.union([
+  z.object({
+    /** Path to a benchmark spec (see spec.ts) naming recorded Rote run ids. */
+    spec: z.string().min(1),
+    model: z.string().min(1),
+    cache_adjusted: z.boolean(),
+    harness: z.string().min(1).default('rote'),
+    config_notes: z.string().optional(),
+  }),
+  z.object({
+    /** Neutral records produced by an append-safe external/atomic Rote driver. */
+    records: z.string().min(1),
+    harness: z.string().min(1).default('rote'),
+  }),
+]);
 
 export const HeadToHeadCompetitorSchema = z.object({
   harness: z.string().min(1),
@@ -55,15 +59,22 @@ export async function assembleHeadToHeadRecords(sourcesPath: string): Promise<Co
   const sourcesDir = dirname(resolvedSources);
   const sources = HeadToHeadSourcesSchema.parse(JSON.parse(await readFile(resolvedSources, 'utf8')));
 
-  const subjectSpecPath = resolve(sourcesDir, sources.subject.spec);
-  const spec = parseBenchmarkSpec(JSON.parse(await readFile(subjectSpecPath, 'utf8')));
-  const cells = await cellsFromSpec(spec, { specDir: dirname(subjectSpecPath) });
-  const records: CompetitorRunRecord[] = roteRecordsFromCells(cells, {
-    model: sources.subject.model,
-    cacheAdjusted: sources.subject.cache_adjusted,
-    harness: sources.subject.harness,
-    ...(sources.subject.config_notes ? { configNotes: sources.subject.config_notes } : {}),
-  });
+  let records: CompetitorRunRecord[];
+  if ('spec' in sources.subject) {
+    const subjectSpecPath = resolve(sourcesDir, sources.subject.spec);
+    const spec = parseBenchmarkSpec(JSON.parse(await readFile(subjectSpecPath, 'utf8')));
+    const cells = await cellsFromSpec(spec, { specDir: dirname(subjectSpecPath) });
+    records = roteRecordsFromCells(cells, {
+      model: sources.subject.model,
+      cacheAdjusted: sources.subject.cache_adjusted,
+      harness: sources.subject.harness,
+      ...(sources.subject.config_notes ? { configNotes: sources.subject.config_notes } : {}),
+    });
+  } else {
+    records = await readCompetitorRecords(resolve(sourcesDir, sources.subject.records));
+    const wrong = records.find((record) => record.harness !== sources.subject.harness);
+    if (wrong) throw new Error(`subject records for "${sources.subject.harness}" contain harness "${wrong.harness}"`);
+  }
 
   for (const competitor of sources.competitors) {
     const competitorRecords = await readCompetitorRecords(resolve(sourcesDir, competitor.records));
@@ -92,6 +103,8 @@ export const CompetitorRawRunSchema = z.object({
   task: z.string().min(1),
   outcome: OutcomeSchema,
   input_tokens: z.number().int().nonnegative(),
+  cache_read_tokens: z.number().int().nonnegative(),
+  cache_write_tokens: z.number().int().nonnegative(),
   output_tokens: z.number().int().nonnegative(),
   duration_ms: z.number().int().nonnegative(),
   repetition: z.number().int().nonnegative().optional(),
@@ -142,6 +155,8 @@ export function competitorRecordsFromRaw(
       repetition: rep,
       outcome: run.outcome,
       input_tokens: run.input_tokens,
+      cache_read_tokens: run.cache_read_tokens,
+      cache_write_tokens: run.cache_write_tokens,
       output_tokens: run.output_tokens,
       duration_ms: run.duration_ms,
       model: options.model,

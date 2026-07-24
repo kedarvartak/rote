@@ -1,5 +1,9 @@
 {
+  "schema_version": 1,
+  "protocol_id": "p1-g2-fixtures-v1-b1-b3",
+  "provider": "openai",
   "model": "gpt-4.1-mini",
+  "viewport": { "width": 1920, "height": 1080 },
   "fixture_port": 8080,
   "repetitions": 18,
   "tasks": [

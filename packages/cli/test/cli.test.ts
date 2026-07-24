@@ -18,6 +18,8 @@ describe('rote run', () => {
       '--chrome-path', '/usr/bin/chrome',
       '--verify-text', 'Download complete',
       '--settle-timeout-ms', '7000',
+      '--viewport-width', '1920',
+      '--viewport-height', '1080',
       '--replay-candidate', 'candidate.json',
     ], '/tmp/rote-test', deps);
 
@@ -28,6 +30,7 @@ describe('rote run', () => {
       model: 'claude-test',
       maxSteps: 12,
       chromePath: '/usr/bin/chrome',
+      viewport: { width: 1920, height: 1080 },
       verifyText: 'Download complete',
       verifyUrlContains: undefined,
       settleTimeoutMs: 7000,

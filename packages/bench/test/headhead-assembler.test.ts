@@ -47,8 +47,8 @@ async function scaffold(): Promise<{ dir: string; sourcesPath: string }> {
     const runId = `b1-warm-${rep}`;
     // Two tagged sources that must sum into one neutral total per task.
     await writeRun(baseDir, runId, [
-      { source: 'planner', input_tokens: 90 + rep, output_tokens: 10 },
-      { source: 'verify', input_tokens: 5, output_tokens: 1 },
+      { source: 'planner', input_tokens: 90 + rep, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 10 },
+      { source: 'verify', input_tokens: 5, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 1 },
     ]);
     runs.push({ task: { id: 'B1', name: 'download report' }, phase: 'warm', repetition: rep, run_id: runId });
   }
@@ -56,8 +56,8 @@ async function scaffold(): Promise<{ dir: string; sourcesPath: string }> {
 
   const competitor = competitorRecordsFromRaw(
     [
-      { task: 'B1', outcome: 'success', input_tokens: 400, output_tokens: 40, duration_ms: 2000 },
-      { task: 'B1', outcome: 'success', input_tokens: 420, output_tokens: 45, duration_ms: 2100 },
+      { task: 'B1', outcome: 'success', input_tokens: 400, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 40, duration_ms: 2000 },
+      { task: 'B1', outcome: 'success', input_tokens: 420, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 45, duration_ms: 2100 },
     ] satisfies CompetitorRawRun[],
     { harness: 'browser-use', model: 'claude-opus-4-8', cache_adjusted: true },
   );
@@ -79,9 +79,9 @@ describe('competitorRecordsFromRaw', () => {
   it('assigns per-task repetition indices and stamps fairness provenance', () => {
     const records = competitorRecordsFromRaw(
       [
-        { task: 'B1', outcome: 'success', input_tokens: 400, output_tokens: 40, duration_ms: 2000 },
-        { task: 'B1', outcome: 'failure', input_tokens: 100, output_tokens: 5, duration_ms: 500 },
-        { task: 'B2', outcome: 'success', input_tokens: 300, output_tokens: 30, duration_ms: 1500 },
+        { task: 'B1', outcome: 'success', input_tokens: 400, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 40, duration_ms: 2000 },
+        { task: 'B1', outcome: 'failure', input_tokens: 100, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 5, duration_ms: 500 },
+        { task: 'B2', outcome: 'success', input_tokens: 300, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 30, duration_ms: 1500 },
       ],
       { harness: 'browser-use', model: 'm', cache_adjusted: false, config_notes: 'default config' },
     );
@@ -111,11 +111,28 @@ describe('assembleHeadToHeadRecords', () => {
     expect(gate.comparisons[0].success_parity).toBe(true);
   });
 
+  it('accepts append-safe neutral subject records without inventing a benchmark spec', async () => {
+    const { dir } = await scaffold();
+    const subject = competitorRecordsFromRaw(
+      [{ task: 'B1', outcome: 'success', input_tokens: 100, cache_read_tokens: 50, cache_write_tokens: 0, output_tokens: 10, duration_ms: 1000, repetition: 1 }],
+      { harness: 'rote', model: 'gpt-4.1-mini', cache_adjusted: true },
+    );
+    await writeFile(join(dir, 'rote.json'), JSON.stringify(subject), 'utf8');
+    const sourcesPath = join(dir, 'neutral-sources.json');
+    await writeFile(sourcesPath, JSON.stringify({
+      subject: { harness: 'rote', records: 'rote.json' },
+      competitors: [{ harness: 'browser-use', records: 'browser-use.json' }],
+    }), 'utf8');
+
+    const records = await assembleHeadToHeadRecords(sourcesPath);
+    expect(records[0]).toMatchObject({ harness: 'rote', cache_read_tokens: 50 });
+  });
+
   it('rejects a competitor sidecar whose harness label disagrees with the source spec', async () => {
     const { dir, sourcesPath } = await scaffold();
     // Overwrite the sidecar with a mislabeled harness.
     const wrong = competitorRecordsFromRaw(
-      [{ task: 'B1', outcome: 'success', input_tokens: 400, output_tokens: 40, duration_ms: 2000 }],
+      [{ task: 'B1', outcome: 'success', input_tokens: 400, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 40, duration_ms: 2000 }],
       { harness: 'stagehand', model: 'm', cache_adjusted: true },
     );
     await writeFile(join(dir, 'browser-use.json'), JSON.stringify(wrong), 'utf8');

@@ -37,30 +37,28 @@ every adapter is held to the same mapping.
 node scripts/bench/headhead/serve-fixtures.mjs 8080
 ```
 
-## 2. Run the Rote side (18 recorded runs per task)
+## 2. Collect matched attempts atomically
+
+Install the pinned Browser Use dependency once, then execute one exact pair at a time:
 
 ```bash
-node packages/bench/bin/rote-bench.js run scripts/bench/headhead/rote-plan.json --out bench-out/rote
+python3 -m venv /tmp/rote-browser-use
+/tmp/rote-browser-use/bin/pip install -r scripts/bench/headhead/browser-use/requirements.txt
+set -a; source .env; set +a
+
+BROWSER_USE_PYTHON=/tmp/rote-browser-use/bin/python \
+  scripts/bench/headhead/run-next-pair.sh B1 1
 ```
 
-`rote run` honors the driver's `ROTE_RUN_ID`/`ROTE_BASE_DIR` and writes a
-self-describing manifest with tagged `token_usage`, so there is no usage sidecar
-on this side — the totals are summed from recorded artifacts, never hand-typed.
+Repeat B1–B3 for repetitions 1–18, with repetition outermost and task order B1→B3.
+Each invocation runs Rote then Browser Use, durably records each completed attempt, and
+is safe to rerun: `--resume` skips an exact completed task/repetition rather than
+success-hunting. Rote retains standard `.rote` manifests plus neutral raw rows; Browser
+Use retains `raw-runs.json` plus per-attempt diagnostics.
 
-## 3. Run the Browser Use side
-
-```bash
-cd scripts/bench/headhead/browser-use
-pip install -r requirements.txt
-python run_browser_use.py --out ../../../../bench-out/browser-use
-```
-
-`--model` defaults to the model `tasks.json` pins for **both** harnesses, and
-`--provider` defaults to `ROTE_LLM_PROVIDER` from your `.env` — so passing
-nothing is the fair thing. Browser Use is a pinned dependency
-(`browser-use==0.13.4`), never a fork or a vendored copy: `docs/05`'s launch
-checklist requires that adapters "import competitors as dependencies, not forks",
-and a fork we control is a fork we could tune.
+Both harnesses start at the same URL through unmeasured navigation and use the pinned
+1920×1080 viewport. Browser Use is `browser-use==0.13.6`, imported as a dependency with
+its default agent behavior—never forked or patched.
 
 This writes `raw-runs.json` plus a per-run dump under `raw/` (usage, visited
 URLs, errors, final result, and the installed browser-use version). Publish
@@ -70,34 +68,37 @@ this space comes from reproducibility."
 `raw-runs.example.json` shows the emitted shape and is what CI ingests; it is an
 illustrative example, **not** a real capture and not evidence of anything.
 
-## 4. Map raw runs to a competitor sidecar
+## 3. Map both raw files to neutral records
 
 ```bash
-node packages/bench/bin/rote-bench.js competitor-records bench-out/browser-use/raw-runs.json \
-  --harness browser-use \
-  --model "$(python3 -c 'import json;print(json.load(open("scripts/bench/headhead/tasks.json"))["model"])')" \
-  --cache-adjusted true \
-  --config-notes "browser-use 0.13.4, default DOM serializer, max_steps=25" \
-  --out bench-out/browser-use.json
+node packages/bench/bin/rote-bench.js competitor-records bench-out/g2/rote/raw-runs.json \
+  --harness rote --model gpt-4.1-mini --cache-adjusted true \
+  --config-notes "Rote current main, exact provider cache buckets, 1920x1080" \
+  --out bench-out/g2/rote.json
+
+node packages/bench/bin/rote-bench.js competitor-records bench-out/g2/browser-use/raw-runs.json \
+  --harness browser-use --model gpt-4.1-mini --cache-adjusted true \
+  --config-notes "browser-use 0.13.6, defaults, exact provider cache buckets, max_steps=25, 1920x1080" \
+  --out bench-out/g2/browser-use.json
 ```
 
-`--harness`, `--model` and `--cache-adjusted` have no defaults on purpose: a
-defaulted `cache_adjusted` would let un-adjusted counts be compared without it
-showing in the record.
+`cache-adjusted=true` is valid only because both raw shapes contain measured uncached,
+cache-read, and cache-write buckets. The gate now rejects `false`; a provenance boolean
+without bucket evidence cannot certify G2.
 
-## 5. Assemble and run the gate
+## 4. Assemble and run the gate
 
 ```bash
-cat > bench-out/sources.json <<'JSON'
+cat > bench-out/g2/sources.json <<'JSON'
 {
-  "subject": { "spec": "rote/bench-spec.json", "model": "gpt-4.1-mini", "cache_adjusted": true },
+  "subject": { "harness": "rote", "records": "rote.json" },
   "competitors": [{ "harness": "browser-use", "records": "browser-use.json" }]
 }
 JSON
 
-node packages/bench/bin/rote-bench.js records bench-out/sources.json --out bench-out/records.json
-node packages/bench/bin/rote-bench.js headhead bench-out/records.json --subject rote --out bench-out/headhead.md
-node packages/bench/bin/rote-bench.js launch-gate bench-out/records.json --subject rote --min-runs 15
+node packages/bench/bin/rote-bench.js records bench-out/g2/sources.json --out bench-out/g2/records.json
+node packages/bench/bin/rote-bench.js headhead bench-out/g2/records.json --subject rote --out bench-out/g2/headhead.md
+node packages/bench/bin/rote-bench.js launch-gate bench-out/g2/records.json --subject rote --min-runs 15
 ```
 
 The gate passes only at success parity, with ≥15 successful runs per harness, and
@@ -122,14 +123,10 @@ data rather than taken on trust.
 
 ## Cache adjustment
 
-`docs/03`: "agents get mildly cheaper on rerun via prompt caching alone — we must
-beat that honestly, and report cache-adjusted numbers." Both harnesses run each
-task ~18× against the same pages, so provider prompt caching will make later
-repetitions cheaper on **both** sides. Set `--cache-adjusted true` only if the
-counts you report are the tokens actually billed (cache reads counted at their
-real rate), and say which in `--config-notes`. If you cannot tell, report `false`
-and say so — a `false` on both sides is still a fair comparison; a wrong `true` is
-a false claim.
+Token intervals use logical totals: uncached input + cache reads + cache writes + output.
+Dollars use the dated model-specific rate for each bucket. This prevents provider caching
+from looking like memory reduction while still reporting what each run actually costs.
+Missing receipts or an impossible bucket split fail before a row is written.
 
 ## Honest-loss reporting
 

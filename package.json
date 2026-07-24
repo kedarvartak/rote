@@ -13,7 +13,7 @@
   "scripts": {
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
-    "test": "npm run test --workspaces --if-present && python3 -m unittest scripts/bench/curve/browser-use/run_curve_test.py",
+    "test": "npm run test --workspaces --if-present && python3 -m unittest scripts/bench/curve/browser-use/run_curve_test.py scripts/bench/headhead/browser-use/run_browser_use_test.py",
     "build": "npm run build --workspaces --if-present"
   },
   "devDependencies": {

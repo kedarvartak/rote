@@ -98,8 +98,13 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
   if (settleTimeoutMs !== undefined && (!Number.isInteger(settleTimeoutMs) || settleTimeoutMs < 1)) {
     throw new Error('--settle-timeout-ms must be a positive integer');
   }
+  const viewportWidth = positiveIntegerOption(values, '--viewport-width');
+  const viewportHeight = positiveIntegerOption(values, '--viewport-height');
+  if ((viewportWidth === undefined) !== (viewportHeight === undefined)) {
+    throw new Error('--viewport-width and --viewport-height must be provided together');
+  }
   const knownFlags = new Set([
-    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--settle-timeout-ms', '--replay-candidate',
+    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--settle-timeout-ms', '--replay-candidate', '--viewport-width', '--viewport-height',
   ]);
   for (const flag of values.keys()) if (!knownFlags.has(flag)) throw new Error(`unknown option: ${flag}`);
   if (!values.has('--verify-text') && !values.has('--verify-url-contains')) throw new Error(runUsage());
@@ -110,6 +115,9 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     model: values.get('--model'),
     maxSteps,
     chromePath: values.get('--chrome-path'),
+    viewport: viewportWidth !== undefined && viewportHeight !== undefined
+      ? { width: viewportWidth, height: viewportHeight }
+      : undefined,
     verifyText: values.get('--verify-text'),
     verifyUrlContains: values.get('--verify-url-contains'),
     settleTimeoutMs,
@@ -117,10 +125,18 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
   };
 }
 
+function positiveIntegerOption(values: ReadonlyMap<string, string>, flag: string): number | undefined {
+  const text = values.get(flag);
+  if (text === undefined) return undefined;
+  const value = Number.parseInt(text, 10);
+  if (!Number.isInteger(value) || value < 1) throw new Error(`${flag} must be a positive integer`);
+  return value;
+}
+
 function candidateUsage(): string {
   return 'rote candidate create <playbook.yaml> --url <url> --params <json-object> --out <candidate.json>';
 }
 
 function runUsage(): string {
-  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>] [--replay-candidate <candidate.json>]';
+  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>] [--viewport-width <px> --viewport-height <px>] [--replay-candidate <candidate.json>]';
 }
