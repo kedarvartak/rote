@@ -41,9 +41,11 @@ describe('browser-use adapter ingestion', () => {
       harness: 'browser-use',
       task: 'B1',
       phase: 'cold',
-      repetition: 0,
+      repetition: 1,
       outcome: 'success',
       input_tokens: 41230,
+      cache_read_tokens: 0,
+      cache_write_tokens: 0,
       output_tokens: 1840,
       duration_ms: 28400,
       model: 'claude-opus-4-8',
@@ -97,7 +99,10 @@ describe('browser-use adapter ingestion', () => {
 describe('head-to-head task parity', () => {
   it('gives Rote and Browser Use identical prompts, URLs and verification text', async () => {
     const config = JSON.parse(await readFile(headhead('tasks.json'), 'utf8')) as {
+      protocol_id: string;
+      provider: string;
       model: string;
+      viewport: { width: number; height: number };
       fixture_port: number;
       repetitions: number;
       tasks: Array<{ id: string; name: string; path: string; prompt: string; verify_text: string }>;
@@ -106,6 +111,11 @@ describe('head-to-head task parity', () => {
       runs: Array<{ task: { id: string; name: string }; args: string[]; repetitions: number }>;
     };
 
+    expect(config).toMatchObject({
+      protocol_id: 'p1-g2-fixtures-v1-b1-b3',
+      provider: 'openai',
+      viewport: { width: 1920, height: 1080 },
+    });
     expect(plan.runs.map((run) => run.task.id)).toEqual(config.tasks.map((task) => task.id));
     for (const [index, task] of config.tasks.entries()) {
       const run = plan.runs[index];
@@ -113,6 +123,8 @@ describe('head-to-head task parity', () => {
       expect(run.args).toContain(task.prompt);
       expect(run.args).toContain(`http://127.0.0.1:${config.fixture_port}/${task.path}`);
       expect(run.args[run.args.indexOf('--verify-text') + 1]).toBe(task.verify_text);
+      expect(run.args[run.args.indexOf('--viewport-width') + 1]).toBe(String(config.viewport.width));
+      expect(run.args[run.args.indexOf('--viewport-height') + 1]).toBe(String(config.viewport.height));
       expect(run.repetitions).toBe(config.repetitions);
     }
   });

@@ -21,6 +21,7 @@ export interface RunBrowserTaskOptions {
   model?: string;
   maxSteps?: number;
   chromePath?: string;
+  viewport?: { width: number; height: number };
   verifyText?: string;
   verifyUrlContains?: string;
   settleTimeoutMs?: number;
@@ -90,7 +91,10 @@ export async function runBrowserTask(
     ? await loadReplayCandidate(options.replayCandidatePath)
     : undefined;
   const selection = selectBrowserExecution(fingerprint.fingerprint_hash, candidate);
-  const backend = dependencies.backend ?? new LaunchingCdpBrowserBackend({ chromePath: options.chromePath });
+  const backend = dependencies.backend ?? new LaunchingCdpBrowserBackend({
+    chromePath: options.chromePath,
+    windowSize: options.viewport,
+  });
   const failureRecorder = new FileBrowserAgentRunRecorder({
     task: options.task,
     envFingerprint: fingerprint,

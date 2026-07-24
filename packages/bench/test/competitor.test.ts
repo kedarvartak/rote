@@ -22,6 +22,8 @@ function record(overrides: Partial<CompetitorRunRecord>): CompetitorRunRecord {
     repetition: 0,
     outcome: 'success',
     input_tokens: 100,
+    cache_read_tokens: 0,
+    cache_write_tokens: 0,
     output_tokens: 20,
     duration_ms: 1000,
     model: 'claude-opus-4-8',
@@ -43,7 +45,7 @@ describe('roteRecordsFromCells', () => {
       repetition: 2,
       runId: 'B1-2',
       manifest: manifest('B1-2', [
-        { source: 'planner', input_tokens: 40, output_tokens: 10 },
+        { source: 'planner', input_tokens: 40, cache_read_tokens: 100, cache_write_tokens: 0, output_tokens: 10 },
         { source: 'verify', input_tokens: 5, output_tokens: 1 },
       ]),
       trajectory: [],
@@ -56,6 +58,8 @@ describe('roteRecordsFromCells', () => {
       repetition: 2,
       outcome: 'success',
       input_tokens: 45,
+      cache_read_tokens: 100,
+      cache_write_tokens: 0,
       output_tokens: 11,
       cache_adjusted: true,
     });
@@ -81,6 +85,15 @@ describe('summarizeHarnessRuns', () => {
     expect(summary.avg_total_tokens).toBe(150);
     expect(summary.success_rate).toBeCloseTo(2 / 3);
     expect(summary.success_total_tokens).toEqual([100, 200]);
+  });
+
+  it('counts cache buckets logically while pricing them at their model-specific rates', () => {
+    const [summary] = summarizeHarnessRuns([
+      record({ input_tokens: 100, cache_read_tokens: 300, output_tokens: 20, model: 'gpt-4.1-mini' }),
+    ]);
+    expect(summary.avg_total_tokens).toBe(420);
+    expect(summary.avg_cost_usd).toBeCloseTo((100 * 0.4 + 300 * 0.1 + 20 * 1.6) / 1_000_000, 12);
+    expect(summary.cache_adjusted).toBe(true);
   });
 
   it('is deterministically ordered by task then harness', () => {
@@ -200,6 +213,26 @@ describe('evaluateLaunchGate', () => {
     expect(gate.comparisons[0].reasons.join()).toContain('insufficient successful runs');
   });
 
+  it('refuses a comparison that did not use the same model', () => {
+    const records = [
+      ...runs('rote', 'B1', spread(100, 2, 15)),
+      ...runs('browser-use', 'B1', spread(400, 2, 15)).map((run) => ({ ...run, model: 'different-model' })),
+    ];
+    const gate = evaluateLaunchGate(buildHeadToHead(records));
+    expect(gate.passed).toBe(false);
+    expect(gate.comparisons[0].reasons.join()).toContain('model mismatch');
+  });
+
+  it('refuses a token win whose cache buckets were not measured', () => {
+    const records = [
+      ...runs('rote', 'B1', spread(100, 2, 15)).map((run) => ({ ...run, cache_adjusted: false })),
+      ...runs('browser-use', 'B1', spread(400, 2, 15)),
+    ];
+    const gate = evaluateLaunchGate(buildHeadToHead(records));
+    expect(gate.passed).toBe(false);
+    expect(gate.comparisons[0].reasons).toContain('logical token totals are not provider-cache-adjusted');
+  });
+
   it('never silently passes an empty head-to-head', () => {
     const gate = evaluateLaunchGate({ subject_harness: 'rote', comparisons: [] });
     expect(gate.passed).toBe(false);
@@ -215,8 +248,8 @@ describe('renderHeadToHeadReport', () => {
     const md = renderHeadToHeadReport(result);
     expect(md).toBe(renderHeadToHeadReport(result));
     expect(md).toContain('| B1 | browser-use | 75.0% | 0.0% | 75.0% | yes |');
-    expect(md).toContain('| B1 | rote | 1 | 100.0% | 100 | 1000 | 1000 | 1000 | $0.0005 |');
-    expect(md).toContain('| B1 | browser-use | 1 | 100.0% | 400 | 1000 | 1000 | 1000 | $0.0020 |');
+    expect(md).toContain('| B1 | rote | claude-opus-4-8 | yes | 1 | 100.0% | 100 | 1000 | 1000 | 1000 | $0.0005 |');
+    expect(md).toContain('| B1 | browser-use | claude-opus-4-8 | yes | 1 | 100.0% | 400 | 1000 | 1000 | 1000 | $0.0020 |');
   });
 
   it('labels an unpriced model instead of rendering it as free', () => {

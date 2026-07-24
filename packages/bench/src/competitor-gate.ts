@@ -183,6 +183,12 @@ function evaluateComparison(
       `success ${pct(comparison.subject.success_rate)} < baseline ${pct(comparison.baseline.success_rate)}`,
     );
   }
+  if (comparison.subject.model !== comparison.baseline.model) {
+    reasons.push(`model mismatch ${comparison.subject.model} != ${comparison.baseline.model}`);
+  }
+  if (!comparison.subject.cache_adjusted || !comparison.baseline.cache_adjusted) {
+    reasons.push('logical token totals are not provider-cache-adjusted');
+  }
   if (subjectRuns < minRuns || baselineRuns < minRuns) {
     reasons.push(`insufficient successful runs ${subjectRuns}/${baselineRuns} < ${minRuns} to certify variance`);
   }

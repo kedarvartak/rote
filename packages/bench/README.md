@@ -215,15 +215,14 @@ wrong competitor.
 - **`assembleHeadToHeadRecords`** — merges recorded Rote runs + competitor
   sidecars into the neutral records the gate consumes.
 - **`readCompetitorRawRuns` / `competitorRecordsFromRaw`** — the adapter contract:
-  loads a competitor's minimal per-run output (`task`, `outcome`, tokens,
-  `duration_ms`) and maps it onto neutral records with fairness provenance
-  attached in-repo, not per adapter. Exposed as `rote-bench competitor-records`,
-  whose `--harness`/`--model`/`--cache-adjusted` are required with no defaults so
-  un-adjusted counts cannot be compared without it showing in the record.
+  loads per-run outcomes and measured uncached/cache-read/cache-write/output buckets,
+  then maps them onto logical-token records with fairness provenance. Exposed as
+  `rote-bench competitor-records`; G2 rejects unadjusted records rather than trusting
+  a boolean whose underlying cache split was not captured.
 
 ```bash
 rote-bench competitor-records raw-runs.json --harness browser-use --model gpt-4.1-mini \
-  --cache-adjusted true --config-notes "browser-use 0.13.4, defaults" --out browser-use.json
+  --cache-adjusted true --config-notes "browser-use 0.13.6, exact cache buckets" --out browser-use.json
 ```
 
 The Browser Use runner that produces `raw-runs.json` is out-of-process (it is a

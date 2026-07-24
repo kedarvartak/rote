@@ -25,7 +25,10 @@ export const CompetitorRunRecordSchema = z.object({
   phase: z.enum(['cold', 'warm', 'drift']).default('cold'),
   repetition: z.number().int().nonnegative(),
   outcome: OutcomeSchema,
+  /** Uncached input tokens; cache buckets remain separate for logical totals and pricing. */
   input_tokens: z.number().int().nonnegative(),
+  cache_read_tokens: z.number().int().nonnegative(),
+  cache_write_tokens: z.number().int().nonnegative(),
   output_tokens: z.number().int().nonnegative(),
   duration_ms: z.number().int().nonnegative(),
   model: z.string().min(1),
@@ -55,9 +58,12 @@ export async function readCompetitorRecords(path: string): Promise<CompetitorRun
 export interface HarnessTaskSummary {
   task: string;
   harness: string;
+  model: string;
   runs: number;
   successes: number;
   success_rate: number;
+  /** True only when provider cache buckets were measured and logical totals neutralize discounts. */
+  cache_adjusted: boolean;
   avg_total_tokens: number;
   avg_duration_ms: number;
   /** Median wall-clock of a successful run, in ms (docs/05 W5 G1 latency-per-phase). */
@@ -137,20 +143,28 @@ export function roteRecordsFromCells(
         ...base,
         outcome: 'failure',
         input_tokens: 0,
+        cache_read_tokens: 0,
+        cache_write_tokens: 0,
         output_tokens: 0,
         duration_ms: 0,
       });
     }
     let input = 0;
+    let cacheRead = 0;
+    let cacheWrite = 0;
     let output = 0;
     for (const usage of cell.manifest.token_usage) {
       input += usage.input_tokens;
+      cacheRead += usage.cache_read_tokens ?? 0;
+      cacheWrite += usage.cache_write_tokens ?? 0;
       output += usage.output_tokens;
     }
     return CompetitorRunRecordSchema.parse({
       ...base,
       outcome: cell.manifest.outcome,
       input_tokens: input,
+      cache_read_tokens: cacheRead,
+      cache_write_tokens: cacheWrite,
       output_tokens: output,
       duration_ms: manifestDurationMs(cell.manifest.started_at, cell.manifest.ended_at),
     });
@@ -167,15 +181,23 @@ export function summarizeHarnessRuns(
   return keys.map((key) => {
     const [task, harness] = key.split('\u0000') as [string, string];
     const group = validated.filter((r) => r.task === task && r.harness === harness);
+    const models = new Set(group.map((run) => run.model));
+    if (models.size !== 1) throw new Error(`${task}/${harness} mixes models`);
     const successes = group.filter((r) => r.outcome === 'success');
-    const successTokens = successes.map((r) => r.input_tokens + r.output_tokens);
+    const cachePolicies = new Set(group.map((run) => run.cache_adjusted));
+    if (cachePolicies.size !== 1) throw new Error(`${task}/${harness} mixes cache-adjusted and unadjusted runs`);
+    const successTokens = successes.map((r) =>
+      r.input_tokens + r.cache_read_tokens + r.cache_write_tokens + r.output_tokens,
+    );
     const durations = successes.map((r) => r.duration_ms);
     return {
       task,
       harness,
+      model: group[0]!.model,
       runs: group.length,
       successes: successes.length,
       success_rate: group.length === 0 ? 0 : successes.length / group.length,
+      cache_adjusted: group[0]!.cache_adjusted,
       avg_total_tokens: average(successTokens.reduce((s, t) => s + t, 0), successes.length),
       avg_duration_ms: average(durations.reduce((s, d) => s + d, 0), successes.length),
       p50_duration_ms: percentileOf(durations, 0.5),
@@ -200,7 +222,13 @@ function costOf(
   for (const run of successes) {
     const price = priceForModel(run.model, prices);
     if (!price) return {};
-    costs.push(runCostUsd(run.input_tokens, run.output_tokens, price));
+    costs.push(runCostUsd(
+      run.input_tokens,
+      run.output_tokens,
+      price,
+      run.cache_read_tokens,
+      run.cache_write_tokens,
+    ));
   }
   return { avg_cost_usd: costs.reduce((s, c) => s + c, 0) / costs.length };
 }
@@ -278,22 +306,22 @@ export function renderHeadToHeadReport(result: HeadToHeadResult): string {
     '',
     '## Per-harness detail (averages over successful runs)',
     '',
-    '| Task | Harness | Runs | Success | Avg tokens | Avg latency (ms) | p50 (ms) | p95 (ms) | $/task |',
-    '|---|---|---:|---:|---:|---:|---:|---:|---:|',
+    '| Task | Harness | Model | Cache-adjusted | Runs | Success | Avg tokens | Avg latency (ms) | p50 (ms) | p95 (ms) | $/task |',
+    '|---|---|---|---|---:|---:|---:|---:|---:|---:|---:|',
   );
   for (const summary of harnessRows(result)) {
     lines.push(
-      `| ${cell(summary.task)} | ${cell(summary.harness)} | ${summary.runs} | ${pct(summary.success_rate)} | ${fmt(summary.avg_total_tokens)} | ${fmt(summary.avg_duration_ms)} | ${fmt(summary.p50_duration_ms)} | ${fmt(summary.p95_duration_ms)} | ${usd(summary.avg_cost_usd)} |`,
+      `| ${cell(summary.task)} | ${cell(summary.harness)} | ${cell(summary.model)} | ${summary.cache_adjusted ? 'yes' : 'NO'} | ${summary.runs} | ${pct(summary.success_rate)} | ${fmt(summary.avg_total_tokens)} | ${fmt(summary.avg_duration_ms)} | ${fmt(summary.p50_duration_ms)} | ${fmt(summary.p95_duration_ms)} | ${usd(summary.avg_cost_usd)} |`,
     );
   }
   if (result.comparisons.length === 0) {
-    lines.push('| — | — | 0 | 0.0% | 0 | 0 | 0 | price unavailable |');
+    lines.push('| — | — | — | NO | 0 | 0.0% | 0 | 0 | 0 | 0 | price unavailable |');
   }
 
   lines.push(
     '',
-    `Prices: \`${prices.version}\` (${prices.source}). Token counts are cache-adjusted only where every`,
-    'record says so — check `cache_adjusted` on the records before quoting $/task.',
+    `Prices: \`${prices.version}\` (${prices.source}). Logical totals include uncached/read/write input plus output.`,
+    'The launch gate rejects model mismatch or any harness whose cache buckets are not measured.',
     '',
   );
   return `${lines.join('\n')}\n`;

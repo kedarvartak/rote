@@ -44,6 +44,8 @@ class RawRun:
     task: str
     outcome: str
     input_tokens: int
+    cache_read_tokens: int
+    cache_write_tokens: int
     output_tokens: int
     duration_ms: int
     repetition: int
@@ -57,60 +59,55 @@ def browser_use_version() -> str:
         raise SystemExit("browser-use is not installed; pip install -r requirements.txt") from error
 
 
-def usage_from_history(history: Any) -> tuple[int, int]:
-    """Reads prompt/completion tokens out of a Browser Use run history.
-
-    Browser Use has moved this field across releases, so several shapes are
-    accepted. An unreadable shape is a hard error, never a zero: a competitor
-    silently recorded as spending 0 tokens would hand Rote a fabricated win, and
-    the launch gate cannot tell a real 0 from a missing field (Rote invariant 1,
-    "never silently wrong").
-    """
-    usage = getattr(history, "usage", None)
-    if usage is not None:
-        prompt = _first_attr(usage, ("total_prompt_tokens", "prompt_tokens", "total_input_tokens", "input_tokens"))
-        completion = _first_attr(usage, ("total_completion_tokens", "completion_tokens", "total_output_tokens", "output_tokens"))
-        if prompt is not None and completion is not None:
-            return int(prompt), int(completion)
-
-    prompt_fn = getattr(history, "total_input_tokens", None)
-    completion_fn = getattr(history, "total_output_tokens", None)
-    if callable(prompt_fn) and callable(completion_fn):
-        return int(prompt_fn()), int(completion_fn())
-
-    raise RuntimeError(
-        "cannot read token usage from this browser-use version "
-        f"({browser_use_version()}); history exposes: {sorted(dir(history))}. "
-        "Teach usage_from_history() the new shape — do not default to 0."
-    )
-
-
-def _first_attr(target: Any, names: tuple[str, ...]) -> Any:
-    for name in names:
-        value = getattr(target, name, None)
-        if value is not None:
-            return value
-    return None
+def usage_from_agent(agent: Any, provider: str) -> tuple[int, int, int, int]:
+    """Sums provider receipts into uncached/read/write/output buckets."""
+    entries = getattr(agent.token_cost_service, "usage_history", None)
+    if not entries:
+        raise RuntimeError("Browser Use exposed no provider receipts; refusing to record zero usage")
+    uncached = cache_read = cache_write = output = 0
+    for index, entry in enumerate(entries, start=1):
+        usage = entry.usage.model_dump(mode="json")
+        prompt = usage.get("prompt_tokens")
+        completion = usage.get("completion_tokens")
+        if prompt is None or completion is None:
+            raise RuntimeError(f"provider receipt {index} has no prompt/completion token counts")
+        read = usage.get("prompt_cached_tokens") or 0
+        one_hour_write = usage.get("prompt_cache_creation_1h_tokens") or 0
+        if one_hour_write:
+            raise RuntimeError(
+                f"provider receipt {index} used 1-hour cache writes, which the neutral 5-minute price bucket cannot represent"
+            )
+        generic_write = usage.get("prompt_cache_creation_tokens") or 0
+        five_minute_write = usage.get("prompt_cache_creation_5m_tokens") or 0
+        if generic_write and five_minute_write:
+            raise RuntimeError(f"provider receipt {index} reports overlapping cache-write buckets")
+        write = generic_write or five_minute_write
+        if provider == "openai":
+            remainder = prompt - read - write
+        elif provider == "anthropic":
+            remainder = prompt
+        else:  # pragma: no cover - argparse rejects this
+            raise RuntimeError(f"unsupported provider {provider}")
+        if remainder < 0:
+            raise RuntimeError(f"provider receipt {index} cache buckets exceed prompt tokens")
+        uncached += int(remainder)
+        cache_read += int(read)
+        cache_write += int(write)
+        output += int(completion)
+    return uncached, cache_read, cache_write, output
 
 
 async def final_page_text(agent: Any) -> str | None:
-    """Best-effort read of the live page's visible text after the run.
-
-    The fixture pages reveal their confirmation state via JS, so this must read
-    the live DOM rather than re-fetching the URL. Returns None when this
-    browser-use version does not expose the session the same way — which
-    `classify_outcome` treats as a hard error rather than as a lost run.
-    """
-    session = getattr(agent, "browser_session", None) or getattr(agent, "browser", None)
-    if session is None:
-        return None
+    """Reads the live same-tab body text through Browser Use's public CDP session."""
     try:
-        page_getter = getattr(session, "get_current_page", None)
-        page = await page_getter() if callable(page_getter) else None
-        if page is None:
-            return None
-        return await page.inner_text("body")
-    except Exception:  # noqa: BLE001 - a failed probe must not fail the run
+        session = await agent.browser_session.get_or_create_cdp_session()
+        result = await session.cdp_client.send.Runtime.evaluate(
+            params={"expression": "document.body?.innerText ?? ''", "returnByValue": True},
+            session_id=session.session_id,
+        )
+        value = result.get("result", {}).get("value")
+        return value if isinstance(value, str) else None
+    except Exception:  # noqa: BLE001 - classify_outcome fails loudly on None
         return None
 
 
@@ -172,23 +169,43 @@ def build_llm(provider: str, model: str) -> Any:
 
 async def run_once(task: dict[str, Any], repetition: int, args: argparse.Namespace) -> tuple[RawRun, dict[str, Any]]:
     # Imported lazily so `--help` works without the dependency installed.
-    from browser_use import Agent
+    from browser_use import Agent, BrowserProfile
 
     url = f"http://127.0.0.1:{args.port}/{task['path']}"
-    agent = Agent(task=f"{task['prompt']}\nStart at {url}", llm=build_llm(args.provider, args.model))
+    agent = Agent(
+        task=task["prompt"],
+        llm=build_llm(args.provider, args.model),
+        initial_actions=[{"navigate": {"url": url, "new_tab": False}}],
+        browser_profile=BrowserProfile(
+            allowed_domains=["127.0.0.1"],
+            window_size=args.viewport,
+            viewport=args.viewport,
+        ),
+        use_judge=False,
+        final_response_after_failure=False,
+    )
+
+    page_text: str | None = None
+
+    async def capture_live_text(current_agent: Any) -> None:
+        nonlocal page_text
+        captured = await final_page_text(current_agent)
+        if captured is not None:
+            page_text = captured
 
     started = time.monotonic()
-    history = await agent.run(max_steps=args.max_steps)
+    history = await agent.run(max_steps=args.max_steps, on_step_end=capture_live_text)
     duration_ms = int((time.monotonic() - started) * 1000)
 
-    page_text = await final_page_text(agent)
-    input_tokens, output_tokens = usage_from_history(history)
+    input_tokens, cache_read_tokens, cache_write_tokens, output_tokens = usage_from_agent(agent, args.provider)
     outcome = classify_outcome(history, page_text, task["verify_text"])
 
     run = RawRun(
         task=task["id"],
         outcome=outcome,
         input_tokens=input_tokens,
+        cache_read_tokens=cache_read_tokens,
+        cache_write_tokens=cache_write_tokens,
         output_tokens=output_tokens,
         duration_ms=duration_ms,
         repetition=repetition,
@@ -203,6 +220,10 @@ async def run_once(task: dict[str, Any], repetition: int, args: argparse.Namespa
         "final_result": _call_safely(history, "final_result"),
         "urls": _call_safely(history, "urls"),
         "errors": _call_safely(history, "errors"),
+        "provider_receipts": [
+            {"model": entry.model, "usage": entry.usage.model_dump(mode="json")}
+            for entry in agent.token_cost_service.usage_history
+        ],
         "verify_text_visible": None if page_text is None else task["verify_text"] in page_text,
     }
     return run, dump
@@ -234,26 +255,61 @@ async def main() -> None:
     )
     parser.add_argument("--port", type=int, default=tasks_config["fixture_port"], help="fixture server port")
     parser.add_argument("--repetitions", type=int, default=tasks_config["repetitions"], help="runs per task (gate needs >= 15 successes)")
+    parser.add_argument("--repetition", type=int, help="run one exact 1-based repetition for paired collection")
+    parser.add_argument("--resume", action="store_true", help="retain completed attempts and skip their task/repetition ids")
+    parser.add_argument("--max-new-runs", type=int, help="maximum new atomic browser sessions")
     parser.add_argument("--max-steps", type=int, default=25, help="Browser Use step ceiling per run")
     parser.add_argument("--task", action="append", dest="only", help="limit to a task id; repeatable")
     args = parser.parse_args()
+    args.viewport = tasks_config["viewport"]
+    if args.repetition is not None and args.repetition < 1:
+        raise SystemExit("--repetition must be positive")
+    if args.max_new_runs is not None and args.max_new_runs < 1:
+        raise SystemExit("--max-new-runs must be positive")
 
     tasks = [t for t in tasks_config["tasks"] if not args.only or t["id"] in args.only]
     raw_dir = args.out / "raw"
     raw_dir.mkdir(parents=True, exist_ok=True)
-
-    runs: list[RawRun] = []
-    for task in tasks:
-        for repetition in range(args.repetitions):
-            run, dump = await run_once(task, repetition, args)
-            # Written per run, not at the end: a crash mid-matrix must not lose the
-            # runs already paid for.
-            (raw_dir / f"{task['id'].lower()}-{repetition}.json").write_text(json.dumps(dump, indent=2) + "\n")
-            runs.append(run)
-            print(f"{task['id']} rep {repetition}: {run.outcome} {run.input_tokens}+{run.output_tokens} tokens in {run.duration_ms}ms")
-
     out_path = args.out / "raw-runs.json"
-    out_path.write_text(json.dumps([asdict(r) for r in runs], indent=2) + "\n")
+    if out_path.exists() and not args.resume:
+        raise SystemExit(f"{out_path} already exists; pass --resume or choose a new output")
+    existing = json.loads(out_path.read_text()) if out_path.exists() else []
+    runs = [RawRun(**row) for row in existing]
+    completed = {(run.task, run.repetition) for run in runs}
+    if len(completed) != len(runs):
+        raise RuntimeError("raw-runs.json contains duplicate task/repetition attempts")
+    # A crash may land the per-attempt dump just before the aggregate rename.
+    # Recover that completed attempt instead of paying for and overwriting it.
+    recovered = False
+    for dump_path in sorted(raw_dir.glob("*.json")):
+        dump = json.loads(dump_path.read_text())
+        identity = (dump.get("task"), dump.get("repetition"))
+        if identity in completed:
+            continue
+        row = RawRun(**{field: dump[field] for field in RawRun.__dataclass_fields__})
+        runs.append(row)
+        completed.add(identity)
+        recovered = True
+    if recovered:
+        temporary = out_path.with_suffix(".tmp")
+        temporary.write_text(json.dumps([asdict(item) for item in runs], indent=2) + "\n")
+        temporary.replace(out_path)
+    repetitions = [args.repetition] if args.repetition is not None else range(1, args.repetitions + 1)
+    plan = [(task, repetition) for task in tasks for repetition in repetitions if (task["id"], repetition) not in completed]
+    if args.max_new_runs is not None:
+        plan = plan[:args.max_new_runs]
+
+    for task, repetition in plan:
+        run, dump = await run_once(task, repetition, args)
+        # Each completed attempt is durable before another paid browser session starts.
+        (raw_dir / f"{task['id'].lower()}-{repetition:02d}.json").write_text(json.dumps(dump, indent=2) + "\n")
+        runs.append(run)
+        temporary = out_path.with_suffix(".tmp")
+        temporary.write_text(json.dumps([asdict(item) for item in runs], indent=2) + "\n")
+        temporary.replace(out_path)
+        logical = run.input_tokens + run.cache_read_tokens + run.cache_write_tokens
+        print(f"{task['id']} rep {repetition}: {run.outcome} logical={logical} output={run.output_tokens} in {run.duration_ms}ms")
+
     print(f"\nwrote {out_path} ({len(runs)} runs, browser-use {browser_use_version()})")
 
 
