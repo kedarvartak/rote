@@ -3,7 +3,7 @@ import Link from "next/link";
 
 /**
  * The roadmap as a stepped cascade (see docs/05-roadmap.md §The phase arc):
- * a dark branching rail indexes the six phases by state, and a paper panel
+ * a branching rail indexes the six phases by state, and a graphite panel
  * carries them as stair-stepped cards joined by elbow connectors — the arc
  * reads left-to-right, top-to-bottom, one gate at a time.
  */
@@ -57,9 +57,9 @@ const PHASES = [
 ];
 
 const STATE = {
-  done: { color: "#4c8f58", chip: "done" },
-  now: { color: "#c2751f", chip: "← we are here" },
-  planned: { color: "#8a8578", chip: "planned" },
+  done: { color: "#5faf6d", chip: "done" },
+  now: { color: "#d98f3d", chip: "← we are here" },
+  planned: { color: "#8a877a", chip: "planned" },
 };
 
 // static so Tailwind can see them: staircase offsets for row one
@@ -120,7 +120,7 @@ function Connector({ drop, edge, offsetClass = "" }: { drop: boolean; edge: Edge
  * all dashed grey: this stretch of the path is still planned.
  */
 function WrapConnector() {
-  const c = "#8a8578";
+  const c = "#8a877a";
   return (
     <div className="hidden lg:flex h-16 mt-2" aria-hidden>
       {/* left corner: down into P3 */}
@@ -177,20 +177,20 @@ function PhaseCard({ p, fill = false }: { p: (typeof PHASES)[number]; fill?: boo
   const s = STATE[p.state];
   return (
     <article
-      className={`${fill ? "h-full" : ""} border bg-white/40 ${
+      className={`${fill ? "h-full" : ""} border bg-surface-2/70 ${
         p.state === "now"
-          ? "border-copper/70 shadow-[0_2px_24px_rgba(194,117,31,0.16)]"
-          : "border-paper-ink/15"
+          ? "border-copper/70 shadow-[0_2px_24px_rgba(194,117,31,0.14)]"
+          : "hairline"
       }`}
     >
       <div
-        className="flex items-center justify-between px-4 py-2.5 border-b border-paper-ink/15"
+        className="flex items-center justify-between px-4 py-2.5 border-b hairline"
         style={{
-          background: `repeating-linear-gradient(45deg, ${s.color}14 0 6px, transparent 6px 12px)`,
+          background: `repeating-linear-gradient(45deg, ${s.color}1f 0 6px, transparent 6px 12px)`,
         }}
       >
         <span
-          className="font-mono text-[0.8rem] font-medium border px-1.5 py-0.5 bg-paper"
+          className="font-mono text-[0.8rem] font-medium border px-1.5 py-0.5 bg-bg"
           style={{ color: s.color, borderColor: `${s.color}66` }}
         >
           {p.id}
@@ -203,24 +203,24 @@ function PhaseCard({ p, fill = false }: { p: (typeof PHASES)[number]; fill?: boo
         </span>
       </div>
       <div className="p-4">
-        <h3 className="font-medium text-paper-ink text-[1.02rem]">{p.theme}</h3>
-        <p className="mt-1.5 font-display italic text-[0.95rem] leading-snug text-paper-ink/75">
+        <h3 className="font-medium text-ink text-[1.02rem]">{p.theme}</h3>
+        <p className="mt-1.5 font-display italic text-[0.95rem] leading-snug text-ink-2">
           {p.line}
         </p>
-        <p className="mt-3 font-mono text-[0.68rem] tracking-widest uppercase text-paper-ink/50">
+        <p className="mt-3 font-mono text-[0.68rem] tracking-widest uppercase text-muted">
           {p.target}
         </p>
         {p.gates && (
-          <div className="mt-3 pt-3 border-t border-paper-ink/10 space-y-1.5">
+          <div className="mt-3 pt-3 border-t hairline space-y-1.5">
             {p.gates.map((g) => (
               <div
                 key={g.id}
                 className="flex items-baseline justify-between gap-3 font-mono text-[0.66rem] whitespace-nowrap"
               >
-                <span className="text-paper-ink/70">
+                <span className="text-ink-2">
                   {g.id} · {g.label}
                 </span>
-                <span className={g.ok ? "text-[#4c8f58]" : "text-paper-ink/40"}>
+                <span className={g.ok ? "text-good" : "text-muted"}>
                   {g.verdict}
                 </span>
               </div>
@@ -310,21 +310,21 @@ export function RoadmapCascade() {
         <Rail />
       </Reveal>
 
-      {/* the paper panel — the notebook page the plan is drawn on */}
+      {/* the plan panel, in the site theme */}
       <Reveal delay={120}>
-        <div className="bg-paper text-paper-ink p-6 sm:p-9 rounded-sm">
+        <div className="bg-surface/70 border hairline p-6 sm:p-9 rounded-sm">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
             <div>
-              <p className="font-display italic text-copper text-xl">
+              <p className="font-display italic text-copper-bright text-xl">
                 One phase at a time.
               </p>
-              <h3 className="font-display text-3xl sm:text-[2.4rem] leading-tight tracking-tight mt-1">
+              <h3 className="font-display text-3xl sm:text-[2.4rem] leading-tight tracking-tight mt-1 text-ink">
                 Each behind a gate with a number on it.
               </h3>
             </div>
             <Link
               href="/docs/roadmap"
-              className="shrink-0 font-mono text-[0.72rem] tracking-[0.15em] uppercase border border-paper-ink/40 px-4 py-2.5 hover:bg-paper-ink hover:text-paper transition-colors"
+              className="shrink-0 font-mono text-[0.72rem] tracking-[0.15em] uppercase border hairline text-ink-2 px-4 py-2.5 hover:border-copper/60 hover:text-copper-bright transition-colors"
             >
               Full roadmap →
             </Link>
@@ -362,7 +362,7 @@ export function RoadmapCascade() {
                           y1="0"
                           x2="38"
                           y2="100%"
-                          stroke="#8a8578"
+                          stroke="#8a877a"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeDasharray="2 7"
@@ -386,7 +386,7 @@ export function RoadmapCascade() {
                 {i > 0 && (
                   <Connector
                     drop={false}
-                    edge={{ dashed: true, color: "#8a8578", delay: 1.7 + i * 0.2 }}
+                    edge={{ dashed: true, color: "#8a877a", delay: 1.7 + i * 0.2 }}
                   />
                 )}
                 <div className="lg:flex-1 min-w-0">
