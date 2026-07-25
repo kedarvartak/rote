@@ -40,8 +40,8 @@ B2 (10 steps):  637 → 677 → 716 → 759 → 800 → 839 → 876 → 917 → 
 **21% of that run's input bill is re-reading text it already sent** — on a page that
 distills to 10 nodes. Everything the field competes on (DOM serializers, element filtering,
 vision-vs-a11y) shrinks the *per-step* prompt, and the better harnesses now evict old
-observations too. What nobody ships is the next step: stop re-sending the current page in
-full when a 24-character diff describes what changed
+observations too. What no major harness ships is the next step: stop re-sending the
+current page in full when a 24-character diff describes what changed
 ([04 — Competition](docs/04-competition.md), source-surveyed 2026-07-25).
 
 ![The quadratic and the four levers on it](docs/diagrams/tier0-curve.svg)
