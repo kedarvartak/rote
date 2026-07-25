@@ -14,7 +14,7 @@ const TIERS = [
     scope: "within one run",
     forgets: "what it already sent this run",
     bill: "cost is O(n²) in task length",
-    field: "Nobody builds it. Rote's wedge — built and measured.",
+    field: "The field evicts old pages, then re-renders the current one in full. Rote sends the diff — built and measured.",
     built: true,
   },
   {
@@ -204,16 +204,17 @@ export default function Home() {
             eyebrow="docs/01 · the problem"
             title={
               <>
-                The quadratic <span className="text-copper-bright text-[1.08em]">nobody names</span>
+                The window <span className="text-copper-bright text-[1.08em]">nobody manages</span>
               </>
             }
             lede={
               <>
-                A run of n steps re-sends its whole history every step:
-                1 + 2 + … + n prompt-units, so cost is O(n²) in task
-                length. Everything the field competes on shrinks the per-step
-                prompt. That lowers the constant.{" "}
-                <span className="text-ink">Nobody has touched the exponent.</span>
+                The naive loop re-sends its whole history every step —
+                1 + 2 + … + n prompt-units, O(n²) in task length. The
+                field&apos;s fix is to evict old observations, and the major
+                harnesses now do. But every one of them still re-renders the
+                current page in full, every step.{" "}
+                <span className="text-ink">Nobody sends the diff.</span>
               </>
             }
           />
@@ -357,7 +358,7 @@ export default function Home() {
           <SectionHead
             eyebrow="docs/05 · tier 0"
             title="Four levers on the curve"
-            lede="Working memory is the wedge nobody else builds. Three of the four levers are live; the honest ledger says so about the fourth."
+            lede="The field ships eviction alone; Rote manages the whole window. Three of the four levers are live; the honest ledger says so about the fourth."
           />
         </Reveal>
         <div className="mt-12 grid gap-px bg-ink/10 border hairline rounded-sm overflow-hidden sm:grid-cols-2">

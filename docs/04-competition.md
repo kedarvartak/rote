@@ -1,6 +1,11 @@
 # 04 — Competition
 
-> Surveyed 2026-07-16 against public docs and repos — **not** against competitor source.
+> Surveyed 2026-07-16 against public docs and repos; **re-surveyed 2026-07-25 against
+> source** — browser-use at tag 0.13.6 (the exact version G1 benchmarked), Skyvern HEAD,
+> Stagehand v3 HEAD, `magnitude-core` 0.3.1, plus vendor docs for the labs. The source
+> read corrected this doc in both directions: **observation eviction is table stakes**
+> (every major harness evicts or masks old observations), and **cross-step observation
+> diffing is ours alone** (the only prior art is a non-web paper, arXiv 2312.07540).
 > Optimization IDs (A4, C3, …) refer to [06 — Optimizations](06-optimizations.md).
 >
 > **The two findings that set the position:** reuse is table stakes (Skyvern ships our
@@ -35,12 +40,21 @@ Python OSS harness and the community Schelling point; cloud offering on top; a s
 
 Their **DOM engine is the best-documented distiller in OSS** (CDP-coordinated
 extraction, interactive-element detection, 95%+ re-walk cache hits, LLM-optimized
-serialization). Above the observation layer the loop is conventional:
-frontier-model-every-step, full re-observation each step, no diffs, no routing, no
-cache-layout discipline; learning only via the separate, user-initiated recorder. They
-**re-reason at every step by design** — no cached selectors, so a layout change is simply
-re-observed. That is robustness bought with tokens, and it is the clearest contrast with
-both Rote and Stagehand.
+serialization). Source read at 0.13.6: the prompt is a fixed two-message skeleton —
+system prompt plus one state message **rebuilt each step**. Prior observations and
+screenshots are **evicted, not retained**; what survives is a compact text history (the
+model's own `memory`/`evaluation` sentences plus action results), **LLM-compacted by
+default** every 25 steps past a 40K-char floor. Element indices are CDP backend-node
+ids — stable across steps on one page, with newly appeared elements `*`-marked — and
+volatile step metadata is deliberately placed at the prompt tail for prefix-cache
+friendliness.
+
+What they do **not** do: cross-step observation diffs — the full current-page
+serialization (up to 40K chars) is re-sent every step — and their ids are runtime
+identities that die on navigation, so nothing can name an element across runs. They
+**re-reason at every step by design** — no cached selectors, so a layout change is
+simply re-observed. That is robustness bought with tokens, and it is the clearest
+contrast with both Rote and Stagehand.
 
 **Read:** they won distribution, not architecture. Their engine validates that perception
 quality matters; everything above it is ordinary. **Rote vs:** match A1/A2 (table
@@ -165,23 +179,21 @@ don't want to own.
 
 ## Capability matrix
 
-Legend: ● ships it · ◐ partial/adjacent · ○ absent. **The Rote column is the designed
-target, not today's build** — see [02 §Status](02-architecture.md) for what actually exists.
-
-Grouped by memory tier. **The Rote column is today's build, not the target** — that is the
-change from previous versions of this table, which described the design and marked
-things ● that do not exist.
+Legend: ● ships it · ◐ partial/adjacent · ○ absent. Grouped by memory tier. **The Rote
+column is today's build, not the target** — see [02 §Status](02-architecture.md). The
+competitor columns are from the 2026-07-25 source read (header note above); previous
+versions of this table were doc-surveyed and wrong in both directions.
 
 | Optimization | Browser Use | Stagehand | Skyvern | Magnitude | Labs | **Rote (actual)** |
 |---|---|---|---|---|---|---|
 | **TIER 0 — working memory** | | | | | | |
 | A1/A2 distillation + element detection | ● | ◐ | ◐ | ○ | ○ | ● |
-| A3 stable element IDs | ◐ | ○ | ○ | ○ | ○ | ● |
-| **A11 observation eviction** | ○ | n/a | ○ | ○ | ○ | **● built** |
-| **A4 diff observations** | ○ | ○ | ○ | ○ | ○ | ◐ built, CI-exercised |
-| A8 token budget contract | ○ | ○ | ○ | ○ | ○ | ● |
-| **B3 cache-layout discipline** | ○ | ○ | ◐ | ○ | n/a | **○ not built** (#57) |
-| **B4 history compaction** | ○ | ○ | ○ | ○ | ○ | ○ |
+| A3 stable element IDs | ◐ runtime (CDP backend-node id, dies on navigation) | ◐ runtime | ○ per-scrape counter | n/a vision | ○ | **● semantic hash — survives navigation and runs** |
+| A11 observation eviction | ● rebuild, current state only | ◐ masks (keeps 2 screenshots + 1 tree) | ● window = last 1 step | ◐ keeps last 2 screenshots | ◐ context editing / truncation | ● |
+| **A4 diff observations** | ○ (`*`-marks new elements only) | ○ | ○ (incremental scrape is within-action) | ○ | ○ | **● built, measured (T10: 849 diffs, −99.6% median)** |
+| A8 token budget contract | ◐ 40K serializer cap | ◐ ~70K tree cap | ◐ 100K + truncation fallbacks | ○ | ○ | ● 4,000-char contract, fails loudly |
+| **B3 cache-layout discipline** | ◐ volatile tail ordering, no enforcement | ○ | ○ | ◐ freeze mask | n/a | **● enforced + keyed (T11)** |
+| **B4 history compaction** | ● LLM summarization, default-on | ○ | ◐ fixed window | ○ | ◐ server-side (labs) | ○ designed only |
 | A7 elective vision (SoM) | ◐ | ◐ | ● always-on | ● always-on | ● always-on | ○ (no vision path) |
 | A9 WebMCP-first | ○ | ○ | ○ | ○ | ◐ | ○ |
 | **TIER 1 — episodic memory** | | | | | | |
@@ -202,9 +214,19 @@ Read this honestly, because the previous version did not:
 
 - **Tier 1 is where we are behind.** Skyvern is ● on both replay and distillation; we are ○
   on the distiller. Their column is stronger than ours today.
-- **Tier 0 is an almost-empty column for everyone** — including us. Four of its rows are
-  all-○ across the entire field. That is the position, and we have exactly one ● that
-  nobody else has (A11), one ◐ that has never run, and two ○.
+- **Tier 0: eviction is table stakes; diffing is empty for everyone but us.** The
+  2026-07-25 source read overturned the previous version of this table, which marked the
+  whole field ○ on A11 and called it "the one ● nobody else has." In reality browser-use,
+  Skyvern, Stagehand, and Magnitude all evict or mask old observations, and browser-use
+  ships default-on LLM history compaction — a lever we have only designed (B4). What is
+  genuinely all-○ across the field is **A4** (cross-step observation diffs; sole prior
+  art is arXiv 2312.07540, on NetHack, not shipped anywhere) and **semantic element
+  identity** (an id that can appear in a playbook and survive a navigation). Both are
+  built and measured (T10/T11).
+- **Until B4 exists, the long-task asymptote is theirs.** Browser-use's default compaction
+  bounds their history term; ours grows linearly forever. In the measured 9–25-step range
+  our slope wins decisively — but a source-literate reader will spot the crossover
+  argument, so we say it first.
 - **The trust-gate row is the only one where we are alone at ●** — and it is a precondition,
   not a product.
 - Rote is ○ on vision and WebMCP. We are not better at everything; we do not do those.
@@ -222,7 +244,7 @@ Three tiers, and the field's position at each ([01](01-problem.md), [02](02-arch
 
 | Tier | Scope | The field | Rote |
 |---|---|---|---|
-| **0 — Working** | within a run | **nobody.** Everyone re-sends the transcript; everyone is O(n²) | **the wedge** — half-built, unmeasured |
+| **0 — Working** | within a run | **eviction is table stakes** — everyone drops old observations, then re-sends a full render of the current page every step; **nobody diffs** | **the wedge** — diffs + enforced cache layout, built and measured (T10/T11) |
 | **1 — Episodic** | across runs | **Skyvern ships it**, with branch coverage we don't design for. Stagehand, `workflow-use` adjacent | **late.** Distiller unbuilt |
 | **2 — Semantic** | across tasks on a site | nobody (Skyvern ◐) | unbuilt |
 | **Trust gate** | all tiers | **nobody** — success = no exception thrown | invariant 1 |
@@ -240,10 +262,12 @@ caching rewards a property that feels unnatural to write:
 > **Nothing above the line may ever mutate.** Not a timestamp, not a run id, not a
 > reordered tool schema, not a "helpful" recency reshuffle.
 
-Most harnesses cannot guarantee that, because **nothing owns prompt layout** — messages are
-appended wherever convenient, across the codebase. Retrofitting the guarantee means finding
-every writer and constraining it. Rote has one `ContextAssembler` that owns layout as an
-architectural rule.
+The field gets partway there by convention — browser-use deliberately orders volatile
+step metadata last in its state message, with comments saying why — but **nothing
+enforces it**: any contributor can append a message wherever convenient, and nothing
+fails when the prefix mutates. Retrofitting the guarantee means finding every writer and
+constraining it. Rote has one `ContextAssembler` that owns layout as an architectural
+rule, enforced at runtime and in the sacred suite.
 
 That is the same shape as invariant 1: **not clever code, an enforced constraint.** E3.4
 now enforces it at runtime and in the sacred suite: timestamp/run-ID fields and any

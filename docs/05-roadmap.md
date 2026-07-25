@@ -40,9 +40,12 @@ Core schemas + Expect DSL, lossless recorder, verified replay executor, benchmar
 
 **A browser agent that manages its context window, and a curve that proves it.**
 
-Everyone re-sends the transcript every step, so every harness is O(n²) in task length.
-Every optimization the field competes on lowers the *constant*. V1 attacks the *exponent* —
-four levers, on tier 0, where the capability matrix is an empty column for the whole field.
+The naive loop re-sends the transcript every step — O(n²) in task length. The field's
+answer is eviction, and the major harnesses now ship it ([04](04-competition.md)); what
+everyone still does is re-send a **full render of the current page** every step. V1
+manages the whole window — evict, diff, budget, enforce cache layout — where the field
+ships eviction alone, and the diff row of the capability matrix is empty for everyone
+but us.
 
 V1 launches on the **deterministic** wins (working memory, accounting, verified replay).
 The probabilistic ones (routing, speculation, learned memory) are deliberately V2+: they
