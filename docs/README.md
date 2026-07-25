@@ -3,8 +3,9 @@
 > **Agent harnesses have no memory manager. Rote is the memory manager.**
 
 Browser agents forget at three timescales and pay again at each: they re-send the
-transcript every step (O(n²) within a run), re-derive the procedure every run, and re-learn
-the site every task. Rote treats the context window as a managed resource — with a budget,
+current page in full every step (and the naive loop re-sends the whole transcript —
+O(n²) within a run), re-derive the procedure every run, and re-learn the site every
+task. Rote treats the context window as a managed resource — with a budget,
 an eviction policy, a layout contract, and a trust gate on the way back in.
 
 ![Architecture](diagrams/architecture.svg)

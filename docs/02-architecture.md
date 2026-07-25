@@ -281,8 +281,9 @@ interface StepOutcome {
 
 **Stable IDs are a schema-level commitment.** They appear in trajectories, playbooks, and
 memory, which is what makes diffs (`"#e42 changed"` rather than re-listing the page) and
-cross-run learning possible at all. Most harnesses renumber every step and silently break
-history reuse.
+cross-run learning possible at all. The field's ids are runtime identities — CDP
+backend-node ids or per-scrape counters — that die on navigation, so no other harness
+can name an element across runs (see [04](04-competition.md), 2026-07-25 source read).
 
 ## Playbooks
 
