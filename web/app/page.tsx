@@ -214,7 +214,7 @@ export default function Home() {
                 field&apos;s fix is to evict old observations, and the major
                 harnesses now do. But every one of them still re-renders the
                 current page in full, every step.{" "}
-                <span className="text-ink">Nobody sends the diff.</span>
+                <span className="text-ink">No major harness sends the diff.</span>
               </>
             }
           />

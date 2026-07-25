@@ -168,7 +168,7 @@ export default function RoadmapPage() {
         <p className="mt-5 text-ink-2 leading-relaxed max-w-2xl">
           One phase at a time, each behind an exit gate with a number on it.
           We are late to tier 1 and early to tier 0 — where the field ships
-          eviction alone and nobody sends a diff.
+          eviction alone and no major harness sends a diff.
         </p>
         {/* status strip */}
         <div className="mt-6 flex flex-wrap gap-2.5">

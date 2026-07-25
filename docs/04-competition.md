@@ -5,7 +5,11 @@
 > Stagehand v3 HEAD, `magnitude-core` 0.3.1, plus vendor docs for the labs. The source
 > read corrected this doc in both directions: **observation eviction is table stakes**
 > (every major harness evicts or masks old observations), and **cross-step observation
-> diffing is ours alone** (the only prior art is a non-web paper, arXiv 2312.07540).
+> diffing is absent from every major harness**. Research recommends diffing (arXiv
+> 2312.07540 on NetHack; arXiv 2604.01535 for web agents); the only wild sighting is a
+> ~14-star MCP tool server (`agent-web-interface`). Nobody ships it as the default
+> representation in a benchmarked production harness — that is the claim, stated
+> exactly, and it is the one we can defend.
 > Optimization IDs (A4, C3, …) refer to [06 — Optimizations](06-optimizations.md).
 >
 > **The two findings that set the position:** reuse is table stakes (Skyvern ships our
@@ -219,10 +223,11 @@ Read this honestly, because the previous version did not:
   whole field ○ on A11 and called it "the one ● nobody else has." In reality browser-use,
   Skyvern, Stagehand, and Magnitude all evict or mask old observations, and browser-use
   ships default-on LLM history compaction — a lever we have only designed (B4). What is
-  genuinely all-○ across the field is **A4** (cross-step observation diffs; sole prior
-  art is arXiv 2312.07540, on NetHack, not shipped anywhere) and **semantic element
-  identity** (an id that can appear in a playbook and survive a navigation). Both are
-  built and measured (T10/T11).
+  genuinely all-○ across the field is **A4** (cross-step observation diffs — research
+  recommends it, arXiv 2312.07540 and 2604.01535, but no major harness ships it; the
+  only wild sighting is a ~14-star MCP tool server) and **semantic element identity**
+  (an id that can appear in a playbook and survive a navigation). Both are built and
+  measured (T10/T11).
 - **Until B4 exists, the long-task asymptote is theirs.** Browser-use's default compaction
   bounds their history term; ours grows linearly forever. In the measured 9–25-step range
   our slope wins decisively — but a source-literate reader will spot the crossover
