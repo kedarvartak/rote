@@ -35,6 +35,8 @@ export interface AssemblePlannerContextOptions {
   previousActions: readonly BrowserAction[];
   /** Compact current control state retained even when unchanged nodes are diff-evicted. */
   stateSummary?: string;
+  /** Prior observation content is no longer available in this stateless planner request. */
+  observationHistoryEvicted?: boolean;
   /** Set on a scoped repair call; rendered into the volatile suffix only. */
   repair?: BrowserExpectFailure;
 }
@@ -65,7 +67,7 @@ ${actionHistory}
 
 Current page:
 ${options.page.title} | ${options.page.url}
-
+${renderRecallBoundary(options.observationHistoryEvicted)}
 Current stateful controls:
 ${options.stateSummary ?? '(none)'}
 ${renderRepair(options.repair)}
@@ -85,7 +87,7 @@ export function assertCacheStablePrefix(expected: string | undefined, actual: st
 }
 
 function assertKnownLayoutFields(options: AssemblePlannerContextOptions): void {
-  const allowed = new Set(['task', 'page', 'observation', 'observationMode', 'previousActions', 'stateSummary', 'repair']);
+  const allowed = new Set(['task', 'page', 'observation', 'observationMode', 'previousActions', 'stateSummary', 'observationHistoryEvicted', 'repair']);
   const unknown = Object.keys(options).filter((key) => !allowed.has(key));
   if (unknown.length > 0) {
     throw new CacheLayoutImmutabilityError(
@@ -102,6 +104,18 @@ function assertKnownLayoutFields(options: AssemblePlannerContextOptions): void {
  * "your action failed" would invite the planner to redo a submit that already went
  * through — the exact double-submit the T1 B2 trace shows was never needed.
  */
+function renderRecallBoundary(historyEvicted?: boolean): string {
+  if (!historyEvicted) return '';
+  // see docs/02-architecture.md "The policy" — eviction is allowed to lose recall,
+  // but never to turn absence into a guessed fact.
+  return `
+Recall boundary: prior page/observation content has been evicted. Only the action history
+and current observation are available. If the task requires a missing earlier fact, do
+not guess; return done with success=false, failureClassification="recall_unavailable",
+and state which fact is unavailable.
+`;
+}
+
 function renderRepair(repair?: BrowserExpectFailure): string {
   if (!repair) return '';
   return `

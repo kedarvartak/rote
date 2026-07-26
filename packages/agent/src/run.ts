@@ -20,6 +20,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
   let repairsUsed = 0;
   let pendingRepair: BrowserExpectFailure | undefined;
   let plannerStablePrefix: string | undefined;
+  let observationHistoryEvicted = false;
 
   try {
     for (let step = 0; step < maxSteps; step += 1) {
@@ -28,11 +29,15 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       const nodes = distillPage(page);
       // INVARIANT: a diff base belongs to one page identity. Reusing old-page
       // nodes after navigation leaves the planner acting on controls that no longer exist.
+      const pageChanged = previousPageUrl !== undefined && previousPageUrl !== page.url;
       const observation = renderAdaptiveObservation(nodes, {
         maxChars: options.observationMaxChars,
         maxBootstrapChars: options.observationBootstrapMaxChars,
         previousNodes: previousPageUrl === page.url ? previousNodes : undefined,
       });
+      // see docs/02-architecture.md "The policy" — once any prior observation is
+      // omitted, later stateless planner calls must know that absence is not evidence.
+      observationHistoryEvicted ||= pageChanged || observation.mode === 'diff';
       previousNodes = nodes;
       previousPageUrl = page.url;
       const pageState = { url: page.url, title: page.title };
@@ -47,6 +52,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         observationMode: observation.mode,
         previousActions,
         stateSummary: renderStatefulControls(nodes),
+        ...(observationHistoryEvicted ? { observationHistoryEvicted: true } : {}),
         ...(pendingRepair ? { repair: pendingRepair } : {}),
       });
       plannerStablePrefix = assertCacheStablePrefix(plannerStablePrefix, context.stablePrefix);
@@ -166,13 +172,17 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       if (action.kind === 'done') {
         let success = action.success;
         let summary = action.summary;
+        let failureClassification: BrowserAgentResult['failureClassification'] = action.success
+          ? undefined
+          : action.failureClassification;
         if (success) {
           const verification = await options.verifier.verify(await options.page.capture(), options.task, action.summary);
           success = verification.success;
           summary = verification.summary;
+          if (!success) failureClassification = 'verification_failed';
         }
         // INVARIANT: planner-declared completion is never success until an independent verifier passes.
-        const result = resultFromSteps(success, summary, steps);
+        const result = resultFromSteps(success, summary, steps, failureClassification);
         finished = true;
         await options.recorder?.finish(success ? 'success' : 'failure', summary, result.tokenUsage);
         return result;
@@ -180,7 +190,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
     }
 
     const summary = `planner exceeded maxSteps=${maxSteps}`;
-    const result = resultFromSteps(false, summary, steps);
+    const result = resultFromSteps(false, summary, steps, 'step_budget_exhausted');
     finished = true;
     await options.recorder?.finish('failure', summary, result.tokenUsage);
     return result;
@@ -195,8 +205,19 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
   }
 }
 
-function resultFromSteps(success: boolean, summary: string, steps: BrowserAgentStep[]): BrowserAgentResult {
-  return { success, summary, steps, tokenUsage: tokenUsageFromSteps(steps) };
+function resultFromSteps(
+  success: boolean,
+  summary: string,
+  steps: BrowserAgentStep[],
+  failureClassification?: BrowserAgentResult['failureClassification'],
+): BrowserAgentResult {
+  return {
+    success,
+    summary,
+    ...(failureClassification ? { failureClassification } : {}),
+    steps,
+    tokenUsage: tokenUsageFromSteps(steps),
+  };
 }
 
 function tokenUsageFromSteps(steps: readonly BrowserAgentStep[]) {

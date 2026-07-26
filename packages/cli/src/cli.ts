@@ -40,7 +40,8 @@ export async function main(
     const result = await dependencies.runBrowserTask(runId ? { ...options, runId } : options);
     const fallback = formatFallback(result);
     if (!result.success) {
-      throw new Error(`browser task failed (run ${result.runId}): ${result.summary}${fallback ? `; ${fallback}` : ''}`);
+      const classification = result.failureClassification ? ` [${result.failureClassification}]` : '';
+      throw new Error(`browser task failed${classification} (run ${result.runId}): ${result.summary}${fallback ? `; ${fallback}` : ''}`);
     }
     return [
       `success: ${result.summary}`,

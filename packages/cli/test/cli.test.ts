@@ -92,6 +92,7 @@ describe('rote run', () => {
       inputTokens: 50,
       outputTokens: 10,
       phase: 'cold' as const,
+      failureClassification: 'step_budget_exhausted',
       fallbackReason: 'replay_error',
       fallbackDetail: 'replay transport broke',
     });
@@ -99,7 +100,7 @@ describe('rote run', () => {
     await expect(main([
       'run', 'Do the task', '--url', 'https://portal.test', '--verify-text', 'Complete',
     ], '.rote', deps)).rejects.toThrow(
-      'browser task failed (run run-failed): planner exceeded maxSteps=2; fallback: replay_error (replay transport broke)',
+      'browser task failed [step_budget_exhausted] (run run-failed): planner exceeded maxSteps=2; fallback: replay_error (replay transport broke)',
     );
   });
 });

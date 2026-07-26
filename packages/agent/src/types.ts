@@ -27,13 +27,36 @@ const OptionalBrowserStableIdSchema = z.preprocess(
   BrowserStableIdSchema.optional(),
 );
 
+/** Auditable reason a browser-agent run ended without success. */
+export const BrowserAgentFailureClassificationSchema = z.enum([
+  'recall_unavailable',
+  'verification_failed',
+  'step_budget_exhausted',
+]);
+/** Auditable browser-agent failure reason. */
+export type BrowserAgentFailureClassification = z.infer<typeof BrowserAgentFailureClassificationSchema>;
+const BrowserPlannerFailureClassificationSchema = z.literal('recall_unavailable');
+
 export const BrowserActionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('navigate'), url: z.string().min(1), expect: BrowserExpectSchema.optional() }),
   z.object({ kind: z.literal('fill'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
   z.object({ kind: z.literal('select'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
   z.object({ kind: z.literal('click'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), expect: BrowserExpectSchema.optional() }),
-  z.object({ kind: z.literal('done'), success: z.boolean(), summary: z.string().default('') }),
-]);
+  z.object({
+    kind: z.literal('done'),
+    success: z.boolean(),
+    summary: z.string().default(''),
+    failureClassification: BrowserPlannerFailureClassificationSchema.optional(),
+  }),
+]).superRefine((action, context) => {
+  if (action.kind === 'done' && action.success && action.failureClassification) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['failureClassification'],
+      message: 'a successful done action cannot carry a failure classification',
+    });
+  }
+});
 export type BrowserAction = z.infer<typeof BrowserActionSchema>;
 
 export const BrowserActionClassificationSchema = z.enum([
@@ -197,6 +220,8 @@ export interface BrowserAgentStep {
 export interface BrowserAgentResult {
   success: boolean;
   summary: string;
+  /** Harness- or planner-declared reason for a clean non-success result. */
+  failureClassification?: BrowserAgentFailureClassification;
   steps: readonly BrowserAgentStep[];
   tokenUsage: readonly TokenUsage[];
 }

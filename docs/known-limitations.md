@@ -24,7 +24,10 @@ scaling, or zero-LLM operation for ordinary tasks.
 - **DOM/accessibility-oriented perception.** Canvas-only, vision-heavy, remote-desktop,
   complex cross-origin iframe, and unusual shadow-DOM workflows are not certified.
 - **Recall across pages is weak.** The tier-0 policy keeps what the agent did, not every
-  page it saw. Compare-across-pages tasks can lose evidence that was evicted.
+  page it saw. Compare-across-pages tasks can lose evidence that was evicted. The planner
+  now receives an explicit recall boundary and can fail as `recall_unavailable`; fabricated
+  completion is independently rejected ([T18](testing/T18-eviction-recall-trade.md)). The
+  task still does not succeed without an external memory strategy.
 - **Open-ended and creative work is a weak fit.** There may be no stable procedure or
   independent success signal to reuse.
 - **Business-rule drift is not selector drift.** Repair cannot infer that a site's meaning
@@ -66,6 +69,10 @@ G2's B2 token reduction does not clear the catalog's 80% target. None of the thr
 cells reaches the catalog's 5× latency target; B1 and B2 are below its 2× line. Cost,
 latency, slope, rendered characters, and logical tokens are separate claims.
 
+T18 landed after the frozen matrices: its recall boundary adds volatile prompt text on
+affected steps. That provider-token overhead has not been recertified. It is
+a fail-closed safety change, not a new efficiency claim.
+
 The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulative-token-curve.md),
 [T11](testing/T11-cache-key-economics.md), and [T13](testing/T13-g2-certification.md).
 
@@ -83,7 +90,7 @@ The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulat
 
 ## Deliberately deferred
 
-Formal B5 drift/repair certification (the launch demo proves detection plus full fallback only), an eviction recall-trade stress task, scheduled compaction, distillation,
+Formal B5 drift/repair certification (the launch demo proves detection plus full fallback only), scheduled compaction, distillation,
 automatic matching, site memory, routing, and speculation remain post-G2 work. Deferral
 means “not claimed,” not “implicitly working.” The authoritative sequence is
 [07 — Execution plan](07-execution-plan.md).
