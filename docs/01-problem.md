@@ -158,7 +158,9 @@ Being honest about the fit is load-bearing; the benchmark reports the losses too
   rather than confidently replay something wrong.
 - **Tasks needing recall of earlier pages.** Our working-memory policy keeps what the agent
   *did*, not what it *saw* ([02](02-architecture.md) §Tier 0). "Compare prices across three
-  products" needs observations we evict. A real limit, not a footnote.
+  products" needs observations we evict. T18 now requires a typed `recall_unavailable`
+  failure—or verifier rejection of a guessed answer—but does not make the task succeed.
+  A real limit, not a footnote.
 
 ## Why browser agents are the right wedge
 

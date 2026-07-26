@@ -50,3 +50,4 @@ enough to be re-run and disagreed with.
 | [T15](T15-replay-fallback.md) | 2026-07-24 | Exercise the invariant-2 exit after an exact-fingerprint replay assertion fails | failed replay remains failed; classified cold fallback completes and verifies B1 |
 | [T16](T16-launch-demo.md) | 2026-07-24 | Record the shipped product boundary from cold exploration through replay and real selector drift | cold verifies; explicit replay uses zero tokens; stale replay fails and classified cold fallback verifies |
 | [T17](T17-one-command-reproduction.md) | 2026-07-24 | Make paid G2 collection and no-provider published-evidence reproduction one command each | byte-identical T13 reproduction passes; fresh post-package B1 pair verifies both source runners |
+| [T18](T18-eviction-recall-trade.md) | 2026-07-26 | Stress the tier-0 recall trade across two pages in the sacred invariant suite | missing recall declines with `recall_unavailable`; fabricated comparison fails verification |

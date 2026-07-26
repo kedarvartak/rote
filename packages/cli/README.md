@@ -22,7 +22,9 @@ npx @rote/cli@0.1.0 run "Confirm that the page says Rote quickstart ready." \
 
 The data URL is a safe local smoke (measured at one step and 366 input + 24 output tokens).
 For real work, replace it with a page you are authorized to automate and a success signal that the live page—not the agent's
-self-report—must show.
+self-report—must show. Clean agent failures retain `recall_unavailable`,
+`verification_failed`, or `step_budget_exhausted` in CLI errors rather than collapsing
+into an untyped summary.
 
 A provider-backed cold→zero-token replay→selector-drift fallback demo is runnable from the
 repository with `scripts/demo/run-launch-demo.sh`; see [T16](../../docs/testing/T16-launch-demo.md).

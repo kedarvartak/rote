@@ -46,6 +46,29 @@ describe('assemblePlannerContext', () => {
     expect(second.volatileSuffix.indexOf('?run=2')).toBeGreaterThan(second.volatileSuffix.lastIndexOf(JSON.stringify(action)));
   });
 
+  it('marks evicted observation history in the volatile suffix without changing the cache prefix', () => {
+    const current = assemblePlannerContext({
+      task: 'Compare product prices',
+      page: { url: 'https://catalog.test/b', title: 'Product B' },
+      observation: 'Product B price: $9',
+      observationMode: 'full',
+      previousActions: [{ kind: 'navigate', url: 'https://catalog.test/b' }],
+    });
+    const evicted = assemblePlannerContext({
+      task: 'Compare product prices',
+      page: { url: 'https://catalog.test/b', title: 'Product B' },
+      observation: 'Product B price: $9',
+      observationMode: 'full',
+      previousActions: [{ kind: 'navigate', url: 'https://catalog.test/b' }],
+      observationHistoryEvicted: true,
+    });
+
+    expect(evicted.stablePrefix).toBe(current.stablePrefix);
+    expect(current.volatileSuffix).not.toContain('Recall boundary:');
+    expect(evicted.volatileSuffix).toContain('failureClassification="recall_unavailable"');
+    expect(evicted.volatileSuffix).toContain('do\nnot guess');
+  });
+
   it('puts action definitions before volatile observations', () => {
     const context = assemblePlannerContext({
       task: 'Find Alpha',

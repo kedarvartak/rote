@@ -115,6 +115,29 @@ describe('runBrowserTask', () => {
     });
   });
 
+  it('propagates a clean agent failure classification to the CLI boundary', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-browser-task-classified-failure-'));
+    const planner: BrowserPlannerClient = {
+      async plan(source) {
+        return {
+          action: { kind: 'navigate', url: 'https://portal.test/next' },
+          usage: { source, input_tokens: 10, output_tokens: 2 },
+        };
+      },
+    };
+
+    const result = await runBrowserTask({
+      task: 'Recall a prior fact', url: 'https://portal.test/start', baseDir,
+      verifyText: 'Done', maxSteps: 1,
+    }, { backend: new FakeBackend(new FakePage()), planner });
+
+    expect(result).toMatchObject({
+      success: false,
+      failureClassification: 'step_budget_exhausted',
+      summary: 'planner exceeded maxSteps=1',
+    });
+  });
+
   it('records failure and closes the browser when initial navigation fails', async () => {
     baseDir = await mkdtemp(join(tmpdir(), 'rote-browser-task-failure-'));
     const page = new FakePage(true);

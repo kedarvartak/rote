@@ -9,7 +9,7 @@ import {
   type BrowserReplayCandidate,
   type EnvFingerprint,
 } from '@rote/core';
-import { FileBrowserAgentRunRecorder, runBrowserAgent, TaggedLlmBrowserPlanner, type BrowserPageSession, type BrowserPlannerClient } from '@rote/agent';
+import { FileBrowserAgentRunRecorder, runBrowserAgent, TaggedLlmBrowserPlanner, type BrowserAgentFailureClassification, type BrowserPageSession, type BrowserPlannerClient } from '@rote/agent';
 import { LaunchingCdpBrowserBackend } from '@rote/browser';
 import { BrowserToolCaller, runPlaybook } from '@rote/executor';
 import { createTaggedLlmClientFromEnv } from '@rote/llm';
@@ -44,6 +44,7 @@ export interface BrowserTaskResult {
   phase: 'cold' | 'warm';
   fallbackReason?: 'fingerprint_mismatch' | 'replay_failed' | 'replay_error';
   fallbackDetail?: string;
+  failureClassification?: BrowserAgentFailureClassification;
 }
 
 export interface BrowserTaskBackend {
@@ -194,6 +195,7 @@ async function runColdBrowserTask(
     inputTokens: result.tokenUsage.reduce((sum, usage) => sum + usage.input_tokens, 0),
     outputTokens: result.tokenUsage.reduce((sum, usage) => sum + usage.output_tokens, 0),
     phase: 'cold',
+    ...(result.failureClassification ? { failureClassification: result.failureClassification } : {}),
   };
 }
 

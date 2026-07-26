@@ -60,7 +60,7 @@ confuse in an architecture doc; this is the boundary.
 | Agent loop, context assembler, tagged LLM client | 0 | **built** |
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
 | Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
-| **Observation eviction** — keep actions, drop prior observations | 0 | **built** — the dominant quadratic term is already gone |
+| **Observation eviction** — keep actions, drop prior observations | 0 | **built and recall-stress tested** — post-eviction context marks the recall boundary; unavailable facts and fabricated comparisons fail closed ([T18](testing/T18-eviction-recall-trade.md)) |
 | **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Cache-layout discipline** (B3) | 0 | **built and economically qualified on OpenAI** — exact immutable prefixes receive deterministic cache-routing keys; WP-N25 cost falls 20.5% and clears Browser Use by 16.0% with both 95% intervals above zero ([T11](testing/T11-cache-key-economics.md)) |
 | **History compaction** (B4) | 0 | **not built** — required to make the curve linear rather than a smaller quadratic |
@@ -120,8 +120,12 @@ not 135+ — **the measurement proves the policy**.
 
 **The trade, stated plainly:** the model recalls what it *did*, not what it *saw*. Correct
 for form-filling and navigation. It will fail on tasks whose answer lives in an evicted
-observation — "compare prices across three products". A real limit
-([01](01-problem.md) §fit), not a footnote.
+observation — "compare prices across three products". After content is first omitted, the
+volatile context marks that recall boundary and instructs the planner to return the typed
+`recall_unavailable` failure instead of guessing. Independent verification still rejects a
+fabricated comparison as `verification_failed`. T18 exercises both exits across two pages
+([T18](testing/T18-eviction-recall-trade.md)). The task still fails; the protection is that
+it fails honestly.
 
 ### The four levers
 
@@ -197,7 +201,9 @@ contract remains fail-closed above 100,000 characters.
 This does **not** prove “they're quadratic, we're linear.” Rote is a smaller-growth
 quadratic until scheduled compaction exists. The frozen pre-cache-key matrix did not prove cost or latency wins. T11 subsequently makes
 Rote 16.0% cheaper than Browser Use at WP-N25 (95% CI 6.2–26.2%), but WP-N09 still loses
-and crosses parity: this is not a universal cost claim. The eviction trade has not been stress-tested on a task requiring recall. G2 now passes
+and crosses parity: this is not a universal cost claim. The eviction trade is now
+fake-world stress-tested to fail cleanly when an earlier-page fact is unavailable (T18),
+but compare-across-pages success remains unsupported. G2 passes
 its frozen B1–B3 level gate at 100% success parity, with 77.3–93.3% logical-token
 reductions whose 95% matched-repetition intervals remain positive
 ([T13](testing/T13-g2-certification.md)); B2 does not clear the catalog's 80% target, and

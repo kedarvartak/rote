@@ -191,7 +191,7 @@ We are in **P1 = tier 0, working memory**. Its four levers, honestly:
 
 | Lever | State |
 |---|---|
-| Observation eviction — keep what you did, not what you saw | **built** (and never claimed until now) |
+| Observation eviction — keep what you did, not what you saw | **built and recall-stress tested** — missing earlier-page facts fail as `recall_unavailable`; fabricated comparisons fail verification ([T18](docs/testing/T18-eviction-recall-trade.md)) |
 | Diff observations | **built and real-page measured** — 849 certification diffs have a 24-character median; median reduction vs. the preceding grounded base is 99.6% ([T10](docs/testing/T10-g1-cumulative-token-curve.md)) |
 | Cache layout | **built and economically qualified** — immutable-prefix routing cuts WP-N25 mean cost 20.5% and clears Browser Use by 16.0%, both with 95% intervals above zero ([T11](docs/testing/T11-cache-key-economics.md)) |
 | History compaction | not built — the lever that would make the curve linear rather than a smaller quadratic |

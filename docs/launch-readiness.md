@@ -15,6 +15,7 @@ npm, and ownership of the intended `@rote` scope is unconfirmed. That is tracked
 | OpenAI cache economics | qualified with short-cell loss | [T11](testing/T11-cache-key-economics.md): WP-N25 cost win; WP-N09 interval crosses parity |
 | G2 tokens/task level | pass with B2 catalog miss | [T13](testing/T13-g2-certification.md): 108/108 sessions; all formal intervals positive; B2 below 80% target |
 | CLI package shape | pass | [T14](testing/T14-cli-package-candidate.md): build, pack, clean install, bin, live data URL and B1 |
+| Eviction recall trade | fail-closed, task remains unsupported | [T18](testing/T18-eviction-recall-trade.md): missing fact is `recall_unavailable`; fabricated answer is `verification_failed` |
 | Failed replay fallback | pass with rollback limit | [T15](testing/T15-replay-fallback.md): failed cheap path remains failed; cold fallback verifies |
 | Runnable terminal demo | pass | [T16](testing/T16-launch-demo.md): cold → explicit zero-token replay → real drift detection/full fallback |
 | One-command evidence reproduction | pass in CI | [T17](testing/T17-one-command-reproduction.md): T13 Markdown/JSON byte-identical |
@@ -43,8 +44,7 @@ a 404 response:
 
 ## Not launch blockers, still not claims
 
-Anthropic cache economics, formal B5 repair certification, recall-stress coverage,
-scheduled compaction, distillation, automatic matching, site memory, model routing, and
+Anthropic cache economics, formal B5 repair certification, scheduled compaction, distillation, automatic matching, site memory, model routing, and
 speculation remain deferred. The launch is tier-0 working memory, not learned memory.
 
 The product website in PR #101 is useful collateral but is not allowed to override this
