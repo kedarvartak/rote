@@ -35,7 +35,11 @@ function evidence() {
       dumps.push({
         task, repetition, outcome: 'success', input_tokens: 100, cache_read_tokens: 0, cache_write_tokens: 0,
         output_tokens: 0, duration_ms: 100, browser_use_version: '0.13.6', provider: 'openai', model: 'gpt-4.1-mini',
-        is_successful: true, verify_text_visible: true,
+        is_successful: true,
+        verify_text: task === 'B2'
+          ? 'company_name=x contact_email=x tax_id=x address_line1=x city=x postal_code=x country=x phone=x'
+          : 'Done',
+        verify_text_visible: true,
         provider_receipts: [{ model: 'gpt-4.1-mini', usage: { prompt_tokens: 100 } }],
       });
     }
@@ -46,10 +50,19 @@ function evidence() {
 describe('G2 report', () => {
   it('distinguishes the formal gate from the 80% catalog target', () => {
     const { records, manifests, dumps } = evidence();
-    const report = buildG2Report(records, manifests, dumps);
+    const report = buildG2Report(records, manifests, dumps, 15, 'p1-g2-fixtures-v2-b2-exact');
+    expect(report.protocol_id).toBe('p1-g2-fixtures-v2-b2-exact');
     expect(report.gate_passed).toBe(true);
     expect(report.tasks.map((task) => task.clears_80_percent_target)).toEqual([true, false, true]);
     expect(report.verification_audit).toMatchObject({ rote_manifests: 45, browser_use_dumps: 45 });
+  });
+
+  it('rejects protocol-v2 B2 evidence that does not retain the exact oracle', () => {
+    const { records, manifests, dumps } = evidence();
+    dumps.find((dump) => dump.task === 'B2')!.verify_text = 'Vendor registration complete';
+    expect(() => buildG2Report(records, manifests, dumps, 15, 'p1-g2-fixtures-v2-b2-exact')).toThrow(
+      /does not retain the protocol-v2 exact B2 verification oracle/,
+    );
   });
 
   it('rejects a Browser Use success without live verification', () => {

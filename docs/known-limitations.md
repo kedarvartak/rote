@@ -61,12 +61,14 @@ strong/weak-fit split.
 |---|---|
 | One controlled self-hosted WordPress workflow, OpenAI `gpt-4.1-mini`, 9–25 required interactions | Production websites, other providers/models, vision-heavy tasks, or tasks below nine interactions |
 | G1 logical-input slope reduction at exact success parity | Linear scaling or the same percentage at every endpoint |
-| G2 positive token margin on three deterministic local fixtures | General web-task superiority or learned-memory economics |
+| B1/B3 positive token margin on deterministic local fixtures | Corrected B2 certification, general web-task superiority, or learned-memory economics |
 | OpenAI cache-key economics on longer WordPress cells | Universal cost savings; the shortest cell crosses parity |
 | Browser Use 0.13.6 comparison under pinned conditions | Current/future Browser Use releases or every competing harness |
 
-G2's B2 token reduction does not clear the catalog's 80% target. None of the three G2
-cells reaches the catalog's 5× latency target; B1 and B2 are below its 2× line. Cost,
+T19 withdraws G2's historical B2 token/parity claim because its completion-only oracle did
+not prove all eight values. The corrected pair is qualification only. In the historical
+matrix, none of the three cells reached the catalog's 5× latency target; B1 and B2 were
+below its 2× line. Cost,
 latency, slope, rendered characters, and logical tokens are separate claims.
 
 T18 landed after the frozen matrices: its recall boundary adds volatile prompt text on
@@ -91,6 +93,6 @@ The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulat
 ## Deliberately deferred
 
 Formal B5 drift/repair certification (the launch demo proves detection plus full fallback only), scheduled compaction, distillation,
-automatic matching, site memory, routing, and speculation remain post-G2 work. Deferral
+automatic matching, site memory, routing, and speculation remain post-corrective-G2 work. Deferral
 means “not claimed,” not “implicitly working.” The authoritative sequence is
 [07 — Execution plan](07-execution-plan.md).

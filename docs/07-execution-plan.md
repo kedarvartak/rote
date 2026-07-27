@@ -32,7 +32,7 @@ drives sequencing:
 
 | Fact | Consequence for the plan |
 |---|---|
-| Eviction/diff built and G1-measured; OpenAI cache layout economically qualified; compaction not built | tier 0 clears G1, long-cell cost, and the frozen B1–B3 G2 level gate |
+| Eviction/diff built and G1-measured; OpenAI cache layout economically qualified; compaction not built | tier 0 clears G1 and long-cell cost; B1/B3 level evidence stands while B2 exact recertification is required |
 | B1–B3 render ~537 chars; the selected WordPress page renders 89,114 chars (~22,279 approximate tok) identically across 15 fresh sessions ([T2](testing/T2-measurement-page-selection.md)) | The real-page prerequisite is now met; E1.2 can fix the curve protocol and E1.4 can collect provider-reported sizes |
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
@@ -43,8 +43,8 @@ drives sequencing:
 ## P1 — the epics
 
 Six epics. E1 ran first under **measure before building** and now passes G1. The remaining
-sequence preserved that evidence through G2 and must now package the measured build, not
-tune the frozen results after seeing them.
+sequence preserved G1, but T19 reopened B2 after finding a completion-only oracle. The
+corrective exact matrix must land before B5 or release; historical artifacts remain frozen.
 
 ```
 E1 curve (G1)  ──►  E3 cache layout  ──►  E4 level (G2)  ──►  E5 launch
@@ -99,10 +99,10 @@ exact-prefix routing on the E1 page. Small fixtures remain below provider cache 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---|---|---|---|
 | E4.1 | **G2 scope decision:** certify the already-built deterministic B1–B3 suite now; defer B5 drift. Building a new fixture after seeing G1 would mix benchmark construction with the level gate, while B1–B3 already span authenticated download, long form entry, and search/extraction. B5 remains the first post-G2 trust/drift instrument, not deleted scope. | 0.5 | — | decision recorded here and in [05](05-roadmap.md) before collection | done |
-| E4.2 | **B5 drift fixture:** B2 with scripted DOM mutations between runs; grades repair and silent-failure rate. | 2 | E4.1 | fixture + mutation script deterministic in CI | deferred until after initial G2 |
-| E4.3 | **Certification runs:** ≥15/harness/task, seeded bootstrap (10k resamples), lower bound vs. floor. | 1–2 | E2.1, E2.2 | 18 matched repetitions; 108/108 verified sessions; all three lower bounds positive; raw evidence retained in [T13](testing/T13-g2-certification.md) | done — G2 pass |
-| E4.4 | **Symmetric verification audit:** confirm competitor runs are graded by our own rule (success = concluded **and** live-page verification text) on real output, not just in code review. | 1 | E4.3 | report command cross-checks 54 manifests and 54 dumps; all Browser Use successes concluded and matched live text; 163 receipts retained | done |
-| E4.5 | **G2 report:** tokens per source, latency avg/p50/p95 ms, $ per task from the dated price table; `price unavailable` never $0. | 0.5 | E4.3 | `g2-report` regenerates Markdown + JSON from raw evidence; B2's missed 80% target is explicit | done |
+| E4.2 | **B5 drift fixture:** B2 with scripted DOM mutations between runs; grades repair and silent-failure rate. | 2 | E4.1 | component drift fixtures exist, but end-to-end B5 is blocked until corrected B2 certification proves the oracle | blocked on B2 recertification |
+| E4.3 | **Certification runs:** ≥15/harness/task, seeded bootstrap (10k resamples), lower bound vs. floor. | 1–2 | E2.1, E2.2 | B1/B3 v1 evidence stands; T19 withdraws B2 because generic completion did not prove eight fields; protocol-v2 pair qualifies the correction | B2 corrective matrix required |
+| E4.4 | **Symmetric verification audit:** confirm competitor runs are graded by our own rule (success = concluded **and** live-page verification text) on real output, not just in code review. | 1 | E4.3 | T19 found B2's shared live text was too weak; v2 now carries all exact values, but symmetric corrective collection remains | reopened for B2 |
+| E4.5 | **G2 report:** tokens per source, latency avg/p50/p95 ms, $ per task from the dated price table; `price unavailable` never $0. | 0.5 | E4.3 | historical report remains reproducible; corrective B2 report must use protocol v2 and preserve the withdrawal note | B2 addendum required |
 
 ### E5 — Launch package. ~4–5 days
 

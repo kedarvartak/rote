@@ -57,13 +57,14 @@ describe('createReplayCandidate', () => {
     const output = await main([
       'candidate', 'create', playbookPath,
       '--url', 'http://127.0.0.1:4321/b2-vendor-form.html',
-      '--params', '{"company_name":"Acme","contact_email":"ops@example.com","country":"US"}',
+      '--params', '{"company_name":"Acme","contact_email":"ops@example.com","tax_id":"T-1","address_line1":"1 Main","city":"Portland","postal_code":"97209","country":"US","phone":"555-0100"}',
       '--out', outPath,
     ]);
 
     expect(output).toContain(`wrote ${outPath}`);
     expect(BrowserReplayCandidateSchema.parse(JSON.parse(await readFile(outPath, 'utf8'))).params).toEqual({
-      company_name: 'Acme', contact_email: 'ops@example.com', country: 'US',
+      company_name: 'Acme', contact_email: 'ops@example.com', tax_id: 'T-1',
+      address_line1: '1 Main', city: 'Portland', postal_code: '97209', country: 'US', phone: '555-0100',
     });
   });
 });

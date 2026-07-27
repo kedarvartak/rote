@@ -16,6 +16,10 @@ claim on whole tasks.
 | `run-certification.sh` | One resumable command: fixture server, 18×B1–B3 paired collection, neutralization, audit, gate, Markdown, and JSON. |
 | `assemble-certification-evidence.mjs` | Cross-run manifest/trajectory/dump assembly; refuses count mismatches before reporting. |
 
+> **B2 correction:** protocol v2 requires one terminal DOM string containing all eight
+> requested values. T13's completion-only B2 claim is withdrawn; see
+> [T19](../../../docs/testing/T19-b2-exact-verification.md). Do not run B5 against v1.
+
 The Python runner does **not** write the neutral records. It emits raw per-run
 rows; `rote-bench competitor-records` maps them, stamping fairness provenance
 (`model`, `cache_adjusted`, `config_notes`) in-repo where it is reviewable, so

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "protocol_id": "p1-g2-fixtures-v1-b1-b3",
+  "protocol_id": "p1-g2-fixtures-v2-b2-exact",
   "provider": "openai",
   "model": "gpt-4.1-mini",
   "viewport": { "width": 1920, "height": 1080 },
@@ -19,7 +19,7 @@
       "name": "vendor registration",
       "path": "b2-vendor-form.html",
       "prompt": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
-      "verify_text": "Vendor registration complete"
+      "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148"
     },
     {
       "id": "B3",

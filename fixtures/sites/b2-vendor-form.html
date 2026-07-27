@@ -10,38 +10,49 @@
         <label for="contact-email">Contact email</label>
         <input id="contact-email" name="contact_email" type="email" required />
         <label for="tax-id">Tax ID</label>
-        <input id="tax-id" name="tax_id" />
+        <input id="tax-id" name="tax_id" required />
         <label for="address-line1">Address line 1</label>
-        <input id="address-line1" name="address_line1" />
+        <input id="address-line1" name="address_line1" required />
         <label for="city">City</label>
-        <input id="city" name="city" />
+        <input id="city" name="city" required />
         <label for="postal-code">Postal code</label>
-        <input id="postal-code" name="postal_code" />
+        <input id="postal-code" name="postal_code" required />
         <label for="country">Country</label>
-        <select id="country" name="country"><option value="US">US</option><option value="CA">Canada</option></select>
+        <select id="country" name="country" required><option value="">Choose country</option><option value="US">US</option><option value="CA">Canada</option></select>
         <label for="phone">Phone</label>
-        <input id="phone" name="phone" />
+        <input id="phone" name="phone" required />
         <button id="registration-submit" type="submit">Submit registration</button>
       </form>
       <section id="registration-confirmation" role="status" hidden>
         <h2 id="registration-complete-heading" hidden>Vendor registration complete</h2>
         <p id="registered-company" hidden></p>
         <p id="registered-email" hidden></p>
+        <p id="registration-summary" hidden></p>
       </section>
     </main>
     <script>
       document.querySelector('#registration-form').addEventListener('submit', (event) => {
         event.preventDefault();
-        const company = document.querySelector('#company-name').value;
-        const email = document.querySelector('#contact-email').value;
-        if (!company || !email) return;
-        document.querySelector('#registered-company').textContent = `Company: ${company}`;
-        document.querySelector('#registered-email').textContent = `Email: ${email}`;
+        const fields = {
+          company_name: document.querySelector('#company-name').value,
+          contact_email: document.querySelector('#contact-email').value,
+          tax_id: document.querySelector('#tax-id').value,
+          address_line1: document.querySelector('#address-line1').value,
+          city: document.querySelector('#city').value,
+          postal_code: document.querySelector('#postal-code').value,
+          country: document.querySelector('#country').value,
+          phone: document.querySelector('#phone').value,
+        };
+        if (Object.values(fields).some((value) => !value)) return;
+        document.querySelector('#registered-company').textContent = `Company: ${fields.company_name}`;
+        document.querySelector('#registered-email').textContent = `Email: ${fields.contact_email}`;
+        document.querySelector('#registration-summary').textContent = `Vendor registration complete | company_name=${fields.company_name} | contact_email=${fields.contact_email} | tax_id=${fields.tax_id} | address_line1=${fields.address_line1} | city=${fields.city} | postal_code=${fields.postal_code} | country=${fields.country} | phone=${fields.phone}`;
         document.querySelector('#registration-form').hidden = true;
         document.querySelector('#registration-confirmation').hidden = false;
         document.querySelector('#registration-complete-heading').hidden = false;
         document.querySelector('#registered-company').hidden = false;
         document.querySelector('#registered-email').hidden = false;
+        document.querySelector('#registration-summary').hidden = false;
         history.replaceState({}, '', '#complete');
       });
     </script>

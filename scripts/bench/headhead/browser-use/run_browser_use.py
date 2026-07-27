@@ -224,6 +224,7 @@ async def run_once(task: dict[str, Any], repetition: int, args: argparse.Namespa
             {"model": entry.model, "usage": entry.usage.model_dump(mode="json")}
             for entry in agent.token_cost_service.usage_history
         ],
+        "verify_text": task["verify_text"],
         "verify_text_visible": None if page_text is None else task["verify_text"] in page_text,
     }
     return run, dump

@@ -43,6 +43,7 @@ done
 node scripts/bench/headhead/assemble-certification-evidence.mjs "$out"
 evidence="$out/evidence"
 commit="$(git rev-parse --short=12 HEAD)"
+protocol="$(node -p "require('./scripts/bench/headhead/tasks.json').protocol_id")"
 node packages/bench/bin/rote-bench.js competitor-records "$out/rote/raw-runs.json" \
   --harness rote --model gpt-4.1-mini --cache-adjusted true \
   --config-notes "Rote $commit, exact cache buckets, 1920x1080" --out "$evidence/rote-records.json"
@@ -55,6 +56,7 @@ node packages/bench/bin/rote-bench.js launch-gate "$evidence/records.json" --sub
 node packages/bench/bin/rote-bench.js g2-report "$evidence/records.json" \
   --rote-manifests "$evidence/rote-manifests.json" \
   --browser-dumps "$evidence/browser-use-dumps.json" \
-  --out "$evidence/g2-report.md" --summary "$evidence/g2-summary.json" --min-runs 15
+  --out "$evidence/g2-report.md" --summary "$evidence/g2-summary.json" --min-runs 15 \
+  --protocol-id "$protocol"
 
 echo "G2 certification complete: $evidence/g2-report.md"

@@ -10,7 +10,8 @@ byte-for-byte. It performs no provider call:
 G2 reproduction passed: Markdown and JSON match T13 byte-for-byte
 ```
 
-This command runs in CI after the package smoke. Raw T13 records, manifests, trajectories,
+This command preserves the historical v1 artifact; byte equality does not restore T19's
+withdrawn B2 claim. It runs in CI after the package smoke. Raw T13 records, manifests, trajectories,
 Browser Use dumps, and provider receipts remain downloadable from
 [T13](T13-g2-certification.md).
 
