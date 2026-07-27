@@ -31,7 +31,7 @@ repository with `scripts/demo/run-launch-demo.sh`; see [T16](../../docs/testing/
 
 ## Public API
 
-- **`rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>)`** — launches Chrome and prefers an exact-environment verified replay when `--replay-candidate <candidate.json>` is supplied; fingerprint mismatch short-circuits to the compact cold planner; failed or errored replay also restarts the cold path from the pinned initial URL with a classified reason. Optional: `--model`, `--max-steps`, `--chrome-path`, `--settle-timeout-ms`, and paired `--viewport-width`/`--viewport-height`.
+- **`rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>)`** — launches Chrome and prefers an exact-environment verified replay when `--replay-candidate <candidate.json>` is supplied; fingerprint mismatch short-circuits to the compact cold planner; failed or errored replay also restarts the cold path from the pinned initial URL with a classified reason. Stored semantic identity can repair stale selectors before dispatch; output reports the repaired-step count. Optional: `--model`, `--max-steps`, `--chrome-path`, `--settle-timeout-ms`, and paired `--viewport-width`/`--viewport-height`.
 - **`rote runs ls`** — lists every run under `.rote/runs`, one per line,
   with outcome and task spec. A run with no `manifest.json` yet (still in
   progress, or abandoned by a kill) is listed as `in-progress` rather than
@@ -79,7 +79,7 @@ candidate. A mismatch never reaches replay.
 The full launch contract is [`docs/known-limitations.md`](../../docs/known-limitations.md).
 In particular:
 
-- No integrated replay selection, distillation, or repair commands yet.
+- No automatic matcher, distillation, arbitrary workflow repair, or repair-management commands yet; candidates are explicit and semantic healing is target-level only.
 - V1 verification currently supports visible text and URL substring checks; richer live
   Expect DSL wiring lands with action-plane hardening.
 - npm's unscoped `rote` name belongs to an unrelated package. The release candidate is

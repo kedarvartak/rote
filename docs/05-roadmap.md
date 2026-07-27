@@ -96,7 +96,7 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | W5 benchmark + the number | **done, corrected** — T20 restores B2/full G2 with 83.6% lower logical tokens (95% CI 82.7–84.6%) at 18/18 exact parity per harness |
 | W6 launch package | package/demo/reproduction done; npm publication separately blocked |
-| **W7 working memory (new)** | #57 accounting **done** → G1/corrected G2 **passed** → B5 trust instrument → packaging closure → compaction in P2 |
+| **W7 working memory (new)** | #57 accounting **done** → G1/corrected G2/B5 **passed** → registry publication → compaction in P2 |
 
 **No longer blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49)
 and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` is now
@@ -110,8 +110,8 @@ is dropped with a recorded classification into the existing semantic resolution 
 Both still fail closed when no safe action can be resolved. The known planner-boundary
 robustness defects no longer block an honest success-parity measurement.
 
-**Blocking the launch:** corrected B2 exact-oracle certification now passes
-([T20](testing/T20-b2-exact-certification.md)). Formal B5 is unblocked; separately,
+**Blocking the launch:** corrected B2 and deterministic B5 now pass
+([T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md)).
 `@rote/cli@0.1.0` is unpublished and npm scope/authentication remains #107. The runnable demo and one-command
 evidence reproduction are complete. The final gate walk and exact closure
 procedure are recorded in [launch readiness](launch-readiness.md).
@@ -132,7 +132,9 @@ Two gates. The first is the headline; the second keeps the first honest.
 proved only generic completion, so its parity and 77.3% reduction claim are withdrawn.
 Protocol v2 requires all eight exact values and passes 18/18 attempts per harness with an
 83.6% reduction (95% CI 82.7–84.6%) in T20. Combined with unchanged B1/B3 evidence, full
-G2 is restored. B5 drift is now the next trust instrument.
+G2 is restored. B5 then passes on deterministic semantic target drift: 72/72 recoverable
+attempts succeed exactly, 0/90 silent failures are observed, and 18/18 ambiguous targets
+fail closed. It does not claim generic workflow repair.
 
 **No number, no launch.** If G1 fails, the memory thesis is wrong and we say so — it costs
 one benchmark, which is the point of running it before building. G2 alone is the old gate:

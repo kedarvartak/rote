@@ -47,6 +47,7 @@ export async function main(
       `success: ${result.summary}`,
       `run: ${result.runId}`,
       `phase: ${result.phase}`,
+      ...(result.replayRepairs !== undefined ? [`replay repairs: ${result.replayRepairs}`] : []),
       ...(fallback ? [fallback] : []),
       `steps: ${result.steps}`,
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,

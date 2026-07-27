@@ -1,0 +1,1892 @@
+[
+  {
+    "run_id": "b5-ambiguous-company-r01",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:11.943Z",
+    "ended_at": "2026-07-27T14:41:11.990Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r02",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:12.028Z",
+    "ended_at": "2026-07-27T14:41:12.072Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r03",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:12.117Z",
+    "ended_at": "2026-07-27T14:41:12.165Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r04",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:12.206Z",
+    "ended_at": "2026-07-27T14:41:12.265Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r05",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:12.312Z",
+    "ended_at": "2026-07-27T14:41:12.356Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r06",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:12.403Z",
+    "ended_at": "2026-07-27T14:41:12.460Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r07",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:12.495Z",
+    "ended_at": "2026-07-27T14:41:12.551Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r08",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:12.598Z",
+    "ended_at": "2026-07-27T14:41:12.657Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r09",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:12.698Z",
+    "ended_at": "2026-07-27T14:41:12.756Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r10",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:12.810Z",
+    "ended_at": "2026-07-27T14:41:12.879Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r11",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:12.930Z",
+    "ended_at": "2026-07-27T14:41:12.980Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r12",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:13.038Z",
+    "ended_at": "2026-07-27T14:41:13.105Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r13",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:13.146Z",
+    "ended_at": "2026-07-27T14:41:13.195Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r14",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:13.239Z",
+    "ended_at": "2026-07-27T14:41:13.290Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r15",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:13.328Z",
+    "ended_at": "2026-07-27T14:41:13.375Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r16",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:13.416Z",
+    "ended_at": "2026-07-27T14:41:13.475Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r17",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:13.532Z",
+    "ended_at": "2026-07-27T14:41:13.597Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-ambiguous-company-r18",
+    "task_spec": "B5 ambiguous-company",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "failure",
+    "started_at": "2026-07-27T14:41:13.659Z",
+    "ended_at": "2026-07-27T14:41:13.700Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r01",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:56.350Z",
+    "ended_at": "2026-07-27T14:40:56.566Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r02",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:56.618Z",
+    "ended_at": "2026-07-27T14:40:56.791Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r03",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:56.836Z",
+    "ended_at": "2026-07-27T14:40:57.000Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r04",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:57.059Z",
+    "ended_at": "2026-07-27T14:40:57.184Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r05",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:57.235Z",
+    "ended_at": "2026-07-27T14:40:57.384Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r06",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:57.421Z",
+    "ended_at": "2026-07-27T14:40:57.549Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r07",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:57.589Z",
+    "ended_at": "2026-07-27T14:40:57.722Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r08",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:57.751Z",
+    "ended_at": "2026-07-27T14:40:57.912Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r09",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:57.961Z",
+    "ended_at": "2026-07-27T14:40:58.131Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r10",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:58.184Z",
+    "ended_at": "2026-07-27T14:40:58.360Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r11",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:58.410Z",
+    "ended_at": "2026-07-27T14:40:58.605Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r12",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:58.647Z",
+    "ended_at": "2026-07-27T14:40:58.841Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r13",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:58.880Z",
+    "ended_at": "2026-07-27T14:40:59.031Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r14",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:59.069Z",
+    "ended_at": "2026-07-27T14:40:59.242Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r15",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:59.282Z",
+    "ended_at": "2026-07-27T14:40:59.466Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r16",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:59.524Z",
+    "ended_at": "2026-07-27T14:40:59.709Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r17",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:59.746Z",
+    "ended_at": "2026-07-27T14:40:59.920Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-fields-renamed-r18",
+    "task_spec": "B5 fields-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:40:59.979Z",
+    "ended_at": "2026-07-27T14:41:00.133Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r01",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:07.816Z",
+    "ended_at": "2026-07-27T14:41:08.016Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r02",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:08.068Z",
+    "ended_at": "2026-07-27T14:41:08.216Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r03",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:08.263Z",
+    "ended_at": "2026-07-27T14:41:08.444Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r04",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:08.475Z",
+    "ended_at": "2026-07-27T14:41:08.648Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r05",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:08.709Z",
+    "ended_at": "2026-07-27T14:41:08.888Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r06",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:08.930Z",
+    "ended_at": "2026-07-27T14:41:09.075Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r07",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:09.129Z",
+    "ended_at": "2026-07-27T14:41:09.324Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r08",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:09.379Z",
+    "ended_at": "2026-07-27T14:41:09.540Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r09",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:09.592Z",
+    "ended_at": "2026-07-27T14:41:09.773Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r10",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:09.840Z",
+    "ended_at": "2026-07-27T14:41:10.022Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r11",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:10.070Z",
+    "ended_at": "2026-07-27T14:41:10.253Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r12",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:10.326Z",
+    "ended_at": "2026-07-27T14:41:10.517Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r13",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:10.575Z",
+    "ended_at": "2026-07-27T14:41:10.762Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r14",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:10.804Z",
+    "ended_at": "2026-07-27T14:41:11.011Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r15",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:11.072Z",
+    "ended_at": "2026-07-27T14:41:11.212Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r16",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:11.253Z",
+    "ended_at": "2026-07-27T14:41:11.430Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r17",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:11.488Z",
+    "ended_at": "2026-07-27T14:41:11.654Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-stale-selector-decoys-r18",
+    "task_spec": "B5 stale-selector-decoys",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:11.713Z",
+    "ended_at": "2026-07-27T14:41:11.889Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r01",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:00.187Z",
+    "ended_at": "2026-07-27T14:41:00.385Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r02",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:00.425Z",
+    "ended_at": "2026-07-27T14:41:00.578Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r03",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:00.613Z",
+    "ended_at": "2026-07-27T14:41:00.793Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r04",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:00.825Z",
+    "ended_at": "2026-07-27T14:41:00.996Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r05",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:01.039Z",
+    "ended_at": "2026-07-27T14:41:01.182Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r06",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:01.232Z",
+    "ended_at": "2026-07-27T14:41:01.398Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r07",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:01.468Z",
+    "ended_at": "2026-07-27T14:41:01.632Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r08",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:01.674Z",
+    "ended_at": "2026-07-27T14:41:01.810Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r09",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:01.861Z",
+    "ended_at": "2026-07-27T14:41:02.005Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r10",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:02.041Z",
+    "ended_at": "2026-07-27T14:41:02.208Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r11",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:02.244Z",
+    "ended_at": "2026-07-27T14:41:02.397Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r12",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:02.435Z",
+    "ended_at": "2026-07-27T14:41:02.596Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r13",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:02.642Z",
+    "ended_at": "2026-07-27T14:41:02.793Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r14",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:02.839Z",
+    "ended_at": "2026-07-27T14:41:02.999Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r15",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:03.050Z",
+    "ended_at": "2026-07-27T14:41:03.223Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r16",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:03.272Z",
+    "ended_at": "2026-07-27T14:41:03.455Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r17",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:03.510Z",
+    "ended_at": "2026-07-27T14:41:03.648Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-submit-renamed-r18",
+    "task_spec": "B5 submit-renamed",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:03.685Z",
+    "ended_at": "2026-07-27T14:41:03.846Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r01",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:03.884Z",
+    "ended_at": "2026-07-27T14:41:04.079Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r02",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:04.130Z",
+    "ended_at": "2026-07-27T14:41:04.279Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r03",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:04.323Z",
+    "ended_at": "2026-07-27T14:41:04.517Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r04",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:04.573Z",
+    "ended_at": "2026-07-27T14:41:04.749Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r05",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:04.804Z",
+    "ended_at": "2026-07-27T14:41:04.971Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r06",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:05.033Z",
+    "ended_at": "2026-07-27T14:41:05.179Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r07",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:05.226Z",
+    "ended_at": "2026-07-27T14:41:05.396Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r08",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:05.434Z",
+    "ended_at": "2026-07-27T14:41:05.628Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r09",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:05.681Z",
+    "ended_at": "2026-07-27T14:41:05.838Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r10",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:05.883Z",
+    "ended_at": "2026-07-27T14:41:06.030Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r11",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:06.086Z",
+    "ended_at": "2026-07-27T14:41:06.244Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r12",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:06.305Z",
+    "ended_at": "2026-07-27T14:41:06.460Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r13",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:06.518Z",
+    "ended_at": "2026-07-27T14:41:06.677Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r14",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:06.709Z",
+    "ended_at": "2026-07-27T14:41:06.883Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r15",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:06.917Z",
+    "ended_at": "2026-07-27T14:41:07.083Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r16",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:07.138Z",
+    "ended_at": "2026-07-27T14:41:07.322Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r17",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:07.373Z",
+    "ended_at": "2026-07-27T14:41:07.533Z",
+    "token_usage": []
+  },
+  {
+    "run_id": "b5-wrappers-r18",
+    "task_spec": "B5 wrappers",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.cdp",
+          "schema_hash": "b5-v1"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "fixture": "b5-v1"
+      },
+      "fingerprint_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "outcome": "success",
+    "started_at": "2026-07-27T14:41:07.589Z",
+    "ended_at": "2026-07-27T14:41:07.756Z",
+    "token_usage": []
+  }
+]

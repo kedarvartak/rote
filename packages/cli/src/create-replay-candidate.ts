@@ -41,7 +41,7 @@ function validateParams(
   params: Record<string, unknown>,
 ): void {
   for (const param of declared) {
-    if (param.name === 'base_url') continue; // rebound from the current --url after fingerprint gating
+    if (param.name === 'base_url' || param.name === 'initial_url') continue; // rebound from the current --url after fingerprint gating
     const value = params[param.name];
     const valid = param.type === 'string'
       ? typeof value === 'string'

@@ -10,6 +10,8 @@ task_signature:
 params:
   - name: base_url
     type: string
+  - name: initial_url
+    type: string
   - name: company_name
     type: string
   - name: contact_email
@@ -31,70 +33,70 @@ steps:
   - id: open_registration
     kind: deterministic
     tool: browser.navigate
-    args: { url: "{{base_url}}/b2-vendor-form.html" }
+    args: { url: "{{initial_url}}" }
     expect: { selector_visible: "#registration-form" }
     on_fail: fallback
   - id: fill_company
     kind: deterministic
     depends_on: [open_registration]
     tool: browser.fill
-    args: { selector: "#company-name", value: "{{company_name}}" }
+    args: { selector: "#company-name", stableId: "b4c1efdc8a5fa7e2", role: textbox, name: "Company name", value: "{{company_name}}" }
     expect: { input_value: "#company-name", equals: "{{company_name}}" }
     on_fail: fallback
   - id: fill_email
     kind: deterministic
     depends_on: [fill_company]
     tool: browser.fill
-    args: { selector: "#contact-email", value: "{{contact_email}}" }
+    args: { selector: "#contact-email", stableId: "68869e594062cadc", role: textbox, name: "Contact email", value: "{{contact_email}}" }
     expect: { input_value: "#contact-email", equals: "{{contact_email}}" }
     on_fail: fallback
   - id: fill_tax_id
     kind: deterministic
     depends_on: [fill_email]
     tool: browser.fill
-    args: { selector: "#tax-id", value: "{{tax_id}}" }
+    args: { selector: "#tax-id", stableId: "d75ea6f1e5ae6644", role: textbox, name: "Tax ID", value: "{{tax_id}}" }
     expect: { input_value: "#tax-id", equals: "{{tax_id}}" }
     on_fail: fallback
   - id: fill_address
     kind: deterministic
     depends_on: [fill_tax_id]
     tool: browser.fill
-    args: { selector: "#address-line1", value: "{{address_line1}}" }
+    args: { selector: "#address-line1", stableId: "06023d0754ab410f", role: textbox, name: "Address line 1", value: "{{address_line1}}" }
     expect: { input_value: "#address-line1", equals: "{{address_line1}}" }
     on_fail: fallback
   - id: fill_city
     kind: deterministic
     depends_on: [fill_address]
     tool: browser.fill
-    args: { selector: "#city", value: "{{city}}" }
+    args: { selector: "#city", stableId: "f9478f9c1a7fe80c", role: textbox, name: City, value: "{{city}}" }
     expect: { input_value: "#city", equals: "{{city}}" }
     on_fail: fallback
   - id: fill_postal_code
     kind: deterministic
     depends_on: [fill_city]
     tool: browser.fill
-    args: { selector: "#postal-code", value: "{{postal_code}}" }
+    args: { selector: "#postal-code", stableId: "691facd64a30346e", role: textbox, name: "Postal code", value: "{{postal_code}}" }
     expect: { input_value: "#postal-code", equals: "{{postal_code}}" }
     on_fail: fallback
   - id: select_country
     kind: deterministic
     depends_on: [fill_postal_code]
     tool: browser.select
-    args: { selector: "#country", value: "{{country}}" }
+    args: { selector: "#country", stableId: "273727f8d688db1b", role: combobox, name: Country, value: "{{country}}" }
     expect: { input_value: "#country", equals: "{{country}}" }
     on_fail: fallback
   - id: fill_phone
     kind: deterministic
     depends_on: [select_country]
     tool: browser.fill
-    args: { selector: "#phone", value: "{{phone}}" }
+    args: { selector: "#phone", stableId: "31f3dca89f854cd4", role: textbox, name: Phone, value: "{{phone}}" }
     expect: { input_value: "#phone", equals: "{{phone}}" }
     on_fail: fallback
   - id: submit_registration
     kind: deterministic
     depends_on: [fill_phone]
     tool: browser.click
-    args: { selector: "#registration-submit" }
+    args: { selector: "#registration-submit", stableId: "ffcb10dc456da5ab", role: button, name: "Submit registration", text: "Submit registration" }
     expect: { text_visible: "Vendor registration complete" }
     on_fail: fallback
 

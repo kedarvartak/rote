@@ -58,7 +58,7 @@ describe('invariant: B2 success proves every requested field', () => {
     const playbook = parsePlaybookYaml(
       await readFile(resolve('../../fixtures/playbooks/browser-b2-stateful.yaml'), 'utf8'),
     );
-    expect(playbook.params.map((param) => param.name)).toEqual(['base_url', ...fields.map(([, key]) => key)]);
+    expect(playbook.params.map((param) => param.name)).toEqual(['base_url', 'initial_url', ...fields.map(([, key]) => key)]);
     expect(playbook.verify).toEqual([{
       text_visible: 'Vendor registration complete | company_name={{company_name}} | contact_email={{contact_email}} | tax_id={{tax_id}} | address_line1={{address_line1}} | city={{city}} | postal_code={{postal_code}} | country={{country}} | phone={{phone}}',
     }]);

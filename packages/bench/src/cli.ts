@@ -19,6 +19,7 @@ import { writeCurveCachePreflight } from './curve-cache-preflight.js';
 import { writeCurveReport } from './curve-report.js';
 import { writeCurveCacheEconomics } from './curve-cache-economics.js';
 import { writeG2Report } from './g2-report.js';
+import { writeB5Report } from './b5-report.js';
 
 interface ReportOptions {
   out?: string;
@@ -58,6 +59,11 @@ export async function main(argv: string[]): Promise<string> {
     const options = parseCurvePreflightOptions(rest);
     const result = await writeCurveCachePreflight(subject, options.out, options.threshold);
     return `wrote ${options.out} (${result.cache_hit_calls}/${result.measurement_calls} calls hit cache; ${result.decision})`;
+  }
+  if (command === 'b5-report' && subject) {
+    const options = parseB5ReportOptions(rest);
+    const result = await writeB5Report(subject, options.coldRecords, options.out, options.summary, options.minRuns);
+    return `wrote ${options.out} and ${options.summary} (B5 ${result.certified ? 'PASS' : 'FAIL'})`;
   }
   if (command === 'g2-report' && subject) {
     const options = parseG2ReportOptions(rest);
@@ -190,6 +196,23 @@ async function cellsFromSpecAt(specPath: string) {
   const resolvedSpecPath = resolve(specPath);
   const spec = parseBenchmarkSpec(JSON.parse(await readFile(resolvedSpecPath, 'utf8')));
   return cellsFromSpec(spec, { specDir: dirname(resolvedSpecPath) });
+}
+
+function parseB5ReportOptions(args: string[]): { coldRecords: string; out: string; summary: string; minRuns: number } {
+  const values = new Map<string, string>();
+  for (let index = 0; index < args.length; index += 2) {
+    const flag = args[index]; const value = args[index + 1];
+    if (!flag || !value || !['--cold-records', '--out', '--summary', '--min-runs'].includes(flag)) {
+      throw new Error('b5-report requires --cold-records, --out, and --summary [--min-runs 15]');
+    }
+    values.set(flag, value);
+  }
+  const coldRecords = values.get('--cold-records'); const out = values.get('--out'); const summary = values.get('--summary');
+  const minRuns = Number(values.get('--min-runs') ?? '15');
+  if (!coldRecords || !out || !summary || !Number.isInteger(minRuns) || minRuns < 15) {
+    throw new Error('b5-report requires --cold-records, --out, and --summary [--min-runs 15]');
+  }
+  return { coldRecords, out, summary, minRuns };
 }
 
 function parseG2ReportOptions(args: string[]): { roteManifests: string; browserDumps: string; out: string; summary: string; minRuns: number; protocolId: string } {
@@ -368,5 +391,5 @@ function parseOptions(args: string[]): ReportOptions {
 }
 
 function usage(): string {
-  return 'usage: rote-bench g2-report <records.json> --rote-manifests <json> --browser-dumps <json> --out report.md --summary summary.json [--min-runs 15] [--protocol-id <id>] | rote-bench curve-dry-run <protocol.json> --out records.jsonl | rote-bench curve-cache-preflight <records.jsonl> --out report.json [--threshold 1024] | rote-bench curve-cache-report <before-rote.jsonl> --after <after-rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg cost.svg --summary summary.json --subject-protocol-suffix <suffix> | rote-bench curve-report <rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg curve.svg --summary summary.json [--slope-floor 0.30] [--subject-protocol-suffix <suffix>] | rote-bench curve-browser-use-records <raw-calls.jsonl> --out records.jsonl | rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench b5-report <records.json> --cold-records <records.json> --out report.md --summary summary.json [--min-runs 15] | rote-bench g2-report <records.json> --rote-manifests <json> --browser-dumps <json> --out report.md --summary summary.json [--min-runs 15] [--protocol-id <id>] | rote-bench curve-dry-run <protocol.json> --out records.jsonl | rote-bench curve-cache-preflight <records.jsonl> --out report.json [--threshold 1024] | rote-bench curve-cache-report <before-rote.jsonl> --after <after-rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg cost.svg --summary summary.json --subject-protocol-suffix <suffix> | rote-bench curve-report <rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg curve.svg --summary summary.json [--slope-floor 0.30] [--subject-protocol-suffix <suffix>] | rote-bench curve-browser-use-records <raw-calls.jsonl> --out records.jsonl | rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
 }

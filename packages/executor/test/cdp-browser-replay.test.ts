@@ -40,6 +40,7 @@ describe('CDP verified browser replay', () => {
     }, llm);
     const b2 = await replay('browser-b2-stateful.yaml', {
       base_url: server.url('').replace(/\/$/, ''),
+      initial_url: server.url('b2-vendor-form.html'),
       company_name: 'Acme Tools',
       contact_email: 'ops@example.com',
       tax_id: '84-1129930',

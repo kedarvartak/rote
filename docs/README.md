@@ -18,13 +18,13 @@ marks status; the authoritative table is [02 §Status](02-architecture.md).
 | | |
 |---|---|
 | **Built** | core schemas + Expect DSL · recorder · verified replay executor · CDP backend · perception (distill → stable IDs → budget) · **observation eviction** · agent loop · tagged LLM client · benchmark + accounting + head-to-head gate |
-| **Built, measured** | diff observations — T10 records 849 real WordPress diffs with 99.6% median render-size reduction · stable-prefix cache routing — T11 cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% |
+| **Built, measured** | diff observations — T10 records 849 real WordPress diffs with 99.6% median render-size reduction · stable-prefix cache routing — T11 cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% · deterministic semantic drift recovery — T21 repairs 72/72 and observes 0/90 silent failures |
 | **Not built** | compaction · playbook distiller · matcher · site memory · model routing · speculation |
 
 We are in **P1 (V1)**: **tier 0, working memory.** G1 passes: 37.2% slower cumulative
 logical-input growth (95% CI 35.6–38.8%) at success parity. B1/B3 retain level evidence;
 T19 withdrew B2's v1 claim after finding its completion-only oracle; T20 protocol-v2
-certification restores B2/full G2 at exact parity. The CLI package
+certification restores B2/full G2 at exact parity; T21 passes deterministic B5 drift. The CLI package
 candidate, runnable cold→replay→drift-fallback demo, and one-command evidence reproduction
 work; registry publication remains. Post-G1 cache routing wins
 long-cell cost while the shortest cell still crosses parity. **No number, no launch.**
@@ -33,7 +33,7 @@ long-cell cost while the shortest cell still crosses parity. **No number, no lau
 
 | Tier | Scope | The field | Us |
 |---|---|---|---|
-| **0 — Working** | within a run | **nobody** — everyone re-sends the transcript | **the wedge**; half-built |
+| **0 — Working** | within a run | competitors evict, but do not cross-step diff | **P1 scope built and measured**; compaction deferred |
 | **1 — Episodic** | across runs of a task | **Skyvern ships it** | late; distiller unbuilt |
 | **2 — Semantic** | across tasks on a site | nobody | unbuilt |
 | **Trust gate** | all tiers | nobody — success means "no exception thrown" | invariant 1 |
@@ -46,6 +46,7 @@ long-cell cost while the shortest cell still crosses parity. **No number, no lau
 | [02 — Architecture](02-architecture.md) | **What is built vs designed**; four planes; the control loop; type spine; playbooks; repair ladder; memory tiers; speculation; invariants |
 | [03 — Benchmark](03-benchmark.md) | How we measure: task suite, metrics, fairness rules, symmetric grading, the variance rule, the launch gate, generalization (T0–T5) |
 | [04 — Competition](04-competition.md) | The field in four strata; per-competitor teardown; capability matrix; the steelmanned objections |
+| [Competitor expansion](competitor-expansion-plan.md) | Pinned Stagehand → Skyvern → Browser Use comparison sequence, two-scorecard fairness protocol, and adapter contract |
 | [05 — Roadmap](05-roadmap.md) | Where we are; V1 scope and gates; P0–P5; open questions |
 | [06 — Optimizations](06-optimizations.md) | The master catalog: every optimization, its tier, its status, and the evidence |
 | [07 — Execution plan](07-execution-plan.md) | The work breakdown: P1 epics and tasks with dependencies, acceptance criteria, estimates, and the RAID log. 05 owns strategy; 07 owns tasks |

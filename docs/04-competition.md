@@ -17,6 +17,10 @@
 > replayed run was *correct*. We are late to memoization and early to two things:
 > **verified** reuse, and **WebMCP** consumption.
 
+The next measured expansion is frozen in the [competitor expansion plan](competitor-expansion-plan.md):
+Stagehand first, Skyvern second, then a newly pinned Browser Use release, with separate cold
+and warm/drift scorecards so hand-authored replay is never mislabeled as learning.
+
 Sources for the 2026-07 survey:
 [Skyvern code caching](https://www.skyvern.com/docs/developers/features/code-caching) ·
 [Stagehand caching](https://www.browserbase.com/blog/stagehand-caching) ·

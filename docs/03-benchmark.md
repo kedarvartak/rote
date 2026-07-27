@@ -180,7 +180,8 @@ exact value and restores B2 with an 83.6% logical-token reduction (95% CI 82.7â€
 Live-run findings are recorded in [`docs/testing/`](testing/). T1's B2 design defect
 ([#49](https://github.com/kedarvartak/rote/issues/49)) and its two planner-boundary
 robustness findings (#51/#52) are fixed. T19 separately reopened B2 because its terminal
-oracle was too weak; T20 restores corrected G2 and unblocks B5
+oracle was too weak; T20 restores corrected G2. T21 then passes deterministic B5 with
+72/72 repaired exact outcomes, 0/90 observed silent failures, and 18/18 ambiguity fallbacks
 ([07 E4](07-execution-plan.md#e4--the-level-gate-g2-46-days-mostly-run-babysitting)).
 
 Next: [04 â€” Competition](04-competition.md)

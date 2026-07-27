@@ -32,13 +32,13 @@ drives sequencing:
 
 | Fact | Consequence for the plan |
 |---|---|
-| Eviction/diff built and G1-measured; OpenAI cache layout economically qualified; compaction not built | tier 0 clears G1, long-cell cost, and corrected G2; formal B5 is next |
+| Eviction/diff built and G1-measured; OpenAI cache layout economically qualified; compaction not built | tier 0 clears G1, long-cell cost, corrected G2, and deterministic B5 |
 | B1–B3 render ~537 chars; the selected WordPress page renders 89,114 chars (~22,279 approximate tok) identically across 15 fresh sessions ([T2](testing/T2-measurement-page-selection.md)) | The real-page prerequisite is now met; E1.2 can fix the curve protocol and E1.4 can collect provider-reported sizes |
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
 | #50/#51/#52 done; open: [#54](https://github.com/kedarvartak/rote/issues/54) (diff-derived postconditions) | Planner slips no longer poison success parity; live expects are honestly optional and final verification remains mandatory |
 | `@rote/cli@0.1.0` tarball, live demo, and one-command evidence reproduction pass; npm auth/scope ownership unconfirmed | registry publication (#107) is the remaining launch blocker |
-| B4–B6 benchmark tasks specified, not built | B5 is the first post-G2 trust instrument; it did not move into the frozen level gate |
+| B4/B6 remain specified; B5 is now built and certified | T21 isolates post-G2 drift trust from the frozen level gate |
 
 ## P1 — the epics
 
@@ -99,7 +99,7 @@ exact-prefix routing on the E1 page. Small fixtures remain below provider cache 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---|---|---|---|
 | E4.1 | **G2 scope decision:** certify the already-built deterministic B1–B3 suite now; defer B5 drift. Building a new fixture after seeing G1 would mix benchmark construction with the level gate, while B1–B3 already span authenticated download, long form entry, and search/extraction. B5 remains the first post-G2 trust/drift instrument, not deleted scope. | 0.5 | — | decision recorded here and in [05](05-roadmap.md) before collection | done |
-| E4.2 | **B5 drift fixture:** B2 with scripted DOM mutations between runs; grades repair and silent-failure rate. | 2 | E4.1 | component drift fixtures exist; T20 restores the exact B2 oracle, so end-to-end B5 is next | ready |
+| E4.2 | **B5 drift fixture:** B2 with scripted DOM mutations between runs; grades repair and silent-failure rate. | 2 | E4.1 | T21: 72/72 recoverable real-Chrome attempts, 0/90 observed silent failures, 18/18 ambiguity fallbacks, zero repair tokens | done |
 | E4.3 | **Certification runs:** ≥15/harness/task, seeded bootstrap (10k resamples), lower bound vs. floor. | 1–2 | E2.1, E2.2 | B1/B3 v1 evidence stands; T20 protocol-v2 B2 matrix passes 18/18 per harness and clears the 80% target | done — corrected G2 pass |
 | E4.4 | **Symmetric verification audit:** confirm competitor runs are graded by our own rule (success = concluded **and** live-page verification text) on real output, not just in code review. | 1 | E4.3 | T20 audits 18 manifests, 18 dumps, 76 Browser Use receipts, and the retained eight-value oracle | done |
 | E4.5 | **G2 report:** tokens per source, latency avg/p50/p95 ms, $ per task from the dated price table; `price unavailable` never $0. | 0.5 | E4.3 | T20 publishes matched token/cost/latency intervals, absolute levels, source accounting, and raw evidence | done |

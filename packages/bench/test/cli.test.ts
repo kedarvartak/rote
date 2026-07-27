@@ -92,6 +92,19 @@ describe('rote-bench CLI', () => {
     await expect(readFile(summary, 'utf8')).resolves.toBe(await readFile(join(data, 'T13-g2-summary.json'), 'utf8'));
   });
 
+  it('reproduces the published B5 audit byte-for-byte', async () => {
+    const root = await tempDir();
+    const report = join(root, 'b5.md'); const summary = join(root, 'b5.json');
+    const data = resolve('../../docs/testing/data');
+    await expect(main([
+      'b5-report', join(data, 'T21-b5-drift-records.jsonl'),
+      '--cold-records', join(data, 'T20-b2-exact-records.json'),
+      '--out', report, '--summary', summary, '--min-runs', '15',
+    ])).resolves.toBe(`wrote ${report} and ${summary} (B5 PASS)`);
+    await expect(readFile(report, 'utf8')).resolves.toBe(await readFile(resolve('../../docs/testing/T21-b5-level-report.md'), 'utf8'));
+    await expect(readFile(summary, 'utf8')).resolves.toBe(await readFile(join(data, 'T21-b5-drift-summary.json'), 'utf8'));
+  });
+
   it('writes a synthetic benchmark pack and evaluates the M3 gate', async () => {
     const root = await tempDir();
     const specPath = join(root, 'bench-spec.json');

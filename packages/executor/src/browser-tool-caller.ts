@@ -1,3 +1,4 @@
+import { resolveElementTarget, type ElementResolutionTarget } from '@rote/action';
 import type { CapturedElement, CapturedPage } from '@rote/browser';
 import { distillPage } from '@rote/perception';
 import type { ToolCallOutcome, ToolCaller } from './tool-caller.js';
@@ -29,16 +30,25 @@ export class BrowserToolCaller implements ToolCaller {
         case 'browser.navigate':
           await this.page.navigate(requiredString(tool, args, 'url'));
           break;
-        case 'browser.fill':
-          await this.page.fill(requiredString(tool, args, 'selector'), requiredString(tool, args, 'value'));
+        case 'browser.fill': {
+          const target = await this.resolveTarget(tool, args);
+          await this.page.fill(target.selector, requiredString(tool, args, 'value'));
+          extra = target.extra;
           break;
-        case 'browser.select':
-          await this.page.select(requiredString(tool, args, 'selector'), requiredString(tool, args, 'value'));
+        }
+        case 'browser.select': {
+          const target = await this.resolveTarget(tool, args);
+          await this.page.select(target.selector, requiredString(tool, args, 'value'));
+          extra = target.extra;
           break;
+        }
         case 'browser.click':
-        case 'browser.download_file':
-          await this.page.click(requiredString(tool, args, 'selector'));
+        case 'browser.download_file': {
+          const target = await this.resolveTarget(tool, args);
+          await this.page.click(target.selector);
+          extra = target.extra;
           break;
+        }
         case 'browser.extract': {
           const page = await this.page.capture();
           const limit = optionalPositiveInteger(tool, args, 'limit') ?? 10;
@@ -58,6 +68,34 @@ export class BrowserToolCaller implements ToolCaller {
       const failure = error instanceof Error ? error : new Error(String(error));
       return { ok: false, error: { message: failure.message, code: 'BROWSER_REPLAY_TOOL_ERROR' } };
     }
+  }
+
+  private async resolveTarget(
+    tool: string,
+    args: Record<string, unknown>,
+  ): Promise<{ selector: string; extra: Record<string, unknown> }> {
+    const requestedSelector = requiredString(tool, args, 'selector');
+    const target: ElementResolutionTarget = {
+      selector: requestedSelector,
+      ...(optionalString(tool, args, 'stableId') ? { stableId: optionalString(tool, args, 'stableId') } : {}),
+      ...(optionalString(tool, args, 'role') ? { role: optionalString(tool, args, 'role') } : {}),
+      ...(optionalString(tool, args, 'name') ? { name: optionalString(tool, args, 'name') } : {}),
+      ...(optionalString(tool, args, 'text') ? { text: optionalString(tool, args, 'text') } : {}),
+    };
+    const hasSemanticIdentity = Boolean(target.stableId || target.role || target.name || target.text);
+    if (!hasSemanticIdentity) return { selector: requestedSelector, extra: {} };
+    const resolution = resolveElementTarget(distillPage(await this.page.capture()), target);
+    return {
+      selector: resolution.selector,
+      extra: {
+        target_resolution: {
+          requested_selector: requestedSelector,
+          resolved_selector: resolution.selector,
+          strategy: resolution.strategy,
+          repaired: requestedSelector !== resolution.selector,
+        },
+      },
+    };
   }
 }
 
@@ -99,6 +137,15 @@ function isVisible(element: CapturedElement): boolean {
 function requiredString(tool: string, args: Record<string, unknown>, key: string): string {
   const value = args[key];
   if (typeof value !== 'string' || value.length === 0) throw new BrowserReplayToolError(tool, `${key} must be a non-empty string`);
+  return value;
+}
+
+function optionalString(tool: string, args: Record<string, unknown>, key: string): string | undefined {
+  const value = args[key];
+  if (value === undefined) return undefined;
+  if (typeof value !== 'string' || value.length === 0) {
+    throw new BrowserReplayToolError(tool, `${key} must be a non-empty string when provided`);
+  }
   return value;
 }
 

@@ -13,8 +13,9 @@
   "scripts": {
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
-    "test": "npm run test --workspaces --if-present && python3 -m unittest scripts/bench/curve/browser-use/run_curve_test.py scripts/bench/headhead/browser-use/run_browser_use_test.py && npm run test:package && npm run reproduce:g2 && npm run test:scripts",
+    "test": "npm run test --workspaces --if-present && python3 -m unittest scripts/bench/curve/browser-use/run_curve_test.py scripts/bench/headhead/browser-use/run_browser_use_test.py && npm run test:package && npm run reproduce:g2 && npm run reproduce:b5 && npm run test:scripts",
     "test:package": "node scripts/release/smoke-cli-package.mjs",
+    "reproduce:b5": "node scripts/release/reproduce-b5.mjs",
     "reproduce:g2": "node scripts/release/reproduce-g2.mjs",
     "test:scripts": "node --test scripts/demo/prepare-drift.test.mjs scripts/bench/headhead/assemble-certification-evidence.test.mjs",
     "build": "npm run build --workspaces --if-present"
