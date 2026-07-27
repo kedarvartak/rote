@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "protocol_id": "p1-g2-fixtures-v2-b2-exact",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "browser_use_version": "0.13.6",
+  "min_successful_runs": 15,
+  "gate_passed": true,
+  "tasks": [
+    {
+      "task": "B2",
+      "rote_successes": 18,
+      "rote_attempts": 18,
+      "baseline_successes": 18,
+      "baseline_attempts": 18,
+      "logical_token_reduction": {
+        "point": 0.8357925197925198,
+        "lower": 0.8266540897217254,
+        "upper": 0.8460031750837174,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "cost_reduction": {
+        "point": 0.6930965070632398,
+        "lower": 0.6772521699317714,
+        "upper": 0.7108617838039673,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "latency_reduction": {
+        "point": 0.4779448993487787,
+        "lower": 0.435712861092104,
+        "upper": 0.5186723639142181,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "rote_level": {
+        "mean_tokens": 8354.055555555555,
+        "mean_latency_ms": 19934.5,
+        "p50_latency_ms": 19924,
+        "p95_latency_ms": 22196.899999999998,
+        "mean_cost_usd": 0.003808222222222222
+      },
+      "baseline_level": {
+        "mean_tokens": 50875,
+        "mean_latency_ms": 38184.666666666664,
+        "p50_latency_ms": 37482,
+        "p95_latency_ms": 50782.09999999999,
+        "mean_cost_usd": 0.012408533333333338
+      },
+      "clears_80_percent_target": true
+    }
+  ],
+  "rote_mean_tokens_by_source": [
+    {
+      "task": "B2",
+      "source": "planner",
+      "mean_tokens": 8354.055555555555
+    }
+  ],
+  "verification_audit": {
+    "rote_manifests": 18,
+    "browser_use_dumps": 18,
+    "browser_use_receipts": 76,
+    "all_rote_successes_verified": true,
+    "all_browser_successes_concluded_and_verified": true
+  },
+  "pricing": {
+    "version": "2026-07-15",
+    "source": "https://platform.claude.com/docs/en/about-claude/models/overview + https://developers.openai.com/api/docs/pricing"
+  }
+}

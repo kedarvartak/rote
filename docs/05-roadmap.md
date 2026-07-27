@@ -94,9 +94,9 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 | W2 distill, stable IDs, diff, render | **done and real-page measured** — T10 records 849 WordPress diffs and their grounded-base ratios |
 | W3 loop + context assembler | **done and OpenAI-economics qualified** — cache-key routing plus immutability guards preserve logical accounting and win long-cell billed cost in T11 |
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
-| W5 benchmark + the number | **corrective B2 certification required** — G1 and B1/B3 level evidence stand; historical B2 oracle was completion-only ([T19](testing/T19-b2-exact-verification.md)) |
+| W5 benchmark + the number | **done, corrected** — T20 restores B2/full G2 with 83.6% lower logical tokens (95% CI 82.7–84.6%) at 18/18 exact parity per harness |
 | W6 launch package | package/demo/reproduction done; npm publication separately blocked |
-| **W7 working memory (new)** | #57 accounting **done** → G1 **passed** → B2 exact recertification → packaging closure → compaction in P2 |
+| **W7 working memory (new)** | #57 accounting **done** → G1/corrected G2 **passed** → B5 trust instrument → packaging closure → compaction in P2 |
 
 **No longer blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49)
 and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` is now
@@ -110,10 +110,9 @@ is dropped with a recorded classification into the existing semantic resolution 
 Both still fail closed when no safe action can be resolved. The known planner-boundary
 robustness defects no longer block an honest success-parity measurement.
 
-**Blocking the launch:** corrected B2 exact-oracle certification is required before B5 or
-release. The historical Browser Use evidence cannot independently prove all eight requested
-values ([T19](testing/T19-b2-exact-verification.md)). Separately, `@rote/cli@0.1.0` is
-unpublished and npm scope/authentication remains #107. The runnable demo and one-command
+**Blocking the launch:** corrected B2 exact-oracle certification now passes
+([T20](testing/T20-b2-exact-certification.md)). Formal B5 is unblocked; separately,
+`@rote/cli@0.1.0` is unpublished and npm scope/authentication remains #107. The runnable demo and one-command
 evidence reproduction are complete. The final gate walk and exact closure
 procedure are recorded in [launch readiness](launch-readiness.md).
 
@@ -131,9 +130,9 @@ Two gates. The first is the headline; the second keeps the first honest.
 
 **G2 correction:** B1 and B3 retain their v1 exact terminal-state evidence. B2's v1 oracle
 proved only generic completion, so its parity and 77.3% reduction claim are withdrawn.
-Protocol v2 requires all eight exact values and has passed one paired qualification
-([T19](testing/T19-b2-exact-verification.md)); ≥15 runs per harness remain. B5 drift follows
-that correction rather than measuring repair against a weak oracle.
+Protocol v2 requires all eight exact values and passes 18/18 attempts per harness with an
+83.6% reduction (95% CI 82.7–84.6%) in T20. Combined with unchanged B1/B3 evidence, full
+G2 is restored. B5 drift is now the next trust instrument.
 
 **No number, no launch.** If G1 fails, the memory thesis is wrong and we say so — it costs
 one benchmark, which is the point of running it before building. G2 alone is the old gate:

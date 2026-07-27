@@ -123,15 +123,16 @@ Logical tokens are never relabeled as savings.
 
 The frozen v1 matrix supports **91.8% lower logical tokens on B1** (95% CI 91.8–91.9%)
 and **93.3% on B3** (92.4–93.9%) at independently verified parity. Its historical B2
-estimate was 77.3%, but B2's live oracle proved only generic form completion—not all eight
-requested values. That B2 claim is withdrawn pending corrective protocol-v2 certification.
-A fresh exact-oracle pair passes on both harnesses; it is qualification, not certification.
+estimate was withdrawn because the oracle proved only generic completion. A fresh
+protocol-v2 matrix now independently proves all eight requested values and reduces B2
+logical tokens by **83.6%** (95% CI 82.7–84.6%) at 18/18 success per harness.
 
 These are controlled local fixtures, while G1 is the real-WordPress length result. They
 do not establish production-site, learned-memory, or cross-provider wins.
 
 [Historical G2 method and correction](docs/testing/T13-g2-certification.md) ·
-[B2 exact-verification correction and qualification](docs/testing/T19-b2-exact-verification.md)
+[B2 exact-verification correction](docs/testing/T19-b2-exact-verification.md) ·
+[corrective B2 certification](docs/testing/T20-b2-exact-certification.md)
 
 ### Reproduce and watch
 
@@ -178,7 +179,7 @@ procedures, and verification signals — so the next run starts warmer.
 
 ## Status
 
-**Early build — G1 and B1/B3 level evidence pass; B2 corrective certification remains.**
+**Early build — G1 and the corrected G2 level gate pass; formal B5 drift remains.**
 
 Built and working end to end: core schemas + Expect DSL, lossless recorder, verified
 replay executor, CDP browser backend, perception (distill → stable IDs → budget),
@@ -202,8 +203,8 @@ Skyvern ships record → codegen → zero-LLM replay → fallback today
 ([docs/04](docs/04-competition.md)). `docs/02-architecture.md` §Status is authoritative.
 
 **No number, no launch.** G1 passes its public 30% slope-reduction floor: 37.2%
-(95% CI 35.6–38.8%) at success parity. B1/B3 retain level evidence; B2 requires a fresh
-exact-verification matrix before the full G2 gate can be restored. Cache economics still
+(95% CI 35.6–38.8%) at success parity. B1/B3 retain their original level evidence and T20 restores B2/full G2 with an exact
+eight-value oracle. Cache economics still
 lose at G1's shortest cell. The CLI tarball, demo, and one-command reproduction pass;
 registry publication remains separately blocked on npm scope ownership/authentication. Read the [known limitations](docs/known-limitations.md) before trying Rote and see
 [T14](docs/testing/T14-cli-package-candidate.md) for packaging evidence.

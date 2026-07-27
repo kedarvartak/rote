@@ -173,14 +173,14 @@ BROWSER_USE_PYTHON=/tmp/rote-browser-use/bin/python \
 
 The frozen v1 matrix supports B1 and B3 at exact terminal-state parity. T19 found that B2's
 shared oracle proved generic completion rather than all eight requested values, so its
-historical parity and 77.3% reduction claim are withdrawn. Protocol v2 carries every exact
-value in the live DOM oracle and has passed paired qualification; corrective certification
-is pending ([T19](testing/T19-b2-exact-verification.md)).
+historical parity and 77.3% reduction claim are withdrawn. T20 protocol v2 carries every
+exact value and restores B2 with an 83.6% logical-token reduction (95% CI 82.7–84.6%) at
+18/18 exact parity per harness ([T20](testing/T20-b2-exact-certification.md)).
 
 Live-run findings are recorded in [`docs/testing/`](testing/). T1's B2 design defect
 ([#49](https://github.com/kedarvartak/rote/issues/49)) and its two planner-boundary
 robustness findings (#51/#52) are fixed. T19 separately reopened B2 because its terminal
-oracle was too weak; corrected certification now precedes B5 and registry-backed release
+oracle was too weak; T20 restores corrected G2 and unblocks B5
 ([07 E4](07-execution-plan.md#e4--the-level-gate-g2-46-days-mostly-run-babysitting)).
 
 Next: [04 — Competition](04-competition.md)

@@ -3,8 +3,8 @@
 > **Correction (2026-07-26):** B2's live oracle proved generic form completion, not all
 > eight requested field values. Rote's trajectories contain all values, but Browser Use's
 > retained evidence cannot independently prove them. The B2 parity/reduction claim below
-> is withdrawn pending corrective protocol-v2 certification. B1/B3 are unaffected. See
-> [T19](T19-b2-exact-verification.md).
+> is superseded by T20's corrective protocol-v2 certification. B1/B3 are unaffected. See
+> [T19](T19-b2-exact-verification.md) and [T20](T20-b2-exact-certification.md).
 
 ## Decision
 

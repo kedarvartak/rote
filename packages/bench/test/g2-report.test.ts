@@ -57,6 +57,19 @@ describe('G2 report', () => {
     expect(report.verification_audit).toMatchObject({ rote_manifests: 45, browser_use_dumps: 45 });
   });
 
+  it('reports a corrective B2-only protocol without relabeling it as the historical matrix', () => {
+    const { records, manifests, dumps } = evidence();
+    const report = buildG2Report(
+      records.filter((record) => record.task === 'B2'),
+      manifests.filter((manifest) => manifest.run_id.includes('-b2-')),
+      dumps.filter((dump) => dump.task === 'B2'),
+      15,
+      'p1-g2-fixtures-v2-b2-exact',
+    );
+    expect(report.tasks).toHaveLength(1);
+    expect(report.tasks[0]).toMatchObject({ task: 'B2', clears_80_percent_target: false });
+  });
+
   it('rejects protocol-v2 B2 evidence that does not retain the exact oracle', () => {
     const { records, manifests, dumps } = evidence();
     dumps.find((dump) => dump.task === 'B2')!.verify_text = 'Vendor registration complete';
