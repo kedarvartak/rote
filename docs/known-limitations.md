@@ -92,7 +92,7 @@ The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulat
 
 ## Deliberately deferred
 
-Formal B5 drift/repair certification (the launch demo proves detection plus full fallback only), scheduled compaction, distillation,
+B5 now certifies deterministic semantic target repair only; arbitrary workflow repair remains absent. Scheduled compaction, distillation,
 automatic matching, site memory, routing, and speculation remain post-G2 work. Deferral
 means “not claimed,” not “implicitly working.” The authoritative sequence is
 [07 — Execution plan](07-execution-plan.md).

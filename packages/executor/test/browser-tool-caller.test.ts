@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { BrowserToolCaller, type BrowserReplayPage } from '../src/index.js';
 
 class FakeBrowserPage implements BrowserReplayPage {
+  constructor(readonly companySelector = '#company') {}
+
   url = 'about:blank';
   values = new Map<string, string>();
   confirmationVisible = false;
@@ -19,7 +21,8 @@ class FakeBrowserPage implements BrowserReplayPage {
       html: '',
       elements: [
         { tag: 'form', attributes: { id: 'registration-form' }, text: '', depth: 0 },
-        { tag: 'input', attributes: { id: 'company', value: this.values.get('#company') ?? '' }, text: '', depth: 1 },
+        { tag: 'label', attributes: { for: this.companySelector.slice(1) }, text: 'Company', depth: 1 },
+        { tag: 'input', attributes: { id: this.companySelector.slice(1), 'aria-label': 'Company', value: this.values.get(this.companySelector) ?? '' }, text: '', depth: 1 },
         { tag: 'select', attributes: { id: 'country', value: this.values.get('#country') ?? 'US' }, text: '', depth: 1 },
         { tag: 'button', attributes: { id: 'submit' }, text: 'Submit', depth: 1 },
         { tag: 'h2', attributes: { id: 'confirmation', ...(this.confirmationVisible ? {} : { hidden: 'true' }) }, text: 'Registration complete', depth: 1 },
@@ -51,6 +54,28 @@ describe('BrowserToolCaller', () => {
       result: expect.objectContaining({
         visible_selectors: expect.arrayContaining(['#confirmation']),
         visible_text: expect.arrayContaining(['Registration complete']),
+      }),
+    });
+  });
+
+  it('repairs a stale selector from grounded semantic identity and retains a receipt', async () => {
+    const page = new FakeBrowserPage('#company-v2');
+    const caller = new BrowserToolCaller(page);
+
+    const result = await caller.call('browser.fill', {
+      selector: '#company', role: 'textbox', name: 'Company', value: 'Acme',
+    });
+
+    expect(page.values.get('#company-v2')).toBe('Acme');
+    expect(result).toEqual({
+      ok: true,
+      result: expect.objectContaining({
+        target_resolution: {
+          requested_selector: '#company',
+          resolved_selector: '#company-v2',
+          strategy: 'role-name',
+          repaired: true,
+        },
       }),
     });
   });

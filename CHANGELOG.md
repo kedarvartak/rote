@@ -49,6 +49,7 @@ labeled `skip-changelog`.
 - **P1**: Make action `expect` optional and give a failed postcondition one scoped repair instead of ending the run — a mandatory expect forced the planner to predict confirmation text it had never seen, failing B2 0/7 with correct form submissions recorded as failures. B2 now passes 11/11 on `gpt-5.6-luna` and `gpt-5.6-sol` at roughly neutral token cost (#49, #50)
 
 ### Added
+- **P1**: Repair stale replay selectors from retained semantic identity before dispatch, fail closed on ambiguity, and publish B5 certification plus the Stagehand-first competitor expansion plan (#113).
 - **P1**: Publish the corrective protocol-v2 B2 matrix with 36/36 exact eight-value successes, restoring full G2 at an 83.6% logical-token reduction (95% CI 82.7–84.6%) and making formal B5 drift the next trust gate (#112).
 - **P1**: Add a post-eviction recall boundary and typed `recall_unavailable|verification_failed|step_budget_exhausted` browser-agent failures, with a two-page sacred invariant fixture proving missing memory declines cleanly and a fabricated comparison cannot pass verification (#110).
 - **P1**: Add one-command resumable G2 collection/audit/reporting, byte-identical published-evidence reproduction in every CI run, a recorded runnable launch demo showing verified cold exploration, explicit zero-token replay, and real selector drift detected before classified cold fallback, plus a final gate walk that blocks release solely on authenticated npm publication (#108).

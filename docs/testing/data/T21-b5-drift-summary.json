@@ -1,0 +1,27 @@
+{
+  "protocol_id": "p1-b5-b2-drift-v1",
+  "certified": true,
+  "repetitions_per_mutation": 18,
+  "recoverable_mutations": 4,
+  "fail_closed_mutations": 1,
+  "drift_recovery_rate": 1,
+  "drift_recovery_interval_95": [
+    0.9493488274035422,
+    1
+  ],
+  "silent_failure_rate": 0,
+  "silent_failure_interval_95": [
+    0,
+    0.04093562556432678
+  ],
+  "fail_closed_rate": 1,
+  "fail_closed_interval_95": [
+    0.8241207763533425,
+    1
+  ],
+  "mean_repair_cost_ratio": 0,
+  "mean_repaired_steps": 5,
+  "mean_repaired_run_duration_ms": 173.23189797222227,
+  "cold_baseline_mean_logical_tokens": 8354.055555555555,
+  "attempts": 90
+}

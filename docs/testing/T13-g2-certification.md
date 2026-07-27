@@ -84,5 +84,5 @@ cmp /tmp/g2.json docs/testing/data/T13-g2-summary.json
 
 This certifies tier-0 level economics on three deterministic local fixtures, not learned
 memory, production-site robustness, vision-heavy tasks, other providers/models, or drift.
-B5 remains the next trust instrument. G1 remains the real-WordPress length result; G2 does
+T21 later certifies narrow deterministic B5 target drift; T13 itself does not. G1 remains the real-WordPress length result; G2 does
 not replace it with a claim that local fixture percentages generalize to the web.

@@ -55,7 +55,7 @@ confuse in an architecture doc; this is the boundary.
 |---|---|---|
 | Core schemas, Expect DSL, templating, fingerprinting | — | **built** |
 | Recorder — append-only, crash-safe, fsync-per-event | 1 | **built** |
-| Replay executor — verified, zero-model on hand-written playbooks | 1 | **built** |
+| Replay executor — verified, zero-model on hand-written playbooks | 1 | **built** — B5 repairs stale selectors from retained semantic identity before dispatch and fails closed on ambiguity ([T21](testing/T21-b5-drift-certification.md)) |
 | CDP browser backend, perception (distill → stable IDs → budget) | 0 | **built** |
 | Agent loop, context assembler, tagged LLM client | 0 | **built** |
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
@@ -71,9 +71,9 @@ confuse in an architecture doc; this is the boundary.
 Packages that exist: `core recorder executor bench cli browser perception action agent llm`.
 Designed but absent: `decision predictor memory mcp-server`.
 
-**Tier 0 is half-built and unmeasured.** Eviction works and was never claimed; diffing has
-never run; caching still has no mechanism, though its accounting prerequisite now does
-(#57). That is the V1 gap ([05](05-roadmap.md)).
+**Tier 0's launch scope is built and measured.** G1 measures eviction/diff growth, T11
+qualifies cache layout, corrected G2 measures task levels, and T21 grades deterministic
+target drift. History compaction remains deliberately sequenced first in P2 ([05](05-roadmap.md)).
 
 ## The four planes
 

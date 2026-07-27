@@ -41,6 +41,8 @@ export interface ExecutorResult {
   reason?: string;
   /** Attempt count per step id that was executed at least once. */
   attempts: Record<string, number>;
+  /** Steps whose stale selector was safely replaced by semantic target resolution. */
+  repairedStepIds: string[];
 }
 
 export interface ExecutorDeps {
@@ -69,6 +71,7 @@ interface StepAttemptResult {
   pass: boolean;
   reason: string;
   world: WorldState;
+  repaired: boolean;
 }
 
 function checkExpect(expect: Expect | undefined, bindings: ParamBindings, world: WorldState): { pass: boolean; reason: string } {
@@ -103,6 +106,7 @@ export async function runPlaybook(
   const tokenUsage: TokenUsage[] = [];
   const completedStepIds: string[] = [];
   const attempts: Record<string, number> = {};
+  const repairedStepIds: string[] = [];
   let world = initialWorldState();
 
   function record(
@@ -142,7 +146,7 @@ export async function runPlaybook(
       token_usage: tokenUsage,
     };
     await writeRunManifest(paths.manifestPath, manifest);
-    return { outcome, runId, completedStepIds, failedStepId, reason, attempts };
+    return { outcome, runId, completedStepIds, failedStepId, reason, attempts, repairedStepIds };
   }
 
   async function attemptStep(step: Step): Promise<StepAttemptResult> {
@@ -153,11 +157,12 @@ export async function runPlaybook(
       const outcome = await deps.toolCaller.call(step.tool, args);
       record(step.tool, args, outcome.ok ? { result: outcome.result } : { error: outcome.error }, Date.now() - t0);
       if (!outcome.ok) {
-        return { pass: false, reason: outcome.error.message, world };
+        return { pass: false, reason: outcome.error.message, world, repaired: false };
       }
+      const resolution = targetResolutionFromResult(outcome.result);
       const nextWorld = mergeWorldState(world, observationFromResult(outcome.result), outcome.result);
-      const checked = checkExpect(step.expect, bindings, nextWorld);
-      return { ...checked, world: nextWorld };
+      const checked = checkExpect(remapExpect(step.expect, resolution), bindings, nextWorld);
+      return { ...checked, world: nextWorld, repaired: resolution?.repaired === true };
     }
 
     if (step.kind === 'slot') {
@@ -167,7 +172,7 @@ export async function runPlaybook(
       bindings[step.llm_fill.into] = completion.text;
       const nextWorld = mergeWorldState(world, observationFromText(completion.text), completion.text);
       const checked = checkExpect(step.expect, bindings, nextWorld);
-      return { ...checked, world: nextWorld };
+      return { ...checked, world: nextWorld, repaired: false };
     }
 
     // judgment
@@ -184,7 +189,7 @@ export async function runPlaybook(
     bindings[step.id] = completion.text;
     const nextWorld = mergeWorldState(world, observationFromText(completion.text), completion.text);
     const checked = checkExpect(step.expect, bindings, nextWorld);
-    return { ...checked, world: nextWorld };
+    return { ...checked, world: nextWorld, repaired: false };
   }
 
   const byId = new Map(playbook.steps.map((s) => [s.id, s] as const));
@@ -192,11 +197,11 @@ export async function runPlaybook(
   for (const stepId of topoOrder(playbook.steps)) {
     const step = byId.get(stepId);
     if (!step) continue; // unreachable for a PlaybookSchema-validated playbook
-    // 'repair' isn't built yet (M6) — it downgrades to an immediate fallback
-    // rather than pretending to retry or silently doing nothing.
+    // Semantic target healing occurs before dispatch in BrowserToolCaller. A failed
+    // step still downgrades to fallback; replay never asks an LLM to improvise.
     const maxAttempts = step.on_fail === 'retry' ? retryPolicy.maxAttempts : 1;
 
-    let result: StepAttemptResult = { pass: false, reason: 'not attempted', world };
+    let result: StepAttemptResult = { pass: false, reason: 'not attempted', world, repaired: false };
     for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
       attempts[step.id] = attempt;
       result = await attemptStep(step);
@@ -209,6 +214,7 @@ export async function runPlaybook(
       return finish('fallback', result.reason, step.id);
     }
     completedStepIds.push(step.id);
+    if (result.repaired) repairedStepIds.push(step.id);
   }
 
   for (const v of playbook.verify) {
@@ -219,4 +225,36 @@ export async function runPlaybook(
   }
 
   return finish('success');
+}
+
+interface TargetResolutionReceipt {
+  requested_selector: string;
+  resolved_selector: string;
+  repaired: boolean;
+}
+
+function targetResolutionFromResult(result: unknown): TargetResolutionReceipt | undefined {
+  if (typeof result !== 'object' || result === null || !('target_resolution' in result)) return undefined;
+  const receipt = (result as { target_resolution?: unknown }).target_resolution;
+  if (typeof receipt !== 'object' || receipt === null) return undefined;
+  const value = receipt as Record<string, unknown>;
+  return typeof value.requested_selector === 'string'
+    && typeof value.resolved_selector === 'string'
+    && typeof value.repaired === 'boolean'
+    ? value as unknown as TargetResolutionReceipt
+    : undefined;
+}
+
+function remapExpect(expect: Expect | undefined, receipt: TargetResolutionReceipt | undefined): Expect | undefined {
+  if (!expect || !receipt || receipt.requested_selector === receipt.resolved_selector) return expect;
+  if ('selector_visible' in expect && expect.selector_visible === receipt.requested_selector) {
+    return { selector_visible: receipt.resolved_selector };
+  }
+  if ('selector_absent' in expect && expect.selector_absent === receipt.requested_selector) {
+    return { selector_absent: receipt.resolved_selector };
+  }
+  if ('input_value' in expect && expect.input_value === receipt.requested_selector) {
+    return { input_value: receipt.resolved_selector, equals: expect.equals };
+  }
+  return expect;
 }

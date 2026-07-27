@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head><title>Vendor Registration</title></head>
+  <body>
+    <main>
+      <h1>Vendor Registration</h1>
+      <form id="registration-form">
+        <label for="company-name">Company name</label><input id="company-name" name="company_name" required />
+        <label for="contact-email">Contact email</label><input id="contact-email" name="contact_email" type="email" required />
+        <label for="tax-id">Tax ID</label><input id="tax-id" name="tax_id" required />
+        <label for="address-line1">Address line 1</label><input id="address-line1" name="address_line1" required />
+        <label for="city">City</label><input id="city" name="city" required />
+        <label for="postal-code">Postal code</label><input id="postal-code" name="postal_code" required />
+        <label for="country">Country</label><select id="country" name="country" required><option value="">Choose country</option><option value="US">US</option><option value="CA">Canada</option></select>
+        <label for="phone">Phone</label><input id="phone" name="phone" required />
+        <button id="registration-submit" type="submit">Submit registration</button>
+      </form>
+      <section id="registration-confirmation" role="status" hidden>
+        <h2 id="registration-complete-heading" hidden>Vendor registration complete</h2>
+        <p id="registration-summary" hidden></p>
+      </section>
+    </main>
+    <script>
+      const mutation = new URLSearchParams(location.search).get('mutation');
+      const fields = ['company-name', 'contact-email', 'tax-id', 'address-line1', 'city', 'postal-code', 'country', 'phone'];
+      const rename = (id, suffix = '-v2') => {
+        const element = document.getElementById(id);
+        const label = document.querySelector(`label[for="${id}"]`);
+        element.id = `${id}${suffix}`;
+        if (label) label.htmlFor = element.id;
+      };
+      const wrap = (id) => {
+        const element = document.getElementById(id);
+        const wrapper = document.createElement('div');
+        wrapper.className = 'layout-wrapper-v2';
+        element.parentNode.insertBefore(wrapper, element);
+        wrapper.appendChild(element);
+      };
+
+      if (mutation === 'fields-renamed') fields.forEach((id) => rename(id));
+      if (mutation === 'submit-renamed') rename('registration-submit');
+      if (mutation === 'wrappers') {
+        fields.forEach((id) => { wrap(id); rename(id, '-v3'); });
+        rename('registration-submit', '-v3');
+      }
+      if (mutation === 'stale-selector-decoys') {
+        rename('company-name');
+        rename('registration-submit');
+        const companyDecoy = document.createElement('input');
+        companyDecoy.id = 'company-name';
+        companyDecoy.setAttribute('aria-label', 'Delete company record');
+        companyDecoy.dataset.destructive = 'true';
+        document.getElementById('company-name-v2').after(companyDecoy);
+        const submitDecoy = document.createElement('button');
+        submitDecoy.id = 'registration-submit';
+        submitDecoy.type = 'button';
+        submitDecoy.textContent = 'Delete registration';
+        submitDecoy.dataset.destructive = 'true';
+        document.getElementById('registration-submit-v2').before(submitDecoy);
+      }
+      if (mutation === 'ambiguous-company') {
+        wrap('company-name');
+        wrap('company-name');
+        rename('company-name');
+        const copy = document.createElement('input');
+        copy.id = 'company-name-copy';
+        copy.setAttribute('aria-label', 'Company name');
+        document.getElementById('company-name-v2').parentElement.appendChild(copy);
+      }
+      if (mutation === 'semantic-change') {
+        rename('phone');
+        document.querySelector('label[for="phone-v2"]').textContent = 'Telephone number';
+      }
+
+      const form = document.querySelector('form');
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const values = Object.fromEntries([
+          'company_name', 'contact_email', 'tax_id', 'address_line1',
+          'city', 'postal_code', 'country', 'phone',
+        ].map((name) => [name, form.querySelector(`[name="${name}"]`).value]));
+        if (Object.values(values).some((value) => !value)) return;
+        const summary = document.querySelector('#registration-summary');
+        summary.textContent = `Vendor registration complete | company_name=${values.company_name} | contact_email=${values.contact_email} | tax_id=${values.tax_id} | address_line1=${values.address_line1} | city=${values.city} | postal_code=${values.postal_code} | country=${values.country} | phone=${values.phone}`;
+        form.hidden = true;
+        document.querySelector('#registration-confirmation').hidden = false;
+        document.querySelector('#registration-complete-heading').hidden = false;
+        summary.hidden = false;
+        history.replaceState({}, '', `${location.search}#complete`);
+      });
+    </script>
+  </body>
+</html>

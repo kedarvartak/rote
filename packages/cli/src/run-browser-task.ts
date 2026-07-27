@@ -45,6 +45,8 @@ export interface BrowserTaskResult {
   fallbackReason?: 'fingerprint_mismatch' | 'replay_failed' | 'replay_error';
   fallbackDetail?: string;
   failureClassification?: BrowserAgentFailureClassification;
+  /** Stale replay steps recovered by deterministic semantic target resolution. */
+  replayRepairs?: number;
 }
 
 export interface BrowserTaskBackend {
@@ -204,6 +206,7 @@ async function runVerifiedBrowserReplay(input: BrowserReplayRunInput): Promise<B
   const result = await runPlaybook(playbook, {
     ...input.candidate.params,
     base_url: input.target.origin,
+    initial_url: input.target.toString(),
   }, {
     toolCaller: new BrowserToolCaller(input.page),
     llmClient: {
@@ -223,6 +226,7 @@ async function runVerifiedBrowserReplay(input: BrowserReplayRunInput): Promise<B
     inputTokens: 0,
     outputTokens: 0,
     phase: 'warm',
+    replayRepairs: result.repairedStepIds.length,
   };
 }
 

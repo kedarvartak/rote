@@ -3,7 +3,7 @@
 **Decision updated 2026-07-26: BLOCKED — do not announce or tag a release yet.**
 
 T20 corrects B2 with 18/18 exact-oracle successes per harness and restores full G2. Formal
-B5 drift is now unblocked; npm publication remains the release blocker. Registry-backed installation also remains separately blocked: the unscoped `rote`
+T21 deterministic B5 drift now passes; npm publication remains the release blocker. Registry-backed installation also remains separately blocked: the unscoped `rote`
 name belongs to another project and npm scope/authentication is tracked in
 [#107](https://github.com/kedarvartak/rote/issues/107).
 
@@ -44,7 +44,7 @@ The full G2 gate is restored. A maintainer with the chosen npm scope perform the
 
 ## Not launch blockers, still not claims
 
-Anthropic cache economics, formal B5 repair certification (which follows corrected B2), scheduled compaction, distillation, automatic matching, site memory, model routing, and
+cross-provider B5 and arbitrary workflow repair, scheduled compaction, distillation, automatic matching, site memory, model routing, and
 speculation remain deferred. The launch is tier-0 working memory, not learned memory.
 
 The product website in PR #101 is useful collateral but is not allowed to override this

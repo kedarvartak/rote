@@ -134,6 +134,17 @@ do not establish production-site, learned-memory, or cross-provider wins.
 [B2 exact-verification correction](docs/testing/T19-b2-exact-verification.md) ·
 [corrective B2 certification](docs/testing/T20-b2-exact-certification.md)
 
+### Deterministic drift recovery
+
+On 90 real-Chrome B5 attempts, Rote recovered **72/72** selector-drifted replays without
+an LLM or full fallback (100%, 95% Wilson interval 94.9–100.0%), observed **0/90** silent
+failures, and failed closed on **18/18** ambiguous-control attempts. Repair used 0 logical
+tokens versus an 8,354-token corrected B2 cold baseline. This covers semantic target
+resolution, not arbitrary workflow repair or rollback.
+
+[B5 method, limitations, and raw receipts](docs/testing/T21-b5-drift-certification.md) ·
+[multi-harness comparison plan](docs/competitor-expansion-plan.md)
+
 ### Reproduce and watch
 
 Reproduce the historical v1 report byte-for-byte (this preserves the record; it does not
@@ -142,6 +153,7 @@ restore the withdrawn B2 claim):
 ```bash
 npm ci
 npm run reproduce:g2
+npm run reproduce:b5
 ```
 
 The paid 18-repetition collection is also one resumable command; see the
@@ -179,7 +191,7 @@ procedures, and verification signals — so the next run starts warmer.
 
 ## Status
 
-**Early build — G1 and the corrected G2 level gate pass; formal B5 drift remains.**
+**Early build — G1, corrected G2, and deterministic B5 drift gates pass.**
 
 Built and working end to end: core schemas + Expect DSL, lossless recorder, verified
 replay executor, CDP browser backend, perception (distill → stable IDs → budget),

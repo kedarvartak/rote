@@ -11,5 +11,7 @@ Golden test data shared across packages and milestones.
   input fixtures. Populated starting in M1 once the Recorder exists.
 - `sites/` — frozen stateful B1–B3 HTML pages: login/download confirmation, vendor submission confirmation with all eight requested values in one exact terminal
   oracle, and query-driven catalog/product states.
-- `sites/drift/` — B2 mutations covering selector renames, wrapper insertion,
+- `sites/drift/` — component B2 mutations covering selector renames, wrapper insertion,
   ambiguous controls, stale-selector decoys, and hidden replacements.
+- `sites/b2-vendor-drift.html` — full eight-field B5 fixture with query-selected field,
+  submit, wrapper, destructive-decoy, and ambiguity mutations under the exact T20 oracle.
