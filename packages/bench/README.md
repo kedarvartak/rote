@@ -200,7 +200,8 @@ rote-bench records sources.json --out bench-out/records.json
 rote-bench headhead bench-out/records.json --subject rote --prices prices.json --out bench-out/headhead.md
 rote-bench launch-gate bench-out/records.json --subject rote --min-token-reduction 0.3 --min-runs 15
 rote-bench g2-report bench-out/records.json --rote-manifests manifests.json \
-  --browser-dumps browser-dumps.json --out g2.md --summary g2.json --min-runs 15
+  --browser-dumps browser-dumps.json --out g2.md --summary g2.json --min-runs 15 \
+  --protocol-id p1-g2-fixtures-v2-b2-exact
 ```
 
 ### Assembling records from real runs

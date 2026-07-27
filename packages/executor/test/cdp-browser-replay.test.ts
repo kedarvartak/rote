@@ -42,7 +42,12 @@ describe('CDP verified browser replay', () => {
       base_url: server.url('').replace(/\/$/, ''),
       company_name: 'Acme Tools',
       contact_email: 'ops@example.com',
+      tax_id: '84-1129930',
+      address_line1: '18 Harbor Way',
+      city: 'Portland',
+      postal_code: '97209',
       country: 'US',
+      phone: '503-555-0148',
     }, llm);
 
     expect(b1.outcome).toBe('success');

@@ -61,7 +61,8 @@ See `src/index.ts`. Highlights:
 
 The stateful fixture browser playbooks live at
 `fixtures/playbooks/browser-b1-stateful.yaml` and `browser-b2-stateful.yaml`; both replay
-through real local Chrome with zero LLM calls in the opt-in CDP suite.
+through real local Chrome with zero LLM calls in the opt-in CDP suite. B2 binds and
+verifies all eight requested values; generic completion text is not sufficient.
 
 ## Running tests
 

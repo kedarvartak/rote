@@ -19,6 +19,7 @@ const BrowserDumpSchema = z.object({
   provider: z.literal('openai'),
   model: z.literal('gpt-4.1-mini'),
   is_successful: z.boolean().nullable(),
+  verify_text: z.string().min(1).optional(),
   verify_text_visible: z.boolean(),
   provider_receipts: z.array(z.object({
     model: z.string().min(1),
@@ -40,7 +41,7 @@ const LevelSchema = z.object({
 /** Machine-readable G2 certification audit and report. */
 export const G2ReportSchema = z.object({
   schema_version: z.literal(1),
-  protocol_id: z.literal('p1-g2-fixtures-v1-b1-b3'),
+  protocol_id: z.string().min(1),
   provider: z.literal('openai'),
   model: z.literal('gpt-4.1-mini'),
   browser_use_version: z.literal('0.13.6'),
@@ -76,18 +77,22 @@ export const G2ReportSchema = z.object({
 /** Validated G2 report. */
 export type G2Report = z.infer<typeof G2ReportSchema>;
 
-/** Audits G2 raw verification evidence and computes seeded-bootstrap level intervals. */
+/**
+ * Audits G2 raw verification evidence and computes seeded-bootstrap level intervals.
+ * `protocolId` labels the exact task/oracle contract; it never defaults from observed data.
+ */
 export function buildG2Report(
   records: readonly CompetitorRunRecord[],
   manifestsRaw: unknown,
   browserDumpsRaw: unknown,
   minRuns = 15,
+  protocolId = 'p1-g2-fixtures-v1-b1-b3',
 ): G2Report {
   const manifests = z.array(RunManifestSchema).parse(manifestsRaw);
   const browserDumps = z.array(BrowserDumpSchema).parse(browserDumpsRaw);
   auditRecordMatrix(records);
   auditRoteManifests(manifests, records);
-  auditBrowserDumps(browserDumps, records);
+  auditBrowserDumps(browserDumps, records, protocolId);
   const result = buildHeadToHead(records, { subject: 'rote' });
   const gate = evaluateLaunchGate(result, { minRuns });
   const price = priceForModel('gpt-4.1-mini');
@@ -119,7 +124,7 @@ export function buildG2Report(
   const bySource = meanTokensBySource(manifests);
   return G2ReportSchema.parse({
     schema_version: 1,
-    protocol_id: 'p1-g2-fixtures-v1-b1-b3',
+    protocol_id: protocolId,
     provider: 'openai',
     model: 'gpt-4.1-mini',
     browser_use_version: '0.13.6',
@@ -138,19 +143,21 @@ export function buildG2Report(
   });
 }
 
-/** Writes the reproducible G2 Markdown and JSON result. */
+/** Writes reproducible G2 Markdown/JSON under the explicitly supplied protocol identity. */
 export async function writeG2Report(
   recordsPath: string,
   manifestsPath: string,
   browserDumpsPath: string,
   outputs: { markdown: string; summary: string },
   minRuns = 15,
+  protocolId = 'p1-g2-fixtures-v1-b1-b3',
 ): Promise<G2Report> {
   const report = buildG2Report(
     await readCompetitorRecords(recordsPath),
     JSON.parse(await readFile(manifestsPath, 'utf8')),
     JSON.parse(await readFile(browserDumpsPath, 'utf8')),
     minRuns,
+    protocolId,
   );
   await Promise.all(Object.values(outputs).map((path) => mkdir(dirname(path), { recursive: true })));
   await Promise.all([
@@ -251,6 +258,7 @@ function auditRoteManifests(
 function auditBrowserDumps(
   dumps: readonly z.infer<typeof BrowserDumpSchema>[],
   records: readonly CompetitorRunRecord[],
+  protocolId: string,
 ): void {
   const seen = new Set<string>();
   for (const dump of dumps) {
@@ -259,6 +267,11 @@ function auditBrowserDumps(
     seen.add(key);
     if (dump.outcome === 'success' && (dump.is_successful !== true || dump.verify_text_visible !== true)) {
       throw new Error(`${key} reports success without conclusion and live verification`);
+    }
+    if (protocolId === 'p1-g2-fixtures-v2-b2-exact' && dump.task === 'B2') {
+      if (!dump.verify_text || !B2_EXACT_VERIFY_KEYS.every((field) => dump.verify_text!.includes(`${field}=`))) {
+        throw new Error(`${key} does not retain the protocol-v2 exact B2 verification oracle`);
+      }
     }
     if (dump.provider_receipts.some((receipt) => receipt.model !== dump.model)) throw new Error(`${key} receipt model mismatch`);
     const record = records.find((candidate) => candidate.harness === 'browser-use' && `${candidate.task}/${candidate.repetition}` === key)!;
@@ -269,6 +282,11 @@ function auditBrowserDumps(
   const expected = new Set(records.filter((record) => record.harness === 'browser-use').map((record) => `${record.task}/${record.repetition}`));
   assertSameIdentities('Browser Use dumps', seen, expected);
 }
+
+const B2_EXACT_VERIFY_KEYS = [
+  'company_name', 'contact_email', 'tax_id', 'address_line1',
+  'city', 'postal_code', 'country', 'phone',
+] as const;
 
 function assertSameIdentities(label: string, actual: ReadonlySet<string>, expected: ReadonlySet<string>): void {
   const missing = [...expected].filter((identity) => !actual.has(identity));

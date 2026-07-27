@@ -171,15 +171,16 @@ BROWSER_USE_PYTHON=/tmp/rote-browser-use/bin/python \
   scripts/bench/headhead/run-certification.sh
 ```
 
-The frozen B1–B3 certification passes G2 at 54/54 verified successes per harness, with
-matched-repetition logical-token reductions of 91.8%, 77.3%, and 93.3%. B2 does not clear
-the catalog's 80% target; see [T13](testing/T13-g2-certification.md) for intervals, raw
-receipts, and limitations.
+The frozen v1 matrix supports B1 and B3 at exact terminal-state parity. T19 found that B2's
+shared oracle proved generic completion rather than all eight requested values, so its
+historical parity and 77.3% reduction claim are withdrawn. Protocol v2 carries every exact
+value in the live DOM oracle and has passed paired qualification; corrective certification
+is pending ([T19](testing/T19-b2-exact-verification.md)).
 
 Live-run findings are recorded in [`docs/testing/`](testing/). T1's B2 design defect
 ([#49](https://github.com/kedarvartak/rote/issues/49)) and its two planner-boundary
-robustness findings (#51/#52) are fixed. The matrix is no longer blocked on those known success-parity defects. G1 and G2 are
-complete; registry-backed CLI publication is the remaining launch blocker
-([07 E5](07-execution-plan.md#e5--launch-package-45-days)).
+robustness findings (#51/#52) are fixed. T19 separately reopened B2 because its terminal
+oracle was too weak; corrected certification now precedes B5 and registry-backed release
+([07 E4](07-execution-plan.md#e4--the-level-gate-g2-46-days-mostly-run-babysitting)).
 
 Next: [04 — Competition](04-competition.md)

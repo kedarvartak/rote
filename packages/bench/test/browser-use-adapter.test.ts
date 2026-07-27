@@ -112,7 +112,7 @@ describe('head-to-head task parity', () => {
     };
 
     expect(config).toMatchObject({
-      protocol_id: 'p1-g2-fixtures-v1-b1-b3',
+      protocol_id: 'p1-g2-fixtures-v2-b2-exact',
       provider: 'openai',
       viewport: { width: 1920, height: 1080 },
     });

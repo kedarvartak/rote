@@ -38,7 +38,7 @@
         "--url",
         "http://127.0.0.1:8080/b2-vendor-form.html",
         "--verify-text",
-        "Vendor registration complete",
+        "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
         "--model",
         "gpt-4.1-mini",
         "--viewport-width",

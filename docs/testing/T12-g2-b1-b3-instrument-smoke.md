@@ -1,5 +1,9 @@
 # T12 — G2 B1–B3 instrument smoke
 
+> **Correction:** T19 found that B2's configured text proved completion but not all eight
+> requested values. Treat T12's B2 row as historical instrument behavior, not exact task
+> verification.
+
 | Field | Value |
 |---|---|
 | Date | 2026-07-24 |

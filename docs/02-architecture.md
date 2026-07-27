@@ -203,11 +203,11 @@ quadratic until scheduled compaction exists. The frozen pre-cache-key matrix did
 Rote 16.0% cheaper than Browser Use at WP-N25 (95% CI 6.2–26.2%), but WP-N09 still loses
 and crosses parity: this is not a universal cost claim. The eviction trade is now
 fake-world stress-tested to fail cleanly when an earlier-page fact is unavailable (T18),
-but compare-across-pages success remains unsupported. G2 passes
-its frozen B1–B3 level gate at 100% success parity, with 77.3–93.3% logical-token
-reductions whose 95% matched-repetition intervals remain positive
-([T13](testing/T13-g2-certification.md)); B2 does not clear the catalog's 80% target, and
-the local fixtures do not establish production-site generality.
+but compare-across-pages success remains unsupported. B1/B3 retain frozen level evidence.
+T19 found that B2's v1 oracle proved generic completion rather than all eight requested
+values, so B2 parity/reduction is withdrawn until protocol-v2 exact certification
+([T19](testing/T19-b2-exact-verification.md)). The local fixtures do not establish
+production-site generality.
 
 Manual exact-fingerprint candidates now return to the plain agent when replay fails or
 throws, with the classification and detail retained. That cold path re-navigates the

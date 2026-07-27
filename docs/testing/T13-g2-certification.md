@@ -1,14 +1,20 @@
 # T13 — G2 B1–B3 certification
 
+> **Correction (2026-07-26):** B2's live oracle proved generic form completion, not all
+> eight requested field values. Rote's trajectories contain all values, but Browser Use's
+> retained evidence cannot independently prove them. The B2 parity/reduction claim below
+> is withdrawn pending corrective protocol-v2 certification. B1/B3 are unaffected. See
+> [T19](T19-b2-exact-verification.md).
+
 ## Decision
 
-**G2 passes its frozen formal gate on all three tasks.** Rote and Browser Use each
-completed and independently verified all 54 attempts. Every matched-repetition 95%
-logical-token interval remains above zero.
+**Historical result:** the v1 report passed its then-configured gate on all three tasks.
+Rote and Browser Use each concluded and matched the configured live text on 54/54 attempts;
+for B2 that text was insufficient to prove the task. The historical token intervals remain
+reproducible, not currently certifying.
 
 B1 and B3 also clear the benchmark catalog's 80% reduction target. **B2 does not:** its
-lower bound is 76.9%, though it remains above the 50% kill threshold. This is a positive
-G2 result, not an honest basis for saying every task saves at least 80%.
+historical lower bound was 76.9%. It is retained below for audit, not as a current claim.
 
 | Task | Logical tokens/task reduction (95% CI) | Cost/task reduction (95% CI) | Latency reduction (95% CI) | Success R/B |
 |---|---:|---:|---:|---:|

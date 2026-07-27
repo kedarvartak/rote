@@ -14,7 +14,17 @@ params:
     type: string
   - name: contact_email
     type: string
+  - name: tax_id
+    type: string
+  - name: address_line1
+    type: string
+  - name: city
+    type: string
+  - name: postal_code
+    type: string
   - name: country
+    type: string
+  - name: phone
     type: string
 
 steps:
@@ -38,23 +48,57 @@ steps:
     args: { selector: "#contact-email", value: "{{contact_email}}" }
     expect: { input_value: "#contact-email", equals: "{{contact_email}}" }
     on_fail: fallback
-  - id: select_country
+  - id: fill_tax_id
     kind: deterministic
     depends_on: [fill_email]
+    tool: browser.fill
+    args: { selector: "#tax-id", value: "{{tax_id}}" }
+    expect: { input_value: "#tax-id", equals: "{{tax_id}}" }
+    on_fail: fallback
+  - id: fill_address
+    kind: deterministic
+    depends_on: [fill_tax_id]
+    tool: browser.fill
+    args: { selector: "#address-line1", value: "{{address_line1}}" }
+    expect: { input_value: "#address-line1", equals: "{{address_line1}}" }
+    on_fail: fallback
+  - id: fill_city
+    kind: deterministic
+    depends_on: [fill_address]
+    tool: browser.fill
+    args: { selector: "#city", value: "{{city}}" }
+    expect: { input_value: "#city", equals: "{{city}}" }
+    on_fail: fallback
+  - id: fill_postal_code
+    kind: deterministic
+    depends_on: [fill_city]
+    tool: browser.fill
+    args: { selector: "#postal-code", value: "{{postal_code}}" }
+    expect: { input_value: "#postal-code", equals: "{{postal_code}}" }
+    on_fail: fallback
+  - id: select_country
+    kind: deterministic
+    depends_on: [fill_postal_code]
     tool: browser.select
     args: { selector: "#country", value: "{{country}}" }
     expect: { input_value: "#country", equals: "{{country}}" }
     on_fail: fallback
-  - id: submit_registration
+  - id: fill_phone
     kind: deterministic
     depends_on: [select_country]
+    tool: browser.fill
+    args: { selector: "#phone", value: "{{phone}}" }
+    expect: { input_value: "#phone", equals: "{{phone}}" }
+    on_fail: fallback
+  - id: submit_registration
+    kind: deterministic
+    depends_on: [fill_phone]
     tool: browser.click
     args: { selector: "#registration-submit" }
     expect: { text_visible: "Vendor registration complete" }
     on_fail: fallback
 
 verify:
-  - text_visible: "Company: {{company_name}}"
-  - text_visible: "Email: {{contact_email}}"
+  - text_visible: "Vendor registration complete | company_name={{company_name}} | contact_email={{contact_email}} | tax_id={{tax_id}} | address_line1={{address_line1}} | city={{city}} | postal_code={{postal_code}} | country={{country}} | phone={{phone}}"
 
 confidence: 1

@@ -22,8 +22,9 @@ marks status; the authoritative table is [02 §Status](02-architecture.md).
 | **Not built** | compaction · playbook distiller · matcher · site memory · model routing · speculation |
 
 We are in **P1 (V1)**: **tier 0, working memory.** G1 passes: 37.2% slower cumulative
-logical-input growth (95% CI 35.6–38.8%) at success parity. G2 also passes its frozen
-positive-margin level gate, with B2's missed 80% catalog target published. The CLI package
+logical-input growth (95% CI 35.6–38.8%) at success parity. B1/B3 retain level evidence;
+T19 withdrew B2's v1 claim after finding its completion-only oracle, and exact protocol-v2
+corrective certification is pending. The CLI package
 candidate, runnable cold→replay→drift-fallback demo, and one-command evidence reproduction
 work; registry publication remains. Post-G1 cache routing wins
 long-cell cost while the shortest cell still crosses parity. **No number, no launch.**

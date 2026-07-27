@@ -121,22 +121,22 @@ Logical tokens are never relabeled as savings.
 
 ### Tokens-per-task level
 
-On the frozen B1–B3 deterministic suite, Rote and Browser Use each passed **54/54**
-independently verified attempts. Rote reduced logical tokens per completed task by
-**91.8% on B1** (95% CI 91.8–91.9%), **77.3% on B2** (76.9–78.1%), and **93.3% on B3**
-(92.4–93.9%). The matched-repetition intervals all clear the formal positive-margin G2
-gate. B2 does **not** clear the benchmark catalog's 80% target, so these results are not
-an “80%+ on every task” claim.
+The frozen v1 matrix supports **91.8% lower logical tokens on B1** (95% CI 91.8–91.9%)
+and **93.3% on B3** (92.4–93.9%) at independently verified parity. Its historical B2
+estimate was 77.3%, but B2's live oracle proved only generic form completion—not all eight
+requested values. That B2 claim is withdrawn pending corrective protocol-v2 certification.
+A fresh exact-oracle pair passes on both harnesses; it is qualification, not certification.
 
 These are controlled local fixtures, while G1 is the real-WordPress length result. They
 do not establish production-site, learned-memory, or cross-provider wins.
 
-[G2 method, audit, and raw evidence](docs/testing/T13-g2-certification.md) ·
-[machine summary](docs/testing/data/T13-g2-summary.json)
+[Historical G2 method and correction](docs/testing/T13-g2-certification.md) ·
+[B2 exact-verification correction and qualification](docs/testing/T19-b2-exact-verification.md)
 
 ### Reproduce and watch
 
-Re-audit the published G2 raw evidence and reproduce its Markdown/JSON byte-for-byte:
+Reproduce the historical v1 report byte-for-byte (this preserves the record; it does not
+restore the withdrawn B2 claim):
 
 ```bash
 npm ci
@@ -178,7 +178,7 @@ procedures, and verification signals — so the next run starts warmer.
 
 ## Status
 
-**Early build — G1 and G2 pass; npm registry publication remains.**
+**Early build — G1 and B1/B3 level evidence pass; B2 corrective certification remains.**
 
 Built and working end to end: core schemas + Expect DSL, lossless recorder, verified
 replay executor, CDP browser backend, perception (distill → stable IDs → budget),
@@ -202,11 +202,10 @@ Skyvern ships record → codegen → zero-LLM replay → fallback today
 ([docs/04](docs/04-competition.md)). `docs/02-architecture.md` §Status is authoritative.
 
 **No number, no launch.** G1 passes its public 30% slope-reduction floor: 37.2%
-(95% CI 35.6–38.8%) at success parity. G2 also passes its positive-margin level gate on
-B1–B3, though B2 misses the catalog's 80% target and cache economics still lose at G1's
-shortest cell. The 0.1.0 CLI tarball now passes clean-install and live fallback smokes,
-but registry publication is blocked on npm scope ownership/authentication; the demo also
-remains. Read the [known limitations](docs/known-limitations.md) before trying Rote and see
+(95% CI 35.6–38.8%) at success parity. B1/B3 retain level evidence; B2 requires a fresh
+exact-verification matrix before the full G2 gate can be restored. Cache economics still
+lose at G1's shortest cell. The CLI tarball, demo, and one-command reproduction pass;
+registry publication remains separately blocked on npm scope ownership/authentication. Read the [known limitations](docs/known-limitations.md) before trying Rote and see
 [T14](docs/testing/T14-cli-package-candidate.md) for packaging evidence.
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)
