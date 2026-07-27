@@ -59,7 +59,7 @@ export const G2ReportSchema = z.object({
     rote_level: LevelSchema,
     baseline_level: LevelSchema,
     clears_80_percent_target: z.boolean(),
-  })).length(3),
+  })).min(1).max(3),
   rote_mean_tokens_by_source: z.array(z.object({
     task: z.enum(['B1', 'B2', 'B3']),
     source: TokenUsageSourceSchema,
@@ -91,6 +91,7 @@ export function buildG2Report(
   const manifests = z.array(RunManifestSchema).parse(manifestsRaw);
   const browserDumps = z.array(BrowserDumpSchema).parse(browserDumpsRaw);
   auditRecordMatrix(records);
+  auditProtocolTaskScope(records, protocolId);
   auditRoteManifests(manifests, records);
   auditBrowserDumps(browserDumps, records, protocolId);
   const result = buildHeadToHead(records, { subject: 'rote' });
@@ -187,7 +188,7 @@ export function renderG2Report(report: G2Report): string {
       lines.push(`| ${task.task} | ${harness} | ${value.mean_tokens.toFixed(1)} | ${value.mean_latency_ms.toFixed(1)} | ${value.p50_latency_ms.toFixed(1)} | ${value.p95_latency_ms.toFixed(1)} | $${value.mean_cost_usd.toFixed(4)} |`);
     }
   }
-  lines.push('', 'B1 and B3 clear the benchmark catalog’s 80% target. B2 passes the formal positive-margin G2 gate but does **not** clear 80%; it is above the 50% kill threshold. Do not describe all three tasks as ≥80% wins. Latency is reported but not gated in V1: no task clears the catalog’s 5× pass target; B1 and B2 are below its 2× kill line, while B3 is between them.', '', '## Rote mean logical tokens by source', '', '| Task | Source | Mean tokens/run |', '|---|---|---:|');
+  lines.push('', interpretation(report), '', '## Rote mean logical tokens by source', '', '| Task | Source | Mean tokens/run |', '|---|---|---:|');
   for (const row of report.rote_mean_tokens_by_source) lines.push(`| ${row.task} | ${row.source} | ${row.mean_tokens.toFixed(1)} |`);
   lines.push('', `Verification audit: ${report.verification_audit.rote_manifests} Rote manifests and ${report.verification_audit.browser_use_dumps} Browser Use dumps; all successes independently verified; ${report.verification_audit.browser_use_receipts} raw Browser Use provider receipts retained.`, '', `Prices: \`${report.pricing.version}\` (${report.pricing.source}). Logical tokens include uncached/cache-read/cache-write input plus output; dollars price each bucket separately.`, '');
   return `${lines.join('\n')}\n`;
@@ -213,6 +214,24 @@ function totalTokens(record: CompetitorRunRecord): number {
 function assertMatchedRepetitions(subject: readonly CompetitorRunRecord[], baseline: readonly CompetitorRunRecord[]): void {
   if (subject.length !== baseline.length || subject.some((record, index) => record.repetition !== baseline[index]!.repetition)) {
     throw new Error('G2 successful repetitions are not exactly matched');
+  }
+}
+
+function interpretation(report: G2Report): string {
+  if (report.tasks.length === 1 && report.tasks[0]!.task === 'B2') {
+    const task = report.tasks[0]!;
+    return `Corrective B2 ${task.clears_80_percent_target ? 'clears' : 'does **not** clear'} the catalog’s 80% token target. Latency is reported, not gated in V1.`;
+  }
+  return 'B1 and B3 clear the benchmark catalog’s 80% target. B2 passes the formal positive-margin G2 gate but does **not** clear 80%; it is above the 50% kill threshold. Do not describe all three tasks as ≥80% wins. Latency is reported but not gated in V1: no task clears the catalog’s 5× pass target; B1 and B2 are below its 2× kill line, while B3 is between them.';
+}
+
+function auditProtocolTaskScope(records: readonly CompetitorRunRecord[], protocolId: string): void {
+  const tasks = [...new Set(records.map((record) => record.task))].sort();
+  if (protocolId === 'p1-g2-fixtures-v1-b1-b3' && tasks.join(',') !== 'B1,B2,B3') {
+    throw new Error(`protocol v1 requires B1,B2,B3; received ${tasks.join(',')}`);
+  }
+  if (protocolId === 'p1-g2-fixtures-v2-b2-exact' && !tasks.includes('B2')) {
+    throw new Error('protocol v2 requires corrective B2 evidence');
   }
 }
 

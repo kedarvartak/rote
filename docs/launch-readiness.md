@@ -2,9 +2,8 @@
 
 **Decision updated 2026-07-26: BLOCKED — do not announce or tag a release yet.**
 
-T19 found that historical B2 verification proved generic form completion rather than all
-eight requested values. Corrective exact-oracle certification is now the repository
-blocker. Registry-backed installation also remains separately blocked: the unscoped `rote`
+T20 corrects B2 with 18/18 exact-oracle successes per harness and restores full G2. Formal
+B5 drift is now unblocked; npm publication remains the release blocker. Registry-backed installation also remains separately blocked: the unscoped `rote`
 name belongs to another project and npm scope/authentication is tracked in
 [#107](https://github.com/kedarvartak/rote/issues/107).
 
@@ -14,7 +13,7 @@ name belongs to another project and npm scope/authentication is tracked in
 |---|---|---|
 | G1 real-page curve | pass | [T10](testing/T10-g1-cumulative-token-curve.md): lower 95% slope-reduction bound 35.6%, above 30%, at 75/75 parity per harness |
 | OpenAI cache economics | qualified with short-cell loss | [T11](testing/T11-cache-key-economics.md): WP-N25 cost win; WP-N09 interval crosses parity |
-| G2 tokens/task level | **B2 corrective certification required** | B1/B3 retain exact parity evidence; T13 B2 claim withdrawn because its oracle was completion-only; corrected v2 pair passes qualification ([T19](testing/T19-b2-exact-verification.md)) |
+| G2 tokens/task level | **pass, corrected** | B1/B3 retain exact parity evidence; T20 restores B2 with 83.6% lower logical tokens (95% CI 82.7–84.6%) at 18/18 exact parity per harness |
 | CLI package shape | pass | [T14](testing/T14-cli-package-candidate.md): build, pack, clean install, bin, live data URL and B1 |
 | Eviction recall trade | fail-closed, task remains unsupported | [T18](testing/T18-eviction-recall-trade.md): missing fact is `recall_unavailable`; fabricated answer is `verification_failed` |
 | Failed replay fallback | pass with rollback limit | [T15](testing/T15-replay-fallback.md): failed cheap path remains failed; cold fallback verifies |
@@ -27,9 +26,7 @@ name belongs to another project and npm scope/authentication is tracked in
 
 ## Exact release closure
 
-First collect and publish at least 15 corrected B2 repetitions per harness with exact
-success parity and matched-bootstrap intervals. Only after the full G2 gate is restored may
-a maintainer with the chosen npm scope perform these steps; none may be inferred from a
+The full G2 gate is restored. A maintainer with the chosen npm scope perform these steps; none may be inferred from a
 404 response:
 
 1. Confirm scope ownership with an authenticated npm account and document the final package

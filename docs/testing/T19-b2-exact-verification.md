@@ -1,5 +1,8 @@
 # T19 — B2 exact-verification correction and qualification
 
+> **Follow-up:** [T20](T20-b2-exact-certification.md) completes the 18-repetition
+> corrective matrix and restores B2/full G2 at exact success parity.
+
 ## Finding
 
 The frozen G2 B2 task requested eight field values, but its independent live-page oracle
@@ -11,7 +14,7 @@ A deterministic audit of T13's Rote trajectories finds all eight exact selector/
 pairs in 18/18 B2 runs. Browser Use dumps do
 not retain action arguments; its final self-report says all fields were filled, but agent
 self-report is not independent evidence. **The historical B2 success-parity and 77.3%
-token-reduction claim are withdrawn pending a corrective exact-verification matrix.** B1
+token-reduction claim were withdrawn until T20's corrective exact-verification matrix.** B1
 and B3 use task-specific terminal signals and are unaffected.
 
 A second latent defect existed in the hand-written B2 replay playbook: it bound only
@@ -57,6 +60,6 @@ This one pair qualifies the instrument only. It does not restore the B2 G2 claim
 
 ## Decision
 
-Corrective B2 certification precedes formal B5 drift work. Measuring drift against a
+Corrective B2 certification now passes in T20; formal B5 drift work is unblocked. Measuring drift against a
 completion-only oracle would grade stale or incomplete state as repaired and violate the
 same invariant B5 is meant to test.

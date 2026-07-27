@@ -205,8 +205,8 @@ and crosses parity: this is not a universal cost claim. The eviction trade is no
 fake-world stress-tested to fail cleanly when an earlier-page fact is unavailable (T18),
 but compare-across-pages success remains unsupported. B1/B3 retain frozen level evidence.
 T19 found that B2's v1 oracle proved generic completion rather than all eight requested
-values, so B2 parity/reduction is withdrawn until protocol-v2 exact certification
-([T19](testing/T19-b2-exact-verification.md)). The local fixtures do not establish
+values, T20 protocol-v2 exact certification restores B2/full G2 at 18/18 parity per harness
+([T20](testing/T20-b2-exact-certification.md)). The local fixtures do not establish
 production-site generality.
 
 Manual exact-fingerprint candidates now return to the plain agent when replay fails or
