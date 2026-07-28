@@ -1,0 +1,29 @@
+{
+  "protocol_id": "skyvern-v1.0.47-b2-b5-qualification-v1",
+  "certification_eligible": false,
+  "decision": "stop_before_certification",
+  "cold_attempts": 4,
+  "cold_exact_successes": 4,
+  "cold_harness_conclusions": 4,
+  "cold_exact_success_interval_95": [
+    0.5101091635454027,
+    1
+  ],
+  "complete_paired_repetitions": 3,
+  "warm_drift_attempts": 24,
+  "warm_drift_exact_successes": 23,
+  "generated_script_attempts": 24,
+  "ai_fallback_attempts": 24,
+  "zero_llm_replay_attempts": 0,
+  "artifact_change_attempts": 0,
+  "observed_silent_failures": 0,
+  "destructive_dispatches": 0,
+  "ambiguous_attempts": 4,
+  "ambiguous_exact_successes": 4,
+  "complete_provider_receipts": 0,
+  "total_attempts": 28,
+  "disqualifications": [
+    "raw provider receipts are incomplete for 28/28 attempts; token and cost ranking prohibited",
+    "aggregate runtime telemetry cannot attribute generated replay, repair, and AI-fallback usage separately"
+  ]
+}

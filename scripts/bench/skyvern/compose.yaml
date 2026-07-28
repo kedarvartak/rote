@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:14-alpine@sha256:f1341c01408dc7278e9d365ed4f860cd3f87dd16b4464ac326fc0f422083a579
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: skyvern
+      POSTGRES_DB: skyvern
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ./state/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skyvern"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  skyvern:
+    image: public.ecr.aws/skyvern/skyvern:v1.0.47@sha256:ad58d950f1c8cc3bc2d442228f701243b80b84494f11bbb066347ed034006e77
+    env_file:
+      - ./state/skyvern.env
+    environment:
+      DATABASE_STRING: postgresql+psycopg://skyvern@postgres:5432/skyvern
+      BROWSER_STREAMING_MODE: cdp
+      BROWSER_TYPE: chromium-headful
+      BROWSER_REMOTE_DEBUGGING_URL: http://127.0.0.1:9222
+      BROWSER_CDP_CONNECT_TIMEOUT_MS: "120000"
+      BROWSER_WIDTH: "1920"
+      BROWSER_HEIGHT: "1080"
+      DOWNLOAD_PATH: /data/downloads
+      BROWSER_SESSION_BASE_PATH: /data/browser_sessions
+      CREDENTIAL_VAULT_TYPE: skyvern
+      ENABLE_LOCAL_CREDENTIAL_VAULT: "true"
+      LOCAL_CREDENTIAL_VAULT_PATH: /data/credential_vault
+      ENABLE_CODE_BLOCK: "true"
+    ports:
+      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:6080:6080"
+    volumes:
+      - ./state/artifacts:/data/artifacts
+      - ./state/videos:/data/videos
+      - ./state/har:/data/har
+      - ./state/log:/data/log
+      - ./state/downloads:/data/downloads
+      - ./state/browser-sessions:/data/browser_sessions
+      - ./state/credential-vault:/data/credential_vault
+      - ./state/credentials:/app/.skyvern
+      - ../../../fixtures/sites:/benchmark/fixtures:ro
+      - ./fixture-server.py:/benchmark/fixture-server.py:ro
+      - ./state/fixture:/benchmark-state
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/heartbeat', timeout=5)"]
+      interval: 5s
+      timeout: 5s
+      retries: 36
+      start_period: 180s

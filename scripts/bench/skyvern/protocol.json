@@ -1,0 +1,44 @@
+{
+  "protocol_id": "skyvern-v1.0.47-b2-b5-qualification-v1",
+  "harness": "skyvern",
+  "harness_version": "1.0.47",
+  "source_commit": "9fc0b2aee079ee34ae3cdb578ca346f06c733218f",
+  "image": "public.ecr.aws/skyvern/skyvern:v1.0.47@sha256:ad58d950f1c8cc3bc2d442228f701243b80b84494f11bbb066347ed034006e77",
+  "image_index_digest": "sha256:ad58d950f1c8cc3bc2d442228f701243b80b84494f11bbb066347ed034006e77",
+  "license": "AGPL-3.0",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "viewport": { "width": 1920, "height": 1080 },
+  "task_id": "B2",
+  "task_prompt": "Register a vendor with company name \"{{company_name}}\", contact email \"{{contact_email}}\", tax ID \"{{tax_id}}\", address line 1 \"{{address_line1}}\", city \"{{city}}\", postal code \"{{postal_code}}\", country \"{{country}}\", and phone \"{{phone}}\", then submit the registration.",
+  "parameters": {
+    "company_name": "Northwind Supply",
+    "contact_email": "ap@northwind.test",
+    "tax_id": "84-1129930",
+    "address_line1": "18 Harbor Way",
+    "city": "Portland",
+    "postal_code": "97209",
+    "country": "US",
+    "phone": "503-555-0148"
+  },
+  "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+  "initial_url": "http://127.0.0.1:8092/b2-vendor-form.html",
+  "mutations": [
+    "fields-renamed",
+    "submit-renamed",
+    "wrappers",
+    "stale-selector-decoys",
+    "ambiguous-company"
+  ],
+  "cold_attempt_cap": 6,
+  "required_complete_pairs": 3,
+  "workflow_options": {
+    "run_with": "code",
+    "ai_fallback": true,
+    "adaptive_caching": false,
+    "enable_self_healing": true,
+    "code_version": 2,
+    "generate_script_on_terminal": true,
+    "max_steps": 20
+  }
+}

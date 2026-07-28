@@ -8,16 +8,14 @@ broaden coverage without turning unlike products into one misleading leaderboard
 | Priority | Harness | Why next | Comparison mode |
 |---|---|---|---|
 | 1 | **Stagehand 3.7.1 — feasibility stopped** | T22 found 1/6 exact cold successes, incomplete cold provider receipts, and cached oracle failures; no certification matrix | retained diagnostic only |
-| 2 | **Skyvern — next** | Ships agent → generated code → zero-LLM replay → fallback | cold agent, generated-code warm run, drifted warm run |
-| 3 | **Browser Use current pinned release** | Maintains continuity with G1/G2 and measures version drift | cold re-reasoning control |
+| 2 | **Skyvern 1.0.47 — feasibility stopped** | T23 observed exact generated-code/fallback execution but no complete raw-provider receipt set; no token/cost certification matrix | retained cold and generated-code warm/drift diagnostics |
+| 3 | **Browser Use current pinned release — next** | Maintains continuity with G1/G2 and measures version drift | cold re-reasoning control |
 | 4 | **Magnitude** | Vision-native contrast; useful for capability/cost boundaries | cold only unless a documented cache path exists |
 | Later | Notte and lab CUAs | Useful for capability ceilings, but API and accounting comparability are weaker | separate appendix, not the primary efficiency table |
 
 Stagehand came first because B5 tests the exact feature it markets: cached actions that
 self-heal after page change. T22 stopped before certification rather than success-hunt an
-unreliable cold cell. Skyvern follows because it is the strongest product-level
-comparison for learned replay, but that comparison becomes fully symmetric only after
-Rote's P2 distiller exists.
+unreliable cold cell. Skyvern followed because it is the strongest product-level comparison for learned replay. T23 stopped before certification when the receipt gate failed, and the comparison remains asymmetric until Rote's P2 distiller exists.
 
 ## Frozen common protocol
 
@@ -31,7 +29,7 @@ Every adapter must use:
 - at least 3 paired qualification runs before any certification spend;
 - at least 15 attempts per harness/task for a published cell;
 - ordered, append-safe paired collection with failed and abandoned attempts retained;
-- raw provider receipts, harness conclusion, and an independent CDP live-page capture;
+- raw provider receipts, harness conclusion, and an independent exact terminal-state oracle (CDP live-page text or an authoritative server-side state audit, frozen before collection);
 - uncached, cache-read, cache-write, and output token buckets kept separate.
 
 A harness that cannot expose reliable provider receipts may appear in a capability table,
@@ -91,10 +89,9 @@ mismatches before calculating an interval.
 1. **Stagehand feasibility — stopped in T22:** pinned 3.7.1 emitted only one exact cold
    success in six attempts and no complete raw cold-provider receipt set. The one available
    pair remains diagnostic; no ≥15-run matrix is allowed for this protocol.
-2. **Skyvern feasibility:** self-host the pinned release, exercise documented code caching,
-   and identify where generation, replay, fallback, and regeneration usage are exposed.
-3. **Skyvern certification:** freeze a new protocol before looking at comparative totals.
-4. **Browser Use refresh:** rerun only after pinning a newer release; retain 0.13.6 as the
+2. **Skyvern feasibility — stopped in T23:** the pinned 1.0.47 image produced exact cold preparations and generated-code warm/drift results, but every completed paired run triggered AI fallback and self-hosted logs exposed aggregate metrics rather than complete raw provider responses. No token/cost ranking is allowed.
+3. **Skyvern certification — not opened:** retain T23 diagnostics; revisit only with complete provider receipts and a newly frozen protocol.
+4. **Browser Use refresh — next:** rerun only after pinning a newer release; retain 0.13.6 as the
    historical baseline rather than silently replacing it.
 5. Add Magnitude only after the three primary harnesses have reproducible adapters.
 
