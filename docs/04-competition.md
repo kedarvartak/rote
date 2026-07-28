@@ -17,9 +17,10 @@
 > replayed run was *correct*. We are late to memoization and early to two things:
 > **verified** reuse, and **WebMCP** consumption.
 
-The next measured expansion is frozen in the [competitor expansion plan](competitor-expansion-plan.md):
-Stagehand first, Skyvern second, then a newly pinned Browser Use release, with separate cold
-and warm/drift scorecards so hand-authored replay is never mislabeled as learning.
+The measured expansion is frozen in the [competitor expansion plan](competitor-expansion-plan.md):
+T22 stopped Stagehand before certification; Skyvern is next, followed by a newly pinned
+Browser Use release. Cold and warm/drift scorecards remain separate so hand-authored replay
+is never mislabeled as learning.
 
 Sources for the 2026-07 survey:
 [Skyvern code caching](https://www.skyvern.com/docs/developers/features/code-caching) ·
@@ -86,6 +87,13 @@ their retention feature.
 **Rote vs:** their per-action cache is a special case of site memory; Rote's is whole-loop
 and infra-portable (including running *on* Browserbase). Expect them to move toward
 memory — speed matters.
+
+**Measured feasibility, not a ranking:** T22 pinned unmodified Stagehand 3.7.1 on exact B2
+and the frozen B5 mutations. Only 1/6 cold attempts passed the independent oracle despite
+6/6 harness conclusions; raw cold-provider receipts were incomplete. The sole cache pair
+also exposed two harness-success/oracle-failure cases. The protocol therefore stopped
+before certification rather than publishing comparative token or reliability claims
+([T22](testing/T22-stagehand-qualification.md)).
 
 ![Memory architecture: Stagehand vs Rote](diagrams/vs-stagehand.svg)
 

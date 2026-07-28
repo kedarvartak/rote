@@ -54,3 +54,4 @@ enough to be re-run and disagreed with.
 | [T19](T19-b2-exact-verification.md) | 2026-07-26 | Replace B2's generic completion oracle with all eight exact values | historical B2 claim withdrawn; corrected Rote/Browser Use pair passes qualification |
 | [T20](T20-b2-exact-certification.md) | 2026-07-27 | Certify corrected B2 under the retained eight-value live oracle | 36/36 exact successes; 83.6% token reduction (95% CI 82.7–84.6%); full G2 restored |
 | [T21](T21-b5-drift-certification.md) | 2026-07-27 | Grade deterministic B2 selector drift, destructive decoys, ambiguity, silent failure, and repair cost | 72/72 repaired exact successes; 0/90 observed silent failures; 18/18 ambiguity fallbacks; zero repair tokens |
+| [T22](T22-stagehand-qualification.md) | 2026-07-28 | Qualify pinned Stagehand 3.7.1 on exact B2 and B5 before certification spend | stop: 1/6 exact cold successes, 7 harness-success/oracle-failure cases, incomplete cold receipts; no comparative claim |

@@ -63,7 +63,7 @@ strong/weak-fit split.
 | G1 logical-input slope reduction at exact success parity | Linear scaling or the same percentage at every endpoint |
 | Corrected B1–B3 positive token margin on deterministic local fixtures | General web-task superiority or learned-memory economics |
 | OpenAI cache-key economics on longer WordPress cells | Universal cost savings; the shortest cell crosses parity |
-| Browser Use 0.13.6 comparison under pinned conditions | Current/future Browser Use releases or every competing harness |
+| Browser Use 0.13.6 comparison under pinned conditions | Current/future Browser Use releases or every competing harness; T22 Stagehand is a stopped feasibility probe, not a ranking |
 
 T19 withdraws the historical B2 row; T20 supersedes it with 18/18 exact-oracle attempts per
 harness and an 83.6% token reduction (95% CI 82.7–84.6%). In the historical

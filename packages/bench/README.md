@@ -43,6 +43,7 @@ See `src/index.ts`. Highlights:
 - **`roteCurveRecordsFromRun` / `renderRoteCurveRun`** — emit Rote's matching per-provider-call rows from an agent run, requiring one raw receipt per normalized usage and preserving observation/action/verification evidence.
 - **`planCurveResume`** — validates existing curve JSONL, refuses non-empty overwrite, and returns only fully completed run ids for append-safe one-run batching.
 - **`buildCurveCachePreflight` / `rote-bench curve-cache-preflight`** — report prompt-size eligibility and provider-observed cache hits from raw curve calls, separating “layout work can fire” from “layout is qualified.”
+- **`buildStagehandQualification` / `rote-bench stagehand-qualification`** — validates pinned Stagehand receipts, maps independently graded neutral rows, and blocks certification when exact cold parity, raw receipts, or safety qualification fail.
 - **`buildB5Report` / `rote-bench b5-report`** — audits real-Chrome drift receipts, exact live verification, semantic repair rate, observed silent failures, fail-closed ambiguity, and repair cost against the corrected cold B2 denominator.
 - **`buildCurveReport` / `rote-bench curve-report`** — fail-closed audit of matched curve receipts, seeded-bootstrap cell and slope intervals, success parity, cache/cost/latency buckets, A4 ratios, and dependency-free Markdown/SVG/JSON publication.
 - **`buildCurveCacheEconomics` / `rote-bench curve-cache-report`** — audit versioned before/after cache evidence and publish model-priced hit-rate and cost confidence intervals plus a cost-curve SVG.

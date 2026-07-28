@@ -1,0 +1,26 @@
+{
+  "protocol_id": "stagehand-v3.7.1-b2-b5-qualification-v1",
+  "certification_eligible": false,
+  "decision": "stop_before_certification",
+  "cold_attempts": 6,
+  "cold_exact_successes": 1,
+  "cold_harness_conclusions": 6,
+  "cold_exact_success_rate": 0.16666666666666666,
+  "cold_exact_success_interval_95": [
+    0.030053369748306635,
+    0.5635028221864702
+  ],
+  "complete_paired_repetitions": 1,
+  "drift_attempts": 5,
+  "drift_exact_successes": 3,
+  "observed_silent_failures": 7,
+  "cold_receipts_complete": 0,
+  "warm_drift_receipts_complete": 6,
+  "warm_drift_attempts": 6,
+  "disqualifications": [
+    "only 1 exact cold success in 6 attempts; 3 paired preparations required",
+    "only 1 complete paired repetition; 3 required",
+    "7 harness-declared successes failed the independent exact oracle",
+    "raw provider receipts are incomplete for 6/6 cold attempts; token and cost ranking prohibited"
+  ]
+}

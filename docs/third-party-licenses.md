@@ -1,13 +1,14 @@
 # Third-party license review
 
-**Review date:** 2026-07-24  
-**Scope:** P1 CLI package, benchmark competitors/services, and comparison material at
-`41bb271` plus this review. This is an engineering inventory, not legal advice.
+**Review date:** 2026-07-28
+**Scope:** P1 CLI package, Browser Use 0.13.6 and Stagehand 3.7.1 benchmark adapters,
+benchmark services, and comparison material. This is an engineering inventory, not legal advice.
 
 ## Decision
 
-**E5.5 passes for the current repository.** Browser Use is consumed as an unmodified MIT
-licensed dependency, never a fork. No competitor source, logo, screenshot, generated UI,
+**E5.5 passes for the current repository.** Browser Use and Stagehand are consumed as
+unmodified MIT-licensed benchmark dependencies, never forks. No competitor source, logo,
+screenshot, generated UI,
 or model weights are vendored into Rote or the npm package. Comparison docs use names and
 versioned factual observations; raw benchmark artifacts are outputs from Rote's own tasks
 and provider receipts.
@@ -38,10 +39,10 @@ are separate checks.
 |---|---|---|---|
 | Browser Use | Python package `browser-use==0.13.6` | MIT classifier and packaged `licenses/LICENSE` in wheel metadata | imported out-of-process by the benchmark runner; no source modifications or vendored files |
 | OpenAI Python | transitive benchmark provider client `openai==2.16.0` in the certification venv | Apache-2.0 metadata | environment dependency only; not committed or shipped |
-| Stagehand | comparison/documentation only | no dependency installed | no code or assets copied |
+| Stagehand | npm package `@browserbasehq/stagehand==3.7.1`, integrity-pinned in `scripts/bench/stagehand/package-lock.json` | MIT package metadata | isolated feasibility adapter only; no source modifications or copied assets; not shipped in `@rote/cli` |
 | Skyvern | comparison/documentation only | no dependency installed | no code or assets copied |
 
-Rote publishes the Browser Use adapter/configuration it authored, not Browser Use itself.
+Rote publishes the Browser Use and Stagehand adapter/configuration it authored, not either harness itself.
 The raw dumps retain model usage and agent results required to audit the comparison; they
 do not contain Browser Use package source.
 

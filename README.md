@@ -145,6 +145,16 @@ resolution, not arbitrary workflow repair or rollback.
 [B5 method, limitations, and raw receipts](docs/testing/T21-b5-drift-certification.md) ·
 [multi-harness comparison plan](docs/competitor-expansion-plan.md)
 
+### Competitor expansion status
+
+The first Stagehand feasibility cell was stopped rather than success-hunted: pinned
+Stagehand 3.7.1 reached the exact B2 oracle on 1/6 cold attempts despite declaring 6/6
+successes, and its public diagnostics did not retain complete raw cold-provider receipts.
+The sole warm/drift pair is retained as diagnostic evidence, not a comparative rate or
+cost claim. Skyvern is next in the frozen expansion sequence.
+
+[Stagehand method, stop decision, and receipts](docs/testing/T22-stagehand-qualification.md)
+
 ### Reproduce and watch
 
 Reproduce the historical v1 report byte-for-byte (this preserves the record; it does not
@@ -154,6 +164,7 @@ restore the withdrawn B2 claim):
 npm ci
 npm run reproduce:g2
 npm run reproduce:b5
+npm run reproduce:stagehand
 ```
 
 The paid 18-repetition collection is also one resumable command; see the
