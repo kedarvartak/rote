@@ -44,6 +44,7 @@ See `src/index.ts`. Highlights:
 - **`planCurveResume`** — validates existing curve JSONL, refuses non-empty overwrite, and returns only fully completed run ids for append-safe one-run batching.
 - **`buildCurveCachePreflight` / `rote-bench curve-cache-preflight`** — report prompt-size eligibility and provider-observed cache hits from raw curve calls, separating “layout work can fire” from “layout is qualified.”
 - **`buildStagehandQualification` / `rote-bench stagehand-qualification`** — validates pinned Stagehand receipts, maps independently graded neutral rows, and blocks certification when exact cold parity, raw receipts, or safety qualification fail.
+- **`buildSkyvernQualification` / `rote-bench skyvern-qualification`** — audits pinned Skyvern cold preparation and generated-code warm/drift evidence, reconciles runtime versus regeneration telemetry, and prohibits rankings without complete raw provider receipts.
 - **`buildB5Report` / `rote-bench b5-report`** — audits real-Chrome drift receipts, exact live verification, semantic repair rate, observed silent failures, fail-closed ambiguity, and repair cost against the corrected cold B2 denominator.
 - **`buildCurveReport` / `rote-bench curve-report`** — fail-closed audit of matched curve receipts, seeded-bootstrap cell and slope intervals, success parity, cache/cost/latency buckets, A4 ratios, and dependency-free Markdown/SVG/JSON publication.
 - **`buildCurveCacheEconomics` / `rote-bench curve-cache-report`** — audit versioned before/after cache evidence and publish model-priced hit-rate and cost confidence intervals plus a cost-curve SVG.
@@ -212,7 +213,7 @@ The records file is not hand-authored. `rote-bench records <sources.json>` build
 it: the subject (Rote) side reads the standard `.rote/runs/<run_id>` artifacts
 that `rote run` already writes — via an ordinary benchmark spec — and sums their
 tagged manifest usage into one neutral total per run. Each competitor side is a
-sidecar the external harness emits; running Browser Use / Stagehand is
+sidecar the external harness emits; running Browser Use, Stagehand, or Skyvern is
 out-of-process, and the sidecar is the fair hand-off (`docs/03` "publish adapters
 + configs + raw data"). The assembler fails loudly if a sidecar's `harness` label
 disagrees with the source spec, so a mislabeled file can never be ranked as the

@@ -100,9 +100,7 @@ Why the adjacent tools don't close it:
 - **Prompt/skill files** are the manual, prose-shaped version. They prove the demand; they
   are text the model re-interprets every run, not executable steps.
 
-**Reuse is no longer a gap.** Skyvern ships agent-run → generated code → zero-LLM replay →
-auto-fallback, with progressive branch coverage. Stagehand caches resolved selectors behind
-a page-similarity check. We are late to tier 1, not early ([04](04-competition.md)).
+**Reuse is no longer a gap.** Skyvern ships agent-run → generated code → code replay with automatic AI fallback and progressive branch coverage. Its ideal code path can avoid model reasoning; T23's generated B2 artifacts instead triggered fallback on every completed warm/drift run, so “zero LLM” is a path, not a universal property. Stagehand caches resolved selectors behind a page-similarity check. We are late to tier 1, not early ([04](04-competition.md)).
 
 **Tier 0 is the gap.** No shipping harness manages working memory, and it is the tier where
 the exponent lives.

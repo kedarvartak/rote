@@ -17,10 +17,7 @@
 > replayed run was *correct*. We are late to memoization and early to two things:
 > **verified** reuse, and **WebMCP** consumption.
 
-The measured expansion is frozen in the [competitor expansion plan](competitor-expansion-plan.md):
-T22 stopped Stagehand before certification; Skyvern is next, followed by a newly pinned
-Browser Use release. Cold and warm/drift scorecards remain separate so hand-authored replay
-is never mislabeled as learning.
+The measured expansion is frozen in the [competitor expansion plan](competitor-expansion-plan.md): T22 stopped Stagehand before certification. T23 then stopped pinned Skyvern 1.0.47 before comparative ranking because self-hosted aggregate telemetry was not a complete set of raw provider receipts. A newly pinned Browser Use release is next. Cold and warm/drift scorecards remain separate so hand-authored replay is never mislabeled as learning.
 
 Sources for the 2026-07 survey:
 [Skyvern code caching](https://www.skyvern.com/docs/developers/features/code-caching) ·
@@ -97,22 +94,18 @@ before certification rather than publishing comparative token or reliability cla
 
 ![Memory architecture: Stagehand vs Rote](diagrams/vs-stagehand.svg)
 
-### Skyvern — the one that already ships our thesis
+### Skyvern — generated reuse already shipped
 
-**Read this section before planning any reuse work.** Skyvern's
-[code caching](https://www.skyvern.com/docs/developers/features/code-caching) is not an
-analog of Rote's replay. It is the same product, shipped:
+**Read this section before planning any reuse work.** Skyvern's [code caching](https://www.skyvern.com/docs/developers/features/code-caching) ships the tier-1 step Rote deliberately defers: an agent trajectory becomes reusable generated code.
 
-| Skyvern, today | Rote's equivalent |
+| Skyvern capability | Rote's equivalent |
 |---|---|
-| `run_with="agent"` records actions, **generates reusable code** | distiller — *not built* |
-| `run_with="code"` — *"no screenshots, no LLM reasoning"* | replay executor — built |
-| cached code fails → **auto-falls back to the agent, regenerates the cache** | repair ladder rung 3 |
-| **progressive caching** — run 1 covers branch A, run 2 branch B, coverage compounds | not designed |
+| agent execution records actions and **generates reusable code** | distiller — *not built* |
+| `run_with="code"` executes the generated artifact | replay executor — built, but current playbooks are hand-authored |
+| cached code fails → **auto-falls back to the agent** | repair ladder rung 3 |
+| **progressive caching** covers additional branches over later runs | not designed |
 
-Their own words for it: *"faster, cheaper, and deterministic."* That is our pitch, in
-their marketing copy, with branch coverage we do not yet design for. Vision-heavy planning
-still makes their **cold** loop expensive — that part of the old read holds.
+The ideal documented code path can avoid model reasoning. T23 shows why that cannot be assumed for every generated artifact: pinned, unmodified Skyvern 1.0.47 generated a distinct artifact for each exact cold preparation, but every completed B2 warm/drift run triggered runtime AI fallback and no zero-LLM replay was observed. All completed attempts still passed the independent exact oracle, including destructive-decoy and visually ambiguous fixtures. This is bounded local feasibility evidence—not proof that Skyvern generally requires fallback, and not a performance ranking—because raw provider response receipts were unavailable ([T23](testing/T23-skyvern-qualification.md)).
 
 **The gap, and it is the only one that matters.** Their docs describe no explicit
 verification that a cached run achieved the right *outcome*: the fallback triggers on
@@ -129,9 +122,7 @@ arriving in their tracker as a *bug*, because their architecture permits it.
 The honest one: **verified** replay. Everyone can replay; nobody proves the replay was
 right.
 
-*Caveat: read from public docs and a commit title, not their source. Their fallback may
-exceed what is documented, and a fixed bug is fixed. The architectural stance —
-success-by-absence-of-error — is stated in their own docs.*
+*Caveat: the architectural review uses the pinned public source and docs; T23 uses the released image without patches. A fixed historical bug is fixed. The qualification observed zero harness-success/oracle-failure cases, so it does not reproduce that bug class.*
 
 ![Perception: Skyvern vs Rote](diagrams/vs-skyvern.svg)
 

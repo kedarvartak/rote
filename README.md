@@ -150,10 +150,9 @@ resolution, not arbitrary workflow repair or rollback.
 The first Stagehand feasibility cell was stopped rather than success-hunted: pinned
 Stagehand 3.7.1 reached the exact B2 oracle on 1/6 cold attempts despite declaring 6/6
 successes, and its public diagnostics did not retain complete raw cold-provider receipts.
-The sole warm/drift pair is retained as diagnostic evidence, not a comparative rate or
-cost claim. Skyvern is next in the frozen expansion sequence.
+The sole warm/drift pair is retained as diagnostic evidence, not a comparative rate or cost claim. Pinned Skyvern 1.0.47 then generated reusable artifacts and completed every non-abandoned B2/B5 qualification attempt exactly, but every completed warm/drift run triggered AI fallback and its self-hosted logs did not provide complete raw provider receipts. T23 therefore stops before comparative token/cost certification; it is not a Rote superiority claim.
 
-[Stagehand method, stop decision, and receipts](docs/testing/T22-stagehand-qualification.md)
+[Stagehand method and stop decision](docs/testing/T22-stagehand-qualification.md) · [Skyvern method and stop decision](docs/testing/T23-skyvern-qualification.md)
 
 ### Reproduce and watch
 
@@ -165,6 +164,7 @@ npm ci
 npm run reproduce:g2
 npm run reproduce:b5
 npm run reproduce:stagehand
+npm run reproduce:skyvern
 ```
 
 The paid 18-repetition collection is also one resumable command; see the
@@ -222,8 +222,7 @@ We are in **P1 = tier 0, working memory**. Its four levers, honestly:
 
 Not built: the playbook distiller (V1 replays hand-written playbooks), the matcher, site
 memory, model routing, speculation. **Tier 1 is table stakes and we are late to it** —
-Skyvern ships record → codegen → zero-LLM replay → fallback today
-([docs/04](docs/04-competition.md)). `docs/02-architecture.md` §Status is authoritative.
+Skyvern ships record → generated code → code replay with automatic AI fallback today; its documented zero-reasoning path must not be assumed for every generated artifact ([docs/04](docs/04-competition.md)). `docs/02-architecture.md` §Status is authoritative.
 
 **No number, no launch.** G1 passes its public 30% slope-reduction floor: 37.2%
 (95% CI 35.6–38.8%) at success parity. B1/B3 retain their original level evidence and T20 restores B2/full G2 with an exact

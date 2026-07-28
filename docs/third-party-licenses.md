@@ -1,15 +1,11 @@
 # Third-party license review
 
 **Review date:** 2026-07-28
-**Scope:** P1 CLI package, Browser Use 0.13.6 and Stagehand 3.7.1 benchmark adapters,
-benchmark services, and comparison material. This is an engineering inventory, not legal advice.
+**Scope:** P1 CLI package; Browser Use 0.13.6, Stagehand 3.7.1, and Skyvern 1.0.47 benchmark adapters; benchmark services; and comparison material. This is an engineering inventory, not legal advice.
 
 ## Decision
 
-**E5.5 passes for the current repository.** Browser Use and Stagehand are consumed as
-unmodified MIT-licensed benchmark dependencies, never forks. No competitor source, logo,
-screenshot, generated UI,
-or model weights are vendored into Rote or the npm package. Comparison docs use names and
+**E5.5 passes for the current repository.** Browser Use and Stagehand are consumed as unmodified MIT-licensed benchmark dependencies, never forks. Skyvern is run as an unmodified, digest-pinned AGPL-3.0 container and is not redistributed by Rote. No competitor source, logo, screenshot, generated UI, or model weights are vendored into Rote or the npm package. Comparison docs use names and
 versioned factual observations; raw benchmark artifacts are outputs from Rote's own tasks
 and provider receipts.
 
@@ -40,9 +36,9 @@ are separate checks.
 | Browser Use | Python package `browser-use==0.13.6` | MIT classifier and packaged `licenses/LICENSE` in wheel metadata | imported out-of-process by the benchmark runner; no source modifications or vendored files |
 | OpenAI Python | transitive benchmark provider client `openai==2.16.0` in the certification venv | Apache-2.0 metadata | environment dependency only; not committed or shipped |
 | Stagehand | npm package `@browserbasehq/stagehand==3.7.1`, integrity-pinned in `scripts/bench/stagehand/package-lock.json` | MIT package metadata | isolated feasibility adapter only; no source modifications or copied assets; not shipped in `@rote/cli` |
-| Skyvern | comparison/documentation only | no dependency installed | no code or assets copied |
+| Skyvern | unmodified `v1.0.47` image index `sha256:ad58d950f1c8cc3bc2d442228f701243b80b84494f11bbb066347ed034006e77`; source commit `9fc0b2aee079ee34ae3cdb578ca346f06c733218f` | upstream AGPL-3.0 `LICENSE` at the pinned source commit | Docker pulls the upstream image for isolated feasibility only; Rote publishes its own Compose/runner configuration and generated benchmark artifacts, not the image or Skyvern source; not shipped in `@rote/cli` |
 
-Rote publishes the Browser Use and Stagehand adapter/configuration it authored, not either harness itself.
+Rote publishes the Browser Use, Stagehand, and Skyvern adapter/configuration it authored, not the harnesses themselves.
 The raw dumps retain model usage and agent results required to audit the comparison; they
 do not contain Browser Use package source.
 
@@ -52,6 +48,7 @@ do not contain Browser Use package source.
 |---|---|---|
 | WordPress official images, digest-pinned | local G1 benchmark service; upstream GPLv2-or-later project | pulled by Docker for the benchmark, not embedded in `@rote/cli` or redistributed as an image |
 | MariaDB official image, digest-pinned | local benchmark database; upstream GPLv2 project with separately licensed components | pulled by Docker, not embedded or redistributed |
+| PostgreSQL 14 Alpine image, digest-pinned | isolated Skyvern qualification database; upstream PostgreSQL License plus image components | pulled by Docker, not embedded or redistributed |
 | Chrome/Chromium | external CDP browser executable | user/system prerequisite; no browser binary ships in the npm tarball |
 
 Custom WordPress MU plugins, seed scripts, fixture HTML, adapters, and reports in this

@@ -34,3 +34,4 @@ pnpm-debug.log*
 *.trajectory.jsonl
 .rote/
 bench-out/
+scripts/bench/skyvern/state/
