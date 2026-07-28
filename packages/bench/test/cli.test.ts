@@ -105,6 +105,19 @@ describe('rote-bench CLI', () => {
     await expect(readFile(summary, 'utf8')).resolves.toBe(await readFile(join(data, 'T21-b5-drift-summary.json'), 'utf8'));
   });
 
+  it('reproduces the Stagehand feasibility stop byte-for-byte', async () => {
+    const root = await tempDir();
+    const report = join(root, 'stagehand.md'); const summary = join(root, 'stagehand.json'); const records = join(root, 'records.json');
+    const data = resolve('../../docs/testing/data');
+    await expect(main([
+      'stagehand-qualification', join(data, 'T22-stagehand-qualification-receipts.jsonl'),
+      '--records', records, '--out', report, '--summary', summary,
+    ])).resolves.toBe(`wrote ${report}, ${summary}, and ${records} (stop_before_certification)`);
+    await expect(readFile(report, 'utf8')).resolves.toBe(await readFile(resolve('../../docs/testing/T22-stagehand-level-report.md'), 'utf8'));
+    await expect(readFile(summary, 'utf8')).resolves.toBe(await readFile(join(data, 'T22-stagehand-qualification-summary.json'), 'utf8'));
+    await expect(readFile(records, 'utf8')).resolves.toBe(await readFile(join(data, 'T22-stagehand-neutral-records.json'), 'utf8'));
+  });
+
   it('writes a synthetic benchmark pack and evaluates the M3 gate', async () => {
     const root = await tempDir();
     const specPath = join(root, 'bench-spec.json');

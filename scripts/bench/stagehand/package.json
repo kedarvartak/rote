@@ -1,0 +1,8 @@
+{
+  "name": "rote-stagehand-benchmark-adapter",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@browserbasehq/stagehand": "3.7.1"
+  }
+}

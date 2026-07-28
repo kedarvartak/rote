@@ -1,0 +1,23 @@
+{
+  "protocol_id": "stagehand-v3.7.1-b2-b5-qualification-v1",
+  "harness": "stagehand",
+  "harness_version": "3.7.1",
+  "package_integrity": "sha512-vAuYSZWIhh3d76BxwppNVE3dB0ztEBLBi85G6TWulZNiebdWptNoANOMuprOB/cw5dE+80b/ZZQo4G33Pc9i6w==",
+  "provider": "openai",
+  "model": "openai/gpt-4.1-mini",
+  "viewport": { "width": 1920, "height": 1080 },
+  "task_id": "B2",
+  "task_prompt": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+  "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+  "initial_url": "http://127.0.0.1:8091/b2-vendor-form.html",
+  "mutations": [
+    "fields-renamed",
+    "submit-renamed",
+    "wrappers",
+    "stale-selector-decoys",
+    "ambiguous-company"
+  ],
+  "cold_attempt_cap": 6,
+  "required_complete_pairs": 3,
+  "stagehand_options": { "env": "LOCAL", "mode": "dom", "self_heal": true, "max_steps": 20 }
+}

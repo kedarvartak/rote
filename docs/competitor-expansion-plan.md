@@ -7,14 +7,15 @@ broaden coverage without turning unlike products into one misleading leaderboard
 
 | Priority | Harness | Why next | Comparison mode |
 |---|---|---|---|
-| 1 | **Stagehand v3** | Closest public analogue to selector caching and self-healing actions | cold agent, cached action, drifted cached action |
-| 2 | **Skyvern** | Ships agent → generated code → zero-LLM replay → fallback | cold agent, generated-code warm run, drifted warm run |
+| 1 | **Stagehand 3.7.1 — feasibility stopped** | T22 found 1/6 exact cold successes, incomplete cold provider receipts, and cached oracle failures; no certification matrix | retained diagnostic only |
+| 2 | **Skyvern — next** | Ships agent → generated code → zero-LLM replay → fallback | cold agent, generated-code warm run, drifted warm run |
 | 3 | **Browser Use current pinned release** | Maintains continuity with G1/G2 and measures version drift | cold re-reasoning control |
 | 4 | **Magnitude** | Vision-native contrast; useful for capability/cost boundaries | cold only unless a documented cache path exists |
 | Later | Notte and lab CUAs | Useful for capability ceilings, but API and accounting comparability are weaker | separate appendix, not the primary efficiency table |
 
-Stagehand comes first because B5 tests the exact feature it markets: cached actions that
-self-heal after page change. Skyvern follows because it is the strongest product-level
+Stagehand came first because B5 tests the exact feature it markets: cached actions that
+self-heal after page change. T22 stopped before certification rather than success-hunt an
+unreliable cold cell. Skyvern follows because it is the strongest product-level
 comparison for learned replay, but that comparison becomes fully symmetric only after
 Rote's P2 distiller exists.
 
@@ -87,17 +88,15 @@ mismatches before calculating an interval.
 
 ## Execution sequence
 
-1. **Stagehand feasibility:** pin v3, prove exact B2 cold and cached-action runs, and audit
-   token receipts. Stop if receipt accounting cannot be reconciled.
-2. **Stagehand B5 qualification:** run every mutation three times. Publish failures; do not
-   tune mutations after observing results.
-3. **Stagehand certification:** only qualified cells receive ≥15 paired attempts.
-4. **Skyvern feasibility:** self-host the pinned release, exercise documented code caching,
+1. **Stagehand feasibility — stopped in T22:** pinned 3.7.1 emitted only one exact cold
+   success in six attempts and no complete raw cold-provider receipt set. The one available
+   pair remains diagnostic; no ≥15-run matrix is allowed for this protocol.
+2. **Skyvern feasibility:** self-host the pinned release, exercise documented code caching,
    and identify where generation, replay, fallback, and regeneration usage are exposed.
-5. **Skyvern certification:** freeze a new protocol before looking at comparative totals.
-6. **Browser Use refresh:** rerun only after pinning a newer release; retain 0.13.6 as the
+3. **Skyvern certification:** freeze a new protocol before looking at comparative totals.
+4. **Browser Use refresh:** rerun only after pinning a newer release; retain 0.13.6 as the
    historical baseline rather than silently replacing it.
-7. Add Magnitude only after the three primary harnesses have reproducible adapters.
+5. Add Magnitude only after the three primary harnesses have reproducible adapters.
 
 ## Claims this plan does not permit
 
