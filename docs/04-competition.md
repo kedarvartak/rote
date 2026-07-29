@@ -17,7 +17,7 @@
 > replayed run was *correct*. We are late to memoization and early to two things:
 > **verified** reuse, and **WebMCP** consumption.
 
-The measured expansion is frozen in the [competitor expansion plan](competitor-expansion-plan.md): T22 stopped Stagehand before certification. T23 then stopped pinned Skyvern 1.0.47 before comparative ranking because self-hosted aggregate telemetry was not a complete set of raw provider receipts. A newly pinned Browser Use release is next. Cold and warm/drift scorecards remain separate so hand-authored replay is never mislabeled as learning.
+The measured expansion is frozen in the [competitor expansion plan](competitor-expansion-plan.md): T22 stopped Stagehand before certification. T23 then stopped pinned Skyvern 1.0.47 before comparative ranking because self-hosted aggregate telemetry was not a complete set of raw provider receipts. T24 has now qualified pinned Browser Use 0.13.7 on corrected B2/B5; a separate ≥15-run corrected-B2 certification is next. Cold and warm/drift scorecards remain separate so hand-authored replay is never mislabeled as learning.
 
 Sources for the 2026-07 survey:
 [Skyvern code caching](https://www.skyvern.com/docs/developers/features/code-caching) ·
@@ -54,6 +54,8 @@ default** every 25 steps past a 40K-char floor. Element indices are CDP backend-
 ids — stable across steps on one page, with newly appeared elements `*`-marked — and
 volatile step metadata is deliberately placed at the prompt tail for prefix-cache
 friendliness.
+
+T24 pinned unmodified 0.13.7 and found 3/3 corrected B2 cold successes plus 5/5 B5 cold diagnostic successes with complete raw receipts. That clears only a separate corrected-B2 certification; it does not refresh the historical performance ranking or turn B5 cold re-reasoning into replay ([T24](testing/T24-browser-use-0137-qualification.md)).
 
 What they do **not** do: cross-step observation diffs — the full current-page
 serialization (up to 40K chars) is re-sent every step — and their ids are runtime

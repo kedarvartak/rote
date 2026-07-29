@@ -49,6 +49,7 @@ labeled `skip-changelog`.
 - **P1**: Make action `expect` optional and give a failed postcondition one scoped repair instead of ending the run — a mandatory expect forced the planner to predict confirmation text it had never seen, failing B2 0/7 with correct form submissions recorded as failures. B2 now passes 11/11 on `gpt-5.6-luna` and `gpt-5.6-sol` at roughly neutral token cost (#49, #50)
 
 ### Added
+- **P1**: Add a wheel-hash-pinned Browser Use 0.13.7 qualification adapter and publish exact corrected-B2/B5 feasibility with complete receipt audits before allowing a separate certification cell (#118).
 - **P1**: Add a digest-pinned Skyvern 1.0.47 generated-code qualification adapter and publish an exact-oracle stop decision that retains fallback/artifact lineage while prohibiting rankings without raw provider receipts (#116).
 - **P1**: Add an integrity-pinned Stagehand 3.7.1 feasibility adapter and publish a fail-closed stop decision after exact verification and receipt audits disqualify certification (#115).
 - **P1**: Repair stale replay selectors from retained semantic identity before dispatch, fail closed on ambiguity, and publish B5 certification plus the Stagehand-first competitor expansion plan (#113).

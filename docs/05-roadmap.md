@@ -21,7 +21,7 @@ the only tier where nobody else is building.
 | P5 | Platform | — | "The efficiency substrate other agents build on" | 2027-Q4+ |
 
 **Why tier 0 first, when tier 1 is the original thesis:** tier 1 is table stakes — Skyvern
-already ships record → codegen → zero-LLM replay → fallback ([04](04-competition.md)).
+already ships record → codegen → code replay with automatic fallback ([04](04-competition.md)); T23 shows the zero-reasoning path is not universal.
 Building the distiller first reaches parity and passes nothing. Tier 0 is where the
 exponent lives, no competitor is there, it needs no site cooperation, and it pays even on
 tasks that never recur. It is also the only tier we can measure this quarter.

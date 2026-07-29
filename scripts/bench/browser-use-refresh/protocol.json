@@ -1,0 +1,27 @@
+{
+  "protocol_id": "browser-use-v0.13.7-b2-b5-qualification-v1",
+  "harness": "browser-use",
+  "harness_version": "0.13.7",
+  "source_commit": "f0aa3a8bb03779c71a5aa262d389e3bfe6b77cdc",
+  "wheel": "browser_use-0.13.7-py3-none-any.whl",
+  "wheel_sha256": "2264439e45cc7dd7fe480ca37e9eabd040c31a4e4d5e20c069ad2f60c07e3ba8",
+  "license": "MIT",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "viewport": { "width": 1920, "height": 1080 },
+  "task_id": "B2",
+  "task_prompt": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+  "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+  "initial_url": "http://127.0.0.1:8093/b2-vendor-drift.html",
+  "mutations": [
+    "fields-renamed",
+    "submit-renamed",
+    "wrappers",
+    "stale-selector-decoys",
+    "ambiguous-company"
+  ],
+  "cold_attempt_cap": 6,
+  "required_exact_cold": 3,
+  "b5_diagnostic_repetitions": 1,
+  "max_steps": 25
+}

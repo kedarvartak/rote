@@ -1,7 +1,7 @@
 # Third-party license review
 
-**Review date:** 2026-07-28
-**Scope:** P1 CLI package; Browser Use 0.13.6, Stagehand 3.7.1, and Skyvern 1.0.47 benchmark adapters; benchmark services; and comparison material. This is an engineering inventory, not legal advice.
+**Review date:** 2026-07-29
+**Scope:** P1 CLI package; Browser Use 0.13.6/0.13.7, Stagehand 3.7.1, and Skyvern 1.0.47 benchmark adapters; benchmark services; and comparison material. This is an engineering inventory, not legal advice.
 
 ## Decision
 
@@ -33,7 +33,7 @@ are separate checks.
 
 | Component | Pinned use | License finding | Repository treatment |
 |---|---|---|---|
-| Browser Use | Python package `browser-use==0.13.6` | MIT classifier and packaged `licenses/LICENSE` in wheel metadata | imported out-of-process by the benchmark runner; no source modifications or vendored files |
+| Browser Use | historical Python package `browser-use==0.13.6`; refresh wheel `browser_use-0.13.7-py3-none-any.whl` SHA-256 `2264439e45cc7dd7fe480ca37e9eabd040c31a4e4d5e20c069ad2f60c07e3ba8`, source `f0aa3a8bb03779c71a5aa262d389e3bfe6b77cdc` | MIT classifier and packaged `LICENSE` in wheel metadata; upstream MIT `LICENSE` at both pins | imported out-of-process by isolated benchmark runners; no source modifications or vendored files; not shipped in `@rote/cli` |
 | OpenAI Python | transitive benchmark provider client `openai==2.16.0` in the certification venv | Apache-2.0 metadata | environment dependency only; not committed or shipped |
 | Stagehand | npm package `@browserbasehq/stagehand==3.7.1`, integrity-pinned in `scripts/bench/stagehand/package-lock.json` | MIT package metadata | isolated feasibility adapter only; no source modifications or copied assets; not shipped in `@rote/cli` |
 | Skyvern | unmodified `v1.0.47` image index `sha256:ad58d950f1c8cc3bc2d442228f701243b80b84494f11bbb066347ed034006e77`; source commit `9fc0b2aee079ee34ae3cdb578ca346f06c733218f` | upstream AGPL-3.0 `LICENSE` at the pinned source commit | Docker pulls the upstream image for isolated feasibility only; Rote publishes its own Compose/runner configuration and generated benchmark artifacts, not the image or Skyvern source; not shipped in `@rote/cli` |
