@@ -1,0 +1,2 @@
+# The wheel SHA-256 is frozen in protocol.json and verified by verify-install.py.
+browser-use==0.13.7

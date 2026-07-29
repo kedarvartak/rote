@@ -1,0 +1,18 @@
+{
+  "protocol_id": "browser-use-v0.13.7-b2-b5-qualification-v1",
+  "certification_eligible": true,
+  "decision": "qualify_b2_for_certification",
+  "cold_attempts": 3,
+  "cold_exact_successes": 3,
+  "cold_harness_conclusions": 3,
+  "cold_exact_success_interval_95": [
+    0.4385029682449546,
+    1
+  ],
+  "b5_attempts": 5,
+  "b5_exact_successes": 5,
+  "observed_silent_failures": 0,
+  "complete_provider_receipts": 8,
+  "total_attempts": 8,
+  "disqualifications": []
+}

@@ -150,9 +150,9 @@ resolution, not arbitrary workflow repair or rollback.
 The first Stagehand feasibility cell was stopped rather than success-hunted: pinned
 Stagehand 3.7.1 reached the exact B2 oracle on 1/6 cold attempts despite declaring 6/6
 successes, and its public diagnostics did not retain complete raw cold-provider receipts.
-The sole warm/drift pair is retained as diagnostic evidence, not a comparative rate or cost claim. Pinned Skyvern 1.0.47 then generated reusable artifacts and completed every non-abandoned B2/B5 qualification attempt exactly, but every completed warm/drift run triggered AI fallback and its self-hosted logs did not provide complete raw provider receipts. T23 therefore stops before comparative token/cost certification; it is not a Rote superiority claim.
+The sole warm/drift pair is retained as diagnostic evidence, not a comparative rate or cost claim. Pinned Skyvern 1.0.47 then generated reusable artifacts and completed every non-abandoned B2/B5 qualification attempt exactly, but every completed warm/drift run triggered AI fallback and its self-hosted logs did not provide complete raw provider receipts. T23 therefore stops before comparative token/cost certification; it is not a Rote superiority claim. Browser Use 0.13.7 subsequently passed bounded T24 feasibility—3/3 corrected B2 cold attempts and 5/5 B5 cold diagnostics, all with complete receipts—so only a separate ≥15-run corrected-B2 refresh is eligible next. T24 itself publishes no performance ranking.
 
-[Stagehand method and stop decision](docs/testing/T22-stagehand-qualification.md) · [Skyvern method and stop decision](docs/testing/T23-skyvern-qualification.md)
+[Stagehand method and stop decision](docs/testing/T22-stagehand-qualification.md) · [Skyvern method and stop decision](docs/testing/T23-skyvern-qualification.md) · [Browser Use refresh qualification](docs/testing/T24-browser-use-0137-qualification.md)
 
 ### Reproduce and watch
 
@@ -165,6 +165,7 @@ npm run reproduce:g2
 npm run reproduce:b5
 npm run reproduce:stagehand
 npm run reproduce:skyvern
+npm run reproduce:browser-use-refresh
 ```
 
 The paid 18-repetition collection is also one resumable command; see the
