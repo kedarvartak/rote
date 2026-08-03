@@ -15,7 +15,7 @@ const BrowserDumpSchema = z.object({
   cache_write_tokens: z.number().int().nonnegative(),
   output_tokens: z.number().int().nonnegative(),
   duration_ms: z.number().int().nonnegative(),
-  browser_use_version: z.literal('0.13.6'),
+  browser_use_version: z.enum(['0.13.6', '0.13.7']),
   provider: z.literal('openai'),
   model: z.literal('gpt-4.1-mini'),
   is_successful: z.boolean().nullable(),
@@ -44,7 +44,7 @@ export const G2ReportSchema = z.object({
   protocol_id: z.string().min(1),
   provider: z.literal('openai'),
   model: z.literal('gpt-4.1-mini'),
-  browser_use_version: z.literal('0.13.6'),
+  browser_use_version: z.enum(['0.13.6', '0.13.7']),
   min_successful_runs: z.number().int().min(15),
   gate_passed: z.boolean(),
   tasks: z.array(z.object({
@@ -90,6 +90,10 @@ export function buildG2Report(
 ): G2Report {
   const manifests = z.array(RunManifestSchema).parse(manifestsRaw);
   const browserDumps = z.array(BrowserDumpSchema).parse(browserDumpsRaw);
+  const browserUseVersion = browserUseVersionForProtocol(protocolId);
+  if (browserDumps.some((dump) => dump.browser_use_version !== browserUseVersion)) {
+    throw new Error(`protocol ${protocolId} requires Browser Use ${browserUseVersion}`);
+  }
   auditRecordMatrix(records);
   auditProtocolTaskScope(records, protocolId);
   auditRoteManifests(manifests, records);
@@ -128,7 +132,7 @@ export function buildG2Report(
     protocol_id: protocolId,
     provider: 'openai',
     model: 'gpt-4.1-mini',
-    browser_use_version: '0.13.6',
+    browser_use_version: browserUseVersion,
     min_successful_runs: minRuns,
     gate_passed: gate.passed && tasks.every((task) => task.logical_token_reduction.lower > 0),
     tasks,
@@ -218,11 +222,19 @@ function assertMatchedRepetitions(subject: readonly CompetitorRunRecord[], basel
 }
 
 function interpretation(report: G2Report): string {
+  if (report.protocol_id === 'p1-g2-fixtures-v3-b2-browser-use-0137-paired') {
+    const task = report.tasks[0]!;
+    return `Fresh paired Browser Use 0.13.7 B2 ${task.clears_80_percent_target ? 'clears' : 'does **not** clear'} the catalog’s 80% token target. Both harnesses ran as cold agents; this cell does not test replay or learning. Latency is reported, not gated in V1.`;
+  }
   if (report.tasks.length === 1 && report.tasks[0]!.task === 'B2') {
     const task = report.tasks[0]!;
     return `Corrective B2 ${task.clears_80_percent_target ? 'clears' : 'does **not** clear'} the catalog’s 80% token target. Latency is reported, not gated in V1.`;
   }
   return 'B1 and B3 clear the benchmark catalog’s 80% target. B2 passes the formal positive-margin G2 gate but does **not** clear 80%; it is above the 50% kill threshold. Do not describe all three tasks as ≥80% wins. Latency is reported but not gated in V1: no task clears the catalog’s 5× pass target; B1 and B2 are below its 2× kill line, while B3 is between them.';
+}
+
+function browserUseVersionForProtocol(protocolId: string): '0.13.6' | '0.13.7' {
+  return protocolId === 'p1-g2-fixtures-v3-b2-browser-use-0137-paired' ? '0.13.7' : '0.13.6';
 }
 
 function auditProtocolTaskScope(records: readonly CompetitorRunRecord[], protocolId: string): void {
@@ -232,6 +244,9 @@ function auditProtocolTaskScope(records: readonly CompetitorRunRecord[], protoco
   }
   if (protocolId === 'p1-g2-fixtures-v2-b2-exact' && !tasks.includes('B2')) {
     throw new Error('protocol v2 requires corrective B2 evidence');
+  }
+  if (protocolId === 'p1-g2-fixtures-v3-b2-browser-use-0137-paired' && tasks.join(',') !== 'B2') {
+    throw new Error(`protocol v3 requires only paired B2 evidence; received ${tasks.join(',')}`);
   }
 }
 
@@ -287,12 +302,16 @@ function auditBrowserDumps(
     if (dump.outcome === 'success' && (dump.is_successful !== true || dump.verify_text_visible !== true)) {
       throw new Error(`${key} reports success without conclusion and live verification`);
     }
-    if (protocolId === 'p1-g2-fixtures-v2-b2-exact' && dump.task === 'B2') {
+    if (['p1-g2-fixtures-v2-b2-exact', 'p1-g2-fixtures-v3-b2-browser-use-0137-paired'].includes(protocolId) && dump.task === 'B2') {
       if (!dump.verify_text || !B2_EXACT_VERIFY_KEYS.every((field) => dump.verify_text!.includes(`${field}=`))) {
-        throw new Error(`${key} does not retain the protocol-v2 exact B2 verification oracle`);
+        throw new Error(`${key} does not retain the exact B2 verification oracle`);
       }
     }
     if (dump.provider_receipts.some((receipt) => receipt.model !== dump.model)) throw new Error(`${key} receipt model mismatch`);
+    const receiptUsage = normalizeBrowserProviderReceipts(dump.provider_receipts, key);
+    if (dump.input_tokens !== receiptUsage.input || dump.cache_read_tokens !== receiptUsage.read || dump.cache_write_tokens !== receiptUsage.write || dump.output_tokens !== receiptUsage.output) {
+      throw new Error(`${key} normalized usage does not reconcile to raw provider receipts`);
+    }
     const record = records.find((candidate) => candidate.harness === 'browser-use' && `${candidate.task}/${candidate.repetition}` === key)!;
     if (record.outcome !== dump.outcome || record.input_tokens !== dump.input_tokens || record.cache_read_tokens !== dump.cache_read_tokens || record.cache_write_tokens !== dump.cache_write_tokens || record.output_tokens !== dump.output_tokens || record.duration_ms !== dump.duration_ms) {
       throw new Error(`${key} neutral record does not match its diagnostic dump`);
@@ -300,6 +319,39 @@ function auditBrowserDumps(
   }
   const expected = new Set(records.filter((record) => record.harness === 'browser-use').map((record) => `${record.task}/${record.repetition}`));
   assertSameIdentities('Browser Use dumps', seen, expected);
+}
+
+function normalizeBrowserProviderReceipts(
+  receipts: Readonly<z.infer<typeof BrowserDumpSchema>['provider_receipts']>,
+  identity: string,
+): { input: number; read: number; write: number; output: number } {
+  return receipts.reduce((total, receipt, index) => {
+    const prompt = browserUsageInteger(receipt.usage.prompt_tokens, identity, index, 'prompt_tokens');
+    const output = browserUsageInteger(receipt.usage.completion_tokens, identity, index, 'completion_tokens');
+    const read = browserUsageInteger(receipt.usage.prompt_cached_tokens ?? 0, identity, index, 'prompt_cached_tokens');
+    const genericWrite = browserUsageInteger(receipt.usage.prompt_cache_creation_tokens ?? 0, identity, index, 'prompt_cache_creation_tokens');
+    const fiveMinuteWrite = browserUsageInteger(receipt.usage.prompt_cache_creation_5m_tokens ?? 0, identity, index, 'prompt_cache_creation_5m_tokens');
+    const oneHourWrite = browserUsageInteger(receipt.usage.prompt_cache_creation_1h_tokens ?? 0, identity, index, 'prompt_cache_creation_1h_tokens');
+    if (oneHourWrite > 0 || (genericWrite > 0 && fiveMinuteWrite > 0)) {
+      throw new Error(`${identity} provider receipt ${index + 1} has unsupported cache-write buckets`);
+    }
+    const write = genericWrite || fiveMinuteWrite;
+    const input = prompt - read - write;
+    if (input < 0) throw new Error(`${identity} provider receipt ${index + 1} cache buckets exceed prompt tokens`);
+    return {
+      input: total.input + input,
+      read: total.read + read,
+      write: total.write + write,
+      output: total.output + output,
+    };
+  }, { input: 0, read: 0, write: 0, output: 0 });
+}
+
+function browserUsageInteger(value: unknown, identity: string, index: number, field: string): number {
+  if (typeof value !== 'number' || !Number.isInteger(value) || value < 0) {
+    throw new Error(`${identity} provider receipt ${index + 1} has invalid ${field}`);
+  }
+  return value;
 }
 
 const B2_EXACT_VERIFY_KEYS = [

@@ -1,6 +1,6 @@
 import { buildEnvFingerprint, type RunManifest } from '@rote/core';
 import { describe, expect, it } from 'vitest';
-import { buildG2Report, type CompetitorRunRecord } from '../src/index.js';
+import { buildG2Report, renderG2Report, type CompetitorRunRecord } from '../src/index.js';
 
 const fingerprint = buildEnvFingerprint({
   tool_inventory: [{ name: 'browser.click', schema_hash: 'abc' }],
@@ -40,7 +40,7 @@ function evidence() {
           ? 'company_name=x contact_email=x tax_id=x address_line1=x city=x postal_code=x country=x phone=x'
           : 'Done',
         verify_text_visible: true,
-        provider_receipts: [{ model: 'gpt-4.1-mini', usage: { prompt_tokens: 100 } }],
+        provider_receipts: [{ model: 'gpt-4.1-mini', usage: { prompt_tokens: 100, completion_tokens: 0 } }],
       });
     }
   }
@@ -70,18 +70,49 @@ describe('G2 report', () => {
     expect(report.tasks[0]).toMatchObject({ task: 'B2', clears_80_percent_target: false });
   });
 
+  it('certifies a separately pinned Browser Use 0.13.7 paired B2 protocol', () => {
+    const { records, manifests, dumps } = evidence();
+    const b2Records = records.filter((record) => record.task === 'B2');
+    const b2Manifests = manifests.filter((manifest) => manifest.run_id.includes('-b2-'));
+    const b2Dumps = dumps.filter((dump) => dump.task === 'B2').map((dump) => ({ ...dump, browser_use_version: '0.13.7' }));
+    const report = buildG2Report(
+      b2Records, b2Manifests, b2Dumps, 15, 'p1-g2-fixtures-v3-b2-browser-use-0137-paired',
+    );
+    expect(report.browser_use_version).toBe('0.13.7');
+    expect(report.tasks.map((task) => task.task)).toEqual(['B2']);
+    expect(report.gate_passed).toBe(true);
+    expect(renderG2Report(report)).toContain('Both harnesses ran as cold agents; this cell does not test replay or learning.');
+  });
+
   it('rejects protocol-v2 B2 evidence that does not retain the exact oracle', () => {
     const { records, manifests, dumps } = evidence();
     dumps.find((dump) => dump.task === 'B2')!.verify_text = 'Vendor registration complete';
     expect(() => buildG2Report(records, manifests, dumps, 15, 'p1-g2-fixtures-v2-b2-exact')).toThrow(
-      /does not retain the protocol-v2 exact B2 verification oracle/,
+      /does not retain the exact B2 verification oracle/,
     );
+  });
+
+  it('rejects a Browser Use version that does not match the paired protocol', () => {
+    const { records, manifests, dumps } = evidence();
+    expect(() => buildG2Report(
+      records.filter((record) => record.task === 'B2'),
+      manifests.filter((manifest) => manifest.run_id.includes('-b2-')),
+      dumps.filter((dump) => dump.task === 'B2'),
+      15,
+      'p1-g2-fixtures-v3-b2-browser-use-0137-paired',
+    )).toThrow(/requires Browser Use 0.13.7/);
   });
 
   it('rejects a Browser Use success without live verification', () => {
     const { records, manifests, dumps } = evidence();
     dumps[0]!.verify_text_visible = false;
     expect(() => buildG2Report(records, manifests, dumps)).toThrow(/success without conclusion and live verification/);
+  });
+
+  it('rejects Browser Use aggregates that do not reconcile to raw receipts', () => {
+    const { records, manifests, dumps } = evidence();
+    (dumps[0]!.provider_receipts as Array<{ usage: { prompt_tokens: number } }>)[0]!.usage.prompt_tokens = 99;
+    expect(() => buildG2Report(records, manifests, dumps)).toThrow(/does not reconcile to raw provider receipts/);
   });
 
   it('rejects missing raw evidence identities', () => {

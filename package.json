@@ -13,14 +13,15 @@
   "scripts": {
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
-    "test": "npm run test --workspaces --if-present && python3 -m unittest scripts/bench/curve/browser-use/run_curve_test.py scripts/bench/headhead/browser-use/run_browser_use_test.py scripts/bench/skyvern/run_qualification_test.py scripts/bench/browser-use-refresh/run_qualification_test.py && npm run test:package && npm run reproduce:g2 && npm run reproduce:b5 && npm run reproduce:stagehand && npm run reproduce:skyvern && npm run reproduce:browser-use-refresh && npm run test:scripts",
+    "test": "npm run test --workspaces --if-present && python3 -m unittest scripts/bench/curve/browser-use/run_curve_test.py scripts/bench/headhead/browser-use/run_browser_use_test.py scripts/bench/skyvern/run_qualification_test.py scripts/bench/browser-use-refresh/run_qualification_test.py && npm run test:package && npm run reproduce:g2 && npm run reproduce:b5 && npm run reproduce:stagehand && npm run reproduce:skyvern && npm run reproduce:browser-use-refresh && npm run reproduce:browser-use-0137-certification && npm run test:scripts",
     "test:package": "node scripts/release/smoke-cli-package.mjs",
     "reproduce:b5": "node scripts/release/reproduce-b5.mjs",
     "reproduce:g2": "node scripts/release/reproduce-g2.mjs",
     "reproduce:stagehand": "node scripts/release/reproduce-stagehand.mjs",
     "reproduce:skyvern": "node scripts/release/reproduce-skyvern.mjs",
     "reproduce:browser-use-refresh": "node scripts/release/reproduce-browser-use-refresh.mjs",
-    "test:scripts": "node --test scripts/demo/prepare-drift.test.mjs scripts/bench/headhead/assemble-certification-evidence.test.mjs",
+    "reproduce:browser-use-0137-certification": "node scripts/release/reproduce-browser-use-0137-certification.mjs",
+    "test:scripts": "node --test scripts/demo/prepare-drift.test.mjs scripts/bench/headhead/assemble-certification-evidence.test.mjs scripts/bench/browser-use-refresh/audit-certification-evidence.test.mjs",
     "build": "npm run build --workspaces --if-present"
   },
   "devDependencies": {

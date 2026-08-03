@@ -175,7 +175,7 @@ The frozen v1 matrix supports B1 and B3 at exact terminal-state parity. T19 foun
 shared oracle proved generic completion rather than all eight requested values, so its
 historical parity and 77.3% reduction claim are withdrawn. T20 protocol v2 carries every
 exact value and restores B2 with an 83.6% logical-token reduction (95% CI 82.7–84.6%) at
-18/18 exact parity per harness ([T20](testing/T20-b2-exact-certification.md)).
+18/18 exact parity per harness against Browser Use 0.13.6 ([T20](testing/T20-b2-exact-certification.md)). T25 separately freezes 18 fresh ordered pairs per harness against Browser Use 0.13.7 and certifies an 83.1% reduction (95% CI 82.1–83.9%) at exact parity; the refreshed B2 cell does not rewrite the historical matrix ([T25](testing/T25-browser-use-0137-paired-certification.md)).
 
 Live-run findings are recorded in [`docs/testing/`](testing/). T1's B2 design defect
 ([#49](https://github.com/kedarvartak/rote/issues/49)) and its two planner-boundary

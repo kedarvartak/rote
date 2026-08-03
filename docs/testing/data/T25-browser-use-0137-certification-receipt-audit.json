@@ -1,0 +1,10 @@
+{
+  "protocol_id": "p1-g2-fixtures-v3-b2-browser-use-0137-paired",
+  "rote_runs": 18,
+  "rote_trajectory_events": 180,
+  "rote_provider_receipts": 180,
+  "browser_use_runs": 18,
+  "browser_use_provider_receipts": 74,
+  "all_usage_reconciled": true,
+  "all_successes_independently_verified": true
+}

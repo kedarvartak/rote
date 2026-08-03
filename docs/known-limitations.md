@@ -63,7 +63,7 @@ strong/weak-fit split.
 | G1 logical-input slope reduction at exact success parity | Linear scaling or the same percentage at every endpoint |
 | Corrected B1–B3 positive token margin on deterministic local fixtures | General web-task superiority or learned-memory economics |
 | OpenAI cache-key economics on longer WordPress cells | Universal cost savings; the shortest cell crosses parity |
-| Browser Use 0.13.6 comparison under pinned conditions | Current/future Browser Use performance or every competing harness; T22 Stagehand and T23 Skyvern are stopped probes, while T24 Browser Use 0.13.7 is qualification—not a refreshed ranking |
+| Browser Use 0.13.6 G1/historical G2 and Browser Use 0.13.7 corrected-B2 comparison under separate pinned conditions | Current/future Browser Use performance, broader 0.13.7 tasks, or every competing harness; T22 Stagehand and T23 Skyvern remain stopped probes, while T25 certifies only one local corrected-B2 cell |
 
 T19 withdraws the historical B2 row; T20 supersedes it with 18/18 exact-oracle attempts per
 harness and an 83.6% token reduction (95% CI 82.7–84.6%). In the historical
@@ -76,7 +76,7 @@ affected steps. That provider-token overhead has not been recertified. It is
 a fail-closed safety change, not a new efficiency claim.
 
 The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulative-token-curve.md),
-[T11](testing/T11-cache-key-economics.md), [T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md), [T22](testing/T22-stagehand-qualification.md), [T23](testing/T23-skyvern-qualification.md), and [T24](testing/T24-browser-use-0137-qualification.md).
+[T11](testing/T11-cache-key-economics.md), [T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md), [T22](testing/T22-stagehand-qualification.md), [T23](testing/T23-skyvern-qualification.md), [T24](testing/T24-browser-use-0137-qualification.md), and [T25](testing/T25-browser-use-0137-paired-certification.md).
 
 ## Provider, packaging, and operations
 

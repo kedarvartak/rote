@@ -1,0 +1,1672 @@
+[
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 22867,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 1285,
+    "duration_ms": 41185,
+    "repetition": 1,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' has been successfully completed. The confirmation page shows all the provided details: company name, contact email, tax ID, address line 1, city, postal code, country (US), and phone number. No further actions are required.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 0,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 382,
+          "total_tokens": 11810,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11645,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 304,
+          "total_tokens": 11949,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11889,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 270,
+          "total_tokens": 12159,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11713,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 329,
+          "total_tokens": 12042,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14955,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1307,
+    "duration_ms": 46195,
+    "repetition": 2,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' has been successfully completed with the provided details: contact email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way', city 'Portland', postal code '97209', country 'US', and phone '503-555-0148'. The confirmation page verifies that the submission was successful.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 338,
+          "total_tokens": 11766,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11631,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 367,
+          "total_tokens": 11998,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11947,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 272,
+          "total_tokens": 12219,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11693,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 330,
+          "total_tokens": 12023,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 18727,
+    "cache_read_tokens": 39680,
+    "cache_write_tokens": 0,
+    "output_tokens": 1529,
+    "duration_ms": 36629,
+    "repetition": 3,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' has been successfully completed and confirmed on the page with all provided details: company name 'Northwind Supply', contact email 'ap@northwind.test', tax ID '84-1129930', address line 1 '18 Harbor Way', city 'Portland', postal code '97209', country 'US', and phone number '503-555-0148'.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 365,
+          "total_tokens": 11793,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11639,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 217,
+          "total_tokens": 11856,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11720,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 262,
+          "total_tokens": 11982,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11888,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 340,
+          "total_tokens": 12228,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11732,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 345,
+          "total_tokens": 12077,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 22793,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 1340,
+    "duration_ms": 41903,
+    "repetition": 4,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' has been successfully completed with the following details:\n- Company Name: Northwind Supply\n- Contact Email: ap@northwind.test\n- Tax ID: 84-1129930\n- Address Line 1: 18 Harbor Way\n- City: Portland\n- Postal Code: 97209\n- Country: US\n- Phone: 503-555-0148\nAll information matches the user's request and the registration confirmation page verifies successful submission.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 353,
+          "total_tokens": 11781,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11614,
+          "prompt_cached_tokens": 0,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 367,
+          "total_tokens": 11981,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11917,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 270,
+          "total_tokens": 12187,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11642,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 350,
+          "total_tokens": 11992,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14936,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1351,
+    "duration_ms": 31521,
+    "repetition": 5,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' has been successfully completed with the following details: contact email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way', city 'Portland', postal code '97209', country 'US', and phone number '503-555-0148'. The confirmation page verifies that all information was submitted correctly.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 362,
+          "total_tokens": 11790,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11628,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 367,
+          "total_tokens": 11995,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11948,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 278,
+          "total_tokens": 12226,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11676,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 344,
+          "total_tokens": 12020,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 18764,
+    "cache_read_tokens": 39680,
+    "cache_write_tokens": 0,
+    "output_tokens": 1607,
+    "duration_ms": 36747,
+    "repetition": 6,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' has been successfully completed. All provided details were entered correctly: company name 'Northwind Supply', contact email 'ap@northwind.test', tax ID '84-1129930', address line 1 '18 Harbor Way', city 'Portland', postal code '97209', country 'US', and phone number '503-555-0148'. The form was submitted and confirmed by the displayed completion message on the page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11426,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 364,
+          "total_tokens": 11790,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11632,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 295,
+          "total_tokens": 11927,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11737,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 244,
+          "total_tokens": 11981,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11902,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 339,
+          "total_tokens": 12241,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11747,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 365,
+          "total_tokens": 12112,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14873,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1348,
+    "duration_ms": 32673,
+    "repetition": 7,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' has been successfully completed and submitted. The confirmation page clearly shows the entered details: company name 'Northwind Supply', contact email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way', city 'Portland', postal code '97209', country 'US', and phone number '503-555-0148'. No further actions are required.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11426,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 352,
+          "total_tokens": 11778,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11622,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 345,
+          "total_tokens": 11967,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11915,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 293,
+          "total_tokens": 12208,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11654,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 358,
+          "total_tokens": 12012,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 18730,
+    "cache_read_tokens": 39680,
+    "cache_write_tokens": 0,
+    "output_tokens": 1514,
+    "duration_ms": 35594,
+    "repetition": 8,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor 'Northwind Supply' has been successfully registered with the provided details: contact email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way, Portland, 97209, US', and phone number '503-555-0148'. The registration form was submitted and confirmed on the completion page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 351,
+          "total_tokens": 11779,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11630,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 221,
+          "total_tokens": 11851,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11720,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 262,
+          "total_tokens": 11982,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11891,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 345,
+          "total_tokens": 12236,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11741,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 335,
+          "total_tokens": 12076,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 22813,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 1331,
+    "duration_ms": 47778,
+    "repetition": 9,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' has been successfully completed with the following details:\n- Contact Email: ap@northwind.test\n- Tax ID: 84-1129930\n- Address Line 1: 18 Harbor Way\n- City: Portland\n- Postal Code: 97209\n- Country: US\n- Phone: 503-555-0148\n\nAll requested information was correctly submitted and confirmed on the completion page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 393,
+          "total_tokens": 11821,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11602,
+          "prompt_cached_tokens": 0,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 307,
+          "total_tokens": 11909,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11922,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 280,
+          "total_tokens": 12202,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11669,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 351,
+          "total_tokens": 12020,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14974,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1385,
+    "duration_ms": 33456,
+    "repetition": 10,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' has been completed successfully with the following details:\n- Company Name: Northwind Supply\n- Contact Email: ap@northwind.test\n- Tax ID: 84-1129930\n- Address Line 1: 18 Harbor Way\n- City: Portland\n- Postal Code: 97209\n- Country: US\n- Phone: 503-555-0148\nThe form was submitted and confirmed on the completion page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11430,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 373,
+          "total_tokens": 11803,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11641,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 376,
+          "total_tokens": 12017,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11959,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 278,
+          "total_tokens": 12237,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11688,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 358,
+          "total_tokens": 12046,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14977,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1447,
+    "duration_ms": 40174,
+    "repetition": 11,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for company 'Northwind Supply' has been successfully completed with all provided details: contact email 'ap@northwind.test', tax ID '84-1129930', address line 1 '18 Harbor Way', city 'Portland', postal code '97209', country 'US', and phone number '503-555-0148'. The confirmation page shows the registration is complete. No further actions are necessary.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 384,
+          "total_tokens": 11812,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11644,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 402,
+          "total_tokens": 12046,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11908,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 290,
+          "total_tokens": 12198,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11741,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 371,
+          "total_tokens": 12112,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14956,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1329,
+    "duration_ms": 32766,
+    "repetition": 12,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for company 'Northwind Supply' with contact email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way, Portland, 97209, US', and phone '503-555-0148' has been successfully completed and confirmed on the final page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 362,
+          "total_tokens": 11790,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11627,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 364,
+          "total_tokens": 11991,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11956,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 285,
+          "total_tokens": 12241,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11689,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 318,
+          "total_tokens": 12007,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14885,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1351,
+    "duration_ms": 32484,
+    "repetition": 13,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' with email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way, Portland, 97209, US', and phone '503-555-0148' has been successfully completed as confirmed by the final page message.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 333,
+          "total_tokens": 11761,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11632,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 403,
+          "total_tokens": 12035,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11870,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 290,
+          "total_tokens": 12160,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11699,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 325,
+          "total_tokens": 12024,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14867,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1353,
+    "duration_ms": 29172,
+    "repetition": 14,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' has been successfully completed with all provided details correctly submitted and confirmed on the completion page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11426,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 356,
+          "total_tokens": 11782,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11634,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 340,
+          "total_tokens": 11974,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11857,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 326,
+          "total_tokens": 12183,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11694,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 331,
+          "total_tokens": 12025,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14918,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1410,
+    "duration_ms": 33889,
+    "repetition": 15,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' has been successfully completed with all provided details: company name, contact email, tax ID, address line 1, city, postal code, country (US), and phone number. The confirmation message on the page verifies successful submission.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 433,
+          "total_tokens": 11861,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11632,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 391,
+          "total_tokens": 12023,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11889,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 272,
+          "total_tokens": 12161,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11713,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 314,
+          "total_tokens": 12027,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14874,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1426,
+    "duration_ms": 27603,
+    "repetition": 16,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for company 'Northwind Supply' was completed successfully with the following details:\n- Contact Email: ap@northwind.test\n- Tax ID: 84-1129930\n- Address Line 1: 18 Harbor Way\n- City: Portland\n- Postal Code: 97209\n- Country: US\n- Phone: 503-555-0148\nThe confirmation page clearly shows that the registration was submitted and accepted.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11428,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 369,
+          "total_tokens": 11797,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11635,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 359,
+          "total_tokens": 11994,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11855,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 328,
+          "total_tokens": 12183,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11700,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 370,
+          "total_tokens": 12070,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 10864,
+    "cache_read_tokens": 23808,
+    "cache_write_tokens": 0,
+    "output_tokens": 1094,
+    "duration_ms": 23177,
+    "repetition": 17,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "The vendor registration for 'Northwind Supply' has been successfully completed with the provided details: contact email 'ap@northwind.test', tax ID '84-1129930', address '18 Harbor Way', city 'Portland', postal code '97209', country 'US', and phone '503-555-0148'. The confirmation message on the page verifies successful submission.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11430,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 349,
+          "total_tokens": 11779,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11631,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 412,
+          "total_tokens": 12043,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11611,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 333,
+          "total_tokens": 11944,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 14920,
+    "cache_read_tokens": 31744,
+    "cache_write_tokens": 0,
+    "output_tokens": 1277,
+    "duration_ms": 28578,
+    "repetition": 18,
+    "phase": "cold",
+    "url": "http://127.0.0.1:8080/b2-vendor-form.html",
+    "browser_use_version": "0.13.7",
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "is_successful": true,
+    "final_result": "Vendor registration for 'Northwind Supply' with the provided details has been successfully completed and confirmed on the page.",
+    "urls": [
+      "",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html",
+      "http://127.0.0.1:8080/b2-vendor-form.html#complete"
+    ],
+    "errors": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "provider_receipts": [
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11426,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 409,
+          "total_tokens": 11835,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11628,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 292,
+          "total_tokens": 11920,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11889,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 303,
+          "total_tokens": 12192,
+          "pricing_multiplier": null
+        }
+      },
+      {
+        "model": "gpt-4.1-mini",
+        "usage": {
+          "prompt_tokens": 11721,
+          "prompt_cached_tokens": 7936,
+          "prompt_cache_creation_tokens": null,
+          "prompt_cache_creation_5m_tokens": null,
+          "prompt_cache_creation_1h_tokens": null,
+          "prompt_image_tokens": null,
+          "completion_tokens": 273,
+          "total_tokens": 11994,
+          "pricing_multiplier": null
+        }
+      }
+    ],
+    "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+    "verify_text_visible": true
+  }
+]

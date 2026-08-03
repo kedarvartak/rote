@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "protocol_id": "p1-g2-fixtures-v3-b2-browser-use-0137-paired",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "browser_use_version": "0.13.7",
+  "min_successful_runs": 15,
+  "gate_passed": true,
+  "tasks": [
+    {
+      "task": "B2",
+      "rote_successes": 18,
+      "rote_attempts": 18,
+      "baseline_successes": 18,
+      "baseline_attempts": 18,
+      "logical_token_reduction": {
+        "point": 0.8306562157522868,
+        "lower": 0.8210134847168808,
+        "upper": 0.8392652640917905,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "cost_reduction": {
+        "point": 0.6824268069490982,
+        "lower": 0.6631183373754215,
+        "upper": 0.6994399675977258,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "latency_reduction": {
+        "point": 0.436323876843952,
+        "lower": 0.39003184113425554,
+        "upper": 0.4805496972105776,
+        "confidence": 0.95,
+        "resamples": 10000
+      },
+      "rote_level": {
+        "mean_tokens": 8352.722222222223,
+        "mean_latency_ms": 19776.38888888889,
+        "p50_latency_ms": 18695.5,
+        "p95_latency_ms": 23813.749999999993,
+        "mean_cost_usd": 0.0038058888888888886
+      },
+      "baseline_level": {
+        "mean_tokens": 49324.055555555555,
+        "mean_latency_ms": 35084.666666666664,
+        "p50_latency_ms": 33672.5,
+        "p95_latency_ms": 46432.45,
+        "mean_cost_usd": 0.011984288888888887
+      },
+      "clears_80_percent_target": true
+    }
+  ],
+  "rote_mean_tokens_by_source": [
+    {
+      "task": "B2",
+      "source": "planner",
+      "mean_tokens": 8352.722222222223
+    }
+  ],
+  "verification_audit": {
+    "rote_manifests": 18,
+    "browser_use_dumps": 18,
+    "browser_use_receipts": 74,
+    "all_rote_successes_verified": true,
+    "all_browser_successes_concluded_and_verified": true
+  },
+  "pricing": {
+    "version": "2026-07-15",
+    "source": "https://platform.claude.com/docs/en/about-claude/models/overview + https://developers.openai.com/api/docs/pricing"
+  }
+}
