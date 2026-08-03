@@ -1,4 +1,5 @@
-import { assertBrowserExpect, BrowserExpectationError, ElementResolutionConflictError, ElementResolutionError, resolveElementTarget, type ElementResolutionResult } from '@rote/action';
+import { assertBrowserExpect, assertPostActionEvidence, BrowserExpectationError, derivePostActionEvidence, ElementResolutionConflictError, ElementResolutionError, PostActionEvidenceError, resolveElementTarget, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
+import type { CapturedPage } from '@rote/browser';
 import type { BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext, assertCacheStablePrefix } from './context.js';
@@ -21,11 +22,13 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
   let pendingRepair: BrowserExpectFailure | undefined;
   let plannerStablePrefix: string | undefined;
   let observationHistoryEvicted = false;
+  let pendingPage: CapturedPage | undefined;
 
   try {
     for (let step = 0; step < maxSteps; step += 1) {
       const startedAt = clock();
-      const page = await options.page.capture();
+      const page = pendingPage ?? await options.page.capture();
+      pendingPage = undefined;
       const nodes = distillPage(page);
       // INVARIANT: a diff base belongs to one page identity. Reusing old-page
       // nodes after navigation leaves the planner acting on controls that no longer exist.
@@ -81,6 +84,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
 
       let actionError: Error | undefined;
       let resolution: ElementResolutionResult | undefined;
+      let postActionEvidence: PostActionEvidence | undefined;
       if (action.kind !== 'done') {
         try {
           try {
@@ -120,12 +124,24 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
           }
           if (action.kind !== 'done') {
             await applyAction(options.page, action, resolution?.selector);
-            // An omitted expect is not an unchecked action: the independent final
-            // verifier still gates success (#49). It only means the model declined to
-            // predict, which beats an invented string.
+            const postActionPage = await options.page.capture();
+            // Reuse the settled post-action capture as the next planner observation;
+            // derived evidence adds no browser capture or LLM call to the loop.
+            pendingPage = postActionPage;
+            postActionEvidence = derivePostActionEvidence({
+              action,
+              ...(action.kind === 'navigate' ? {} : { resolvedSelector: resolution?.selector ?? action.selector }),
+              before: page,
+              after: postActionPage,
+            });
+            // INVARIANT: a dispatch that returned without its strong observable
+            // effect is a failed step, never evidence of successful execution.
+            assertPostActionEvidence(postActionEvidence, postActionPage.url);
+            // An omitted model-authored expect is no longer an unchecked strong
+            // effect. Click reaction remains shadow-only until #54 qualification.
             if (action.expect) {
               const liveExpect = resolvedExpect(action.expect, action.kind === 'navigate' ? undefined : action.selector, resolution?.selector);
-              assertBrowserExpect(liveExpect, await options.page.capture());
+              assertBrowserExpect(liveExpect, postActionPage);
             }
             previousActions.push(action);
           }
@@ -142,6 +158,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(repairUsage.length > 0 ? { repairUsage } : {}),
         ...(repairProviderReceipts.length > 0 ? { repairProviderReceipts } : {}),
         ...(classifications.length > 0 ? { classifications } : {}),
+        ...(postActionEvidence ? { postActionEvidence } : {}),
         durationMs: Math.max(0, clock() - startedAt),
         ...(actionError ? { error: actionError.message } : {}),
         ...(resolution ? { resolution } : {}),
@@ -157,7 +174,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         // INVARIANT: only a failed *postcondition* is repairable. An action that
         // threw (element detached, navigation error) is a broken world, not a wrong
         // belief about it, and stays fatal.
-        const repairable = actionError instanceof BrowserExpectationError && repairsUsed < maxRepairs;
+        const repairable = (actionError instanceof BrowserExpectationError || actionError instanceof PostActionEvidenceError) && repairsUsed < maxRepairs;
         if (repairable) {
           repairsUsed += 1;
           pendingRepair = { action, reason: actionError.message };
@@ -176,7 +193,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
           ? undefined
           : action.failureClassification;
         if (success) {
-          const verification = await options.verifier.verify(await options.page.capture(), options.task, action.summary);
+          const verification = await options.verifier.verify(page, options.task, action.summary);
           success = verification.success;
           summary = verification.summary;
           if (!success) failureClassification = 'verification_failed';

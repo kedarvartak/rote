@@ -60,6 +60,60 @@ describe('browser agent recording: never reports success on a failed action', ()
     expect(event.error?.message).toBe('button detached');
   });
 
+  it('records failure when a derived strong effect is absent', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-agent-derived-effect-invariant-'));
+    const recorder = new FileBrowserAgentRunRecorder({
+      task: 'Fill the company',
+      envFingerprint: buildEnvFingerprint({ tool_inventory: [], target_identity: 'fixture.test', surface_versions: {} }),
+      baseDir,
+      runId: 'failed-derived-effect-run',
+      clock: sequenceClock(),
+    });
+    const planner: BrowserPlannerClient = {
+      async plan(source) {
+        return {
+          action: { kind: 'fill', selector: '#company', value: 'Acme' },
+          usage: { source, input_tokens: 8, output_tokens: 2 },
+        };
+      },
+    };
+    const page: BrowserPageSession = {
+      async navigate() {},
+      async capture() {
+        return {
+          url: 'https://fixture.test/form', title: 'Form', html: '',
+          elements: [{ tag: 'input', attributes: { id: 'company', value: '' }, text: '', depth: 0 }],
+        };
+      },
+      // Simulate a dispatch that resolves without throwing but has no effect.
+      async fill() {},
+      async select() {},
+      async click() {},
+    };
+
+    await expect(runBrowserAgent({
+      task: 'Fill the company', page, planner,
+      verifier: { async verify() { return { success: true, summary: 'unreachable' }; } },
+      recorder,
+      maxRepairs: 0,
+      clock: () => 100,
+    })).rejects.toThrow('fill did not produce its required observable effect');
+
+    const runDir = join(baseDir, 'runs', 'failed-derived-effect-run');
+    const manifest = RunManifestSchema.parse(JSON.parse(await readFile(join(runDir, 'manifest.json'), 'utf8')));
+    const event = TrajectoryEventSchema.parse(JSON.parse((await readFile(join(runDir, 'trajectory.jsonl'), 'utf8')).trim()));
+    expect(manifest.outcome).toBe('failure');
+    expect(event.error?.message).toBe('fill did not produce its required observable effect');
+    expect(event.result_ref).toMatchObject({
+      kind: 'inline',
+      value: {
+        post_action_evidence: {
+          action_kind: 'fill', classification: 'exact_effect_missing', passed: false, enforced: true,
+        },
+      },
+    });
+  });
+
   it('records failure when an action postcondition fails and the repair budget is exhausted', async () => {
     baseDir = await mkdtemp(join(tmpdir(), 'rote-agent-expect-invariant-'));
     const recorder = new FileBrowserAgentRunRecorder({

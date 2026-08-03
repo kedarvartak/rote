@@ -45,10 +45,11 @@ strong/weak-fit split.
 - The public CLI requires visible-text and/or URL-substring verification. These checks are
   only as independent as the signal the caller chooses; ambiguous text can be a weak
   oracle. Richer Expect checks exist in replay, but are not fully exposed as CLI flags.
-- Ordinary live-agent actions currently have no mandatory per-action effect check when the
-  planner correctly omits an ungrounded `expect`; final verification carries success.
-  The #54 design permits exact fill/select/navigation evidence, but generic click diffs
-  remain unsafe to enforce until no-op, download, and background-mutation qualification.
+- Ordinary live-agent fill/select/navigation actions enforce zero-LLM exact effect checks
+  even when the planner correctly omits an ungrounded `expect`. Generic click diffs are
+  recorded only as reaction diagnostics: they remain unsafe to enforce until no-op,
+  download, and background-mutation qualification. Final verification still carries task
+  success and cannot be replaced by either signal.
 - Rote is not a browser sandbox or authorization system. The model can act with the
   browser profile's privileges. Use only sites and accounts you are authorized to
   automate, with least-privilege test credentials first.

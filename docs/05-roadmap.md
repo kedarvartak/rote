@@ -239,8 +239,9 @@ can read; the benchmark as an industry-neutral instrument.
    [#54](https://github.com/kedarvartak/rote/issues/54) now has a frozen design for
    zero-LLM post-action evidence: exact value/URL effects are enforceable, while a click's
    generic DOM reaction remains shadow-only because unrelated mutation can false-pass and
-   legitimate external effects can produce no DOM diff. Implementation and click
-   qualification remain open; the final verifier still decides task success.
+   legitimate external effects can produce no DOM diff. Exact value/URL enforcement and
+   shadow click evidence are implemented; click qualification and post-change live
+   confirmation remain open. The final verifier still decides task success.
 2. **Small-model hosting** — Fara-class models are self-hostable (7B). Bundled local
    inference or API? Affects adoption friction vs the cost story. Decide in P2 with data.
 3. **Matching threshold policy** — how conservative should τ be at launch? Lean:

@@ -7,12 +7,14 @@ class FakePage implements BrowserPageSession {
   url = 'mem://blank';
   values = new Map<string, string>();
   clicks: string[] = [];
+  captures = 0;
 
   async navigate(url: string): Promise<void> {
     this.url = url;
   }
 
   async capture(): Promise<CapturedPage> {
+    this.captures += 1;
     return {
       url: this.url,
       title: 'Fake Browser Page',
@@ -78,6 +80,7 @@ describe('runBrowserAgent', () => {
     expect(page.values.get('#company-name')).toBe('Acme Tools');
     expect(page.values.get('#country')).toBe('US');
     expect(page.clicks).toEqual(['#registration-submit']);
+    expect(page.captures).toBe(5);
     expect(planner.sources).toEqual(['planner', 'planner', 'planner', 'planner', 'planner']);
     expect(planner.requests[1]?.observation.text).toContain('#company-name');
     expect(planner.requests[1]?.observation.approxTokens).toBeGreaterThan(0);
@@ -85,6 +88,14 @@ describe('runBrowserAgent', () => {
     expect(planner.requests[1]?.context.stablePrefix).toBe(planner.requests[0]?.context.stablePrefix);
     expect(result.tokenUsage).toHaveLength(5);
     expect(result.tokenUsage.every((usage) => usage.source === 'planner')).toBe(true);
+    expect(result.steps.map((step) => step.postActionEvidence?.classification)).toEqual([
+      'exact_effect_observed',
+      'exact_effect_observed',
+      'exact_effect_observed',
+      'click_no_observable_reaction',
+      undefined,
+    ]);
+    expect(result.steps[3]?.postActionEvidence).toMatchObject({ strength: 'reaction', enforced: false });
   });
 
   it('starts a new grounded base when navigation changes the page URL', async () => {
