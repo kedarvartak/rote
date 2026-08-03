@@ -73,7 +73,7 @@ The letter sections below group by *plane* (where the code lives). This groups b
 | **C3** | **Speculative pre-execution — a signature move.** Shadow-context execution of predicted actions during think time; promote on hit, discard on miss, **never past the effect boundary**. Blind draft models reach ~55% accuracy → ~20% latency; trajectory memory should do far better on warm sites. Nobody ships it. | P0 | ○ |
 | **C4** | **Typed, minimal action space.** A small closed verb set with schema'd args — not 50 overlapping tools. Bigger action spaces cost prefix tokens and confuse routing. | P0 | ● |
 | **C5** | **Batched micro-actions.** `fill_form([{id, value}…])` instead of N round-trips — N−1 fewer model turns on the most common enterprise flow. Needs C1 between items and per-item expects (invariant 1 held per field). | P1 | ○ |
-| **C6** | **Per-step expect assertions.** The Expect DSL gates stored replay and speculation steps. Live planner actions may omit `expect`: T1 proved that forcing a model-authored future postcondition produces a guess or tautology (#49/#50), so the independent final verifier carries success while diff-derived checks remain open in #54. | P0 | ◐ |
+| **C6** | **Per-step effect evidence.** The Expect DSL gates stored replay and speculation steps. Live planner actions may omit `expect`: T1 proved that forcing a model-authored future postcondition produces a guess or tautology (#49/#50). #54 now specifies zero-LLM exact value/URL effects; generic click diffs remain shadow-only until qualified, so the independent final verifier still carries task success. | P0 | ◐ |
 
 ## D · Learning — compounding
 
