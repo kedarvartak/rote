@@ -36,7 +36,12 @@ describe('browser-agent CDP fixture smoke', () => {
     await expect(runFixtureTask(backend, server.url('b2-vendor-form.html'), [
       { kind: 'fill', selector: '#company-name', value: 'Acme Tools', expect: { input_value: '#company-name', equals: 'Acme Tools' } },
       { kind: 'fill', selector: '#contact-email', value: 'ops@example.com', expect: { input_value: '#contact-email', equals: 'ops@example.com' } },
+      { kind: 'fill', selector: '#tax-id', value: '84-1129930' },
+      { kind: 'fill', selector: '#address-line1', value: '18 Harbor Way' },
+      { kind: 'fill', selector: '#city', value: 'Portland' },
+      { kind: 'fill', selector: '#postal-code', value: '97209' },
       { kind: 'select', selector: '#country', value: 'US', expect: { input_value: '#country', equals: 'US' } },
+      { kind: 'fill', selector: '#phone', value: '503-555-0148' },
       { kind: 'click', selector: '#registration-submit', expect: { text_visible: 'Vendor registration complete' } },
       { kind: 'done', success: true, summary: 'vendor submitted' },
     ], '#registration-submit', 'Vendor registration complete')).resolves.toBe('vendor submitted');
@@ -75,7 +80,7 @@ async function runFixtureTask(
           : { success: false, summary: `missing final text: ${finalVerificationText}` };
       },
     },
-    maxSteps: 8,
+    maxSteps: Math.max(8, actionCount),
   });
 
   expect(result.success).toBe(true);

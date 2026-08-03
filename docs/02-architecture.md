@@ -401,8 +401,11 @@ Implementation order is binding:
 3. Keep click reaction shadow-only until its separate qualification gate passes. Final
    task success continues to require independent `verify` in every mode.
 
-This resolves the design question in [#54](https://github.com/kedarvartak/rote/issues/54);
-the implementation and click qualification remain open.
+The strong-effect derivation, bounded repair integration, redacted trajectory evidence,
+and shadow click classifications are now implemented with deterministic and property
+tests. [#54](https://github.com/kedarvartak/rote/issues/54) remains open only for the
+click qualification gate and post-change B1/B2/B3 live confirmation; generic click
+reaction is not enforced or marketed as verification.
 
 ## Repair ladder
 

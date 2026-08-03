@@ -1,7 +1,7 @@
 # @rote/action
 
 Browser action hardening for Rote's V1 harness. It provides deterministic settledness
-and resilient semantic element resolution before dispatch.
+resilient semantic element resolution before dispatch, and zero-LLM post-action evidence.
 
 ## Public API
 
@@ -11,7 +11,9 @@ and resilient semantic element resolution before dispatch.
 - `resolveElementTarget(nodes, target)` — resolves unique stable ID → unique role+name → unambiguous text proximity; selector-only legacy actions use their supplied selector, while semantic hints grounded to different rows fail before dispatch.
 - `ElementResolutionError` / `ElementResolutionConflictError` — typed failures for an unresolvable target or stable-ID/role-name field splicing.
 - `evaluateBrowserExpect` / `assertBrowserExpect` — live checks for visible/absent selectors, input values, URL substrings, and visible text.
-- `BrowserExpectationError` — typed postcondition failure carrying the assertion and page URL.
+- `BrowserExpectationError` — typed model-authored postcondition failure carrying the assertion and page URL.
+- `derivePostActionEvidence(input)` — compares settled before/after captures: fill/select values and canonical navigation targets are strong enforced effects; click DOM/URL changes are explicitly non-enforcing reaction evidence.
+- `assertPostActionEvidence(evidence, pageUrl)` / `PostActionEvidenceError` — fail strong missing effects without copying dispatched values into evidence or error messages.
 
 The frozen B2 drift suite covers selector renames, wrapper insertion, ambiguity,
 stale-selector decoys, hidden replacements, and delayed SPA state.

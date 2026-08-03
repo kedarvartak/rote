@@ -9,7 +9,7 @@ behind `BrowserPlannerClient`, while tests use deterministic scripted planners.
 
 ## Public API
 
-- `runBrowserAgent(options)` — observe → plan → act loop until `done` or the step budget is exhausted; planner-declared success is gated by an injected verifier, and one unresolvable or semantically conflicting pre-action target gets a bounded correction grounded by complete current candidate objects.
+- `runBrowserAgent(options)` — observe → plan → act loop until `done` or the step budget is exhausted; planner-declared success is gated by an injected verifier, one unresolvable or semantically conflicting pre-action target gets a bounded correction grounded by complete current candidate objects, and settled post-action captures enforce exact fill/select/navigation effects without an LLM call.
 - `BrowserPlannerClient` — planner interface; calls are always tagged with `source: 'planner'`.
 - `TaggedLlmBrowserPlanner` — production planner adapter over `@rote/llm`; strictly parses one typed action, gives malformed output one scoped corrective call, and returns both the original and `repair`-tagged provider usage. Exhausting the bounded repair fails closed.
 - `assemblePlannerContext(options)` — separates cache-stable instructions/task/action schemas and orders append-only action history before volatile page/observation churn; after content is evicted, its volatile suffix marks the recall boundary and requires `recall_unavailable` instead of a guessed fact. Unknown fields fail instead of silently crossing the cache boundary.
@@ -21,7 +21,8 @@ behind `BrowserPlannerClient`, while tests use deterministic scripted planners.
 - `BrowserAction` — Zod-backed action union: `navigate`, `fill`, `select`, `click`, `done`. A mutating action **may** carry a closed browser `expect` postcondition; it is optional because a model can only assert what it has already observed, so a mandatory field yields guesses or tautologies (#49/#50). Element actions may carry semantic identity for resilient resolution; malformed optional stable IDs are dropped into the semantic fallback chain and recorded as `dropped_malformed_stable_id` rather than failing the run (#52).
 - `BrowserPlannerClient.plan(source, request)` — `source` is `'planner'` or `'repair'`; a repair call carries `request.repair` (the failed action and why its postcondition did not hold) and is billed under its own usage tag.
 - `runBrowserAgent({ maxRepairs, beforeAction })` — scoped repairs allowed before a failed postcondition is fatal (default 1); an injected deterministic guard can also reject a pre-action policy violation before side effects and request one grounded correction. A failed expect means the model's belief was wrong, not necessarily the action, so the repair reconciles against the post-action page rather than replaying the step. Success still requires the independent verifier.
-- `FileBrowserAgentRunRecorder` — writes browser decisions/actions to append-only trajectory JSONL, including raw provider receipts when available, and a benchmark-compatible run manifest with normalized planner usage.
+- `BrowserAgentStep.postActionEvidence` — redacted effect/reaction classification. Strong missing effects enter the bounded postcondition repair path; generic click reaction is recorded but not enforced until #54 qualification.
+- `FileBrowserAgentRunRecorder` — writes browser decisions/actions and post-action evidence to append-only trajectory JSONL, including raw provider receipts when available, and a benchmark-compatible run manifest with normalized planner usage.
 
 ## Running tests
 

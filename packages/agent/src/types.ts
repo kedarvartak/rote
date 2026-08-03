@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ElementResolutionResult } from '@rote/action';
+import type { ElementResolutionResult, PostActionEvidence } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
 import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
 import type { ProviderUsageReceipt } from '@rote/llm';
@@ -212,6 +212,8 @@ export interface BrowserAgentStep {
   repairProviderReceipts?: readonly ProviderUsageReceipt[];
   /** Non-fatal optional-hint degradation applied before action resolution. */
   classifications?: readonly BrowserActionClassification[];
+  /** Redacted zero-LLM effect/reaction evidence from the settled post-action capture. */
+  postActionEvidence?: PostActionEvidence;
   durationMs: number;
   error?: string;
   resolution?: ElementResolutionResult;

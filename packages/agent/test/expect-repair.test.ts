@@ -94,6 +94,45 @@ describe('action expects: a wrong postcondition does not fail a correct run (#49
     expect(planner.sources).toContain('repair');
   });
 
+  it('repairs a missing derived strong effect before final verification', async () => {
+    let value = '';
+    let fills = 0;
+    const page: BrowserPageSession = {
+      async navigate() {},
+      async capture() {
+        return {
+          url: 'https://fixture.test/form', title: 'Form', html: '',
+          elements: [{ tag: 'input', attributes: { id: 'company', value }, text: '', depth: 0 }],
+        };
+      },
+      async fill(_selector, next) {
+        fills += 1;
+        if (fills > 1) value = next;
+      },
+      async select() {},
+      async click() {},
+    };
+    const planner = scriptedPlanner([
+      { kind: 'fill', selector: '#company', value: 'Acme' },
+      { kind: 'fill', selector: '#company', value: 'Acme' },
+      { kind: 'done', success: true, summary: 'filled' },
+    ]);
+
+    const result = await runBrowserAgent({
+      task: 'Fill company', page, planner,
+      verifier: { async verify() { return { success: value === 'Acme', summary: value }; } },
+      clock: () => 100,
+    });
+
+    expect(result.success).toBe(true);
+    expect(planner.sources).toEqual(['planner', 'repair', 'planner']);
+    expect(result.steps[0]).toMatchObject({
+      error: 'fill did not produce its required observable effect',
+      postActionEvidence: { classification: 'exact_effect_missing', passed: false, enforced: true },
+    });
+    expect(result.steps[1]?.postActionEvidence).toMatchObject({ classification: 'exact_effect_observed', passed: true });
+  });
+
   it('still fails when the actions did not complete the task', async () => {
     const page = vendorFormPage();
     // Proposes an absent control, so no action is dispatched. The target-repair

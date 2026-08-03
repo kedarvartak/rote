@@ -45,6 +45,7 @@ export class FileBrowserAgentRunRecorder implements BrowserAgentRunRecorder {
           ? [step.providerReceipt, ...(step.repairProviderReceipts ?? [])]
           : undefined,
         action_classifications: step.classifications,
+        post_action_evidence: step.postActionEvidence,
         resolution: step.resolution,
       },
       duration_ms: step.durationMs,
