@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "protocol_id": "p1-post-action-evidence-b1-b3-qualification-v1",
+  "rote_commit": "0960f9915c71de703aedf29b623be717b169817e",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "tasks": [
+    {
+      "task": "B1",
+      "successes": 3,
+      "attempts": 3,
+      "mean_logical_tokens": 2961
+    },
+    {
+      "task": "B2",
+      "successes": 3,
+      "attempts": 3,
+      "mean_logical_tokens": 8374.333333333334
+    },
+    {
+      "task": "B3",
+      "successes": 3,
+      "attempts": 3,
+      "mean_logical_tokens": 2179.3333333333335
+    }
+  ],
+  "total_attempts": 9,
+  "total_successes": 9,
+  "planner_calls": 57,
+  "repair_calls": 0,
+  "provider_receipts": 57,
+  "strong_effects_observed": 33,
+  "click_reactions_observed": 15,
+  "done_actions": 9,
+  "click_policy": "shadow-only"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 2781,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 180,
+    "duration_ms": 11496,
+    "repetition": 1,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 8001,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 390,
+    "duration_ms": 20382,
+    "repetition": 1,
+    "phase": "cold"
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 2047,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 131,
+    "duration_ms": 7235,
+    "repetition": 1,
+    "phase": "cold"
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 2781,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 180,
+    "duration_ms": 9415,
+    "repetition": 2,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 387,
+    "duration_ms": 23267,
+    "repetition": 2,
+    "phase": "cold"
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 2047,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 131,
+    "duration_ms": 7079,
+    "repetition": 2,
+    "phase": "cold"
+  },
+  {
+    "task": "B1",
+    "outcome": "success",
+    "input_tokens": 2781,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 180,
+    "duration_ms": 9479,
+    "repetition": 3,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 8001,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 386,
+    "duration_ms": 22074,
+    "repetition": 3,
+    "phase": "cold"
+  },
+  {
+    "task": "B3",
+    "outcome": "success",
+    "input_tokens": 2047,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 135,
+    "duration_ms": 9022,
+    "repetition": 3,
+    "phase": "cold"
+  }
+]

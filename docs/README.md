@@ -24,7 +24,7 @@ marks status; the authoritative table is [02 §Status](02-architecture.md).
 We are in **P1 (V1)**: **tier 0, working memory.** G1 passes: 37.2% slower cumulative
 logical-input growth (95% CI 35.6–38.8%) at success parity. B1/B3 retain level evidence;
 T19 withdrew B2's v1 claim after finding its completion-only oracle; T20 protocol-v2
-certification restores B2/full G2 at exact parity; T21 passes deterministic B5 drift; T25 separately refreshes corrected B2 against Browser Use 0.13.7 with fresh exact pairs. The CLI package
+certification restores B2/full G2 at exact parity; T21 passes deterministic B5 drift; T25 separately refreshes corrected B2 against Browser Use 0.13.7 with fresh exact pairs; T26 qualifies zero-LLM strong action effects while keeping generic click reaction non-enforcing. The CLI package
 candidate, runnable cold→replay→drift-fallback demo, and one-command evidence reproduction
 work; registry publication remains. Post-G1 cache routing wins
 long-cell cost while the shortest cell still crosses parity. **No number, no launch.**

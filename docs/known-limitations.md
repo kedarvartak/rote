@@ -47,9 +47,9 @@ strong/weak-fit split.
   oracle. Richer Expect checks exist in replay, but are not fully exposed as CLI flags.
 - Ordinary live-agent fill/select/navigation actions enforce zero-LLM exact effect checks
   even when the planner correctly omits an ungrounded `expect`. Generic click diffs are
-  recorded only as reaction diagnostics: they remain unsafe to enforce until no-op,
-  download, and background-mutation qualification. Final verification still carries task
-  success and cannot be replaced by either signal.
+  recorded only as reaction diagnostics: T26's no-op, no-DOM-effect, and unrelated-mutation
+  boundary shows the generic signal is unsafe to enforce. Final verification still carries
+  task success and cannot be replaced by either signal.
 - Rote is not a browser sandbox or authorization system. The model can act with the
   browser profile's privileges. Use only sites and accounts you are authorized to
   automate, with least-privilege test credentials first.
@@ -81,7 +81,7 @@ affected steps. That provider-token overhead has not been recertified. It is
 a fail-closed safety change, not a new efficiency claim.
 
 The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulative-token-curve.md),
-[T11](testing/T11-cache-key-economics.md), [T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md), [T22](testing/T22-stagehand-qualification.md), [T23](testing/T23-skyvern-qualification.md), [T24](testing/T24-browser-use-0137-qualification.md), and [T25](testing/T25-browser-use-0137-paired-certification.md).
+[T11](testing/T11-cache-key-economics.md), [T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md), [T22](testing/T22-stagehand-qualification.md), [T23](testing/T23-skyvern-qualification.md), [T24](testing/T24-browser-use-0137-qualification.md), [T25](testing/T25-browser-use-0137-paired-certification.md), and [T26](testing/T26-post-action-evidence-qualification.md).
 
 ## Provider, packaging, and operations
 

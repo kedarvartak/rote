@@ -97,6 +97,17 @@ describe('post-action evidence', () => {
     expect(() => assertPostActionEvidence(evidence, 'https://portal.test/form')).not.toThrow();
   });
 
+  it('cannot distinguish a no-DOM external effect from a no-op click', () => {
+    // A browser download event is outside CapturedPage; before/after DOM and URL stay
+    // identical even when the click had that legitimate external effect.
+    const evidence = derivePostActionEvidence({
+      action: { kind: 'click' }, resolvedSelector: '#submit', before: page(), after: page(),
+    });
+    expect(evidence).toMatchObject({
+      classification: 'click_no_observable_reaction', passed: false, enforced: false,
+    });
+  });
+
   it.each([
     ['a visible DOM change', page('https://portal.test/form', '', 'Saved')],
     ['a URL change', page('https://portal.test/complete')],
