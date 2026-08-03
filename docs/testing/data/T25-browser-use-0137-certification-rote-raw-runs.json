@@ -1,0 +1,200 @@
+[
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 387,
+    "duration_ms": 27626,
+    "repetition": 1,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 391,
+    "duration_ms": 22170,
+    "repetition": 2,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 8003,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 386,
+    "duration_ms": 21003,
+    "repetition": 3,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 391,
+    "duration_ms": 20417,
+    "repetition": 4,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 387,
+    "duration_ms": 17144,
+    "repetition": 5,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 388,
+    "duration_ms": 17863,
+    "repetition": 6,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 387,
+    "duration_ms": 18828,
+    "repetition": 7,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 8001,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 385,
+    "duration_ms": 19458,
+    "repetition": 8,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 388,
+    "duration_ms": 17928,
+    "repetition": 9,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 8003,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 385,
+    "duration_ms": 20351,
+    "repetition": 10,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 386,
+    "duration_ms": 18563,
+    "repetition": 11,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 387,
+    "duration_ms": 23141,
+    "repetition": 12,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 385,
+    "duration_ms": 18070,
+    "repetition": 13,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 387,
+    "duration_ms": 18474,
+    "repetition": 14,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 387,
+    "duration_ms": 21075,
+    "repetition": 15,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 387,
+    "duration_ms": 18165,
+    "repetition": 16,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 391,
+    "duration_ms": 17560,
+    "repetition": 17,
+    "phase": "cold"
+  },
+  {
+    "task": "B2",
+    "outcome": "success",
+    "input_tokens": 7958,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 387,
+    "duration_ms": 18139,
+    "repetition": 18,
+    "phase": "cold"
+  }
+]

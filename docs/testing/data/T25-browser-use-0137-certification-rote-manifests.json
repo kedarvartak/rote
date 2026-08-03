@@ -1,0 +1,2018 @@
+[
+  {
+    "run_id": "g2-rote-b2-r01",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:12:47.795Z",
+    "ended_at": "2026-08-03T12:13:15.421Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r02",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:13:59.865Z",
+    "ended_at": "2026-08-03T12:14:22.035Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 26
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r03",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:15:11.191Z",
+    "ended_at": "2026-08-03T12:15:32.194Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 779,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 23
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r04",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:16:12.039Z",
+    "ended_at": "2026-08-03T12:16:32.456Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 26
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r05",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:17:17.168Z",
+    "ended_at": "2026-08-03T12:17:34.312Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r06",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:18:08.637Z",
+    "ended_at": "2026-08-03T12:18:26.500Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 23
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r07",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:19:06.321Z",
+    "ended_at": "2026-08-03T12:19:25.149Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r08",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:20:01.050Z",
+    "ended_at": "2026-08-03T12:20:20.508Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 818,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r09",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:20:59.294Z",
+    "ended_at": "2026-08-03T12:21:17.222Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 23
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r10",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:22:07.999Z",
+    "ended_at": "2026-08-03T12:22:28.350Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 779,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r11",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:23:04.807Z",
+    "ended_at": "2026-08-03T12:23:23.370Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 21
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r12",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:24:06.686Z",
+    "ended_at": "2026-08-03T12:24:29.827Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r13",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:25:05.487Z",
+    "ended_at": "2026-08-03T12:25:23.557Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 20
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r14",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:25:58.685Z",
+    "ended_at": "2026-08-03T12:26:17.159Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r15",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:26:49.358Z",
+    "ended_at": "2026-08-03T12:27:10.433Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r16",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:27:47.364Z",
+    "ended_at": "2026-08-03T12:28:05.529Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r17",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:28:36.378Z",
+    "ended_at": "2026-08-03T12:28:53.938Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 26
+      }
+    ]
+  },
+  {
+    "run_id": "g2-rote-b2-r18",
+    "task_spec": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+    "env_fingerprint": {
+      "tool_inventory": [
+        {
+          "name": "browser.click",
+          "schema_hash": "5e79071f553842ff1304723a8e92a54a18b7972a74dfb3716f914c260b374afc"
+        },
+        {
+          "name": "browser.download_file",
+          "schema_hash": "6cff0ca0455fe297bc95c87e42bd0b8255af05f2047e1e0f92405a5a45ef8268"
+        },
+        {
+          "name": "browser.extract",
+          "schema_hash": "d0607a7ecd7eada2c1f44665235405b24a9302234d160ab7978e87d3b9640290"
+        },
+        {
+          "name": "browser.fill",
+          "schema_hash": "e99ba404c0422135c92e5bfc8214b2629cea754d8d82209d4b81a8225d4ef14f"
+        },
+        {
+          "name": "browser.navigate",
+          "schema_hash": "4dc7012836c9067e0e598722108eafec5feb550e3675dfa0f8075b06c002c56c"
+        },
+        {
+          "name": "browser.select",
+          "schema_hash": "a363dca570cb4894c4932a10c8f11d55fa157588936c4b02103a6684322b3be8"
+        }
+      ],
+      "target_identity": "127.0.0.1",
+      "surface_versions": {
+        "browser_actions": "v1"
+      },
+      "fingerprint_hash": "d5e0e0106a2403a4e3b1cbe78731d1fff0ba05895a7ab911e5b26ba5d9ccc8d7"
+    },
+    "outcome": "success",
+    "started_at": "2026-08-03T12:29:20.213Z",
+    "ended_at": "2026-08-03T12:29:38.352Z",
+    "token_usage": [
+      {
+        "source": "planner",
+        "input_tokens": 612,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 652,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 691,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 44
+      },
+      {
+        "source": "planner",
+        "input_tokens": 734,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 775,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 40
+      },
+      {
+        "source": "planner",
+        "input_tokens": 814,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 851,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 37
+      },
+      {
+        "source": "planner",
+        "input_tokens": 887,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 42
+      },
+      {
+        "source": "planner",
+        "input_tokens": 928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 38
+      },
+      {
+        "source": "planner",
+        "input_tokens": 1014,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 22
+      }
+    ]
+  }
+]

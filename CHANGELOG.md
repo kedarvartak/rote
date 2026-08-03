@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P1**: Certify corrected B2 against pinned Browser Use 0.13.7 with 18 fresh ordered exact-success pairs per harness, raw-receipt reconciliation, and reproducible matched token, cost, and latency intervals (#120).
 - **P1**: Add `web/` — the product website (Next.js 15 + Tailwind v4, all routes static): a landing page with an animated tier-0 eviction hero and the G1/T11 headline numbers, an architecture page built from docs/02 embedding the design diagrams, and a docs section (overview, benchmarks & runs with audited figures from `docs/testing/data/`, packages, roadmap) (#101)
 
 ### Docs

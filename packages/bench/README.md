@@ -195,7 +195,7 @@ stays token-based; latency and $ are reported, not gated, in V1 (docs/05 P3).
   aggregation and the gate's bootstrap.
 - **`bootstrapReductionInterval` / `bootstrapMatchedReductionInterval`** — pure,
   deterministic reduction intervals for independent samples or exact repetition pairs.
-- **`buildG2Report` / `writeG2Report`** — fail-closed raw-evidence identity and live-verification audit, matched token/cost/latency intervals, absolute levels, and source accounting.
+- **`buildG2Report` / `writeG2Report`** — fail-closed raw-evidence identity, protocol-pinned Browser Use version, live-verification and provider-receipt reconciliation audits, matched token/cost/latency intervals, absolute levels, and source accounting.
 - **`evaluateLaunchGate`** — the W5 gate: a comparison passes only at success
   parity, with enough successful runs, and a range lower bound at/above the floor.
 

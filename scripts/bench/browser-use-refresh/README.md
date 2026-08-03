@@ -48,3 +48,21 @@ node packages/bench/bin/rote-bench.js browser-use-refresh \
 ```
 
 A qualification decision allows only a separately frozen ≥15-run corrected-B2 certification. It does not publish refreshed performance rankings by itself.
+
+## Paired corrected-B2 certification
+
+T25 freezes a separate 18-pair protocol and recollects both Rote and Browser Use contemporaneously in strict Rote → Browser Use order:
+
+```bash
+export OPENAI_API_KEY=...
+export BROWSER_USE_PYTHON=/tmp/rote-browser-use-0.13.7/bin/python
+scripts/bench/browser-use-refresh/run-certification.sh
+```
+
+The collector is append-safe and resumable through the shared paired runner. It audits every Rote trajectory receipt and Browser Use provider receipt before generating the matched-bootstrap report. Reproduce the frozen report without a provider key:
+
+```bash
+npm run reproduce:browser-use-0137-certification
+```
+
+Both sides are cold-agent executions; T25 does not test replay or learned/generated memory. See [T25](../../../docs/testing/T25-browser-use-0137-paired-certification.md).

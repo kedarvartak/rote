@@ -1,7 +1,8 @@
 # Competitor expansion plan
 
-Rote's published comparison currently uses Browser Use 0.13.6. The next comparison should
-broaden coverage without turning unlike products into one misleading leaderboard.
+Rote's broad G1 and historical G2 comparison uses Browser Use 0.13.6; T25 separately
+certifies corrected B2 against 0.13.7. Further comparisons should broaden coverage
+without turning unlike products into one misleading leaderboard.
 
 ## Order
 
@@ -9,8 +10,8 @@ broaden coverage without turning unlike products into one misleading leaderboard
 |---|---|---|---|
 | 1 | **Stagehand 3.7.1 — feasibility stopped** | T22 found 1/6 exact cold successes, incomplete cold provider receipts, and cached oracle failures; no certification matrix | retained diagnostic only |
 | 2 | **Skyvern 1.0.47 — feasibility stopped** | T23 observed exact generated-code/fallback execution but no complete raw-provider receipt set; no token/cost certification matrix | retained cold and generated-code warm/drift diagnostics |
-| 3 | **Browser Use 0.13.7 — feasibility passed** | T24 cleared corrected B2/B5 exactness and receipt gates; a separate ≥15-run corrected-B2 certification is next | cold re-reasoning control |
-| 4 | **Magnitude — after Browser Use certification** | Vision-native contrast; useful for capability/cost boundaries | cold only unless a documented cache path exists |
+| 3 | **Browser Use 0.13.7 — corrected B2 certified** | T24 cleared feasibility; T25 then collected 18 fresh ordered pairs per harness with exact parity and complete receipt reconciliation | cold re-reasoning control |
+| 4 | **Magnitude — eligible next** | Vision-native contrast; useful for capability/cost boundaries | cold only unless a documented cache path exists |
 | Later | Notte and lab CUAs | Useful for capability ceilings, but API and accounting comparability are weaker | separate appendix, not the primary efficiency table |
 
 Stagehand came first because B5 tests the exact feature it markets: cached actions that
@@ -92,8 +93,8 @@ mismatches before calculating an interval.
 2. **Skyvern feasibility — stopped in T23:** the pinned 1.0.47 image produced exact cold preparations and generated-code warm/drift results, but every completed paired run triggered AI fallback and self-hosted logs exposed aggregate metrics rather than complete raw provider responses. No token/cost ranking is allowed.
 3. **Skyvern certification — not opened:** retain T23 diagnostics; revisit only with complete provider receipts and a newly frozen protocol.
 4. **Browser Use refresh feasibility — passed in T24:** pinned 0.13.7 passed 3/3 corrected B2 cold attempts and 5/5 B5 cold diagnostics with complete receipts. Historical 0.13.6 evidence remains unchanged.
-5. **Browser Use 0.13.7 certification — next:** freeze and collect only the eligible corrected-B2 ≥15-run cell before publishing any refreshed performance comparison.
-6. Add Magnitude only after the three primary harnesses have reproducible adapters.
+5. **Browser Use 0.13.7 certification — passed in T25:** 18/18 fresh ordered attempts per harness passed the exact corrected-B2 oracle; every raw receipt reconciled, permitting a cell-specific token/cost/latency comparison. Historical 0.13.6 evidence remains frozen.
+6. Magnitude is now eligible for a separately qualified cold-only adapter.
 
 ## Claims this plan does not permit
 

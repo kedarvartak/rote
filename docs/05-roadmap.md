@@ -94,7 +94,7 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 | W2 distill, stable IDs, diff, render | **done and real-page measured** — T10 records 849 WordPress diffs and their grounded-base ratios |
 | W3 loop + context assembler | **done and OpenAI-economics qualified** — cache-key routing plus immutability guards preserve logical accounting and win long-cell billed cost in T11 |
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
-| W5 benchmark + the number | **done, corrected** — T20 restores B2/full G2 with 83.6% lower logical tokens (95% CI 82.7–84.6%) at 18/18 exact parity per harness |
+| W5 benchmark + the number | **done, corrected and refreshed** — T20 restores historical B2/full G2 against Browser Use 0.13.6; T25 separately certifies fresh corrected B2 against 0.13.7 with 83.1% lower logical tokens (95% CI 82.1–83.9%) at 18/18 exact parity per harness |
 | W6 launch package | package/demo/reproduction done; npm publication separately blocked |
 | **W7 working memory (new)** | #57 accounting **done** → G1/corrected G2/B5 **passed** → registry publication → compaction in P2 |
 
@@ -131,8 +131,10 @@ Two gates. The first is the headline; the second keeps the first honest.
 **G2 correction:** B1 and B3 retain their v1 exact terminal-state evidence. B2's v1 oracle
 proved only generic completion, so its parity and 77.3% reduction claim are withdrawn.
 Protocol v2 requires all eight exact values and passes 18/18 attempts per harness with an
-83.6% reduction (95% CI 82.7–84.6%) in T20. Combined with unchanged B1/B3 evidence, full
-G2 is restored. B5 then passes on deterministic semantic target drift: 72/72 recoverable
+83.6% reduction (95% CI 82.7–84.6%) against Browser Use 0.13.6 in T20. Combined with
+unchanged B1/B3 evidence, full G2 is restored. Protocol v3 then recollects both harnesses
+contemporaneously and certifies corrected B2 against Browser Use 0.13.7 at 83.1%
+(95% CI 82.1–83.9%) in T25; it does not rewrite the historical matrix. B5 then passes on deterministic semantic target drift: 72/72 recoverable
 attempts succeed exactly, 0/90 silent failures are observed, and 18/18 ambiguous targets
 fail closed. It does not claim generic workflow repair.
 
