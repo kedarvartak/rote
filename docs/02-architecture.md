@@ -360,8 +360,49 @@ a string to an id.
 
 Result: B2 0/7 → **11/11** on `gpt-5.6-luna` and `gpt-5.6-sol`, at roughly neutral token
 cost (B3 got ~1% *cheaper* — the output tokens saved by not emitting `expect` paid for
-the prompt guidance). Deriving postconditions from the observation diff instead of
-asking the model at all remains open as [#54](https://github.com/kedarvartak/rote/issues/54).
+the prompt guidance).
+
+### Decision for #54: derive evidence from the observed transition
+
+A model should not predict the postcondition. The action plane already owns the dispatched
+arguments and can compare the settled capture before the action with a fresh settled
+capture after it. That transition produces zero-LLM **post-action evidence**:
+
+| Action | Derived evidence | Strength | Initial policy |
+|---|---|---|---|
+| `fill` | Resolved live control value exactly equals the dispatched value | strong effect check | enforce |
+| `select` | Resolved live select value exactly equals the dispatched option value | strong effect check | enforce |
+| `navigate` | Canonical final URL exactly equals the resolved requested URL | strong effect check | enforce; redirects require an explicit later policy |
+| `click` | Final URL changed, or the distilled before/after observations have at least one added, removed, or updated node | **reaction only** | record in shadow mode; do not enforce yet |
+| `done` | none | not applicable | final independent verifier remains mandatory |
+
+“Reaction” is deliberately not called verification. An unrelated timer can change the DOM
+after a no-op click, while a legitimate download can have no DOM effect. Treating any diff
+as proof of the requested effect would violate “never silently wrong”; rejecting every
+no-diff click would violate “never worse than baseline.” Click evidence may become enforced
+only after a frozen qualification corpus includes no-op controls, DOM-changing controls,
+navigation, downloads, and unrelated background mutation, with zero false accepts and a
+bounded false-reject policy. B1's fixture download is one positive case because it exposes
+an authoritative completion node; it is not proof that downloads generally mutate the DOM.
+
+The derivation lives as pure action-plane logic over captured pages and distilled nodes.
+It must not add form values to `DistilledNode` or the planner's rendered diff: captured
+values can be credentials, and post-action checking is not a reason to spend tokens or
+expand secret exposure. Recorded evidence carries the action kind, resolved target
+identity, classification, and pass/fail status, but not a second copy of the value.
+
+Implementation order is binding:
+
+1. Add property/deterministic tests for strong effects, no-op clicks, unrelated mutation,
+   and URL canonicalization before integration.
+2. Capture once after dispatch, derive evidence with no planner call, and record it on the
+   step. Strong failures enter the existing typed postcondition-repair path and can never
+   be recorded as a successful step.
+3. Keep click reaction shadow-only until its separate qualification gate passes. Final
+   task success continues to require independent `verify` in every mode.
+
+This resolves the design question in [#54](https://github.com/kedarvartak/rote/issues/54);
+the implementation and click qualification remain open.
 
 ## Repair ladder
 

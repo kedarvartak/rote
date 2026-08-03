@@ -236,9 +236,11 @@ can read; the benchmark as an industry-neutral instrument.
    omission, made a failed expect cost one scoped repair instead of the run, and left the
    ground-truth `verify` gate as the thing that decides success. Both failure shapes were
    symptoms of a mandatory field, not of assertion strength.
-   Still open: with expects mostly omitted, per-action checking now rests on the final
-   gate alone. Deriving postconditions from the observation diff — which needs no
-   prediction and no model call — is [#54](https://github.com/kedarvartak/rote/issues/54).
+   [#54](https://github.com/kedarvartak/rote/issues/54) now has a frozen design for
+   zero-LLM post-action evidence: exact value/URL effects are enforceable, while a click's
+   generic DOM reaction remains shadow-only because unrelated mutation can false-pass and
+   legitimate external effects can produce no DOM diff. Implementation and click
+   qualification remain open; the final verifier still decides task success.
 2. **Small-model hosting** — Fara-class models are self-hostable (7B). Bundled local
    inference or API? Affects adoption friction vs the cost story. Decide in P2 with data.
 3. **Matching threshold policy** — how conservative should τ be at launch? Lean:
