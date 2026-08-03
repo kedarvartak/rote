@@ -1,0 +1,17 @@
+{
+  "protocol_id": "p1-post-action-evidence-b1-b3-qualification-v1",
+  "rote_commit": "0960f9915c71de703aedf29b623be717b169817e",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "viewport": { "width": 1920, "height": 1080 },
+  "tasks": ["B1", "B2", "B3"],
+  "repetitions": 3,
+  "pairing": "none-single-harness-qualification",
+  "success_gate": "manifest success after canonical independent exact verification",
+  "click_policy": "shadow-only",
+  "claims": [
+    "exact-success qualification",
+    "no post-action repair calls observed",
+    "no comparative token/cost/latency ranking"
+  ]
+}
