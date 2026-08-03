@@ -402,10 +402,14 @@ Implementation order is binding:
    task success continues to require independent `verify` in every mode.
 
 The strong-effect derivation, bounded repair integration, redacted trajectory evidence,
-and shadow click classifications are now implemented with deterministic and property
-tests. [#54](https://github.com/kedarvartak/rote/issues/54) remains open only for the
-click qualification gate and post-change B1/B2/B3 live confirmation; generic click
-reaction is not enforced or marketed as verification.
+and shadow click classifications are implemented with deterministic and property tests.
+[T26](testing/T26-post-action-evidence-qualification.md) then passes 9/9 fresh canonical
+B1–B3 attempts with 33/33 strong effects, 57/57 reconciled receipts, and zero repairs.
+Generic click reaction remains permanently non-enforcing for P1: unrelated mutation can
+false-attribute a no-op, while external effects can leave no captured diff. Future click
+gates need action-specific authoritative evidence, not a threshold over generic churn.
+This completes [#54](https://github.com/kedarvartak/rote/issues/54) without marketing
+reaction as verification.
 
 ## Repair ladder
 
