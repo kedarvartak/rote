@@ -160,7 +160,7 @@ measured 37.2% (95% CI 35.6–38.8%) over 15 complete matched repetitions ([T10]
       distiller — tier 1 is V2**; eviction trades recall for cost)
 - [x] [Licence check](third-party-licenses.md) confirms competitor dependencies, not forks
 
-## P2 — V2: tiers 1 and 2, the harness that learns (~8–10 weeks)
+## P2 — V2: tiers 1 and 2, the harness that learns (~14–18 weeks; re-estimate after E7.1)
 
 Episodic and semantic memory go live; the learning curve becomes the product. **This is
 catch-up on tier 1 and a lead on tier 2** — Skyvern ships the former, nobody ships the
@@ -172,21 +172,47 @@ and tier 1 is where we are behind; parity is worth less than a position.
    B3 by construction: compaction mutates the prefix caching needs immutable, so compact
    every ~*k* steps and eat one miss. Listed first because it completes V1's headline
    rather than starting a new one.
-2. **Distiller v1** (tier 1) — trajectory → playbook: causal pruning, parameterization,
-   assertion synthesis. Replaces hand-written playbooks. Gate: distilled playbooks replay
-   the fixture suite with zero human edits. **Reaches parity with Skyvern's 2026 baseline;
-   the differentiator is the verification contract, not the distillation.**
-3. **Predictor** — trace matching, transition models, offline simulation. *The kill gate
-   comes first and costs no systems work*: **≥70% warm next-action accuracy** on recorded
-   runs, or P3's speculation thesis dies early and P2 re-scopes to
-   memory-without-prediction.
-4. **Site memory** (tier 2) — per-fingerprint selector maps, form semantics, page graph,
-   settle-time priors, quirks. Append-only, confidence + freshness. Advisory only: it
-   *informs*, never *executes*, so it can be wrong without being dangerous. Its brief is
-   tier-0 content and must live inside the token budget — a 2K brief at 5% utility is
-   overhead, not memory.
-5. **Model routing** — `grounded-routine` on a small model, escalation contract, per-site
-   calibration. New `route`/`predict` tags (invariant 5; CLAUDE.md updated same PR).
+2. **Freeze the enterprise browser contract corpus** ([#127](https://github.com/kedarvartak/rote/issues/127)) — adversarial repeated grids,
+   nested iframe/open-shadow contexts, realistic input controls, a long-lived SPA, restart
+   boundaries, and authoritative non-UI oracles. Tests precede mechanisms so no
+   implementation gets to define its own passing case.
+3. **Version target identity before learning it** ([#128](https://github.com/kedarvartak/rote/issues/128)) — v1 hashes role, accessible
+   name, and a coarse depth bucket and can collide in repeated grids. Identity v2 adds
+   browsing-context and stable composed-container lineage, detects residual ambiguity
+   before dispatch, excludes sensitive values, and preserves v1 artifacts append-only.
+4. **Composed browsing contexts** ([#129](https://github.com/kedarvartak/rote/issues/129)) — capture, diff, resolution, and dispatch
+   across nested same/cross-origin iframes and open shadow roots. Closed roots remain a
+   typed unsupported boundary; context mismatch precedes fuzzy matching.
+5. **Authoritative outcome evidence** ([#130](https://github.com/kedarvartak/rote/issues/130)) — versioned evidence envelopes and
+   injected API/database/download-event adapters. UI evidence remains useful support but
+   cannot alone satisfy a task that declares an authoritative outcome requirement.
+6. **Enterprise action vocabulary** ([#131](https://github.com/kedarvartak/rote/issues/131)) — grounded hover, explicit keyboard
+   chords/text, allowlisted file upload, and target-to-target drag/drop. Every verb lands
+   with safety classification, redaction, settledness, and action-specific evidence; no
+   arbitrary-event escape hatch.
+7. **Long-running single-session SPA endurance** ([#132](https://github.com/kedarvartak/rote/issues/132)) — certify 50+ transitions,
+   route epochs, remounts, virtualization, background traffic, and bounded context under
+   B4. This is deliberately separate from continuation across a browser/process restart.
+8. **Distiller v1** (tier 1) — trajectory → playbook: causal pruning, parameterization,
+   assertion synthesis. It follows the identity, context, action, and evidence contracts
+   so learned playbooks do not fossilize v1 collisions or UI-only assertions. Gate:
+   distilled playbooks replay the fixture suite with zero human edits. **Reaches parity
+   with Skyvern's 2026 baseline; the differentiator is the verification contract.**
+9. **Multi-session task continuation** ([#133](https://github.com/kedarvartak/rote/issues/133)) — append-only checkpoints resume an
+   incomplete controlled workflow across browser/process restarts only after fingerprint,
+   live-state, and authoritative-evidence revalidation. Credentials and profile management
+   remain P4; continuation is reported separately from replay and learned matching.
+10. **Predictor** — trace matching, transition models, offline simulation. *The kill gate
+    comes first and costs no systems work*: **≥70% warm next-action accuracy** on recorded
+    runs, or P3's speculation thesis dies early and P2 re-scopes to
+    memory-without-prediction.
+11. **Site memory** (tier 2) — per-fingerprint selector maps, form semantics, page graph,
+    settle-time priors, quirks. Append-only, confidence + freshness. Advisory only: it
+    *informs*, never *executes*, so it can be wrong without being dangerous. Its brief is
+    tier-0 content and must live inside the token budget — a 2K brief at 5% utility is
+    overhead, not memory.
+12. **Model routing** — `grounded-routine` on a small model, escalation contract, per-site
+    calibration. New `route`/`predict` tags (invariant 5; CLAUDE.md updated same PR).
 
 **Exit gates:** T0 ≥80% reduction at parity *with automated distillation*; **T2 ≥30%**
 (the generalization bet — retreat rule if <15%); ≥50% of warm steps off the frontier
@@ -216,7 +242,8 @@ The buyer shifts from builder to fleet operator; reliability and operability bec
 product. Sequenced by design-partner pull.
 
 Recovery ladder v2 (scoped repair agent, patch versioning, rollback) + drift tracker ·
-parallel fan-out · auth & profiles (**credentials never in trajectories** — redaction at
+parallel fan-out · production certification of E7's iframe/shadow/action/SPA contracts ·
+auth & profiles (**credentials never in trajectories** — redaction at
 the recorder, invariant-grade tests) · injection containment with a published threat
 model · certified backends · the observability product ("your top 20 procedures, their
 hit rates, and what re-derivation is costing you").

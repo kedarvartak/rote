@@ -4,7 +4,7 @@
 > **tasks**: what gets done, in what order, blocked by what, and how we know each one is
 > done. If the two disagree, 05 wins and both get fixed in the same PR.
 >
-> Snapshot date **2026-07-17**. Owner: Kedar. Update cadence: every merged PR that
+> Snapshot date **2026-08-04**. Owner: Kedar. Update cadence: every merged PR that
 > completes a task flips its status here; a weekly pass re-checks the sequence table.
 >
 > **Board:** every task below is mirrored on the GitHub Project
@@ -36,7 +36,7 @@ drives sequencing:
 | B1–B3 render ~537 chars; the selected WordPress page renders 89,114 chars (~22,279 approximate tok) identically across 15 fresh sessions ([T2](testing/T2-measurement-page-selection.md)) | The real-page prerequisite is now met; E1.2 can fix the curve protocol and E1.4 can collect provider-reported sizes |
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
-| #50/#51/#52 done; open: [#54](https://github.com/kedarvartak/rote/issues/54) (diff-derived postconditions) | Planner slips no longer poison success parity; live expects are honestly optional and final verification remains mandatory |
+| #50/#51/#52/#54 done | Planner slips no longer poison success parity; exact fill/select/navigation effects are enforced without an LLM, generic click reaction stays non-enforcing, and final verification remains mandatory |
 | `@rote/cli@0.1.0` tarball, live demo, and one-command evidence reproduction pass; npm auth/scope ownership unconfirmed | registry publication (#107) is the remaining launch blocker |
 | B4/B6 remain specified; B5 is now built and certified | T21 isolates post-G2 drift trust from the frozen level gate |
 
@@ -138,25 +138,46 @@ slips.
 | W5 | E5.1–E5.5 | quickstart + README + demo ready |
 | W6 | buffer · E5.6 | **launch, or a published reason why not** |
 
-## P2 — entry criteria and shape (~8–10 weeks, detail deferred)
+## P2 — entry criteria and ordered shape (~14–18 weeks; re-estimate after E7.1)
 
-Do not start any of these before E5.6 ships or P1 is explicitly killed — the launch
-cadence argument in [05](05-roadmap.md) is binding. Order within P2:
+Do not start implementation before E5.6 ships or P1 is explicitly killed — the launch
+cadence argument in [05](05-roadmap.md) is binding. Planning and adversarial fixture
+specification may proceed, but P2 code must not land early. B4 remains first. The browser
+contracts then precede distillation because stable identities, action verbs, and evidence
+schemas are persisted into trajectories and playbooks; learning the v1 contracts first
+would make their weaknesses append-only data.
+
+### E7 — Enterprise browser contracts
+
+| ID | Task | Est | Depends on | Acceptance | Status |
+|---|---|---:|---|---|---|
+| E7.1 | **Freeze the enterprise contract corpus** ([#127](https://github.com/kedarvartak/rote/issues/127)): duplicate grids, nested frame/open-shadow contexts, complex controls, SPA/restart cases, and authoritative oracles. | 2–3 | E5.6 | Deterministic fake-world and real-Chrome controls include exact positives, no-ops, unrelated mutation, identity collision, stale context, and restart boundaries; protocol distinguishes single-session endurance from continuation. | blocked (#107) |
+| E7.2 | **Stable target identity v2** ([#128](https://github.com/kedarvartak/rote/issues/128)): versioned browsing-context and composed-container lineage with fail-closed collision handling. | 4–6 | E7.1 | Distinct repeated-grid targets survive safe reorder/remount/selector rename; unresolved collisions stop before dispatch; v1 artifacts remain unchanged; no values or credentials enter identity. | blocked (E7.1) |
+| E7.3 | **Iframe and open Shadow DOM support** ([#129](https://github.com/kedarvartak/rote/issues/129)): capture → diff → resolve → dispatch across nested same/cross-origin contexts. | 5–8 | E7.2 | E7.1 frame/shadow cases pass exactly; detach/navigation/context mismatch fail before fuzzy dispatch; closed roots return a typed unsupported classification. | blocked (E7.2) |
+| E7.4 | **Authoritative evidence verification** ([#130](https://github.com/kedarvartak/rote/issues/130)): provenance/freshness-bound evidence envelopes plus injected fixture/API/database/download adapters. | 4–6 | E7.1, E7.2 | Declared authoritative outcomes cannot pass from harness conclusion, generic DOM change, stale evidence, or another task's evidence; every verifier exit has invariant coverage. | blocked (E7.2) |
+| E7.5 | **Enterprise action vocabulary** ([#131](https://github.com/kedarvartak/rote/issues/131)): grounded hover, keyboard text/chords, allowlisted upload, and target-to-target drag/drop. | 6–9 | E7.3, E7.4 | Fake and CDP backends share Zod verbs; every action has safety, settledness, redaction, and effect semantics; unsupported capabilities fail cleanly; no arbitrary-event escape hatch. | blocked (E7.3, E7.4) |
+| E7.6 | **Long-running single-session SPA certification** ([#132](https://github.com/kedarvartak/rote/issues/132)): 50+ transitions with routes, remounts, virtualization, background traffic, and B4. | 5–8 | B4, E7.3–E7.5 | ≥15 exact runs with authoritative verification, zero silent failures, bounded context/metadata/settle units, and clean `recall_unavailable` behavior. | blocked (B4, E7.3–E7.5) |
+| E7.7 | **Multi-session task continuation** ([#133](https://github.com/kedarvartak/rote/issues/133)): append-only checkpoints across browser/process restarts. | 6–10 | distiller v1, E7.6 | Two controlled restarts reach exact outcome; fingerprint/state/evidence/version mismatch stops before action; credentials stay outside artifacts; continuation is reported separately from replay. | blocked (distiller, E7.6) |
+
+### P2 sequence after E7
 
 1. **B4 compaction** — finishes tier 0; the only lever that makes the curve linear.
    Cache-economics-scheduled (it fights B3 by construction). Entry: E3.5 data on real
    cache hit rates, so the schedule is derived, not guessed.
-2. **Distiller v1** — trajectory → playbook (causal pruning, parameterization, assertion
-   synthesis). Gate: distilled playbooks replay the fixture suite with zero human edits.
-   This is tier-1 catch-up; the differentiator remains the verification contract.
-3. **Predictor kill-gate first**: ≥70% warm next-action accuracy offline on recorded
+2. **E7.1–E7.6** in dependency order. E7.6 is B4's enterprise endurance gate.
+3. **Distiller v1** — trajectory → playbook only after target, context, action, and
+   evidence contracts are versioned. Gate: distilled playbooks replay the fixture suite
+   with zero human edits.
+4. **E7.7 multi-session continuation** — after a learned procedure exists to resume.
+5. **Predictor kill-gate first**: ≥70% warm next-action accuracy offline on recorded
    runs, before any speculation systems work. Costs no systems work; can kill P3 early.
-4. **Site memory** (tier 2, advisory-only) and **model routing** — in that order, each
+6. **Site memory** (tier 2, advisory-only) and **model routing** — in that order, each
    behind the measured gates in [03](03-benchmark.md) (T2 ≥30%; ≥50% warm steps off the
    frontier model at parity).
 
-P3 (speculation), P4 (fleet), P5 (platform): unchanged from [05](05-roadmap.md); no task
-breakdown until P2 exits.
+P3 (speculation), P4 (fleet), P5 (platform): unchanged from [05](05-roadmap.md); P4 owns
+production credential/profile handling and broader enterprise certification rather than
+putting secrets into P2 checkpoints.
 
 ## RAID
 
@@ -174,7 +195,7 @@ breakdown until P2 exits.
 **Assumptions:** 1–3 builders; OSS-first; pinned models stay available through E4;
 provider pricing table refreshed at E4.5.
 
-**Issues (open, tracked):** #54 (stretch). **Done:** #50 · #51 · #52.
+**Issues (open, tracked):** #107 (P1 registry blocker) · #127–#133 (ordered P2 E7 pipeline). **Done:** #50 · #51 · #52 · #54.
 
 **Dependencies:** provider usage APIs (#57 contract) · Browser Use as a dependency,
 never a fork · CDP/Chrome stability on the measurement page.

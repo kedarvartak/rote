@@ -56,10 +56,11 @@ confuse in an architecture doc; this is the boundary.
 | Core schemas, Expect DSL, templating, fingerprinting | — | **built** |
 | Recorder — append-only, crash-safe, fsync-per-event | 1 | **built** |
 | Replay executor — verified, zero-model on hand-written playbooks | 1 | **built** — B5 repairs stale selectors from retained semantic identity before dispatch and fails closed on ambiguity ([T21](testing/T21-b5-drift-certification.md)) |
-| CDP browser backend, perception (distill → stable IDs → budget) | 0 | **built** |
+| CDP browser backend, perception (distill → stable IDs → budget) | 0 | **built for the top-level light DOM** — v1 IDs hash role/name/coarse depth and can collide in repeated grids; iframe/open-shadow traversal and context-aware identity are planned in E7.2–E7.3 |
 | Agent loop, context assembler, tagged LLM client | 0 | **built** |
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
-| Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
+| Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built for navigate/fill/select/click** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50); hover, keyboard chords, upload, and drag/drop are planned in E7.5 |
+| Final verification | — | **built, with a narrow public surface** — every success requires an injected verifier, but CLI verification is visible-text/URL based; authoritative evidence envelopes and adapters are planned in E7.4 |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built and recall-stress tested** — post-eviction context marks the recall boundary; unavailable facts and fabricated comparisons fail closed ([T18](testing/T18-eviction-recall-trade.md)) |
 | **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Cache-layout discipline** (B3) | 0 | **built and economically qualified on OpenAI** — exact immutable prefixes receive deterministic cache-routing keys; WP-N25 cost falls 20.5% and clears Browser Use by 16.0% with both 95% intervals above zero ([T11](testing/T11-cache-key-economics.md)) |
@@ -290,6 +291,34 @@ memory, which is what makes diffs (`"#e42 changed"` rather than re-listing the p
 cross-run learning possible at all. The field's ids are runtime identities — CDP
 backend-node ids or per-scrape counters — that die on navigation, so no other harness
 can name an element across runs (see [04](04-competition.md), 2026-07-25 source read).
+
+The current commitment is explicitly **v1, not enterprise-complete**:
+`hash(role, accessible name, floor(DOM depth / 2))`. Coarse depth is not ancestry. Repeated
+controls in data grids can therefore collide, and `distillPage` also deduplicates repeated
+non-interactive content by role/name. E7.2 must version identity before distiller v1 learns
+it: add browsing-context and stable composed-container lineage, preserve semantic rename
+recovery, reject residual ambiguity before dispatch, exclude sensitive values, and leave
+historical v1 artifacts untouched.
+
+### Enterprise browser contracts (planned, after P1 launch)
+
+Implementation order is binding because every later layer persists assumptions from the
+one before it ([07 §E7](07-execution-plan.md)):
+
+1. Freeze adversarial fixtures and authoritative outcome oracles (#127).
+2. Version context-aware target identity and collision behavior (#128).
+3. Carry that identity through nested same/cross-origin iframes and open shadow roots;
+   classify closed roots unsupported (#129).
+4. Version verification evidence with provenance, freshness, task binding, and injected
+   authoritative adapters (#130). UI state remains supporting evidence, not forbidden.
+5. Add grounded hover, keyboard, allowlisted upload, and drag/drop only with action-specific
+   evidence, redaction, settledness, and typed unsupported exits (#131).
+6. Certify B4 on a 50+ transition single-session SPA before adding append-only,
+   fingerprint-gated multi-session continuation after distiller v1 (#132–#133).
+
+This sequence intentionally puts contracts before learning. Otherwise the distiller would
+turn target collisions, top-level-only traversal, UI-only assertions, and an incomplete
+action vocabulary into durable playbooks that append-only history cannot silently repair.
 
 ## Playbooks
 

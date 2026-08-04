@@ -21,8 +21,22 @@ scaling, or zero-LLM operation for ordinary tasks.
 
 - **Chrome/Chromium only.** The shipped backend uses CDP. Firefox, Safari, mobile browsers,
   and native applications are untested.
-- **DOM/accessibility-oriented perception.** Canvas-only, vision-heavy, remote-desktop,
-  complex cross-origin iframe, and unusual shadow-DOM workflows are not certified.
+- **Top-level light-DOM perception only.** Canvas-only, vision-heavy, remote-desktop,
+  nested iframe, and shadow-DOM workflows are not supported or certified. E7.3 adds
+  explicit same/cross-origin frame and open-shadow context traversal; closed roots remain
+  a typed unsupported boundary.
+- **Stable identity v1 can collide.** It hashes role, accessible name, and a coarse depth
+  bucket—not actual ancestry or container context. Repeated controls in enterprise data
+  grids may therefore resolve ambiguously. E7.2 versions the identity before automated
+  distillation; current ambiguous resolution must fail closed rather than pick a target.
+- **The live action vocabulary is narrow.** It supports navigate, fill, select, and click.
+  Hover, keyboard chords, file upload, drag/drop, and arbitrary pointer sequences are not
+  available. E7.5 adds only grounded, evidence-bearing primitives rather than a generic
+  event escape hatch.
+- **Long-running SPA and cross-session workflows are unqualified.** Route remounts,
+  virtualized controls, background traffic, 50+ interaction tasks, and continuation after
+  browser/process restart have no certification. E7.6 covers single-session endurance;
+  E7.7 separately covers fingerprint-gated continuation without storing credentials.
 - **Recall across pages is weak.** The tier-0 policy keeps what the agent did, not every
   page it saw. Compare-across-pages tasks can lose evidence that was evicted. The planner
   now receives an explicit recall boundary and can fail as `recall_unavailable`; fabricated
@@ -45,6 +59,9 @@ strong/weak-fit split.
 - The public CLI requires visible-text and/or URL-substring verification. These checks are
   only as independent as the signal the caller chooses; ambiguous text can be a weak
   oracle. Richer Expect checks exist in replay, but are not fully exposed as CLI flags.
+  E7.4 adds provenance/freshness-bound evidence envelopes and injected authoritative
+  API/database/download-event adapters; UI evidence remains supporting evidence where it
+  is genuinely task-specific.
 - Ordinary live-agent fill/select/navigation actions enforce zero-LLM exact effect checks
   even when the planner correctly omits an ungrounded `expect`. Generic click diffs are
   recorded only as reaction diagnostics: T26's no-op, no-DOM-effect, and unrelated-mutation
@@ -97,7 +114,8 @@ The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulat
 
 ## Deliberately deferred
 
-B5 now certifies deterministic semantic target repair only; arbitrary workflow repair remains absent. Scheduled compaction, distillation,
-automatic matching, site memory, routing, and speculation remain post-G2 work. Deferral
+B5 now certifies deterministic semantic target repair only; arbitrary workflow repair remains absent. Scheduled compaction, enterprise
+browser contracts E7.1–E7.7, distillation, automatic matching, site memory, routing, and
+speculation remain post-G2 work. Deferral
 means “not claimed,” not “implicitly working.” The authoritative sequence is
 [07 — Execution plan](07-execution-plan.md).
