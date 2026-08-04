@@ -319,7 +319,7 @@ export default function RoadmapPage() {
           <p className="mt-3 text-[0.92rem] text-ink-2 leading-relaxed max-w-3xl">
             G1 passed at 37.2%; G2 — the tokens-per-task level win at success
             parity — has not yet run. The packages are private at 0.0.0, so
-            the <code className="font-mono text-[0.85em] text-ink">npx rote run</code>{" "}
+            the <code className="font-mono text-[0.85em] text-ink">npx @rotehq/cli run</code>{" "}
             quickstart does not exist yet, and there is no public demo. The
             second number isn&apos;t in — and the launch package waits for it.
           </p>

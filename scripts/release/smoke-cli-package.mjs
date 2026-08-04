@@ -27,14 +27,14 @@ try {
   if (result.stdout.trim() !== 'No runs found.') {
     throw new Error(`unexpected packaged CLI output: ${JSON.stringify(result.stdout)}`);
   }
-  const packageJson = JSON.parse(await readFile(join(temporary, 'node_modules/@rote/cli/package.json'), 'utf8'));
+  const packageJson = JSON.parse(await readFile(join(temporary, 'node_modules/@rotehq/cli/package.json'), 'utf8'));
   if (packageJson.version !== '0.1.0' || packageJson.private === true || packageJson.license !== 'MIT') {
     throw new Error('installed CLI package does not carry public 0.1.0 metadata');
   }
   if (Object.keys(packageJson.dependencies ?? {}).some((name) => name.startsWith('@rote/'))) {
     throw new Error('published CLI cannot depend on unpublished @rote workspaces');
   }
-  const bundle = await readFile(join(temporary, 'node_modules/@rote/cli/dist/cli-entry.js'), 'utf8');
+  const bundle = await readFile(join(temporary, 'node_modules/@rotehq/cli/dist/cli-entry.js'), 'utf8');
   if (bundle.includes('@rote/')) throw new Error('published bundle retained an internal workspace import');
   console.log(`packaged CLI smoke passed (${metadata[0].size} bytes)`);
 } finally {

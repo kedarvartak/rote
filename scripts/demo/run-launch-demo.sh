@@ -31,7 +31,7 @@ start_server() {
 }
 trap stop_server EXIT
 
-npm run build --workspace @rote/cli >/dev/null
+npm run build --workspace @rotehq/cli >/dev/null
 start_server "$root/fixtures/sites"
 
 echo '=== 1/3 cold: compact planner explores and verifies ==='

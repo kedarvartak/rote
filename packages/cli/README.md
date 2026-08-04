@@ -1,4 +1,4 @@
-# @rote/cli
+# @rotehq/cli
 
 The `rote` command-line interface. It inspects recorded runs and launches recorded,
 verified cold browser-agent tasks against local Chrome. The 0.1.0 package bundles internal
@@ -9,12 +9,12 @@ commands.
 ## Quickstart
 
 Prerequisites: Node 20+, Chrome/Chromium, and one provider key. The scoped package is
-prepared but not registry-published until npm scope ownership is confirmed; see
-[T14](../../docs/testing/T14-cli-package-candidate.md).
+prepared for the maintainer-owned `rotehq` npm organization but is not registry-published until the final release smoke; see
+[T14](https://github.com/kedarvartak/rote/blob/main/docs/testing/T14-cli-package-candidate.md).
 
 ```bash
 export OPENAI_API_KEY=...
-npx @rote/cli@0.1.0 run "Confirm that the page says Rote quickstart ready." \
+npx @rotehq/cli@0.1.0 run "Confirm that the page says Rote quickstart ready." \
   --url 'data:text/html,<h1>Rote quickstart ready</h1>' \
   --verify-text 'Rote quickstart ready' \
   --model gpt-4.1-mini --max-steps 3
@@ -27,7 +27,7 @@ self-report—must show. Clean agent failures retain `recall_unavailable`,
 into an untyped summary.
 
 A provider-backed cold→zero-token replay→selector-drift fallback demo is runnable from the
-repository with `scripts/demo/run-launch-demo.sh`; see [T16](../../docs/testing/T16-launch-demo.md).
+repository with `scripts/demo/run-launch-demo.sh`; see [T16](https://github.com/kedarvartak/rote/blob/main/docs/testing/T16-launch-demo.md).
 
 ## Public API
 
@@ -76,14 +76,14 @@ candidate. A mismatch never reaches replay.
 
 ## Known v1 limitations
 
-The full launch contract is [`docs/known-limitations.md`](../../docs/known-limitations.md).
+The full launch contract is [known limitations](https://github.com/kedarvartak/rote/blob/main/docs/known-limitations.md).
 In particular:
 
 - No automatic matcher, distillation, arbitrary workflow repair, or repair-management commands yet; candidates are explicit and semantic healing is target-level only.
 - V1 verification currently supports visible text and URL substring checks; richer live
   Expect DSL wiring lands with action-plane hardening.
 - npm's unscoped `rote` name belongs to an unrelated package. The release candidate is
-  `@rote/cli`; registry-backed `npx` remains blocked on scope ownership/authentication.
+  `@rotehq/cli`; registry-backed `npx` remains blocked until the final publish and clean-install smoke.
 - Chrome/Chromium must already be installed or supplied with `--chrome-path`.
 - Cold fallback re-navigates the initial URL, but cannot generically undo server-side side
   effects made before a replay failure. Only use replay for workflows whose authored
@@ -92,6 +92,6 @@ In particular:
 ## Running tests
 
 ```bash
-npm test --workspace @rote/cli
+npm test --workspace @rotehq/cli
 npm run test:package # build, pack, clean-install, and invoke the published bin shape
 ```

@@ -2,7 +2,7 @@
 
 Runs the unmodified, integrity-pinned `@browserbasehq/stagehand@3.7.1` local DOM agent
 against the canonical exact B2 oracle and frozen B5 mutations. This is an isolated
-benchmark dependency; it is not shipped with `@rote/cli`.
+benchmark dependency; it is not shipped with `@rotehq/cli`.
 
 ## Install
 

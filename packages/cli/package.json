@@ -1,5 +1,5 @@
 {
-  "name": "@rote/cli",
+  "name": "@rotehq/cli",
   "version": "0.1.0",
   "description": "Verified, memory-efficient browser agent CLI",
   "type": "module",

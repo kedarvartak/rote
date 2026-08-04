@@ -1,6 +1,6 @@
 # Skyvern qualification adapter
 
-This isolated adapter runs the unmodified Skyvern `v1.0.47` image against frozen B2/B5. It separates cold agent preparation from generated-code warm replay, runtime AI fallback, and post-run artifact changes. It is qualification tooling, not a production dependency of `@rote/cli`.
+This isolated adapter runs the unmodified Skyvern `v1.0.47` image against frozen B2/B5. It separates cold agent preparation from generated-code warm replay, runtime AI fallback, and post-run artifact changes. It is qualification tooling, not a production dependency of `@rotehq/cli`.
 
 ## Pin
 

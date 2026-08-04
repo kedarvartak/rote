@@ -232,7 +232,7 @@ Skyvern ships record → generated code → code replay with automatic AI fallba
 (95% CI 35.6–38.8%) at success parity. B1/B3 retain their original level evidence and T20 restores B2/full G2 with an exact
 eight-value oracle. Cache economics still
 lose at G1's shortest cell. The CLI tarball, demo, and one-command reproduction pass;
-registry publication remains separately blocked on npm scope ownership/authentication. Read the [known limitations](docs/known-limitations.md) before trying Rote and see
+registry publication remains separately blocked on the final `@rotehq/cli@0.1.0` publish and clean-install smoke; the maintainer-owned scope is confirmed. Read the [known limitations](docs/known-limitations.md) before trying Rote and see
 [T14](docs/testing/T14-cli-package-candidate.md) for packaging evidence.
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)

@@ -17,7 +17,7 @@ for this repository. Include:
 - A description of the vulnerability and its potential impact
 - Steps to reproduce, or a proof of concept
 - Any affected package(s) (`@rote/core`, `@rote/recorder`, `@rote/executor`,
-  `@rote/cli`) and version/commit
+  `@rotehq/cli`) and version/commit
 
 You should expect an initial response within a few days. We'll work with you
 to understand and confirm the issue, agree on a disclosure timeline, and
