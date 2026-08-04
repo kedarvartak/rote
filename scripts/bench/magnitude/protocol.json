@@ -1,0 +1,23 @@
+{
+  "protocol_id": "magnitude-core-v0.3.1-b2-qualification-v1",
+  "harness": "magnitude-core",
+  "harness_version": "0.3.1",
+  "package_integrity": "sha512-kfwfc8D4qo1JMcROhXRgPS1FTXPbtQnI8tHGJ2AXMDdUZWiD8+VHgHHBJcss0s/PqSkDmaaj4XOKzK0+iSwx0w==",
+  "package_shasum": "c21a57a282a27058e146923b2b9a46bdbaa79779",
+  "npm_git_head": "f1b587c4173d8242bdb551991de54e70c4d2faf3",
+  "source_note": "npm gitHead is not reachable from the upstream repository after history replacement; the integrity-pinned registry artifact is authoritative",
+  "license": "Apache-2.0",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "viewport": { "width": 1920, "height": 1080 },
+  "task_id": "B2",
+  "task_prompt": "Register a vendor with company name \"Northwind Supply\", contact email \"ap@northwind.test\", tax ID \"84-1129930\", address line 1 \"18 Harbor Way\", city \"Portland\", postal code \"97209\", country \"US\", and phone \"503-555-0148\", then submit the registration.",
+  "verify_text": "Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148",
+  "initial_url": "http://127.0.0.1:8094/b2-vendor-form.html",
+  "required_exact_successes": 3,
+  "attempt_cap": 6,
+  "attempt_timeout_ms": 90000,
+  "mode": "cold-vision-agent",
+  "initial_navigation_measured": false,
+  "raw_provider_receipt_requirement": "complete raw provider responses required for token/cost ranking"
+}

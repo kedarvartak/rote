@@ -150,9 +150,9 @@ resolution, not arbitrary workflow repair or rollback.
 The first Stagehand feasibility cell was stopped rather than success-hunted: pinned
 Stagehand 3.7.1 reached the exact B2 oracle on 1/6 cold attempts despite declaring 6/6
 successes, and its public diagnostics did not retain complete raw cold-provider receipts.
-The sole warm/drift pair is retained as diagnostic evidence, not a comparative rate or cost claim. Pinned Skyvern 1.0.47 then generated reusable artifacts and completed every non-abandoned B2/B5 qualification attempt exactly, but every completed warm/drift run triggered AI fallback and its self-hosted logs did not provide complete raw provider receipts. T23 therefore stops before comparative token/cost certification; it is not a Rote superiority claim. Browser Use 0.13.7 subsequently passed bounded T24 feasibility—3/3 corrected B2 cold attempts and 5/5 B5 cold diagnostics, all with complete receipts. T25 then recollected both harnesses in 18 fresh ordered corrected-B2 pairs: both passed 18/18 exact attempts, while Rote reduced logical tokens by 83.1% (95% CI 82.1–83.9%), billed cost by 68.2% (66.3–69.9%), and latency by 43.6% (39.0–48.1%). This is a single pinned local cold-agent cell; it does not test replay or learning.
+The sole warm/drift pair is retained as diagnostic evidence, not a comparative rate or cost claim. Pinned Skyvern 1.0.47 then generated reusable artifacts and completed every non-abandoned B2/B5 qualification attempt exactly, but every completed warm/drift run triggered AI fallback and its self-hosted logs did not provide complete raw provider receipts. T23 therefore stops before comparative token/cost certification; it is not a Rote superiority claim. Browser Use 0.13.7 subsequently passed bounded T24 feasibility—3/3 corrected B2 cold attempts and 5/5 B5 cold diagnostics, all with complete receipts. T25 then recollected both harnesses in 18 fresh ordered corrected-B2 pairs: both passed 18/18 exact attempts, while Rote reduced logical tokens by 83.1% (95% CI 82.1–83.9%), billed cost by 68.2% (66.3–69.9%), and latency by 43.6% (39.0–48.1%). This is a single pinned local cold-agent cell; it does not test replay or learning. Magnitude 0.3.1 then stopped at bounded feasibility in T27: 0/6 corrected-B2 attempts reached a harness conclusion or exact oracle before the frozen 90-second timeout, and 0/6 retained complete raw provider receipts. No B5 run or Magnitude-vs-Rote ranking followed.
 
-[Stagehand method and stop decision](docs/testing/T22-stagehand-qualification.md) · [Skyvern method and stop decision](docs/testing/T23-skyvern-qualification.md) · [Browser Use refresh qualification](docs/testing/T24-browser-use-0137-qualification.md) · [Browser Use 0.13.7 paired certification](docs/testing/T25-browser-use-0137-paired-certification.md)
+[Stagehand method and stop decision](docs/testing/T22-stagehand-qualification.md) · [Skyvern method and stop decision](docs/testing/T23-skyvern-qualification.md) · [Browser Use refresh qualification](docs/testing/T24-browser-use-0137-qualification.md) · [Browser Use 0.13.7 paired certification](docs/testing/T25-browser-use-0137-paired-certification.md) · [Magnitude method and stop decision](docs/testing/T27-magnitude-qualification.md)
 
 ### Reproduce and watch
 
@@ -166,6 +166,9 @@ npm run reproduce:b5
 npm run reproduce:stagehand
 npm run reproduce:skyvern
 npm run reproduce:browser-use-refresh
+npm run reproduce:browser-use-0137-certification
+npm run reproduce:post-action-evidence
+npm run reproduce:magnitude
 ```
 
 The paid 18-repetition collection is also one resumable command; see the
