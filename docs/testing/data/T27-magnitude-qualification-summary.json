@@ -1,0 +1,26 @@
+{
+  "protocol_id": "magnitude-core-v0.3.1-b2-qualification-v1",
+  "certification_eligible": false,
+  "decision": "stop_before_certification",
+  "cold_attempts": 6,
+  "cold_exact_successes": 0,
+  "cold_harness_conclusions": 0,
+  "cold_exact_success_rate": 0,
+  "cold_exact_success_interval_95": [
+    2.7755575615628914e-17,
+    0.3903342879021653
+  ],
+  "timeouts": 6,
+  "abandoned_attempts": 0,
+  "observed_silent_failures": 0,
+  "complete_raw_provider_receipt_sets": 0,
+  "aggregate_usage_attempts": 6,
+  "aggregate_usage_events": 22,
+  "total_actions_observed": 416,
+  "diagnostic_records": 6,
+  "b5_attempts": 0,
+  "disqualifications": [
+    "only 0 exact cold successes in 6 attempts; 3 required",
+    "raw provider receipts are incomplete for 6/6 attempts; token and cost ranking prohibited"
+  ]
+}

@@ -17,7 +17,7 @@
 > replayed run was *correct*. We are late to memoization and early to two things:
 > **verified** reuse, and **WebMCP** consumption.
 
-The measured expansion is frozen in the [competitor expansion plan](competitor-expansion-plan.md): T22 stopped Stagehand before certification. T23 then stopped pinned Skyvern 1.0.47 before comparative ranking because self-hosted aggregate telemetry was not a complete set of raw provider receipts. T24 qualified pinned Browser Use 0.13.7 on corrected B2/B5; T25 then certified a separate 18-pair corrected-B2 cell with complete receipt reconciliation. Cold and warm/drift scorecards remain separate so hand-authored replay is never mislabeled as learning.
+The measured expansion is frozen in the [competitor expansion plan](competitor-expansion-plan.md): T22 stopped Stagehand before certification. T23 then stopped pinned Skyvern 1.0.47 before comparative ranking because self-hosted aggregate telemetry was not a complete set of raw provider receipts. T24 qualified pinned Browser Use 0.13.7 on corrected B2/B5; T25 then certified a separate 18-pair corrected-B2 cell with complete receipt reconciliation. T27 stops pinned Magnitude 0.3.1 after six bounded corrected-B2 timeouts and no complete raw receipt set. Cold and warm/drift scorecards remain separate so hand-authored replay is never mislabeled as learning.
 
 Sources for the 2026-07 survey:
 [Skyvern code caching](https://www.skyvern.com/docs/developers/features/code-caching) ·
@@ -130,7 +130,15 @@ right.
 
 ### Magnitude, Notte, and the long tail
 
-Vision-native challengers and thin wrappers. Interesting, small, and mostly orthogonal.
+Magnitude is a vision-native cold-agent contrast. T27 integrity-pinned unmodified
+`magnitude-core` 0.3.1 and ran the unchanged corrected-B2 prompt with OpenAI
+`gpt-4.1-mini`. All six attempts reached the frozen 90-second bound without a harness
+conclusion or exact terminal state. Magnitude emitted aggregate usage events, but 0/6
+attempts exposed complete raw provider responses, so B5 and comparative certification
+stopped. This is a local feasibility result—not a general reliability finding or a Rote
+superiority claim ([T27](testing/T27-magnitude-qualification.md)).
+
+Notte and other thin wrappers remain interesting, small, and mostly orthogonal.
 
 ### Labs (Operator/CUA, Claude computer-use, Mariner)
 

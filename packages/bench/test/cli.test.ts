@@ -118,6 +118,19 @@ describe('rote-bench CLI', () => {
     await expect(readFile(records, 'utf8')).resolves.toBe(await readFile(join(data, 'T22-stagehand-neutral-records.json'), 'utf8'));
   });
 
+  it('reproduces the Magnitude feasibility stop byte-for-byte', async () => {
+    const root = await tempDir();
+    const report = join(root, 'magnitude.md'); const summary = join(root, 'magnitude.json'); const records = join(root, 'records.json');
+    const data = resolve('../../docs/testing/data');
+    await expect(main([
+      'magnitude-qualification', join(data, 'T27-magnitude-qualification-receipts.jsonl'),
+      '--records', records, '--out', report, '--summary', summary,
+    ])).resolves.toBe(`wrote ${report}, ${summary}, and ${records} (stop_before_certification)`);
+    await expect(readFile(report, 'utf8')).resolves.toBe(await readFile(resolve('../../docs/testing/T27-magnitude-level-report.md'), 'utf8'));
+    await expect(readFile(summary, 'utf8')).resolves.toBe(await readFile(join(data, 'T27-magnitude-qualification-summary.json'), 'utf8'));
+    await expect(readFile(records, 'utf8')).resolves.toBe(await readFile(join(data, 'T27-magnitude-neutral-records.json'), 'utf8'));
+  });
+
   it('writes a synthetic benchmark pack and evaluates the M3 gate', async () => {
     const root = await tempDir();
     const specPath = join(root, 'bench-spec.json');

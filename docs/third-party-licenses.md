@@ -1,7 +1,7 @@
 # Third-party license review
 
-**Review date:** 2026-07-29
-**Scope:** P1 CLI package; Browser Use 0.13.6/0.13.7, Stagehand 3.7.1, and Skyvern 1.0.47 benchmark adapters; benchmark services; and comparison material. This is an engineering inventory, not legal advice.
+**Review date:** 2026-08-04
+**Scope:** P1 CLI package; Browser Use 0.13.6/0.13.7, Stagehand 3.7.1, Skyvern 1.0.47, and Magnitude 0.3.1 benchmark adapters; benchmark services; and comparison material. This is an engineering inventory, not legal advice.
 
 ## Decision
 
@@ -37,8 +37,9 @@ are separate checks.
 | OpenAI Python | transitive benchmark provider client `openai==2.16.0` in the certification venv | Apache-2.0 metadata | environment dependency only; not committed or shipped |
 | Stagehand | npm package `@browserbasehq/stagehand==3.7.1`, integrity-pinned in `scripts/bench/stagehand/package-lock.json` | MIT package metadata | isolated feasibility adapter only; no source modifications or copied assets; not shipped in `@rote/cli` |
 | Skyvern | unmodified `v1.0.47` image index `sha256:ad58d950f1c8cc3bc2d442228f701243b80b84494f11bbb066347ed034006e77`; source commit `9fc0b2aee079ee34ae3cdb578ca346f06c733218f` | upstream AGPL-3.0 `LICENSE` at the pinned source commit | Docker pulls the upstream image for isolated feasibility only; Rote publishes its own Compose/runner configuration and generated benchmark artifacts, not the image or Skyvern source; not shipped in `@rote/cli` |
+| Magnitude | unmodified `magnitude-core@0.3.1`, npm integrity `sha512-kfwfc8D4qo1JMcROhXRgPS1FTXPbtQnI8tHGJ2AXMDdUZWiD8+VHgHHBJcss0s/PqSkDmaaj4XOKzK0+iSwx0w==`; npm `gitHead` `f1b587c4173d8242bdb551991de54e70c4d2faf3` is no longer reachable from rewritten upstream refs | Apache-2.0 package metadata; integrity-pinned registry tarball is the reproducible identity | isolated cold-feasibility adapter only; package and transitive dependencies remain under the benchmark directory, are not modified or vendored, and do not ship in `@rote/cli` |
 
-Rote publishes the Browser Use, Stagehand, and Skyvern adapter/configuration it authored, not the harnesses themselves.
+Rote publishes the Browser Use, Stagehand, Skyvern, and Magnitude adapter/configuration it authored, not the harnesses themselves.
 The raw dumps retain model usage and agent results required to audit the comparison; they
 do not contain Browser Use package source.
 
@@ -57,7 +58,7 @@ container images or install browsers receive those works under their upstream te
 
 ## Verification record
 
-The review used the committed npm lockfile, `npm view <exact-version> license`, installed
+The review used the committed npm lockfiles, `npm view <exact-version> license`, installed
 Python wheel `METADATA`/`licenses/LICENSE`, pinned requirements, Docker digests, and the T14
 `npm pack --json` file list. Registry metadata can change; exact resolved versions and
 committed pins are the reproducible identity.

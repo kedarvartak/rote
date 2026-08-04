@@ -29,3 +29,4 @@ export * from './b5-report.js';
 export * from './stagehand-qualification.js';
 export * from './skyvern-qualification.js';
 export * from './browser-use-refresh.js';
+export * from './magnitude-qualification.js';
