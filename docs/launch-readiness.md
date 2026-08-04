@@ -4,7 +4,7 @@
 
 T20 corrects B2 with 18/18 exact-oracle successes per harness and restores full historical G2. T25 separately refreshes corrected B2 against Browser Use 0.13.7 with 18/18 fresh exact successes per harness. Formal
 T21 deterministic B5 drift now passes; npm publication remains the release blocker. Registry-backed installation also remains separately blocked: the unscoped `rote`
-name belongs to another project and npm scope/authentication is tracked in
+name belongs to another project and the final `@rotehq/cli@0.1.0` publish and registry smoke are tracked in
 [#107](https://github.com/kedarvartak/rote/issues/107).
 
 ## Gate walk
@@ -26,18 +26,18 @@ name belongs to another project and npm scope/authentication is tracked in
 
 ## Exact release closure
 
-The full G2 gate is restored. A maintainer with the chosen npm scope perform these steps; none may be inferred from a
-404 response:
+The full G2 gate is restored. A maintainer with the chosen npm scope performs these steps; none may be inferred from a
+404 response. The `rotehq` organization is now confirmed maintainer-owned:
 
 1. Confirm scope ownership with an authenticated npm account and document the final package
    name. Do not silently substitute an unrelated or opportunistic name.
 2. From current `main`, run `npm ci && npm test && npm run build`.
-3. Run `npm pack --workspace @rote/cli --json` and compare its contents with the T14
+3. Run `npm pack --workspace @rotehq/cli --json` and compare its contents with the T14
    allowlist: `README.md`, `bin/rote.js`, `dist/*`, `dist/LICENSE`, `package.json`.
 4. Publish 0.1.0 with public access. Publishing is append-only; do not reuse a version after
    a partial or incorrect release.
 5. In an empty directory with no checkout, run the README data-URL command through
-   registry-backed `npx <confirmed-package>@0.1.0`. It must independently verify and leave
+   registry-backed `npx @rotehq/cli@0.1.0`. It must independently verify and leave
    a valid manifest/trajectory.
 6. Publish that receipt as the next numbered testing record, check the final roadmap box,
    mark E5.1/E5.6 done, and only then tag/announce P1.

@@ -1,5 +1,13 @@
 # T14 — CLI package candidate and clean-install smoke
 
+> **2026-08-04 scope addendum:** the authenticated maintainer is not a member of the
+> unrelated `@rote` scope; the attempted publish failed with `E404` before creating any
+> package or consuming version 0.1.0. The maintainer then created and verified ownership
+> of the `rotehq` organization. The reviewed release name is now `@rotehq/cli`; the
+> original T14 name, bytes, and commands below remain historical package-candidate
+> evidence rather than being rewritten. Final registry bytes and `npx` output will be
+> frozen in the next testing record.
+
 ## Result
 
 `@rote/cli@0.1.0` now packs as a self-contained public-package candidate: internal

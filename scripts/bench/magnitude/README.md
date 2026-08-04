@@ -1,6 +1,6 @@
 # Magnitude 0.3.1 qualification adapter
 
-This isolated adapter runs pinned, unmodified `magnitude-core@0.3.1` as an ordinary cold vision agent on canonical corrected B2. It is feasibility before certification, not a Magnitude-vs-Rote ranking. Nothing here ships in `@rote/cli`.
+This isolated adapter runs pinned, unmodified `magnitude-core@0.3.1` as an ordinary cold vision agent on canonical corrected B2. It is feasibility before certification, not a Magnitude-vs-Rote ranking. Nothing here ships in `@rotehq/cli`.
 
 ## Pin
 

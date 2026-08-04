@@ -85,6 +85,7 @@ labeled `skip-changelog`.
 - **P1**: OpenAI model prices in the head-to-head price table (GPT-5.6/5.5/5.4 families, `gpt-5.3-codex`, and the `@rote/llm` default `gpt-4.1-mini`), captured from OpenAI's published pricing on 2026-07-15, so `$/task` is reported rather than `price unavailable` on an OpenAI-driven run.
 
 ### Changed
+- **P1**: Move the public CLI candidate to the maintainer-owned `@rotehq/cli` scope after the unrelated `@rote` scope rejects publication, while preserving the original T14 candidate as historical evidence (#135).
 - **P1**: Route each exact OpenAI stable planner prefix with a privacy-preserving `prompt_cache_key` without padding prompts; a fresh 15-run paired matrix cuts WP-N25 Rote cost 20.5% (95% CI 11.3–30.3%) and makes it 16.0% cheaper than Browser Use (6.2–26.2%), while WP-N09 remains an honest loss (#100).
 - **P1**: Stop v7 certification after 3/10 first-repetition failures and replace the unsafe title editor with v8's deterministic tag creation; retain every failed receipt and qualify all five new cells across 30/30 exact-verified sessions (#97, #98).
 - **P1**: Replace the uncertifiable bulk-checkbox curve with v7's independently verified title-review workflow; all five 8–24-interaction paired smokes pass while the verifier checks all 120 titles, contents, and statuses, so certification collection can begin (#92, #96).

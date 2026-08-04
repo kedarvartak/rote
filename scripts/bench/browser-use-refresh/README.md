@@ -1,6 +1,6 @@
 # Browser Use 0.13.7 refresh adapter
 
-This isolated adapter qualifies the current Browser Use release without rewriting the frozen 0.13.6 G1/G2 baseline. It runs corrected B2 and the five B5 pages as ordinary cold re-reasoning; Browser Use has no replay path in this comparison. Nothing here ships in `@rote/cli`.
+This isolated adapter qualifies the current Browser Use release without rewriting the frozen 0.13.6 G1/G2 baseline. It runs corrected B2 and the five B5 pages as ordinary cold re-reasoning; Browser Use has no replay path in this comparison. Nothing here ships in `@rotehq/cli`.
 
 ## Pin
 

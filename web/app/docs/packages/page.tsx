@@ -61,7 +61,7 @@ const PACKAGES = [
     api: "runBenchmarkMatrix · buildCurveReport · bootstrapReductionInterval · evaluateLaunchGate",
   },
   {
-    name: "@rote/cli",
+    name: "@rotehq/cli",
     plane: "surface",
     what: "The rote command: launch verified cold browser tasks, inspect recorded runs, and promote candidates — preferring exact-fingerprint zero-LLM replay when one matches.",
     api: "rote run · rote runs ls · rote runs show · rote candidate create",

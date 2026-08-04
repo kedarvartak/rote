@@ -105,9 +105,9 @@ The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulat
 - OpenAI is the canonical measured provider. Anthropic accounting is implemented, but
   explicit Anthropic cache-layout economics remain unqualified.
 - Pricing is a dated benchmark snapshot, not a billing guarantee.
-- `@rote/cli@0.1.0` passes tarball build/install/live smokes but is not npm-published as of
-  2026-07-24. The unscoped `rote` name is occupied; scoped publication awaits npm scope
-  ownership and authentication ([T14](testing/T14-cli-package-candidate.md), [#107](https://github.com/kedarvartak/rote/issues/107)).
+- `@rotehq/cli@0.1.0` passes tarball build/install/live smokes but is not npm-published as of
+  2026-08-04. The unscoped `rote` and original `@rote` scope are controlled by unrelated
+  owners; the maintainer-owned `rotehq` organization is confirmed and publication awaits the final registry smoke ([T14](testing/T14-cli-package-candidate.md), [#107](https://github.com/kedarvartak/rote/issues/107)).
 - The CLI requires Node 20+ and an installed Chrome/Chromium executable.
 - Windows and macOS package installation are not yet exercised in CI; current package
   evidence is Linux.

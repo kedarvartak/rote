@@ -112,7 +112,7 @@ robustness defects no longer block an honest success-parity measurement.
 
 **Blocking the launch:** corrected B2 and deterministic B5 now pass
 ([T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md)).
-`@rote/cli@0.1.0` is unpublished and npm scope/authentication remains #107. The runnable demo and one-command
+`@rotehq/cli@0.1.0` is unpublished; maintainer scope ownership/authentication are confirmed and final registry publication remains #107. The runnable demo and one-command
 evidence reproduction are complete. The final gate walk and exact closure
 procedure are recorded in [launch readiness](launch-readiness.md).
 
