@@ -1,0 +1,8 @@
+{
+  "name": "rote-magnitude-qualification",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "magnitude-core": "0.3.1"
+  }
+}
