@@ -66,10 +66,10 @@ const LEVERS = [
   {
     tag: "B4",
     name: "History compaction",
-    effect: "turns the curve from quadratic to linear",
+    effect: "bounds planner-visible action history",
     detail:
-      "Summarize the far tail of the action ledger under budget. The one tier-0 lever still on the bench — deliberately deferred to P2.",
-    status: "Not built",
+      "Deterministic 16-action boundaries retain an exact tail and real older representatives. The mechanism is built; 50+ step provider and SPA qualification remains open.",
+    status: "Built · qualification pending",
   },
 ];
 

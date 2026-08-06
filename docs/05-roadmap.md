@@ -59,11 +59,12 @@ need calibration time and would delay the number without changing its headline. 
 | **A11 observation eviction** | kills the dominant quadratic term | **built** — and never claimed. Growth is 35 tok/step (one action JSON), not 135+ |
 | **A4 diff observations** | −~90% on the constant, real pages | **built and measured** — 849 WordPress certification diffs show 99.6% median render-size reduction vs. their preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **B3 cache layout** | discounted provider billing on the surviving prefix | **built and economically qualified on OpenAI** — deterministic immutable-prefix routing cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% ([T11](testing/T11-cache-key-economics.md)) |
-| **B4 compaction** | history → O(1); **curve → linear** | not built |
+| **B4 compaction** | action history → O(1) in steps; cumulative action-history input → O(n) | **built deterministically; long-run provider/SPA qualification pending** — exact 24-action prefix, 16-action boundaries, at least eight exact recent actions, provenance-only representatives |
 
 **Measure before building.** G1 now exercises A11/A4 on WordPress and reports B3 cache
-buckets without relabeling cache reads as savings. B4 remains deferred: the measured curve
-already clears G1, while compaction fights cache-prefix stability and needs scheduling.
+buckets without relabeling cache reads as savings. B4 subsequently landed first in P2
+under the explicit #107 implementation waiver; the measured P1 curve remains frozen, and
+long-run cache economics stay unclaimed until E7.6.
 
 ### In / out
 
@@ -72,7 +73,7 @@ already clears G1, while compaction fights cache-prefix stability and needs sche
 | **The curve**: cumulative tokens vs. steps, vs. Browser Use, on a real page — the headline | live-site continuous eval |
 | ~~#57 cache accounting~~ — **done**; it was the prerequisite, so it shipped first | — |
 | A11 eviction (built) + A4 diff proven on a real page | cross-step dedup (A10), task-focused filtering (P2) |
-| B3 cache layout: qualify OpenAI automatic prefix hits + cache-aware accounting | B4 compaction (P2 — fights B3, needs scheduling) |
+| B3 cache layout: qualify OpenAI automatic prefix hits + cache-aware accounting | B4 long-run provider/SPA qualification (mechanism lands first in P2) |
 | CDP browser backend | remote backends beyond a connect string (P2) |
 | Distillation, element detection, stable IDs, token budgeter | WebMCP (P3 — no site implements it; see [04](04-competition.md)) |
 | Settledness, self-healing resolution v0 | memory-ranked resolution, batched fill (P2) |
@@ -96,7 +97,7 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | W5 benchmark + the number | **done, corrected and refreshed** — T20 restores historical B2/full G2 against Browser Use 0.13.6; T25 separately certifies fresh corrected B2 against 0.13.7 with 83.1% lower logical tokens (95% CI 82.1–83.9%) at 18/18 exact parity per harness |
 | W6 launch package | package/demo/reproduction done; npm publication separately blocked |
-| **W7 working memory (new)** | #57 accounting **done** → G1/corrected G2/B5 **passed** → registry publication → compaction in P2 |
+| **W7 working memory (new)** | #57 accounting **done** → G1/corrected G2/B5 **passed** → registry package published (provider-backed smoke open) → deterministic compaction built under waiver |
 
 **No longer blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49)
 and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` is now
@@ -112,7 +113,7 @@ robustness defects no longer block an honest success-parity measurement.
 
 **Blocking the launch:** corrected B2 and deterministic B5 now pass
 ([T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md)).
-`@rotehq/cli@0.1.0` is unpublished; maintainer scope ownership/authentication are confirmed and final registry publication remains #107. The runnable demo and one-command
+`@rotehq/cli@0.1.0` is published and its registry metadata/integrity plus no-key bin invocation pass; the provider-backed registry quickstart and T28 closure remain #107. The runnable demo and one-command
 evidence reproduction are complete. The final gate walk and exact closure
 procedure are recorded in [launch readiness](launch-readiness.md).
 
@@ -167,11 +168,11 @@ catch-up on tier 1 and a lead on tier 2** — Skyvern ships the former, nobody s
 latter ([04](04-competition.md)). Sequenced after V1 because tier 0 is where we are alone
 and tier 1 is where we are behind; parity is worth less than a position.
 
-1. **History compaction** (B4) — finishes tier 0. The only lever that turns the curve from
-   a smaller quadratic into a **linear** one. Cache-economics-scheduled, because it fights
-   B3 by construction: compaction mutates the prefix caching needs immutable, so compact
-   every ~*k* steps and eat one miss. Listed first because it completes V1's headline
-   rather than starting a new one.
+1. **History compaction** (B4) — **built first under the explicit #107 implementation
+   waiver.** Deterministic action-aware compaction bounds planner-visible history while
+   preserving an append-only tail between 16-action boundaries, where one cache miss is
+   explicit. The mechanism completes tier 0 structurally; E7.6 still must qualify 50+
+   step provider economics and SPA parity before any linear-scaling or cost claim.
 2. **Freeze the enterprise browser contract corpus** ([#127](https://github.com/kedarvartak/rote/issues/127)) — adversarial repeated grids,
    nested iframe/open-shadow contexts, realistic input controls, a long-lived SPA, restart
    boundaries, and authoritative non-UI oracles. Tests precede mechanisms so no

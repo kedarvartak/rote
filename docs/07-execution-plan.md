@@ -32,12 +32,12 @@ drives sequencing:
 
 | Fact | Consequence for the plan |
 |---|---|
-| Eviction/diff built and G1-measured; OpenAI cache layout economically qualified; compaction not built | tier 0 clears G1, long-cell cost, corrected G2, and deterministic B5 |
+| Eviction/diff built and G1-measured; OpenAI cache layout economically qualified; deterministic B4 compaction built under the #107 waiver | tier 0 clears G1, long-cell cost, corrected G2, and deterministic B5; E7.6 still owns long-run compaction/provider qualification |
 | B1–B3 render ~537 chars; the selected WordPress page renders 89,114 chars (~22,279 approximate tok) identically across 15 fresh sessions ([T2](testing/T2-measurement-page-selection.md)) | The real-page prerequisite is now met; E1.2 can fix the curve protocol and E1.4 can collect provider-reported sizes |
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
 | #50/#51/#52/#54 done | Planner slips no longer poison success parity; exact fill/select/navigation effects are enforced without an LLM, generic click reaction stays non-enforcing, and final verification remains mandatory |
-| `@rotehq/cli@0.1.0` tarball, live demo, and one-command evidence reproduction pass; `rotehq` ownership/authentication confirmed | registry publication and clean-install smoke (#107) are the remaining launch blockers |
+| `@rotehq/cli@0.1.0` is published; registry integrity and a clean no-key bin invocation pass | provider-backed registry quickstart and T28 closure (#107) are the remaining launch blockers |
 | B4/B6 remain specified; B5 is now built and certified | T21 isolates post-G2 drift trust from the frozen level gate |
 
 ## P1 — the epics
@@ -108,7 +108,7 @@ exact-prefix routing on the E1 page. Small fixtures remain below provider cache 
 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---|---|---|---|
-| E5.1 | **Publish `@rotehq/cli`** (0.1.0): npm name check, `bin` wiring, quickstart. | 1.5 | E4 green | [T14](testing/T14-cli-package-candidate.md): one-package bundle, pack/install/bin automation, and tarball-installed live B1 pass; unscoped `rote` and `@rote` are unavailable, while maintainer ownership of `rotehq` is confirmed; registry `npx @rotehq/cli` awaits final publish/smoke | package-ready; registry-blocked |
+| E5.1 | **Publish `@rotehq/cli`** (0.1.0): npm name check, `bin` wiring, quickstart. | 1.5 | E4 green | Package is public; audited registry integrity and clean no-key `npx` bin pass. [T14](testing/T14-cli-package-candidate.md) preserves candidate history; provider-backed registry output belongs in T28. | published; provider smoke deferred (#107) |
 | E5.2 | **README with the number:** curve graph, G1/G2 results, units, method links, reproduction one-liner. | 0.5 | E1.5, E4.5 | README carries G1/G2 and `npm run reproduce:g2`; CI requires byte-identical Markdown/JSON from raw T13 evidence | done |
 | E5.3 | **Demo:** terminal recording of cold run → explicit warm replay → drift detection and classified plain-agent fallback on the fixture suite. Scoped repair is not built and must not be staged. | 1 | E5.1 | [T16](testing/T16-launch-demo.md): 5-step cold, 5-step zero-token replay, real selector drift fails stale replay then cold verifies; cast + four raw runs linked from README | done |
 | E5.4 | **Known-limitations doc:** no distiller (tier 1 is V2), no routing/speculation, eviction trades recall for cost, weak-fit list from [01](01-problem.md). | 0.5 | — | [known-limitations](known-limitations.md) is linked from README and covers product, browser, safety, evidence, provider, package, and recovery boundaries | done |
@@ -156,14 +156,15 @@ would make their weaknesses append-only data.
 | E7.3 | **Iframe and open Shadow DOM support** ([#129](https://github.com/kedarvartak/rote/issues/129)): capture → diff → resolve → dispatch across nested same/cross-origin contexts. | 5–8 | E7.2 | E7.1 frame/shadow cases pass exactly; detach/navigation/context mismatch fail before fuzzy dispatch; closed roots return a typed unsupported classification. | blocked (E7.2) |
 | E7.4 | **Authoritative evidence verification** ([#130](https://github.com/kedarvartak/rote/issues/130)): provenance/freshness-bound evidence envelopes plus injected fixture/API/database/download adapters. | 4–6 | E7.1, E7.2 | Declared authoritative outcomes cannot pass from harness conclusion, generic DOM change, stale evidence, or another task's evidence; every verifier exit has invariant coverage. | blocked (E7.2) |
 | E7.5 | **Enterprise action vocabulary** ([#131](https://github.com/kedarvartak/rote/issues/131)): grounded hover, keyboard text/chords, allowlisted upload, and target-to-target drag/drop. | 6–9 | E7.3, E7.4 | Fake and CDP backends share Zod verbs; every action has safety, settledness, redaction, and effect semantics; unsupported capabilities fail cleanly; no arbitrary-event escape hatch. | blocked (E7.3, E7.4) |
-| E7.6 | **Long-running single-session SPA certification** ([#132](https://github.com/kedarvartak/rote/issues/132)): 50+ transitions with routes, remounts, virtualization, background traffic, and B4. | 5–8 | B4, E7.3–E7.5 | ≥15 exact runs with authoritative verification, zero silent failures, bounded context/metadata/settle units, and clean `recall_unavailable` behavior. | blocked (B4, E7.3–E7.5) |
+| E7.6 | **Long-running single-session SPA certification** ([#132](https://github.com/kedarvartak/rote/issues/132)): 50+ transitions with routes, remounts, virtualization, background traffic, and B4. | 5–8 | B4, E7.3–E7.5 | ≥15 exact runs with authoritative verification, zero silent failures, bounded context/metadata/settle units, and clean `recall_unavailable` behavior. | blocked (E7.3–E7.5; B4 mechanism done) |
 | E7.7 | **Multi-session task continuation** ([#133](https://github.com/kedarvartak/rote/issues/133)): append-only checkpoints across browser/process restarts. | 6–10 | distiller v1, E7.6 | Two controlled restarts reach exact outcome; fingerprint/state/evidence/version mismatch stops before action; credentials stay outside artifacts; continuation is reported separately from replay. | blocked (distiller, E7.6) |
 
 ### P2 sequence after E7
 
-1. **B4 compaction** — finishes tier 0; the only lever that makes the curve linear.
-   Cache-economics-scheduled (it fights B3 by construction). Entry: E3.5 data on real
-   cache hit rates, so the schedule is derived, not guessed.
+1. **B4 compaction — done under the explicit #107 implementation waiver (#136).**
+   The default 16-action boundary follows T10 action-token measurements and provider cache
+   increments; it bounds the mechanism but remains an initial schedule until E7.6 measures
+   50+ step cache economics.
 2. **E7.1–E7.6** in dependency order. E7.6 is B4's enterprise endurance gate.
 3. **Distiller v1** — trajectory → playbook only after target, context, action, and
    evidence contracts are versioned. Gate: distilled playbooks replay the fixture suite
@@ -195,7 +196,7 @@ putting secrets into P2 checkpoints.
 **Assumptions:** 1–3 builders; OSS-first; pinned models stay available through E4;
 provider pricing table refreshed at E4.5.
 
-**Issues (open, tracked):** #107 (P1 registry blocker) · #127–#133 (ordered P2 E7 pipeline). **Done:** #50 · #51 · #52 · #54.
+**Issues (open, tracked):** #107 (provider-backed registry smoke) · #127–#133 (ordered P2 E7 pipeline). **Done:** #50 · #51 · #52 · #54 · #136.
 
 **Dependencies:** provider usage APIs (#57 contract) · Browser Use as a dependency,
 never a fork · CDP/Chrome stability on the measurement page.

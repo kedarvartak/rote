@@ -4,6 +4,7 @@ import type { CapturedPage } from '@rote/browser';
 import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
 import type { ProviderUsageReceipt } from '@rote/llm';
 import type { AdaptiveRenderedObservation, DistilledNode } from '@rote/perception';
+import type { HistoryCompactionPolicy, HistoryCompactionRecord, PlannerActionHistory } from './history-compaction.js';
 
 /**
  * `expect` is **optional** by deliberate design (#49).
@@ -95,6 +96,8 @@ export interface PlannerContext {
   stablePrefix: string;
   /** Per-step page state, action history, and compact observation. */
   volatileSuffix: string;
+  /** Bounded action history represented by the volatile suffix. */
+  history: PlannerActionHistory;
 }
 
 /**
@@ -187,6 +190,8 @@ export interface RunBrowserAgentOptions {
   observationMaxChars?: number;
   /** Hard ceiling for an explicit grounded snapshot that establishes a diff base. */
   observationBootstrapMaxChars?: number;
+  /** B4 policy; `false` retains the unbounded baseline for measurement. */
+  historyCompactionPolicy?: HistoryCompactionPolicy | false;
   clock?: () => number;
   /**
    * Scoped repairs allowed per run before a failed postcondition is fatal
@@ -214,6 +219,8 @@ export interface BrowserAgentStep {
   classifications?: readonly BrowserActionClassification[];
   /** Redacted zero-LLM effect/reaction evidence from the settled post-action capture. */
   postActionEvidence?: PostActionEvidence;
+  /** Redacted B4 boundary telemetry; representative values remain only in planner context. */
+  historyCompaction?: HistoryCompactionRecord;
   durationMs: number;
   error?: string;
   resolution?: ElementResolutionResult;

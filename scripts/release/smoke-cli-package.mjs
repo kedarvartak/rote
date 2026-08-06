@@ -10,6 +10,7 @@ const root = fileURLToPath(new URL('../..', import.meta.url));
 const temporary = await mkdtemp(join(tmpdir(), 'rote-cli-package-'));
 
 try {
+  const sourcePackageJson = JSON.parse(await readFile(join(root, 'packages/cli/package.json'), 'utf8'));
   const packed = await exec('npm', ['pack', join(root, 'packages/cli'), '--pack-destination', temporary, '--json'], {
     cwd: root,
     maxBuffer: 10 * 1024 * 1024,
@@ -28,8 +29,13 @@ try {
     throw new Error(`unexpected packaged CLI output: ${JSON.stringify(result.stdout)}`);
   }
   const packageJson = JSON.parse(await readFile(join(temporary, 'node_modules/@rotehq/cli/package.json'), 'utf8'));
-  if (packageJson.version !== '0.1.0' || packageJson.private === true || packageJson.license !== 'MIT') {
-    throw new Error('installed CLI package does not carry public 0.1.0 metadata');
+  if (
+    packageJson.name !== sourcePackageJson.name
+    || packageJson.version !== sourcePackageJson.version
+    || packageJson.private === true
+    || packageJson.license !== 'MIT'
+  ) {
+    throw new Error('installed CLI package does not match the tracked public package metadata');
   }
   if (Object.keys(packageJson.dependencies ?? {}).some((name) => name.startsWith('@rote/'))) {
     throw new Error('published CLI cannot depend on unpublished @rote workspaces');

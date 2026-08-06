@@ -66,7 +66,34 @@ describe('assemblePlannerContext', () => {
     expect(evicted.stablePrefix).toBe(current.stablePrefix);
     expect(current.volatileSuffix).not.toContain('Recall boundary:');
     expect(evicted.volatileSuffix).toContain('failureClassification="recall_unavailable"');
-    expect(evicted.volatileSuffix).toContain('do\nnot guess');
+    expect(evicted.volatileSuffix).toContain('do not guess');
+  });
+
+  it('keeps the stable prefix fixed across an explicit compaction boundary', () => {
+    const actions = Array.from({ length: 40 }, (_, index) => ({
+      kind: 'click' as const,
+      selector: `#step-${index}`,
+    }));
+    const before = assemblePlannerContext({
+      task: 'Complete a long workflow',
+      page: { url: 'https://portal.test', title: 'Portal' },
+      observation: 'button "Continue" selector=#continue',
+      observationMode: 'full',
+      previousActions: actions.slice(0, 24),
+    });
+    const after = assemblePlannerContext({
+      task: 'Complete a long workflow',
+      page: { url: 'https://portal.test', title: 'Portal' },
+      observation: 'button "Continue" selector=#continue',
+      observationMode: 'full',
+      previousActions: actions,
+    });
+
+    expect(after.stablePrefix).toBe(before.stablePrefix);
+    expect(before.history.compaction).toBeUndefined();
+    expect(after.history.compaction?.compactedActionCount).toBe(32);
+    expect(after.history.visibleActions.length).toBeLessThanOrEqual(31);
+    expect(after.volatileSuffix).toContain('Recall boundary:');
   });
 
   it('puts action definitions before volatile observations', () => {

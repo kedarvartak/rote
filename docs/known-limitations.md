@@ -9,7 +9,7 @@ page before spending a token.
 | Area | Current limit | Practical consequence |
 |---|---|---|
 | Memory tiers | Only tier-0 working-memory controls are integrated. There is no playbook distiller, matcher, episodic learning, or site memory. | Rote does **not learn** from ordinary runs. Replay candidates are created or supplied explicitly. |
-| History growth | Observation eviction and diffs are built; scheduled history compaction is not. | The measured curve is a smaller-growth quadratic, not linear or bounded-context execution. |
+| History growth | Deterministic action-history compaction is built on `main`: after 24 exact actions it compacts on 16-action boundaries, retaining an exact tail and only actual older representatives. | Planner-visible action count is structurally bounded, but no 50+ step provider/SPA certification exists; do not generalize the frozen P1 curve into a production linear-scaling or cost claim. |
 | Decision plane | Model routing and speculative execution are not built. | Every frontier step uses the configured planner model; there is no automatic cheap-model routing. |
 | Replay selection | Candidate selection is explicit and the environment gate is exact, not fuzzy. | A fingerprint mismatch goes cold. There is no semantic task matching or automatic reuse. |
 | Replay recovery | Failed replay reaches a classified cold fallback from the initial URL, but browser navigation cannot undo arbitrary server-side mutations. | Only replay retry-safe workflows with assertions before unsafe continuation and explicit site reset/compensation semantics. |
@@ -105,16 +105,19 @@ The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulat
 - OpenAI is the canonical measured provider. Anthropic accounting is implemented, but
   explicit Anthropic cache-layout economics remain unqualified.
 - Pricing is a dated benchmark snapshot, not a billing guarantee.
-- `@rotehq/cli@0.1.0` passes tarball build/install/live smokes but is not npm-published as of
-  2026-08-04. The unscoped `rote` and original `@rote` scope are controlled by unrelated
-  owners; the maintainer-owned `rotehq` organization is confirmed and publication awaits the final registry smoke ([T14](testing/T14-cli-package-candidate.md), [#107](https://github.com/kedarvartak/rote/issues/107)).
+- `@rotehq/cli@0.1.0` is npm-published; registry metadata/integrity and a clean no-key bin
+  invocation pass. The provider-backed registry quickstart and T28 release record remain
+  deferred in [#107](https://github.com/kedarvartak/rote/issues/107), so P1 is not yet
+  marked launched. Version 0.1.0 predates B4; deterministic compaction is on `main` for a
+  later package version. The unscoped `rote` and original `@rote` scope are controlled by
+  unrelated owners ([T14](testing/T14-cli-package-candidate.md)).
 - The CLI requires Node 20+ and an installed Chrome/Chromium executable.
 - Windows and macOS package installation are not yet exercised in CI; current package
   evidence is Linux.
 
 ## Deliberately deferred
 
-B5 now certifies deterministic semantic target repair only; arbitrary workflow repair remains absent. Scheduled compaction, enterprise
+B5 now certifies deterministic semantic target repair only; arbitrary workflow repair remains absent. Long-run B4 qualification, enterprise
 browser contracts E7.1–E7.7, distillation, automatic matching, site memory, routing, and
 speculation remain post-G2 work. Deferral
 means “not claimed,” not “implicitly working.” The authoritative sequence is

@@ -74,8 +74,8 @@ const ARC: Entry[] = [
     name: "the level",
     criterion:
       "A tokens-per-task win at success parity — at least 15 runs, seeded-bootstrap lower bound above the floor.",
-    verdict: "NOT YET RUN",
-    ok: false,
+    verdict: "PASS — corrected B2 18/18 per harness; 83.1% [82.1–83.9] vs Browser Use 0.13.7",
+    ok: true,
   },
   {
     kind: "phase",
@@ -88,7 +88,7 @@ const ARC: Entry[] = [
     ships: [
       "Playbook distiller — trajectories become verified playbooks",
       "Matcher: semantic match + bind behind the fingerprint gate",
-      "Site memory and briefs; B4 history compaction — the lever that makes the curve linear",
+      "B4 deterministic history compaction built first; long-run qualification, site memory, and briefs follow",
     ],
   },
   {
@@ -138,13 +138,14 @@ const BUILT = [
   "A11 observation eviction",
   "A4 diff observations, measured on real pages",
   "B3 cache-layout discipline, economically qualified (T11)",
+  "B4 deterministic action-history compaction (long-run qualification pending)",
   "Agent loop with tagged LLM accounting on every call",
   "Benchmark matrix, curve reports, head-to-head launch gate",
   "Action plane: settledness, self-healing resolution, scoped repair",
 ];
 
 const NOT_BUILT = [
-  { what: "B4 history compaction", why: "the lever that would make the curve linear rather than a smaller quadratic — deferred to P2 on purpose" },
+  { what: "B4 long-run qualification", why: "the mechanism is built; 50+ step provider cache economics and SPA parity remain E7.6" },
   { what: "Playbook distiller", why: "V1 replays hand-written playbooks; trajectory → playbook distillation is unbuilt" },
   { what: "Matcher (semantic match + bind)", why: "only the exact-fingerprint hard gate exists today" },
   { what: "Site memory, model routing, speculation", why: "designed in docs/02, scheduled for P2/P3" },

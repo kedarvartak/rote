@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Bound planner-visible action history with deterministic cache-amortized compaction, preserve exact recent actions and real older representatives, record redacted boundaries, and fail explicitly when evicted detail is required (#137).
 - **P1**: Add an integrity-pinned Magnitude 0.3.1 cold-agent adapter and publish a bounded corrected-B2 stop decision after six timeouts and incomplete raw provider receipts prohibit certification and ranking (#126).
 - **P1**: Qualify observed action effects on nine fresh exact B1–B3 runs with 57/57 reconciled receipts and zero repairs, and keep generic click reactions non-enforcing after no-op/external-effect/background-mutation analysis (#124).
 - **P1**: Enforce redacted zero-LLM fill/select/navigation effects after settled dispatch, route missing effects through bounded repair, and retain generic click reactions as non-enforcing trajectory evidence (#123).

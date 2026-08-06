@@ -64,7 +64,7 @@ confuse in an architecture doc; this is the boundary.
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built and recall-stress tested** — post-eviction context marks the recall boundary; unavailable facts and fabricated comparisons fail closed ([T18](testing/T18-eviction-recall-trade.md)) |
 | **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Cache-layout discipline** (B3) | 0 | **built and economically qualified on OpenAI** — exact immutable prefixes receive deterministic cache-routing keys; WP-N25 cost falls 20.5% and clears Browser Use by 16.0% with both 95% intervals above zero ([T11](testing/T11-cache-key-economics.md)) |
-| **History compaction** (B4) | 0 | **not built** — required to make the curve linear rather than a smaller quadratic |
+| **History compaction** (B4) | 0 | **built deterministically; long-run qualification pending** — action history compacts after 24 actions on 16-action boundaries, retaining an exact tail plus provenance-preserving representatives; E7.6 owns 50+ step provider/SPA certification |
 | **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
 | **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
 | **Site memory, model routing, speculation** | 2 | **not built** — designed below |
@@ -74,7 +74,7 @@ Designed but absent: `decision predictor memory mcp-server`.
 
 **Tier 0's launch scope is built and measured.** G1 measures eviction/diff growth, T11
 qualifies cache layout, corrected G2 measures task levels, and T21 grades deterministic
-target drift. History compaction remains deliberately sequenced first in P2 ([05](05-roadmap.md)).
+target drift. History compaction landed first under the explicit #107 implementation waiver; P1 launch evidence remains open, and E7.6 still owns long-run qualification ([05](05-roadmap.md)).
 
 ## The four planes
 
@@ -135,7 +135,7 @@ it fails honestly.
 | **Evict observations** | kills the dominant quadratic term | **built** (A4-adjacent; never claimed) |
 | **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built and measured** — 849 WordPress certification diffs have a 24-character median and 99.6% median reduction against their preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Prefix-cache `[stable][history]`** (B3) | discounted billing on the surviving prefix | **built and OpenAI-economics qualified** — exact-prefix routing cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% ([T11](testing/T11-cache-key-economics.md)) |
-| **Scheduled compaction** (B4) | history → O(1); curve → **linear** | not built (P2) |
+| **Scheduled compaction** (B4) | action history → O(1) in steps; cumulative action-history input → O(n) | **built deterministically; not yet provider/SPA-qualified** |
 | **Replay** (B2) | 0 steps, 0 tokens | needs the distiller (P2) |
 
 ### Caching: exact-prefix routing, measured economics
@@ -189,8 +189,14 @@ nonzero before B3 can move from unproven to built.
 
 Caching requires the prefix to be immutable; compaction rewrites history to bound it.
 Compact every step and you cache-miss every step — you have paid for both mechanisms and
-bought neither. The resolution is amortization: compact on a schedule and eat one miss
-every ~*k* steps. **Cache-economics-scheduled**, not step-scheduled.
+bought neither. B4 therefore keeps the rendered history byte-append-only between explicit
+boundaries: the default retains the first 24 actions exactly, compacts every 16 older
+actions thereafter, and keeps at least eight exact recent actions plus at most eight real older
+representatives. Boundary metadata records the compacted count and digest without values.
+A disabled policy preserves the unbounded baseline. The 16-action interval is based on
+T10's measured 35–40 logical tokens/action and OpenAI's 128-token cache increments; it is
+a deterministic initial schedule, not yet a provider-cost optimum. E7.6 must qualify the
+cache-miss/savings trade over 50+ steps before any economic claim.
 
 ### What is unproven
 
@@ -199,8 +205,11 @@ and A4's 849 live WordPress diffs show 99.6% median render-size reduction agains
 preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)). The bootstrap
 contract remains fail-closed above 100,000 characters.
 
-This does **not** prove “they're quadratic, we're linear.” Rote is a smaller-growth
-quadratic until scheduled compaction exists. The frozen pre-cache-key matrix did not prove cost or latency wins. T11 subsequently makes
+The B4 mechanism now structurally bounds planner-visible action count, so its cumulative
+action-history contribution is linear in step count. This does **not** yet prove a linear
+provider curve, production-SPA parity, or a cost win: task text, current observations,
+repair content, cache misses, and provider tokenization remain measured terms, and no
+50+ step certification has run. The frozen pre-cache-key matrix did not prove cost or latency wins. T11 subsequently makes
 Rote 16.0% cheaper than Browser Use at WP-N25 (95% CI 6.2–26.2%), but WP-N09 still loses
 and crosses parity: this is not a universal cost claim. The eviction trade is now
 fake-world stress-tested to fail cleanly when an earlier-page fact is unavailable (T18),

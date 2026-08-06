@@ -3,9 +3,11 @@
 **Decision updated 2026-07-26: BLOCKED — do not announce or tag a release yet.**
 
 T20 corrects B2 with 18/18 exact-oracle successes per harness and restores full historical G2. T25 separately refreshes corrected B2 against Browser Use 0.13.7 with 18/18 fresh exact successes per harness. Formal
-T21 deterministic B5 drift now passes; npm publication remains the release blocker. Registry-backed installation also remains separately blocked: the unscoped `rote`
-name belongs to another project and the final `@rotehq/cli@0.1.0` publish and registry smoke are tracked in
-[#107](https://github.com/kedarvartak/rote/issues/107).
+T21 deterministic B5 drift now passes. `@rotehq/cli@0.1.0` is npm-published and its
+registry integrity plus clean no-key bin invocation pass. The provider-backed registry
+quickstart, T28 record, and launch declaration remain deferred in
+[#107](https://github.com/kedarvartak/rote/issues/107); the unscoped `rote` and original
+`@rote` scope belong to unrelated owners.
 
 ## Gate walk
 
@@ -22,25 +24,22 @@ name belongs to another project and the final `@rotehq/cli@0.1.0` publish and re
 | Known limitations | published | [Known limitations](known-limitations.md) linked from README |
 | Competitor/dependency license review | pass | [Third-party review](third-party-licenses.md): Browser Use is an unmodified MIT dependency, not a fork |
 | Typecheck, lint, sacred invariants, package/script tests | pass | mandatory CI |
-| Registry-backed `npx` with only provider key | **BLOCKED** | #107 |
+| Registry-backed `npx` with only provider key | **PARTIAL — package/bin pass; provider-backed exact run deferred** | #107 |
 
 ## Exact release closure
 
 The full G2 gate is restored. A maintainer with the chosen npm scope performs these steps; none may be inferred from a
 404 response. The `rotehq` organization is now confirmed maintainer-owned:
 
-1. Confirm scope ownership with an authenticated npm account and document the final package
-   name. Do not silently substitute an unrelated or opportunistic name.
-2. From current `main`, run `npm ci && npm test && npm run build`.
-3. Run `npm pack --workspace @rotehq/cli --json` and compare its contents with the T14
-   allowlist: `README.md`, `bin/rote.js`, `dist/*`, `dist/LICENSE`, `package.json`.
-4. Publish 0.1.0 with public access. Publishing is append-only; do not reuse a version after
-   a partial or incorrect release.
-5. In an empty directory with no checkout, run the README data-URL command through
+1. [x] Confirm maintainer ownership of `rotehq` and freeze `@rotehq/cli`.
+2. [x] From the merge commit, run `npm ci && npm test && npm run build`.
+3. [x] Pack and audit the seven-file tarball; registry integrity and shasum match it.
+4. [x] Publish 0.1.0 with public access and invoke its registry-backed bin in an empty directory.
+5. [ ] In an empty directory with no checkout, run the README data-URL command through
    registry-backed `npx @rotehq/cli@0.1.0`. It must independently verify and leave
    a valid manifest/trajectory.
-6. Publish that receipt as the next numbered testing record, check the final roadmap box,
-   mark E5.1/E5.6 done, and only then tag/announce P1.
+6. [ ] Publish that receipt as T28, check the final roadmap box, mark E5.1/E5.6 done,
+   and only then tag/announce P1.
 
 ## Not launch blockers, still not claims
 
@@ -48,4 +47,4 @@ cross-provider B5 and arbitrary workflow repair, scheduled compaction, distillat
 speculation remain deferred. The launch is tier-0 working memory, not learned memory.
 
 The product website in PR #101 is useful collateral but is not allowed to override this
-technical gate. A green website PR cannot turn an unpublished package into a launch.
+technical gate. A green website PR cannot turn an unverified provider-backed registry path into a launch.

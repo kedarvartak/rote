@@ -1,6 +1,6 @@
 {
   "name": "@rotehq/cli",
-  "version": "0.1.0",
+  "version": "0.2.0-dev.0",
   "description": "Verified, memory-efficient browser agent CLI",
   "type": "module",
   "license": "MIT",
