@@ -14,6 +14,7 @@ labeled `skip-changelog`.
 - **P1**: Qualify observed action effects on nine fresh exact B1–B3 runs with 57/57 reconciled receipts and zero repairs, and keep generic click reactions non-enforcing after no-op/external-effect/background-mutation analysis (#124).
 - **P1**: Enforce redacted zero-LLM fill/select/navigation effects after settled dispatch, route missing effects through bounded repair, and retain generic click reactions as non-enforcing trajectory evidence (#123).
 - **P1**: Certify corrected B2 against pinned Browser Use 0.13.7 with 18 fresh ordered exact-success pairs per harness, raw-receipt reconciliation, and reproducible matched token, cost, and latency intervals (#120).
+- **P1**: Make the website usable on a phone: data tables re-lay as labelled cards below `sm`, the charts gain a scroll region with edge fades and a hint instead of clipping silently, the docs nav becomes a sticky scrollable tab bar, the mobile menu gains a backdrop plus Escape-to-close and scroll lock, and tap targets reach 44px (#101)
 - **P1**: Add `web/` — the product website (Next.js 15 + Tailwind v4, all routes static): a landing page with an animated tier-0 eviction hero and the G1/T11 headline numbers, an architecture page built from docs/02 embedding the design diagrams, and a docs section (overview, benchmarks & runs with audited figures from `docs/testing/data/`, packages, roadmap) (#101)
 
 ### Docs
@@ -27,6 +28,10 @@ labeled `skip-changelog`.
 
 ### Fixed
 - **P1**: Replace B2's generic completion oracle with a required composite DOM signal containing all eight exact requested values, expand zero-model replay to bind/verify every field, version the protocol, and withdraw the historical B2 parity/reduction claim until a corrective matrix is collected (#111).
+- **P1**: Remove `touch-action: none` from the website's G1 curve chart — a touch landing on the chart could not scroll the page past it (#101)
+- **P1**: Offset website anchor targets by the sticky nav's height so `#g1` and `#t11` no longer land underneath it (#101)
+- **P1**: Position the cost chart's read-out outside its horizontal scroller, where it rendered a screen-width off-view on a phone (#101)
+- **P1**: Pause the website hero animation while it is off screen, and fill its unrun steps with a scaffold instead of leaving two blank panels on first paint (#101)
 - **P1**: Keep source-checkout G2 collection working after the published CLI switched to built-only JavaScript by invoking the TypeScript source entry explicitly; a fresh paired B1 collector smoke verifies both harnesses still append exact measured rows (#108).
 - **P1**: Restart the classified plain-agent path from the pinned initial URL when an exact-fingerprint replay returns failure or throws, instead of stranding the task on a failed cheap path; print the retained failure detail and cover both exits in the sacred fallback invariant suite (#105).
 - **P1**: Make G2 logical totals include measured uncached/cache-read/cache-write buckets, price those buckets separately, and reject missing cache adjustment or model mismatch; the previous neutral adapter dropped Rote cache tokens and Browser Use could only emit an inclusive total (#102).

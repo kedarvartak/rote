@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ScrollX } from "./ScrollX";
 
 /**
  * T11 — mean billed cost per task before/after routing the immutable prefix
@@ -41,8 +42,9 @@ export function CostChart() {
           <span className="w-1 h-3.5 bg-blue inline-block rounded-[1px]" /> Browser Use
         </span>
       </div>
-      <div className="overflow-x-auto">
-      <div className="relative min-w-[36rem]">
+      <div className="relative">
+      <ScrollX label="Billed cost per task — scrollable chart">
+      <div className="min-w-[36rem]">
       <svg
         viewBox={`0 0 ${W} ${H}`}
         className="w-full h-auto"
@@ -71,6 +73,7 @@ export function CostChart() {
             <g
               key={r.cell}
               onPointerEnter={() => setHover(i)}
+              onPointerDown={() => setHover(i)}
               onPointerLeave={() => setHover(null)}
             >
               {/* generous hit target */}
@@ -99,8 +102,15 @@ export function CostChart() {
           );
         })}
       </svg>
+      </div>
+      </ScrollX>
+
+      {/* the read-out sits outside the scroller: anchored inside it, a tooltip
+          pinned to the chart's right edge would render a screen-width away on
+          a phone. Floating over the chart from sm up, a caption below it under
+          that — where there is no room to float without covering the data. */}
       {hover !== null && (
-        <div className="pointer-events-none absolute z-10 right-2 top-2 rounded-sm border hairline bg-surface-2 px-3 py-2 shadow-lg text-[0.72rem] leading-relaxed max-w-[19rem]">
+        <div className="mt-3 sm:mt-0 sm:pointer-events-none sm:absolute sm:z-10 sm:right-2 sm:top-2 rounded-sm border hairline bg-surface-2 px-3 py-2 sm:shadow-lg text-[0.72rem] leading-relaxed sm:max-w-[19rem]">
           <p className="font-mono text-muted">{ROWS[hover].cell}</p>
           <p className="tabular-nums">
             <span className="text-copper-bright">Rote</span> ${ROWS[hover].before.toFixed(4)} → $
@@ -112,7 +122,6 @@ export function CostChart() {
           <p className="text-ink-2">{ROWS[hover].note}</p>
         </div>
       )}
-      </div>
       </div>
     </div>
   );

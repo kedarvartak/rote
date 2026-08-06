@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ScrollX } from "./ScrollX";
 
 /**
  * G1 — cumulative logical input vs task length.
@@ -80,15 +81,16 @@ export function CurveChart() {
           <span className="w-4 h-0.5 rounded bg-copper inline-block" /> Rote
         </span>
       </div>
-      <div className="overflow-x-auto">
+      <ScrollX label="Cumulative logical input curve — scrollable chart">
       <div className="relative min-w-[40rem]">
       <svg
         ref={ref}
         viewBox={`0 0 ${W} ${H}`}
-        className="w-full h-auto touch-none"
+        className="w-full h-auto"
         role="img"
         aria-label="Line chart: cumulative logical input tokens for Rote versus Browser Use across task lengths of 9 to 25 steps. Rote grows 37.2 percent slower."
         onPointerMove={onMove}
+        onPointerDown={onMove}
         onPointerLeave={() => setHover(null)}
       >
         {/* gridlines + y labels */}
@@ -204,7 +206,7 @@ export function CurveChart() {
         </div>
       )}
       </div>
-      </div>
+      </ScrollX>
     </div>
   );
 }

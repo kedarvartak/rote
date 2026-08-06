@@ -1,5 +1,14 @@
 import Link from "next/link";
 
+/**
+ * A footer link. On a phone the row grows to the 44px comfortable thumb
+ * target and the list closes its gaps to compensate; from `sm` up it goes
+ * back to a tight text list, where a pointer needs no help.
+ */
+const linkClass =
+  "flex items-center min-h-11 sm:min-h-0 hover:text-copper-bright transition-colors";
+const listClass = "space-y-0 sm:space-y-2.5 text-ink-2";
+
 export function Footer() {
   return (
     <footer className="border-t hairline bg-surface/40">
@@ -14,19 +23,19 @@ export function Footer() {
           </div>
           <div className="text-sm">
             <p className="eyebrow mb-3.5">Explore</p>
-            <ul className="space-y-2.5 text-ink-2">
-              <li><Link className="hover:text-copper-bright transition-colors" href="/architecture">Architecture</Link></li>
-              <li><Link className="hover:text-copper-bright transition-colors" href="/docs">Documentation</Link></li>
-              <li><Link className="hover:text-copper-bright transition-colors" href="/docs/packages">Packages</Link></li>
-              <li><Link className="hover:text-copper-bright transition-colors" href="/docs/roadmap">Roadmap</Link></li>
+            <ul className={listClass}>
+              <li><Link className={linkClass} href="/architecture">Architecture</Link></li>
+              <li><Link className={linkClass} href="/docs">Documentation</Link></li>
+              <li><Link className={linkClass} href="/docs/packages">Packages</Link></li>
+              <li><Link className={linkClass} href="/docs/roadmap">Roadmap</Link></li>
             </ul>
           </div>
           <div className="text-sm">
             <p className="eyebrow mb-3.5">Evidence</p>
-            <ul className="space-y-2.5 text-ink-2">
-              <li><Link className="hover:text-copper-bright transition-colors" href="/docs/benchmarks">Benchmarks &amp; runs</Link></li>
-              <li><Link className="hover:text-copper-bright transition-colors" href="/docs/benchmarks#g1">G1 · the curve — pass</Link></li>
-              <li><Link className="hover:text-copper-bright transition-colors" href="/docs/benchmarks#t11">T11 · cache-key economics</Link></li>
+            <ul className={listClass}>
+              <li><Link className={linkClass} href="/docs/benchmarks">Benchmarks &amp; runs</Link></li>
+              <li><Link className={linkClass} href="/docs/benchmarks#g1">G1 · the curve — pass</Link></li>
+              <li><Link className={linkClass} href="/docs/benchmarks#t11">T11 · cache-key economics</Link></li>
             </ul>
             <p className="mt-4 text-[0.8rem] text-muted leading-relaxed max-w-[30ch]">
               Early build — P1, tier 0. G1 passes at 37.2% slower
@@ -35,10 +44,10 @@ export function Footer() {
           </div>
           <div className="text-sm">
             <p className="eyebrow mb-3.5">Connect</p>
-            <ul className="space-y-2.5 text-ink-2">
+            <ul className={listClass}>
               <li>
                 <a
-                  className="hover:text-copper-bright transition-colors"
+                  className={linkClass}
                   href="https://github.com/kedarvartak/rote"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -48,7 +57,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  className="hover:text-copper-bright transition-colors"
+                  className={linkClass}
                   href="https://cal.com/kedar-vartak"
                   target="_blank"
                   rel="noopener noreferrer"

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CurveChart } from "@/components/CurveChart";
 import { CostChart } from "@/components/CostChart";
+import { DataTable } from "@/components/DataTable";
 
 export const metadata: Metadata = {
   description:
@@ -22,14 +23,6 @@ const T11_ROWS = [
   { cell: "WP-N21", before: "$0.0270", after: "$0.0236", cut: "12.6% [5.0–21.6]", vsBu: "8.3% [0.3–17.5]", reads: "6,707 → 18,790" },
   { cell: "WP-N25", before: "$0.0310", after: "$0.0246", cut: "20.5% [11.3–30.3]", vsBu: "16.0% [6.2–26.2]", reads: "10,377 → 29,722" },
 ];
-
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="px-3.5 py-2.5 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal text-left whitespace-nowrap">
-      {children}
-    </th>
-  );
-}
 
 export default function BenchmarksPage() {
   return (
@@ -95,30 +88,19 @@ export default function BenchmarksPage() {
       <div className="mt-6 rounded-sm border hairline bg-surface p-5">
         <CurveChart />
       </div>
-      <div className="mt-5 overflow-x-auto rounded-sm border hairline">
-        <table className="w-full text-[0.83rem]">
-          <thead className="bg-surface border-b hairline">
-            <tr>
-              <Th>Cell</Th>
-              <Th>Steps</Th>
-              <Th>Rote logical input</Th>
-              <Th>Browser Use</Th>
-              <Th>Reduction [95% CI]</Th>
-            </tr>
-          </thead>
-          <tbody className="divide-y hairline text-ink-2">
-            {G1_ROWS.map((r) => (
-              <tr key={r.cell} className="hover:bg-surface/70 transition-colors">
-                <td className="px-3.5 py-2.5 font-mono text-ink">{r.cell}</td>
-                <td className="px-3.5 py-2.5 tabular-nums">{r.steps}</td>
-                <td className="px-3.5 py-2.5 tabular-nums text-copper-bright">{r.rote}</td>
-                <td className="px-3.5 py-2.5 tabular-nums text-blue-bright">{r.bu}</td>
-                <td className="px-3.5 py-2.5 tabular-nums">{r.red}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        className="mt-5"
+        label="G1 results by cell"
+        rows={G1_ROWS}
+        rowKey={(r) => r.cell}
+        columns={[
+          { header: "Cell", cell: (r) => r.cell, card: "title", className: "font-mono text-ink" },
+          { header: "Steps", cell: (r) => r.steps, className: "tabular-nums" },
+          { header: "Rote logical input", cell: (r) => r.rote, className: "tabular-nums text-copper-bright" },
+          { header: "Browser Use", cell: (r) => r.bu, className: "tabular-nums text-blue-bright" },
+          { header: "Reduction [95% CI]", cell: (r) => r.red, className: "tabular-nums" },
+        ]}
+      />
       <p className="mt-3 font-mono text-[0.7rem] text-muted">
         source: docs/testing/T10-g1-cumulative-token-curve.md ·
         data/T10-g1-curve-summary.json
@@ -148,32 +130,20 @@ export default function BenchmarksPage() {
       <div className="mt-6 rounded-sm border hairline bg-surface p-5">
         <CostChart />
       </div>
-      <div className="mt-5 overflow-x-auto rounded-sm border hairline">
-        <table className="w-full text-[0.83rem]">
-          <thead className="bg-surface border-b hairline">
-            <tr>
-              <Th>Cell</Th>
-              <Th>Cost before</Th>
-              <Th>After</Th>
-              <Th>Cut [95% CI]</Th>
-              <Th>vs Browser Use</Th>
-              <Th>Cache reads</Th>
-            </tr>
-          </thead>
-          <tbody className="divide-y hairline text-ink-2">
-            {T11_ROWS.map((r) => (
-              <tr key={r.cell} className="hover:bg-surface/70 transition-colors">
-                <td className="px-3.5 py-2.5 font-mono text-ink">{r.cell}</td>
-                <td className="px-3.5 py-2.5 tabular-nums">{r.before}</td>
-                <td className="px-3.5 py-2.5 tabular-nums text-copper-bright">{r.after}</td>
-                <td className="px-3.5 py-2.5 tabular-nums">{r.cut}</td>
-                <td className="px-3.5 py-2.5 tabular-nums">{r.vsBu}</td>
-                <td className="px-3.5 py-2.5 tabular-nums whitespace-nowrap">{r.reads}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        className="mt-5"
+        label="T11 cache-key economics by cell"
+        rows={T11_ROWS}
+        rowKey={(r) => r.cell}
+        columns={[
+          { header: "Cell", cell: (r) => r.cell, card: "title", className: "font-mono text-ink" },
+          { header: "Cost before", cell: (r) => r.before, className: "tabular-nums" },
+          { header: "After", cell: (r) => r.after, className: "tabular-nums text-copper-bright" },
+          { header: "Cut [95% CI]", cell: (r) => r.cut, className: "tabular-nums" },
+          { header: "vs Browser Use", cell: (r) => r.vsBu, className: "tabular-nums" },
+          { header: "Cache reads", cell: (r) => r.reads, className: "tabular-nums whitespace-nowrap" },
+        ]}
+      />
       <p className="mt-3 font-mono text-[0.7rem] text-muted">
         source: docs/testing/T11-cache-key-economics.md ·
         data/T11-cache-key-economics-summary.json

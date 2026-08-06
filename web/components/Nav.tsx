@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const links = [
   { href: "/architecture", label: "Architecture" },
@@ -15,6 +15,7 @@ export function Nav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -28,19 +29,49 @@ export function Nav() {
     setOpen(false);
   }, [pathname]);
 
+  // an open menu owns the screen: Escape closes it, the page underneath stops
+  // scrolling, and focus moves into the panel so a keyboard lands in the menu
+  // rather than continuing down the page behind it
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    panelRef.current?.querySelector("a")?.focus();
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   const isActive = (href: string) =>
     href === "/docs" ? pathname === "/docs" : pathname.startsWith(href);
 
   return (
-    <div className="sticky top-3 sm:top-4 z-50 pl-4 pr-16 sm:pl-8 sm:pr-16 xl:px-8 pointer-events-none relative">
+    <div className="sticky top-3 sm:top-4 z-50 pl-4 pr-16 sm:pl-8 sm:pr-16 xl:px-8 pointer-events-none">
+      {/* backdrop: tapping anywhere off the menu closes it */}
+      {open && (
+        <div
+          className="sm:hidden fixed inset-0 -z-10 bg-bg/60 backdrop-blur-sm pointer-events-auto"
+          onClick={() => setOpen(false)}
+          aria-hidden
+        />
+      )}
+
       <header
-        className={`pointer-events-auto mx-auto w-fit rounded-full border backdrop-blur-xl h-12 sm:h-13 px-5 sm:px-6 flex items-center gap-5 sm:gap-8 transition-all duration-500 ${
+        className={`pointer-events-auto flex items-center h-12 sm:h-13 rounded-full border backdrop-blur-xl transition-all duration-500 w-full justify-between px-4 sm:w-fit sm:mx-auto sm:justify-start sm:gap-8 sm:px-6 ${
           scrolled || open
             ? "bg-bg/80 hairline shadow-lg shadow-black/30"
             : "bg-bg/40 border-transparent"
         }`}
       >
-        <Link href="/" className="font-display text-xl sm:text-2xl tracking-tight leading-none">
+        <Link
+          href="/"
+          className="font-display text-xl sm:text-2xl tracking-tight leading-none"
+        >
           rote
         </Link>
 
@@ -50,6 +81,7 @@ export function Nav() {
             <Link
               key={l.href}
               href={l.href}
+              aria-current={isActive(l.href) ? "page" : undefined}
               className={`px-3 py-1.5 text-[0.82rem] rounded-full transition-colors ${
                 isActive(l.href) ? "text-copper-bright" : "text-ink-2 hover:text-ink"
               }`}
@@ -59,15 +91,24 @@ export function Nav() {
           ))}
         </nav>
 
-        {/* mobile menu toggle */}
+        {/* mobile menu toggle — 44px square, the comfortable thumb minimum */}
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
+          aria-controls="mobile-menu"
           aria-label={open ? "Close menu" : "Open menu"}
-          className="sm:hidden flex items-center justify-center w-9 h-9 -mr-1 text-ink-2 hover:text-ink transition-colors"
+          className="sm:hidden flex items-center justify-center w-11 h-11 -mr-2.5 text-ink-2 hover:text-ink transition-colors"
         >
-          <svg viewBox="0 0 20 20" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+          <svg
+            viewBox="0 0 20 20"
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            aria-hidden
+          >
             {open ? (
               <>
                 <path d="M5 5 L15 15" />
@@ -86,13 +127,18 @@ export function Nav() {
 
       {/* mobile menu panel */}
       {open && (
-        <div className="sm:hidden pointer-events-auto absolute left-4 right-16 top-[calc(100%+0.5rem)] rounded-2xl border hairline bg-bg/95 backdrop-blur-xl shadow-xl shadow-black/40 p-2">
+        <div
+          id="mobile-menu"
+          ref={panelRef}
+          className="sm:hidden pointer-events-auto mt-2 rounded-2xl border hairline bg-bg/95 backdrop-blur-xl shadow-xl shadow-black/40 p-2"
+        >
           <nav className="flex flex-col">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className={`px-4 py-3 rounded-xl text-[0.95rem] transition-colors ${
+                aria-current={isActive(l.href) ? "page" : undefined}
+                className={`px-4 py-3.5 rounded-xl text-[0.95rem] transition-colors ${
                   isActive(l.href)
                     ? "text-copper-bright bg-copper/10"
                     : "text-ink-2 hover:text-ink hover:bg-surface"
@@ -102,10 +148,18 @@ export function Nav() {
               </Link>
             ))}
             <a
+              href="https://github.com/kedarvartak/rote"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-3.5 rounded-xl text-[0.95rem] text-ink-2 hover:text-ink hover:bg-surface transition-colors"
+            >
+              GitHub ↗
+            </a>
+            <a
               href="https://cal.com/kedar-vartak"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 mx-2 mb-1.5 rounded-full bg-copper text-bg text-center text-[0.9rem] font-medium px-4 py-2.5 hover:bg-copper-bright transition-colors"
+              className="mt-2 mx-1 mb-1 rounded-full bg-copper text-bg text-center text-[0.92rem] font-medium px-4 py-3 hover:bg-copper-bright transition-colors"
             >
               Talk to me
             </a>

@@ -20,48 +20,134 @@ function pagesSoFar(step: number, everything: boolean) {
   return total;
 }
 
+/**
+ * One step's row. Steps that have not run yet still occupy their slot as a
+ * faint track: the two panels stack on a phone, and reserving nine rows of
+ * blank space in each read as a rendering fault rather than as a run in
+ * progress. The ghost also telegraphs the shape each side is heading for —
+ * a widening wedge against a fixed column.
+ */
+function Row({
+  i,
+  width,
+  filled,
+  tone,
+  note,
+}: {
+  i: number;
+  width: string;
+  filled: boolean;
+  tone: "blue" | "copper";
+  note?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span
+        className={`font-mono text-[0.6rem] w-10 shrink-0 tabular-nums transition-colors duration-500 ${
+          filled ? "text-muted" : "text-muted/40"
+        }`}
+      >
+        step {i + 1}
+      </span>
+      <div
+        className={`h-2.5 rounded-[2px] transition-all duration-700 ease-out ${
+          filled
+            ? tone === "blue"
+              ? "bg-blue/65"
+              : "bg-copper/80"
+            : "bg-ink/[0.07]"
+        }`}
+        style={{ width }}
+      />
+      {note && (
+        <span
+          className={`font-mono text-[0.6rem] transition-colors duration-500 ${
+            filled ? "text-copper-bright/80" : "text-muted/30"
+          }`}
+        >
+          note
+        </span>
+      )}
+    </div>
+  );
+}
+
+/** Panel header — side by side on desktop, stacked on a phone where the
+ *  descriptor would otherwise wrap into the title. */
+function PanelHead({ title, note, tone }: { title: string; note: string; tone: string }) {
+  return (
+    <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+      <p className="text-[0.95rem] text-ink">{title}</p>
+      <p className={`font-mono text-[0.65rem] tracking-widest uppercase ${tone}`}>
+        {note}
+      </p>
+    </div>
+  );
+}
+
 export function HeroDemo() {
   const [tick, setTick] = useState(0);
-  const reduced = useRef(false);
+  const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    reduced.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced.current) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setTick(N);
       return;
     }
-    const id = setInterval(
-      () => setTick((t) => (t >= N + PAUSE_TICKS ? 0 : t + 1)),
-      TICK_MS,
+    const el = ref.current;
+    if (!el) return;
+
+    // the loop only runs while the figure is on screen — on a phone this sits
+    // above a very long page, and a 1.1s interval ticking for the whole scroll
+    // costs battery for an animation nobody is watching
+    let id: ReturnType<typeof setInterval> | undefined;
+    const start = () => {
+      if (id) return;
+      id = setInterval(
+        () => setTick((t) => (t >= N + PAUSE_TICKS ? 0 : t + 1)),
+        TICK_MS,
+      );
+    };
+    const stop = () => {
+      clearInterval(id);
+      id = undefined;
+    };
+    const io = new IntersectionObserver(
+      ([e]) => (e.isIntersecting ? start() : stop()),
+      { threshold: 0.15 },
     );
-    return () => clearInterval(id);
+    io.observe(el);
+    return () => {
+      stop();
+      io.disconnect();
+    };
   }, []);
 
   const step = Math.min(tick, N);
   const done = step === N;
 
   return (
-    <figure aria-label="Animation: the same nine-step task. An ordinary agent re-reads every earlier page at every step, 45 page-reads in total. Rote keeps a note per step and reads only the current page, 9 page-reads in total.">
+    <figure
+      ref={ref}
+      aria-label="Animation: the same nine-step task. An ordinary agent re-reads every earlier page at every step, 45 page-reads in total. Rote keeps a note per step and reads only the current page, 9 page-reads in total."
+    >
       <div className="grid gap-4 lg:grid-cols-2">
         {/* ordinary agent */}
         <div className="rounded-sm border hairline bg-surface p-5">
-          <div className="flex items-baseline justify-between gap-4">
-            <p className="text-[0.95rem] text-ink">An ordinary agent</p>
-            <p className="font-mono text-[0.65rem] tracking-widest uppercase text-blue-bright">
-              re-reads everything, every step
-            </p>
-          </div>
-          <div className="mt-4 space-y-1.5" style={{ minHeight: `${N * 1.06}rem` }}>
-            {Array.from({ length: step }, (_, i) => (
-              <div key={i} className="flex items-center gap-2.5">
-                <span className="font-mono text-[0.6rem] text-muted w-10 shrink-0 tabular-nums">
-                  step {i + 1}
-                </span>
-                <div
-                  className="h-2.5 rounded-[2px] bg-blue/65 transition-all duration-700 ease-out"
-                  style={{ width: `${((i + 1) / N) * 88}%` }}
-                />
-              </div>
+          <PanelHead
+            title="An ordinary agent"
+            note="re-reads everything, every step"
+            tone="text-blue-bright"
+          />
+          <div className="mt-4 space-y-1.5">
+            {Array.from({ length: N }, (_, i) => (
+              <Row
+                key={i}
+                i={i}
+                width={`${((i + 1) / N) * 88}%`}
+                filled={i < step}
+                tone="blue"
+              />
             ))}
           </div>
           <div className="mt-4 pt-3 border-t hairline flex items-baseline justify-between">
@@ -74,23 +160,14 @@ export function HeroDemo() {
 
         {/* rote */}
         <div className="rounded-sm border border-copper/50 bg-surface p-5">
-          <div className="flex items-baseline justify-between gap-4">
-            <p className="text-[0.95rem] text-ink">The same task with Rote</p>
-            <p className="font-mono text-[0.65rem] tracking-widest uppercase text-copper-bright">
-              keeps notes, reads only what changed
-            </p>
-          </div>
-          <div className="mt-4 space-y-1.5" style={{ minHeight: `${N * 1.06}rem` }}>
-            {Array.from({ length: step }, (_, i) => (
-              <div key={i} className="flex items-center gap-2.5">
-                <span className="font-mono text-[0.6rem] text-muted w-10 shrink-0 tabular-nums">
-                  step {i + 1}
-                </span>
-                <div className="h-2.5 w-[9%] rounded-[2px] bg-copper/80" />
-                <span className="font-mono text-[0.6rem] text-copper-bright/80">
-                  note
-                </span>
-              </div>
+          <PanelHead
+            title="The same task with Rote"
+            note="keeps notes, reads only what changed"
+            tone="text-copper-bright"
+          />
+          <div className="mt-4 space-y-1.5">
+            {Array.from({ length: N }, (_, i) => (
+              <Row key={i} i={i} width="9%" filled={i < step} tone="copper" note />
             ))}
           </div>
           <div className="mt-4 pt-3 border-t hairline flex items-baseline justify-between">
@@ -111,7 +188,9 @@ export function HeroDemo() {
           }`}
         >
           <span className="text-ink">45 page-reads vs 9.</span>{" "}
-          <span className="text-ink-2">That gap grows with every step — measured at 37.2% below.</span>
+          <span className="text-ink-2">
+            That gap grows with every step — measured at 37.2% below.
+          </span>
         </span>
       </figcaption>
     </figure>

@@ -539,7 +539,10 @@ export default function ArchitecturePage() {
           <div className="mt-10 max-w-3xl">
             {PKG_LAYERS.map((l, i) => (
               <div key={l.layer} className="relative">
-                <div className="grid grid-cols-[6.5rem_1fr] gap-4 items-stretch">
+                {/* the layer name sits beside its packages on a wide screen and
+                    above them on a phone, where a fixed 6.5rem gutter would take
+                    a quarter of the viewport from the package pills */}
+                <div className="grid grid-cols-1 sm:grid-cols-[6.5rem_1fr] gap-1 sm:gap-4 items-stretch">
                   <div className="flex items-center">
                     <span className="font-mono text-[0.65rem] tracking-widest uppercase text-muted">
                       {l.layer}
@@ -564,8 +567,8 @@ export default function ArchitecturePage() {
                   </div>
                 </div>
                 {i < PKG_LAYERS.length - 1 && (
-                  <div className="grid grid-cols-[6.5rem_1fr]" aria-hidden>
-                    <div />
+                  <div className="grid grid-cols-1 sm:grid-cols-[6.5rem_1fr]" aria-hidden>
+                    <div className="hidden sm:block" />
                     <div className="pl-8 py-0.5">
                       <svg viewBox="0 0 12 14" className="w-3 h-3.5" fill="none">
                         <path d="M6 0 V10" stroke="rgba(232,226,214,0.25)" strokeWidth="1.2" />
@@ -590,20 +593,24 @@ export default function ArchitecturePage() {
           />
         </Reveal>
         <Reveal delay={100}>
-          <div className="mt-10 overflow-x-auto rounded-sm border hairline">
-            <table className="w-full text-[0.87rem] min-w-[40rem]">
-              <tbody className="divide-y hairline">
-                {TYPES.map((t) => (
-                  <tr key={t.t} className="hover:bg-surface/70 transition-colors">
-                    <td className="px-4 py-3.5 font-mono text-[0.8rem] text-copper-bright whitespace-nowrap align-top w-44">
-                      {t.t}
-                    </td>
-                    <td className="px-4 py-3.5 text-ink-2 leading-relaxed">{t.d}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {/* a two-column definition list, not a data table: on a phone each
+              type keeps its name above its description instead of squeezing a
+              full sentence into a 200px column */}
+          <dl className="mt-10 rounded-sm border hairline divide-y hairline overflow-hidden">
+            {TYPES.map((t) => (
+              <div
+                key={t.t}
+                className="px-4 py-3.5 sm:flex sm:gap-4 hover:bg-surface/70 transition-colors"
+              >
+                <dt className="font-mono text-[0.8rem] text-copper-bright sm:w-44 sm:shrink-0">
+                  {t.t}
+                </dt>
+                <dd className="mt-1 sm:mt-0 text-[0.87rem] text-ink-2 leading-relaxed">
+                  {t.d}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </Reveal>
       </section>
     </div>

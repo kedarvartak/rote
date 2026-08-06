@@ -26,6 +26,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* iOS inflates font sizes in landscape unless told not to; the type scale
+     is already responsive and does not want the browser's help */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -34,6 +37,42 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  /* the grey flash Safari paints over any tapped link reads as a rendering
+     glitch against this palette — :active states below carry the feedback */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* deep links from the footer (#g1, #t11) land under the sticky nav without
+   this — 5.5rem clears the pill plus its top offset */
+:target,
+[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+/* touch feedback, since the tap highlight is off: links and buttons dim on
+   press. Pointer-coarse only — a mouse already has :hover. */
+@media (hover: none) {
+  a:active,
+  button:active {
+    opacity: 0.65;
+  }
+}
+
+/* wide content that must scroll sideways (charts) — keep the bar visible but
+   quiet, so the affordance survives on trackpads that hide overlay scrollbars */
+.overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(232, 226, 214, 0.18) transparent;
+}
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: rgba(232, 226, 214, 0.18);
+  border-radius: 3px;
+}
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 ::selection {

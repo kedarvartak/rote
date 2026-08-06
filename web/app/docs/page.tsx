@@ -1,5 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DataTable } from "@/components/DataTable";
+
+const AMNESIAS = [
+  {
+    tier: "0 · Working",
+    scope: "within one run",
+    bill: "cost is O(n²) in task length",
+    status: "built · measured (G1 pass)",
+    good: true,
+  },
+  {
+    tier: "1 · Episodic",
+    scope: "across runs of a task",
+    bill: "run #50 costs what run #1 cost",
+    status: "replay built · distiller unbuilt (P2)",
+    good: false,
+  },
+  {
+    tier: "2 · Semantic",
+    scope: "across tasks on a site",
+    bill: "every task re-learns the portal",
+    status: "designed (P2)",
+    good: false,
+  },
+];
 
 export const metadata: Metadata = {
   description:
@@ -35,38 +60,23 @@ export default function DocsOverview() {
       </div>
 
       <h2 className="mt-12 font-display text-2xl">The three amnesias</h2>
-      <div className="mt-4 overflow-x-auto rounded-sm border hairline">
-        <table className="w-full text-[0.85rem] leading-relaxed">
-          <thead>
-            <tr className="border-b hairline bg-surface text-left">
-              <th className="px-4 py-3 font-mono text-[0.65rem] uppercase tracking-widest text-muted font-normal">Tier</th>
-              <th className="px-4 py-3 font-mono text-[0.65rem] uppercase tracking-widest text-muted font-normal">Scope</th>
-              <th className="px-4 py-3 font-mono text-[0.65rem] uppercase tracking-widest text-muted font-normal">The bill</th>
-              <th className="px-4 py-3 font-mono text-[0.65rem] uppercase tracking-widest text-muted font-normal">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y hairline text-ink-2">
-            <tr>
-              <td className="px-4 py-3 text-ink">0 · Working</td>
-              <td className="px-4 py-3">within one run</td>
-              <td className="px-4 py-3">cost is O(n²) in task length</td>
-              <td className="px-4 py-3 text-good">built · measured (G1 pass)</td>
-            </tr>
-            <tr>
-              <td className="px-4 py-3 text-ink">1 · Episodic</td>
-              <td className="px-4 py-3">across runs of a task</td>
-              <td className="px-4 py-3">run #50 costs what run #1 cost</td>
-              <td className="px-4 py-3">replay built · distiller unbuilt (P2)</td>
-            </tr>
-            <tr>
-              <td className="px-4 py-3 text-ink">2 · Semantic</td>
-              <td className="px-4 py-3">across tasks on a site</td>
-              <td className="px-4 py-3">every task re-learns the portal</td>
-              <td className="px-4 py-3">designed (P2)</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        className="mt-4"
+        label="The three amnesias"
+        rows={AMNESIAS}
+        rowKey={(r) => r.tier}
+        columns={[
+          { header: "Tier", cell: (r) => r.tier, card: "title", className: "text-ink whitespace-nowrap" },
+          { header: "Scope", cell: (r) => r.scope },
+          { header: "The bill", cell: (r) => r.bill },
+          {
+            header: "Status",
+            cell: (r) => (
+              <span className={r.good ? "text-good" : undefined}>{r.status}</span>
+            ),
+          },
+        ]}
+      />
       <p className="mt-4 text-ink-2 leading-relaxed">
         The trust gate is not a fourth tier — it is the precondition for all
         three. Memory that might be wrong is worse than no memory: every tier

@@ -4,6 +4,7 @@ import { CurveChart } from "@/components/CurveChart";
 import { CostChart } from "@/components/CostChart";
 import { Reveal } from "@/components/Reveal";
 import { RoadmapCascade } from "@/components/RoadmapCascade";
+import { DataTable } from "@/components/DataTable";
 
 const B2_TOKENS = [637, 677, 716, 759, 800, 839, 876, 917, 953];
 
@@ -153,13 +154,13 @@ export default function Home() {
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
                     href="/docs/benchmarks"
-                    className="rounded-sm bg-copper text-bg font-medium px-5 py-2.5 text-sm hover:bg-copper-bright transition-colors"
+                    className="inline-flex items-center rounded-sm bg-copper text-bg font-medium px-5 min-h-11 text-sm hover:bg-copper-bright transition-colors"
                   >
                     See the numbers
                   </Link>
                   <Link
                     href="/architecture"
-                    className="rounded-sm border hairline px-5 py-2.5 text-sm text-ink hover:border-copper/60 transition-colors"
+                    className="inline-flex items-center rounded-sm border hairline px-5 min-h-11 text-sm text-ink hover:border-copper/60 transition-colors"
                   >
                     Read the architecture
                   </Link>
@@ -472,38 +473,30 @@ export default function Home() {
           />
         </Reveal>
         <Reveal delay={80}>
-          <div className="mt-12 overflow-x-auto rounded-sm border hairline">
-            <table className="w-full text-[0.9rem] min-w-[44rem]">
-              <thead className="bg-surface border-b hairline text-left">
-                <tr>
-                  <th className="px-4 py-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal w-14">
-                    №
-                  </th>
-                  <th className="px-4 py-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal w-56">
-                    Invariant
-                  </th>
-                  <th className="px-4 py-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal">
-                    The rule
-                  </th>
-                  <th className="px-4 py-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal w-72">
-                    Enforced by
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y hairline">
-                {INVARIANTS.map((inv) => (
-                  <tr key={inv.n} className="align-top hover:bg-surface/70 transition-colors group">
-                    <td className="px-4 py-4 font-display text-xl text-copper-bright/80 group-hover:text-copper-bright transition-colors">
-                      {inv.n}
-                    </td>
-                    <td className="px-4 py-4 font-medium text-ink">{inv.name}</td>
-                    <td className="px-4 py-4 text-ink-2 leading-relaxed">{inv.rule}</td>
-                    <td className="px-4 py-4 text-ink-2 leading-relaxed">{inv.enforcement}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            className="mt-12"
+            label="The five invariants"
+            rows={INVARIANTS}
+            rowKey={(inv) => inv.n}
+            columns={[
+              {
+                header: "№",
+                cell: (inv) => inv.n,
+                card: "badge",
+                width: "w-14",
+                className: "font-display text-xl text-copper-bright/80",
+              },
+              {
+                header: "Invariant",
+                cell: (inv) => inv.name,
+                card: "title",
+                width: "w-56",
+                className: "font-medium text-ink",
+              },
+              { header: "The rule", cell: (inv) => inv.rule },
+              { header: "Enforced by", cell: (inv) => inv.enforcement, width: "w-72" },
+            ]}
+          />
         </Reveal>
       </section>
 
@@ -534,7 +527,7 @@ export default function Home() {
               <div className="flex gap-3 shrink-0">
                 <Link
                   href="/docs"
-                  className="rounded-sm bg-copper text-bg font-medium px-5 py-2.5 text-sm hover:bg-copper-bright transition-colors"
+                  className="inline-flex items-center rounded-sm bg-copper text-bg font-medium px-5 min-h-11 text-sm hover:bg-copper-bright transition-colors"
                 >
                   Read the docs
                 </Link>
