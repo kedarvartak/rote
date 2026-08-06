@@ -41,6 +41,15 @@ describe('FileBrowserAgentRunRecorder', () => {
       usage,
       durationMs: 15,
       classifications: ['dropped_malformed_stable_id'],
+      historyCompaction: {
+        version: 1,
+        compactedActionCount: 16,
+        throughActionIndex: 15,
+        retainedRepresentativeCount: 2,
+        historyDigest: 'a'.repeat(64),
+        detailsEvicted: true,
+        kindCounts: { navigate: 1, fill: 5, select: 2, click: 8, done: 0 },
+      },
       resolution: { selector: '#open-alpha', strategy: 'role-name', stableId: 'aaaaaaaaaaaaaaaa' },
     });
     await recorder.finish('success', 'alpha opened', [usage]);
@@ -56,6 +65,11 @@ describe('FileBrowserAgentRunRecorder', () => {
         observation_mode: 'bootstrap',
         observation_bootstrap: { budgetChars: 10, exceededByChars: 7 },
         action_classifications: ['dropped_malformed_stable_id'],
+        history_compaction: expect.objectContaining({
+          compactedActionCount: 16,
+          historyDigest: 'a'.repeat(64),
+          detailsEvicted: true,
+        }),
         resolution: { selector: '#open-alpha', strategy: 'role-name', stableId: 'aaaaaaaaaaaaaaaa' },
       }),
     }));

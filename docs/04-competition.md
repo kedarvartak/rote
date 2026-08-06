@@ -210,7 +210,7 @@ versions of this table were doc-surveyed and wrong in both directions.
 | **A4 diff observations** | ○ (`*`-marks new elements only) | ○ | ○ (incremental scrape is within-action) | ○ | ○ | **● built, measured (T10: 849 diffs, −99.6% median)** |
 | A8 token budget contract | ◐ 40K serializer cap | ◐ ~70K tree cap | ◐ 100K + truncation fallbacks | ○ | ○ | ● 4,000-char contract, fails loudly |
 | **B3 cache-layout discipline** | ◐ volatile tail ordering, no enforcement | ○ | ○ | ◐ freeze mask | n/a | **● enforced + keyed (T11)** |
-| **B4 history compaction** | ● LLM summarization, default-on | ○ | ◐ fixed window | ○ | ◐ server-side (labs) | ○ designed only |
+| **B4 history compaction** | ● LLM summarization, default-on | ○ | ◐ fixed window | ○ | ◐ server-side (labs) | **● deterministic action-aware mechanism; long-run qualification pending** |
 | A7 elective vision (SoM) | ◐ | ◐ | ● always-on | ● always-on | ● always-on | ○ (no vision path) |
 | A9 WebMCP-first | ○ | ○ | ○ | ○ | ◐ | ○ |
 | **TIER 1 — episodic memory** | | | | | | |
@@ -235,16 +235,18 @@ Read this honestly, because the previous version did not:
   2026-07-25 source read overturned the previous version of this table, which marked the
   whole field ○ on A11 and called it "the one ● nobody else has." In reality browser-use,
   Skyvern, Stagehand, and Magnitude all evict or mask old observations, and browser-use
-  ships default-on LLM history compaction — a lever we have only designed (B4). What is
-  genuinely all-○ across the field is **A4** (cross-step observation diffs — research
+  ships default-on LLM history compaction. B4 now gives Rote deterministic action-aware
+  compaction with explicit recall and cache boundaries, but its long-run provider economics
+  remain unqualified. What is genuinely all-○ across the field is **A4** (cross-step observation diffs — research
   recommends it, arXiv 2312.07540 and 2604.01535, but no major harness ships it; the
   only wild sighting is a ~14-star MCP tool server) and **semantic element identity**
   (an id that can appear in a playbook and survive a navigation). Both are built and
   measured (T10/T11).
-- **Until B4 exists, the long-task asymptote is theirs.** Browser-use's default compaction
-  bounds their history term; ours grows linearly forever. In the measured 9–25-step range
-  our slope wins decisively — but a source-literate reader will spot the crossover
-  argument, so we say it first.
+- **B4 closes the structural history-growth gap, not the evidence gap.** Both Browser Use
+  and Rote now bound planner history by different mechanisms. Rote's deterministic schedule
+  preserves real actions and fails explicitly on missing detail, but no 50+ step provider
+  cell has measured its cache misses, cost, or success parity. The frozen 9–25-step slope
+  predates B4 and must not be relabeled as compaction evidence.
 - **The trust-gate row is the only one where we are alone at ●** — and it is a precondition,
   not a product.
 - Rote is ○ on vision and WebMCP. We are not better at everything; we do not do those.

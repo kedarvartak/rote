@@ -222,7 +222,7 @@ We are in **P1 = tier 0, working memory**. Its four levers, honestly:
 | Observation eviction — keep what you did, not what you saw | **built and recall-stress tested** — missing earlier-page facts fail as `recall_unavailable`; fabricated comparisons fail verification ([T18](docs/testing/T18-eviction-recall-trade.md)) |
 | Diff observations | **built and real-page measured** — 849 certification diffs have a 24-character median; median reduction vs. the preceding grounded base is 99.6% ([T10](docs/testing/T10-g1-cumulative-token-curve.md)) |
 | Cache layout | **built and economically qualified** — immutable-prefix routing cuts WP-N25 mean cost 20.5% and clears Browser Use by 16.0%, both with 95% intervals above zero ([T11](docs/testing/T11-cache-key-economics.md)) |
-| History compaction | not built — the lever that would make the curve linear rather than a smaller quadratic |
+| History compaction | **built deterministically on `main`; long-run qualification pending** — planner-visible action history is bounded on cache-amortized boundaries, but the frozen P1 curve and published 0.1.0 predate it |
 
 Not built: the playbook distiller (V1 replays hand-written playbooks), the matcher, site
 memory, model routing, speculation. **Tier 1 is table stakes and we are late to it** —
@@ -232,7 +232,7 @@ Skyvern ships record → generated code → code replay with automatic AI fallba
 (95% CI 35.6–38.8%) at success parity. B1/B3 retain their original level evidence and T20 restores B2/full G2 with an exact
 eight-value oracle. Cache economics still
 lose at G1's shortest cell. The CLI tarball, demo, and one-command reproduction pass;
-registry publication remains separately blocked on the final `@rotehq/cli@0.1.0` publish and clean-install smoke; the maintainer-owned scope is confirmed. Read the [known limitations](docs/known-limitations.md) before trying Rote and see
+`@rotehq/cli@0.1.0` is registry-published and its audited integrity plus clean no-key bin invocation pass; the provider-backed registry quickstart and T28 launch record remain deferred in #107. Read the [known limitations](docs/known-limitations.md) before trying Rote and see
 [T14](docs/testing/T14-cli-package-candidate.md) for packaging evidence.
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)

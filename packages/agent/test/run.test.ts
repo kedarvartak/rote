@@ -98,6 +98,33 @@ describe('runBrowserAgent', () => {
     expect(result.steps[3]?.postActionEvidence).toMatchObject({ strength: 'reaction', enforced: false });
   });
 
+  it('bounds planner-visible action history and records B4 telemetry after the first boundary', async () => {
+    const clicks: BrowserAction[] = Array.from({ length: 25 }, () => ({
+      kind: 'click', selector: '#registration-submit', role: 'button', name: 'Submit registration',
+    }));
+    const planner = new ScriptedPlanner([
+      ...clicks,
+      { kind: 'done', success: true, summary: 'long workflow complete' },
+    ]);
+
+    const result = await runBrowserAgent({
+      task: 'Complete a long workflow',
+      page: new FakePage(),
+      planner,
+      verifier: passVerifier,
+      maxSteps: 30,
+    });
+
+    expect(result.success).toBe(true);
+    expect(planner.requests[24]?.previousActions).toHaveLength(24);
+    expect(planner.requests[25]?.previousActions.length).toBeLessThan(25);
+    expect(planner.requests[25]?.context.history.compaction).toMatchObject({
+      compactedActionCount: 16,
+      detailsEvicted: true,
+    });
+    expect(result.steps[25]?.historyCompaction).toMatchObject({ compactedActionCount: 16 });
+  });
+
   it('starts a new grounded base when navigation changes the page URL', async () => {
     const planner = new ScriptedPlanner([
       { kind: 'navigate', url: 'mem://next' },

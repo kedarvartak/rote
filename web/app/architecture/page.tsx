@@ -406,9 +406,10 @@ export default function ArchitecturePage() {
               trivial; the discipline is not.
             </p>
             <p className="mt-4 text-ink-2 leading-relaxed">
-              With eviction on, a step adds ~37 tokens instead of ~172 — the
-              quadratic term belongs to observations, and observations
-              don&apos;t accumulate.
+              With eviction on, a step added ~37 tokens instead of ~172 in the
+              frozen P1 curve. B4 now bounds the surviving action ledger on
+              explicit cache-amortized boundaries; its 50+ step provider curve
+              is not yet qualified.
             </p>
           </Reveal>
           <Reveal delay={120}>

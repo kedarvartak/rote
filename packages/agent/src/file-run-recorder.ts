@@ -46,6 +46,7 @@ export class FileBrowserAgentRunRecorder implements BrowserAgentRunRecorder {
           : undefined,
         action_classifications: step.classifications,
         post_action_evidence: step.postActionEvidence,
+        history_compaction: step.historyCompaction,
         resolution: step.resolution,
       },
       duration_ms: step.durationMs,

@@ -19,7 +19,7 @@ marks status; the authoritative table is [02 §Status](02-architecture.md).
 |---|---|
 | **Built** | core schemas + Expect DSL · recorder · verified replay executor · CDP backend · perception (distill → stable IDs → budget) · **observation eviction** · agent loop · tagged LLM client · benchmark + accounting + head-to-head gate |
 | **Built, measured** | diff observations — T10 records 849 real WordPress diffs with 99.6% median render-size reduction · stable-prefix cache routing — T11 cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% · deterministic semantic drift recovery — T21 repairs 72/72 and observes 0/90 silent failures |
-| **Not built** | compaction · playbook distiller · matcher · site memory · model routing · speculation |
+| **Not built / unqualified** | B4 long-run provider/SPA qualification · playbook distiller · matcher · site memory · model routing · speculation |
 
 We are in **P1 (V1)**: **tier 0, working memory.** G1 passes: 37.2% slower cumulative
 logical-input growth (95% CI 35.6–38.8%) at success parity. B1/B3 retain level evidence;
@@ -33,7 +33,7 @@ long-cell cost while the shortest cell still crosses parity. **No number, no lau
 
 | Tier | Scope | The field | Us |
 |---|---|---|---|
-| **0 — Working** | within a run | competitors evict, but do not cross-step diff | **P1 scope built and measured**; compaction deferred |
+| **0 — Working** | within a run | competitors evict, but do not cross-step diff | P1 eviction/diff/cache measured; deterministic compaction built afterward, long-run qualification pending |
 | **1 — Episodic** | across runs of a task | **Skyvern ships it** | late; distiller unbuilt |
 | **2 — Semantic** | across tasks on a site | nobody | unbuilt |
 | **Trust gate** | all tiers | nobody — success means "no exception thrown" | invariant 1 |

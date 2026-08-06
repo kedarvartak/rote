@@ -1,4 +1,5 @@
 import type { AdaptiveObservationMode } from '@rote/perception';
+import { buildPlannerActionHistory, type HistoryCompactionPolicy } from './history-compaction.js';
 import type { BrowserAction, BrowserExpectFailure, PlannerContext } from './types.js';
 
 const ACTION_SCHEMA = `Actions (return exactly one JSON object):
@@ -33,6 +34,8 @@ export interface AssemblePlannerContextOptions {
   observation: string;
   observationMode: AdaptiveObservationMode;
   previousActions: readonly BrowserAction[];
+  /** B4 schedule; `false` reproduces the unbounded action-history baseline. */
+  historyCompactionPolicy?: HistoryCompactionPolicy | false;
   /** Compact current control state retained even when unchanged nodes are diff-evicted. */
   stateSummary?: string;
   /** Prior observation content is no longer available in this stateless planner request. */
@@ -57,23 +60,24 @@ ${options.task}
 ${ACTION_SCHEMA}
 
 ${EXPECT_GUIDANCE}`;
-  const actionHistory = options.previousActions.length === 0
-    ? '(none)'
-    : options.previousActions.map((action) => JSON.stringify(action)).join('\n');
-  // see docs/02-architecture.md "Caching" — append-only history must precede
-  // page/observation churn so each longer request reuses the prior exact prefix.
+  const history = buildPlannerActionHistory(
+    options.previousActions,
+    options.historyCompactionPolicy,
+  );
+  // see docs/02-architecture.md "Caching and compaction fight" — exact recent
+  // history stays append-only between explicit compaction boundaries.
   const volatileSuffix = `Previous actions:
-${actionHistory}
+${history.text}
 
 Current page:
 ${options.page.title} | ${options.page.url}
-${renderRecallBoundary(options.observationHistoryEvicted)}
+${renderRecallBoundary(options.observationHistoryEvicted, history.compaction?.detailsEvicted)}
 Current stateful controls:
 ${options.stateSummary ?? '(none)'}
 ${renderRepair(options.repair)}
 Compact observation (${options.observationMode}):
 ${options.observation}`;
-  return { stablePrefix, volatileSuffix };
+  return { stablePrefix, volatileSuffix, history };
 }
 
 /** Fails if a planner prefix mutates after the first step of a run. */
@@ -87,7 +91,7 @@ export function assertCacheStablePrefix(expected: string | undefined, actual: st
 }
 
 function assertKnownLayoutFields(options: AssemblePlannerContextOptions): void {
-  const allowed = new Set(['task', 'page', 'observation', 'observationMode', 'previousActions', 'stateSummary', 'observationHistoryEvicted', 'repair']);
+  const allowed = new Set(['task', 'page', 'observation', 'observationMode', 'previousActions', 'historyCompactionPolicy', 'stateSummary', 'observationHistoryEvicted', 'repair']);
   const unknown = Object.keys(options).filter((key) => !allowed.has(key));
   if (unknown.length > 0) {
     throw new CacheLayoutImmutabilityError(
@@ -104,15 +108,19 @@ function assertKnownLayoutFields(options: AssemblePlannerContextOptions): void {
  * "your action failed" would invite the planner to redo a submit that already went
  * through — the exact double-submit the T1 B2 trace shows was never needed.
  */
-function renderRecallBoundary(historyEvicted?: boolean): string {
-  if (!historyEvicted) return '';
+function renderRecallBoundary(observationHistoryEvicted?: boolean, actionDetailsEvicted?: boolean): string {
+  if (!observationHistoryEvicted && !actionDetailsEvicted) return '';
   // see docs/02-architecture.md "The policy" — eviction is allowed to lose recall,
   // but never to turn absence into a guessed fact.
+  const unavailable = [
+    ...(observationHistoryEvicted ? ['prior page/observation content'] : []),
+    ...(actionDetailsEvicted ? ['some older action details'] : []),
+  ].join(' and ');
   return `
-Recall boundary: prior page/observation content has been evicted. Only the action history
-and current observation are available. If the task requires a missing earlier fact, do
-not guess; return done with success=false, failureClassification="recall_unavailable",
-and state which fact is unavailable.
+Recall boundary: history from ${unavailable} has been evicted. Only the action history represented
+above and the current observation are available. If the task requires a missing earlier
+fact, do not guess; return done with success=false,
+failureClassification="recall_unavailable", and state which fact is unavailable.
 `;
 }
 

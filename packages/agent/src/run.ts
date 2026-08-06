@@ -54,10 +54,14 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         observation: observation.text,
         observationMode: observation.mode,
         previousActions,
+        ...(options.historyCompactionPolicy !== undefined
+          ? { historyCompactionPolicy: options.historyCompactionPolicy }
+          : {}),
         stateSummary: renderStatefulControls(nodes),
         ...(observationHistoryEvicted ? { observationHistoryEvicted: true } : {}),
         ...(pendingRepair ? { repair: pendingRepair } : {}),
       });
+      if (context.history.compaction) observationHistoryEvicted = true;
       plannerStablePrefix = assertCacheStablePrefix(plannerStablePrefix, context.stablePrefix);
       // INVARIANT: planner calls are always source-tagged for benchmark accounting.
       let planned = await options.planner.plan(source, {
@@ -65,7 +69,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         step,
         page: pageState,
         observation,
-        previousActions,
+        previousActions: context.history.visibleActions,
         context,
         ...(pendingRepair ? { repair: pendingRepair } : {}),
       });
@@ -101,7 +105,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
               step,
               page: pageState,
               observation,
-              previousActions,
+              previousActions: context.history.visibleActions,
               context: {
                 ...context,
                 volatileSuffix: `${context.volatileSuffix}\n\nYour proposed action was NOT performed because its pre-action checks failed: ${error.message}\nGrounded candidates for the requested role:\n${renderGroundedCandidates(nodes, error instanceof BrowserActionGuardError ? error.candidateRole : ('role' in action ? action.role : undefined), error instanceof BrowserActionGuardError ? error.candidateName : ('name' in action ? action.name : undefined))}\nChoose one corrected action by copying selector, stableId, role, and name from one complete candidate object. Never combine fields from different candidates.${error instanceof BrowserActionGuardError ? '\nYou MUST perform the missing candidate action now; do not repeat the rejected action.' : ''}`,
@@ -159,6 +163,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(repairProviderReceipts.length > 0 ? { repairProviderReceipts } : {}),
         ...(classifications.length > 0 ? { classifications } : {}),
         ...(postActionEvidence ? { postActionEvidence } : {}),
+        ...(context.history.compaction ? { historyCompaction: context.history.compaction } : {}),
         durationMs: Math.max(0, clock() - startedAt),
         ...(actionError ? { error: actionError.message } : {}),
         ...(resolution ? { resolution } : {}),

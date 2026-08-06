@@ -89,6 +89,10 @@ function request(): BrowserPlannerRequest {
     page: { url: 'https://portal.test', title: 'Portal' },
     observation: { text: 'button selector=#submit', truncated: false, approxTokens: 5, mode: 'full' },
     previousActions: [],
-    context: { stablePrefix: 'stable instructions', volatileSuffix: 'volatile observation' },
+    context: {
+      stablePrefix: 'stable instructions',
+      volatileSuffix: 'volatile observation',
+      history: { text: '(none)', visibleActions: [] },
+    },
   };
 }
