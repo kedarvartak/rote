@@ -70,6 +70,20 @@ describe('distillPage', () => {
     expect(nodes.some((node) => node.selectorHint === '#visible')).toBe(true);
   });
 
+  it('keeps translucent controls and drops only fully transparent ones', () => {
+    const nodes = distillPage(captureStaticHtml('mem://opacity', `
+      <button id="fading" style="opacity: 0.37">Save draft</button>
+      <button id="dimmed" style="color: red; opacity:.5;">Archive</button>
+      <button id="transparent" style="opacity: 0">Ghost</button>
+      <button id="transparent-pct" style="opacity: 0%">Ghost percent</button>
+    `));
+
+    expect(nodes.some((node) => node.selectorHint === '#fading')).toBe(true);
+    expect(nodes.some((node) => node.selectorHint === '#dimmed')).toBe(true);
+    expect(nodes.some((node) => node.selectorHint === '#transparent')).toBe(false);
+    expect(nodes.some((node) => node.selectorHint === '#transparent-pct')).toBe(false);
+  });
+
   it('preserves live checkbox state as diffable observation data', () => {
     const unchecked = distillPage(captureStaticHtml('mem://checks', '<input id="row" type="checkbox" />'));
     const checked = distillPage(captureStaticHtml('mem://checks', '<input id="row" type="checkbox" checked />'));
