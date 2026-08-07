@@ -43,7 +43,12 @@ function isVisible(element: CapturedElement): boolean {
   if ('hidden' in element.attributes || element.attributes['aria-hidden'] === 'true') return false;
   if (element.tag === 'input' && element.attributes['type'] === 'hidden') return false;
   const style = element.attributes['style']?.replaceAll(' ', '').toLowerCase() ?? '';
-  return !style.includes('display:none') && !style.includes('visibility:hidden') && !style.includes('opacity:0');
+  if (style.includes('display:none') || style.includes('visibility:hidden')) return false;
+  // Opacity must be parsed, not substring-matched: "opacity:0.5" contains "opacity:0",
+  // so a merely translucent control (mid-fade, cosmetic restyle) would silently vanish
+  // from the observation and surface as a spurious removal in the diff.
+  const opacity = /(?:^|;)opacity:([^;]+)/.exec(style);
+  return opacity === null || Number.parseFloat(opacity[1]!) !== 0;
 }
 
 function isInteractive(element: CapturedElement): boolean {
