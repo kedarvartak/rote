@@ -15,7 +15,10 @@ const groups = [
   },
   {
     label: "Evidence",
-    items: [{ href: "/docs/benchmarks", label: "Benchmarks & runs" }],
+    items: [
+      { href: "/docs/benchmarks", label: "Benchmarks & runs" },
+      { href: "/docs/cosmetic-drift", label: "Cosmetic drift" },
+    ],
   },
   {
     label: "Code",
