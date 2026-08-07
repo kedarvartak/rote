@@ -184,6 +184,17 @@ scripts/demo/run-launch-demo.sh
 The candidate in this demo is hand-written, not learned, and drift uses full fallback,
 not scoped repair. [Method and raw demo artifacts](docs/testing/T16-launch-demo.md).
 
+To see why a full cosmetic redesign costs ~6 tokens while a real change still
+surfaces — the production distiller and adaptive renderer on three versions of one
+page, no API key needed — run:
+
+```bash
+npx tsx scripts/demo/cosmetic-diff-demo.ts
+```
+
+Edit the HTML inside the script to try your own drift.
+![Cosmetic-drift demo](docs/demo/cosmetic-diff-demo.gif)
+
 ![Architecture](docs/diagrams/architecture.svg)
 
 ## Design invariants
