@@ -3,84 +3,101 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Cosmetic drift",
   description:
-    "Why a full visual redesign costs Rote's diff-based observations ~6 tokens: the distiller's information bottleneck, the drift gradient, the failure ladder, and the opacity bug the question surfaced.",
+    "A site redesign costs Rote ~6 tokens. The distiller throws styling away before the diff runs, so cosmetic changes can't break — or bloat — an observation.",
 };
 
 /* ---------------------------------------------------------------- shells */
 
-function Code({ children }: { children: React.ReactNode }) {
+function H2({ children }: { children: React.ReactNode }) {
   return (
-    <pre className="mt-4 rounded-sm border hairline bg-surface p-4 overflow-x-auto font-mono text-[0.72rem] leading-relaxed text-ink-2">
-      {children}
-    </pre>
+    <h2 className="mt-16 font-display text-2xl tracking-tight">{children}</h2>
   );
 }
 
-function H2({ children }: { children: React.ReactNode }) {
+function Chip({
+  tone,
+  children,
+}: {
+  tone: "keep" | "drop" | "free" | "degrades" | "fails";
+  children: React.ReactNode;
+}) {
+  const tones = {
+    keep: "border-copper/50 text-copper-bright",
+    drop: "hairline text-muted line-through decoration-muted/60",
+    free: "border-copper/50 text-copper-bright",
+    degrades: "hairline text-ink-2",
+    fails: "hairline text-muted",
+  } as const;
   return (
-    <h2 className="mt-14 font-display text-2xl tracking-tight">{children}</h2>
+    <span
+      className={`inline-flex items-center font-mono text-[0.62rem] uppercase tracking-widest border rounded-[2px] px-1.5 py-0.5 ${tones[tone]}`}
+    >
+      {children}
+    </span>
   );
 }
 
 /* ------------------------------------------------------------------ data */
 
-const GRADIENT = [
+const KEPT = ["role", "name", "tag", "depth", "interactive", "checked"];
+const DROPPED = ["class", "CSS", "colors", "fonts", "spacing", "animation"];
+
+const STEPS = [
   {
-    change: "Restyle: classes, stylesheets, colors, fonts, spacing",
-    sees: "Nothing. The distiller never reads class or CSS.",
-    cost: "~6 tokens — a zero-delta diff",
-    verdict: "free",
+    label: "Step 1 · first look",
+    tokens: "~65 tokens",
+    what: "One grounded snapshot of the page. Paid once — this is the diff base.",
   },
   {
-    change: "Visual reordering (CSS order, or DOM moves at the same depth)",
-    sees: "Same stable IDs; only the machine-readable order changes.",
-    cost: "~6 tokens",
-    verdict: "free",
+    label: "Step 2 · full redesign",
+    tokens: "~6 tokens",
+    what: "New classes, fonts, colors on every element. The diff: “no observation changes.”",
   },
   {
-    change: "Translucency, fades, mid-animation opacity",
-    sees: "Nothing, since #138. Only a value parsing to exactly 0 is invisible.",
-    cost: "~6 tokens",
-    verdict: "free",
-  },
-  {
-    change: "Copy tweaks: a button renamed, a placeholder reworded",
-    sees: "Identity churn — name feeds the stable ID, so a remove + add.",
-    cost: "A few diff lines; cross-run resolution falls back toward selector hints",
-    verdict: "degrades",
-  },
-  {
-    change: "Layout restructuring: wrapper elements shift DOM depth",
-    sees: "The ancestry bucket flips for about half the nodes.",
-    cost: "One bounded re-snapshot (median 9.3K chars in G1 data), then diffs resume",
-    verdict: "degrades",
-  },
-  {
-    change: "A restyle duplicates an interactive element's role + name",
-    sees: "ObservationIdentityError — refused, never guessed at.",
-    cost: "The run fails closed and falls back to the plain agent",
-    verdict: "fails closed",
+    label: "Step 3 · a real change",
+    tokens: "~11 tokens",
+    what: "A new required field, hidden inside another restyle. One diff line — the field.",
   },
 ];
 
-const TRANSCRIPT = `$ npx tsx scripts/demo/cosmetic-diff-demo.ts
-
-=== Step 1: grounded observation (mode=bootstrap, the diff base) ===
-- [0a0eab9ca97781a3] heading "Vendor registration"
-* [43b1171e7d0e7748] textbox #company "Company name"
-* [f611d7df7dd6e00d] combobox #country "Country"
-* [6c356500acbb7b0f] button #submit "Submit registration"
-- [1dbac07d393d2874] p "All fields are required."
-[260 chars, ~65 tokens]
-
-=== Step 2: after the full cosmetic redesign (mode=diff) ===
-(no observation changes)
-[24 chars, ~6 tokens — identical stable IDs: true]
-
-=== Step 3: a real change (new required field) inside another restyle ===
-(mode=diff)
-+ * [57690cb72562634c] textbox #tax "Tax ID"
-[~11 tokens — the restyle is silent, the new control is not]`;
+const GRADIENT = [
+  {
+    change: "Restyle — classes, CSS, colors, fonts",
+    result: "Invisible. The diff never sees styling.",
+    cost: "~6 tokens",
+    tone: "free" as const,
+  },
+  {
+    change: "Visual reordering",
+    result: "Same element identities; only order updates.",
+    cost: "~6 tokens",
+    tone: "free" as const,
+  },
+  {
+    change: "Fades & translucency",
+    result: "Still visible, still tracked.",
+    cost: "~6 tokens",
+    tone: "free" as const,
+  },
+  {
+    change: "Renamed labels or placeholders",
+    result: "Identity changes; resolution falls back to selectors.",
+    cost: "a few diff lines",
+    tone: "degrades" as const,
+  },
+  {
+    change: "New wrapper layout",
+    result: "One bounded re-snapshot, then diffs resume.",
+    cost: "one snapshot",
+    tone: "degrades" as const,
+  },
+  {
+    change: "Two identical controls appear",
+    result: "Refused, never guessed. Falls back to the plain agent.",
+    cost: "run falls back",
+    tone: "fails" as const,
+  },
+];
 
 /* ------------------------------------------------------------------ page */
 
@@ -89,162 +106,141 @@ export default function CosmeticDriftPage() {
     <article className="pb-20">
       <p className="eyebrow">deep dive</p>
       <h1 className="mt-3 font-display text-4xl tracking-tight">
-        Cosmetic drift and the diff
+        A redesign costs 6 tokens
       </h1>
       <p className="mt-5 text-ink-2 leading-relaxed max-w-2xl">
-        A fair question from the field: if observations are diff-encoded
-        against a previous snapshot, doesn&apos;t a visual redesign break the
-        diff — or worse, flood it? The answer is that cosmetic drift is the
-        case this architecture handles <em>best</em>, and not by detection or
-        self-healing. It&apos;s handled by construction: the diff never sees a
-        restyle, because the layer below it already threw the styling away.
+        Rote sends the model <em>diffs</em> of the page, not the page. So what
+        happens when a site restyles everything? Nothing — and not because we
+        detect it. The styling is thrown away one layer before the diff runs,
+        so a redesign has nothing left to change.
       </p>
 
-      <H2>The information bottleneck</H2>
+      <H2>Watch it happen</H2>
       <p className="mt-4 text-ink-2 leading-relaxed max-w-2xl">
-        Before anything is diffed, a captured page passes through{" "}
-        <span className="font-mono text-[0.8rem]">distillPage</span> in{" "}
-        <span className="font-mono text-[0.8rem]">@rote/perception</span>. A
-        distilled node keeps seven things: role, accessible name, tag, an
-        optional selector hint, DOM depth, interactivity, and checked state.
-        The <span className="font-mono text-[0.8rem]">class</span> attribute is
-        never read. External CSS does not exist at this layer. Inline style is
-        consulted only to decide visibility. Everything a designer touches in a
-        reskin is discarded one stage before the diff runs — so the diff
-        cannot be confused by what it never receives.
+        The production pipeline on three versions of one page — original, fully
+        redesigned, and redesigned with a real new field hidden inside:
       </p>
-      <p className="mt-4 text-ink-2 leading-relaxed max-w-2xl">
-        Element identity is a 16-hex-char hash of role, name, and a bucketed
-        ancestry depth — deliberately <em>excluding</em> selector hints, ids,
-        and styling, so an id rename or restyle cannot change who an element
-        is:
-      </p>
-      <Code>{`// packages/perception/src/distill.ts
-function stableId(element, role, name) {
-  const ancestryBucket = Math.floor(element.depth / 2);
-  // Selector hints are deliberately excluded: IDs must survive an
-  // id/name attribute rename so the action resolver can recover
-  // through the semantic fallback chain (docs/02 C2).
-  return { hash: sha256(\`\${role}\\0\${name}\\0\${ancestryBucket}\`).slice(0, 16) };
-}`}</Code>
-
-      <H2>Run it yourself</H2>
-      <p className="mt-4 text-ink-2 leading-relaxed max-w-2xl">
-        This is the production pipeline — the same{" "}
-        <span className="font-mono text-[0.8rem]">
-          distillPage → renderAdaptiveObservation
-        </span>{" "}
-        path the agent runs, no mocks, no API key — on three versions of one
-        page: the original, a full redesign (new utility classes on every
-        element, inline fonts and colors, a translucent button), and a second
-        restyle hiding a genuinely new required field:
-      </p>
-      <Code>{TRANSCRIPT}</Code>
-      <p className="mt-4 text-ink-2 leading-relaxed max-w-2xl">
-        The redesign costs six tokens. The real change costs eleven, and
-        surfaces as exactly the one line that matters. The demo lives at{" "}
-        <span className="font-mono text-[0.8rem]">
-          scripts/demo/cosmetic-diff-demo.ts
-        </span>{" "}
-        — the page HTML is inline, so edit it and rerun to try your own
-        drift.
-      </p>
-
-      <H2>The drift gradient</H2>
-      <p className="mt-4 text-ink-2 leading-relaxed max-w-2xl">
-        &ldquo;Cosmetic&rdquo; is a spectrum, and honesty about where it stops
-        being free matters more than the headline. What each change looks like
-        from inside the pipeline:
-      </p>
-      <div className="mt-6 grid gap-3">
-        {GRADIENT.map((row) => (
-          <div
-            key={row.change}
-            className="rounded-sm border hairline bg-surface p-4 grid gap-2 sm:grid-cols-[1fr_auto] sm:items-start"
-          >
-            <div>
-              <p className="text-[0.85rem] text-ink-2 leading-relaxed">
-                {row.change}
-              </p>
-              <p className="mt-1.5 text-[0.78rem] text-muted leading-relaxed">
-                What the diff sees: {row.sees}
-              </p>
-              <p className="mt-1 font-mono text-[0.68rem] text-copper-bright">
-                {row.cost}
-              </p>
-            </div>
-            <span className="font-mono text-[0.6rem] uppercase tracking-widest text-muted border hairline rounded-[2px] px-1.5 py-0.5 justify-self-start sm:justify-self-end">
-              {row.verdict}
-            </span>
+      {/* plain <img>: the GIF is animated, next/image would freeze or bloat it */}
+      <img
+        src="/cosmetic-diff-demo.gif"
+        alt="Terminal demo: a full cosmetic redesign produces the diff “no observation changes” (~6 tokens); a hidden real change surfaces as one diff line (~11 tokens)."
+        className="mt-6 w-full rounded-sm border hairline"
+      />
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        {STEPS.map((s) => (
+          <div key={s.label} className="rounded-sm border hairline bg-surface p-4">
+            <p className="font-mono text-[0.62rem] uppercase tracking-widest text-muted">
+              {s.label}
+            </p>
+            <p className="mt-2 font-display text-2xl text-copper-bright">
+              {s.tokens}
+            </p>
+            <p className="mt-2 text-[0.8rem] text-ink-2 leading-relaxed">
+              {s.what}
+            </p>
           </div>
         ))}
       </div>
-      <p className="mt-6 text-ink-2 leading-relaxed max-w-2xl">
-        The pattern across the gradient: cosmetic drift degrades{" "}
-        <em>cost</em>, never <em>correctness</em>. The failure ladder is diff →
-        identity churn → one bounded re-snapshot under an explicit ceiling →
-        clean fallback to the plain agent. There is no rung where the system
-        acts on a stale picture of the page — that is design invariant #1
-        (never silently wrong) meeting invariant #2 (never worse than
-        baseline).
+
+      <H2>How it&apos;s taken care of</H2>
+      <p className="mt-4 text-ink-2 leading-relaxed max-w-2xl">
+        Before anything is diffed, every page passes through a distiller that
+        keeps what an <em>agent</em> needs and drops what a <em>designer</em>{" "}
+        touches:
+      </p>
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-sm border border-copper/40 bg-surface p-4">
+          <p className="font-mono text-[0.62rem] uppercase tracking-widest text-copper-bright">
+            kept — what the agent acts on
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {KEPT.map((k) => (
+              <Chip key={k} tone="keep">
+                {k}
+              </Chip>
+            ))}
+          </div>
+        </div>
+        <div className="rounded-sm border hairline bg-surface p-4">
+          <p className="font-mono text-[0.62rem] uppercase tracking-widest text-muted">
+            dropped — what a redesign touches
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {DROPPED.map((d) => (
+              <Chip key={d} tone="drop">
+                {d}
+              </Chip>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="mt-6 rounded-sm border hairline bg-surface p-4 overflow-x-auto">
+        <p className="font-mono text-[0.72rem] leading-relaxed text-ink-2 whitespace-nowrap">
+          page&nbsp;&nbsp;→&nbsp;&nbsp;distill{" "}
+          <span className="text-muted">(styling dropped here)</span>
+          &nbsp;&nbsp;→&nbsp;&nbsp;stable IDs&nbsp;&nbsp;→&nbsp;&nbsp;diff
+          &nbsp;&nbsp;→&nbsp;&nbsp;planner
+        </p>
+      </div>
+      <p className="mt-4 text-ink-2 leading-relaxed max-w-2xl">
+        Each element&apos;s identity is a hash of what it <em>is</em> — role,
+        name, position band — never how it looks and never its selectors. A
+        restyled button is still the same button, so the diff has nothing to
+        report and replay finds its target without hesitation.
       </p>
 
-      <H2>The bug the question found</H2>
+      <H2>Where the line is</H2>
       <p className="mt-4 text-ink-2 leading-relaxed max-w-2xl">
-        Auditing this claim against the code surfaced one place a cosmetic
-        change genuinely broke observation. Visibility gating
-        substring-matched inline styles — and{" "}
-        <span className="font-mono text-[0.8rem]">
-          &quot;opacity:0.5&quot;
-        </span>{" "}
-        contains{" "}
-        <span className="font-mono text-[0.8rem]">&quot;opacity:0&quot;</span>.
-        A merely translucent control — a mid-fade animation frame, a cosmetic
-        dimming — silently vanished from the distilled observation and
-        surfaced as a spurious removal in the next diff: an element reported
-        gone while sitting on screen.
+        &ldquo;Cosmetic&rdquo; is a spectrum. Here&apos;s the whole of it, and
+        what each kind of change costs:
       </p>
-      <Code>{`// before — a translucent control matches the substring and vanishes
-return !style.includes('display:none')
-  && !style.includes('visibility:hidden')
-  && !style.includes('opacity:0');   // "opacity:0.5" matches
-
-// after (#138) — parse, and fail open on anything unparseable
-const opacity = /(?:^|;)opacity:([^;]+)/.exec(style);
-return opacity === null || Number.parseFloat(opacity[1]) !== 0;`}</Code>
+      <div className="mt-6 rounded-sm border hairline overflow-x-auto">
+        <table className="w-full text-left text-[0.82rem]">
+          <thead>
+            <tr className="border-b hairline">
+              <th className="p-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal">
+                the site changes…
+              </th>
+              <th className="p-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal">
+                rote&apos;s response
+              </th>
+              <th className="p-3 font-mono text-[0.62rem] uppercase tracking-widest text-muted font-normal">
+                cost
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {GRADIENT.map((row) => (
+              <tr key={row.change} className="border-b hairline last:border-b-0">
+                <td className="p-3 text-ink-2 align-top">{row.change}</td>
+                <td className="p-3 text-ink-2 align-top">{row.result}</td>
+                <td className="p-3 align-top whitespace-nowrap">
+                  <Chip tone={row.tone}>{row.cost}</Chip>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <p className="mt-4 text-ink-2 leading-relaxed max-w-2xl">
-        Only a value parsing to exactly 0 (including{" "}
-        <span className="font-mono text-[0.8rem]">0%</span>) is treated as
-        invisible; anything unparseable stays visible, because dropping a real
-        control is the dangerous direction. The fix landed with a regression
-        fixture covering{" "}
-        <span className="font-mono text-[0.8rem]">0.37</span>,{" "}
-        <span className="font-mono text-[0.8rem]">.5</span>,{" "}
-        <span className="font-mono text-[0.8rem]">0</span>, and{" "}
-        <span className="font-mono text-[0.8rem]">0%</span> in the same PR
-        (#138), per the project rule that every manually-found bug becomes an
-        automated test in the PR that fixes it.
+        The rule across every row: drift can cost tokens, but it can never make
+        the agent act on a stale picture of the page. When the system
+        isn&apos;t sure, it re-looks or hands off — it doesn&apos;t guess.
       </p>
 
-      <H2>Where the hard problem actually is</H2>
+      <H2>Try it yourself</H2>
       <p className="mt-4 text-ink-2 leading-relaxed max-w-2xl">
-        Cosmetic drift is the easy half, and it&apos;s easy for a structural
-        reason: the bottleneck discards exactly what cosmetic changes touch.
-        The corollary is that every real robustness hole lives where a signal{" "}
-        <em>crosses</em> the bottleneck. Structural drift — an{" "}
-        <span className="font-mono text-[0.8rem]">&lt;input&gt;</span> becoming
-        a <span className="font-mono text-[0.8rem]">&lt;textarea&gt;</span>, a
-        button gaining{" "}
-        <span className="font-mono text-[0.8rem]">disabled</span> — fails in
-        the opposite direction: both distill to the same role today, the tag
-        is not part of identity, and the swap is invisible rather than noisy.
-        The planned fix keeps affordances (entry mode, disabled, readonly,
-        value type) as a channel separate from identity, checked as
-        action-conditioned preconditions: input→textarea passes under a bare
-        fill, where it genuinely is equivalent, and fails the moment a step
-        depends on Enter submitting. Functional equivalence is relative to the
-        action — under-observation and over-observation fail in opposite
-        directions, and the stable-ID hash is the dial between them.
+        No API key needed. The page HTML is inline in the script — edit the
+        &ldquo;redesign&rdquo; and rerun your own drift:
+      </p>
+      <pre className="mt-4 rounded-sm border hairline bg-surface p-4 overflow-x-auto font-mono text-[0.72rem] leading-relaxed text-ink-2">
+        {`git clone https://github.com/kedarvartak/rote && cd rote && npm i
+npx tsx scripts/demo/cosmetic-diff-demo.ts`}
+      </pre>
+      <p className="mt-8 text-[0.8rem] text-muted leading-relaxed max-w-2xl">
+        Scope note: this page covers <em>cosmetic</em> drift. Structural drift
+        — an input swapped for a textarea, a button disabled — is a different
+        problem with its own planned defenses, tracked openly in the roadmap.
       </p>
     </article>
   );
