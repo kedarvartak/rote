@@ -3,7 +3,7 @@ import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
   description:
-    "The phase arc from P0 foundations to a P5 platform, with the exit gates drawn on the line — what shipped, what's designed, and what blocks launch.",
+    "The phase arc from launched P1 working memory to a P5 platform, with evidence gates and build status drawn on the line.",
 };
 
 /* ------------------------------------------------------------------ data */
@@ -50,8 +50,8 @@ const ARC: Entry[] = [
     theme: "Working memory — tier 0",
     quote: "The first browser agent with a managed context window.",
     tier: "0",
-    target: "2026 Q3",
-    state: "now",
+    target: "launched 2026-08-08",
+    state: "done",
     ships: [
       "A11 observation eviction — kills the dominant quadratic term",
       "A4 diff observations — 849 diffs in G1, median 24 chars, −99.6% vs re-send",
@@ -84,7 +84,7 @@ const ARC: Entry[] = [
     quote: "Your 50th task on a site costs a fraction of your 1st.",
     tier: "1 · 2",
     target: "2026 Q4",
-    state: "planned",
+    state: "now",
     ships: [
       "Playbook distiller — trajectories become verified playbooks",
       "Matcher: semantic match + bind behind the fingerprint gate",
@@ -311,18 +311,17 @@ export default function RoadmapPage() {
         </Reveal>
       </div>
 
-      {/* what blocks launch */}
+      {/* launch closure */}
       <Reveal delay={100}>
         <div className="mt-16 rounded-sm border border-copper/40 bg-copper/[0.06] p-6">
           <p className="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-copper-bright">
-            what blocks launch
+            P1 launch closure
           </p>
           <p className="mt-3 text-[0.92rem] text-ink-2 leading-relaxed max-w-3xl">
-            G1 passed at 37.2%; G2 — the tokens-per-task level win at success
-            parity — has not yet run. The packages are private at 0.0.0, so
-            the <code className="font-mono text-[0.85em] text-ink">npx @rotehq/cli run</code>{" "}
-            quickstart does not exist yet, and there is no public demo. The
-            second number isn&apos;t in — and the launch package waits for it.
+            G1 and corrected G2 pass. Public <code className="font-mono text-[0.85em] text-ink">@rotehq/cli@0.1.0</code>{" "}
+            matches its audited registry artifact, and T28 verifies the
+            provider-backed quickstart from an empty directory. P1 launched
+            without expanding its one-provider, pinned-cell claims; E7.1 is next.
           </p>
         </div>
       </Reveal>

@@ -98,19 +98,19 @@ affected steps. That provider-token overhead has not been recertified. It is
 a fail-closed safety change, not a new efficiency claim.
 
 The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulative-token-curve.md),
-[T11](testing/T11-cache-key-economics.md), [T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md), [T22](testing/T22-stagehand-qualification.md), [T23](testing/T23-skyvern-qualification.md), [T24](testing/T24-browser-use-0137-qualification.md), [T25](testing/T25-browser-use-0137-paired-certification.md), [T26](testing/T26-post-action-evidence-qualification.md), and [T27](testing/T27-magnitude-qualification.md).
+[T11](testing/T11-cache-key-economics.md), [T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md), [T22](testing/T22-stagehand-qualification.md), [T23](testing/T23-skyvern-qualification.md), [T24](testing/T24-browser-use-0137-qualification.md), [T25](testing/T25-browser-use-0137-paired-certification.md), [T26](testing/T26-post-action-evidence-qualification.md), [T27](testing/T27-magnitude-qualification.md), and [T28](testing/T28-registry-provider-quickstart.md).
 
 ## Provider, packaging, and operations
 
 - OpenAI is the canonical measured provider. Anthropic accounting is implemented, but
   explicit Anthropic cache-layout economics remain unqualified.
 - Pricing is a dated benchmark snapshot, not a billing guarantee.
-- `@rotehq/cli@0.1.0` is npm-published; registry metadata/integrity and a clean no-key bin
-  invocation pass. The provider-backed registry quickstart and T28 release record remain
-  deferred in [#107](https://github.com/kedarvartak/rote/issues/107), so P1 is not yet
-  marked launched. Version 0.1.0 predates B4; deterministic compaction is on `main` for a
-  later package version. The unscoped `rote` and original `@rote` scope are controlled by
-  unrelated owners ([T14](testing/T14-cli-package-candidate.md)).
+- `@rotehq/cli@0.1.0` is npm-published and provider-verified from an empty directory in
+  [T28](testing/T28-registry-provider-quickstart.md). Its immutable bundled README retains
+  candidate-era wording that publication is pending; tracked docs correct this for later
+  versions rather than changing published bytes. Version 0.1.0 predates B4; deterministic
+  compaction is on `main` for a later package version. The unscoped `rote` and original
+  `@rote` scope are controlled by unrelated owners ([T14](testing/T14-cli-package-candidate.md)).
 - The CLI requires Node 20+ and an installed Chrome/Chromium executable.
 - Windows and macOS package installation are not yet exercised in CI; current package
   evidence is Linux.

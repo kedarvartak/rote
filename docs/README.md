@@ -21,13 +21,14 @@ marks status; the authoritative table is [02 §Status](02-architecture.md).
 | **Built, measured** | diff observations — T10 records 849 real WordPress diffs with 99.6% median render-size reduction · stable-prefix cache routing — T11 cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% · deterministic semantic drift recovery — T21 repairs 72/72 and observes 0/90 silent failures |
 | **Not built / unqualified** | B4 long-run provider/SPA qualification · playbook distiller · matcher · site memory · model routing · speculation |
 
-We are in **P1 (V1)**: **tier 0, working memory.** G1 passes: 37.2% slower cumulative
-logical-input growth (95% CI 35.6–38.8%) at success parity. B1/B3 retain level evidence;
-T19 withdrew B2's v1 claim after finding its completion-only oracle; T20 protocol-v2
-certification restores B2/full G2 at exact parity; T21 passes deterministic B5 drift; T25 separately refreshes corrected B2 against Browser Use 0.13.7 with fresh exact pairs; T26 qualifies zero-LLM strong action effects while keeping generic click reaction non-enforcing. The CLI package
-candidate, runnable cold→replay→drift-fallback demo, and one-command evidence reproduction
-work; registry publication remains. Post-G1 cache routing wins
-long-cell cost while the shortest cell still crosses parity. **No number, no launch.**
+**P1 (V1) launched on 2026-08-08; P2 is current.** G1 passes at 37.2% slower cumulative
+logical-input growth (95% CI 35.6–38.8%) at success parity. T20 restores corrected B2/full
+G2; T21 passes deterministic B5 drift; T25 separately refreshes corrected B2 against
+Browser Use 0.13.7 with fresh exact pairs; T26 qualifies zero-LLM strong action effects
+while keeping generic click reaction non-enforcing. Public `@rotehq/cli@0.1.0` matches its
+audited bytes, and T28 verifies the provider-backed quickstart from an empty directory.
+Post-G1 cache routing wins long-cell cost while the shortest cell still crosses parity.
+P2 begins with B4 built and E7.1's adversarial contract corpus next.
 
 ## The memory spine
 

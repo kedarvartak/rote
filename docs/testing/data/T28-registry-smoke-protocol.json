@@ -1,0 +1,54 @@
+{
+  "protocol_id": "p1-registry-provider-quickstart-v1",
+  "record_kind": "release_smoke",
+  "observed_at": "2026-08-08T12:05:39.146Z",
+  "package": {
+    "name": "@rotehq/cli",
+    "version": "0.1.0",
+    "source_commit": "5564443558c9eb9e48d29ff1aca80d205cf0d32b",
+    "tarball_sha256": "8fe18b3e2435cfb7538bbb0b003d616fcbfbbf05d4fef84b264b00a061a3b262",
+    "expected_integrity": "sha512-SDQGpvJaI8g/kxJLMbccJDRl7uyMjLeXQ0XxeEjAdG66a6rfEO+NXIo1nRCQsy2CEviEFp45umiMzmHNm7sOdA=="
+  },
+  "environment": {
+    "node": "v22.22.0",
+    "npm": "10.9.4",
+    "browser": "Chromium 150.0.7871.128 snap",
+    "initial_working_directory_entries": 0,
+    "source_checkout_present": false,
+    "package_manifest_present": false,
+    "credential": "OPENAI_API_KEY present; value not recorded"
+  },
+  "command": {
+    "argv": [
+      "npx",
+      "--yes",
+      "@rotehq/cli@0.1.0",
+      "run",
+      "Confirm that the page says Rote quickstart ready.",
+      "--url",
+      "data:text/html,<h1>Rote quickstart ready</h1>",
+      "--verify-text",
+      "Rote quickstart ready",
+      "--model",
+      "gpt-4.1-mini",
+      "--max-steps",
+      "3"
+    ],
+    "environment": {
+      "ROTE_LLM_PROVIDER": "openai",
+      "ROTE_BASE_DIR": "<empty-working-directory>/.rote"
+    }
+  },
+  "expected": {
+    "outcome": "success",
+    "phase": "cold",
+    "steps": 1,
+    "verification": {
+      "kind": "visible_text",
+      "exact_required_text": "Rote quickstart ready"
+    },
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "complete_raw_receipts": 1
+  }
+}

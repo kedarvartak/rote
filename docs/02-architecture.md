@@ -74,7 +74,7 @@ Designed but absent: `decision predictor memory mcp-server`.
 
 **Tier 0's launch scope is built and measured.** G1 measures eviction/diff growth, T11
 qualifies cache layout, corrected G2 measures task levels, and T21 grades deterministic
-target drift. History compaction landed first under the explicit #107 implementation waiver; P1 launch evidence remains open, and E7.6 still owns long-run qualification ([05](05-roadmap.md)).
+target drift. History compaction landed first under the explicit #107 implementation waiver; T28 subsequently closed P1 launch evidence, and E7.6 still owns long-run qualification ([05](05-roadmap.md)).
 
 ## The four planes
 

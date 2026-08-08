@@ -19,11 +19,11 @@ const PHASES = [
     id: "P1",
     theme: "Working memory",
     line: "“The first browser agent with a managed context window.”",
-    target: "2026 Q3",
-    state: "now" as const,
+    target: "launched 2026-08-08",
+    state: "done" as const,
     gates: [
       { id: "G1", label: "the curve", verdict: "✓ 37.2%", ok: true },
-      { id: "G2", label: "the level", verdict: "pending", ok: false },
+      { id: "G2", label: "the level", verdict: "✓ 83.1%", ok: true },
     ],
   },
   {
@@ -31,7 +31,7 @@ const PHASES = [
     theme: "The harness that learns",
     line: "“Your 50th task on a site costs a fraction of your 1st.”",
     target: "2026 Q4",
-    state: "planned" as const,
+    state: "now" as const,
   },
   {
     id: "P3",

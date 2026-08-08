@@ -1,0 +1,51 @@
+[
+  {
+    "id": "@rotehq/cli@0.1.0",
+    "name": "@rotehq/cli",
+    "version": "0.1.0",
+    "size": 106253,
+    "unpackedSize": 407362,
+    "shasum": "b0a18f34ef0c119128ce567d810712aadfe58d36",
+    "integrity": "sha512-SDQGpvJaI8g/kxJLMbccJDRl7uyMjLeXQ0XxeEjAdG66a6rfEO+NXIo1nRCQsy2CEviEFp45umiMzmHNm7sOdA==",
+    "filename": "rotehq-cli-0.1.0.tgz",
+    "files": [
+      {
+        "path": "README.md",
+        "size": 5199,
+        "mode": 420
+      },
+      {
+        "path": "bin/rote.js",
+        "size": 212,
+        "mode": 493
+      },
+      {
+        "path": "dist/cli-entry.js",
+        "size": 121183,
+        "mode": 420
+      },
+      {
+        "path": "dist/cli-entry.js.LEGAL.txt",
+        "size": 0,
+        "mode": 420
+      },
+      {
+        "path": "dist/cli-entry.js.map",
+        "size": 278669,
+        "mode": 420
+      },
+      {
+        "path": "dist/LICENSE",
+        "size": 1069,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 1030,
+        "mode": 420
+      }
+    ],
+    "entryCount": 7,
+    "bundled": []
+  }
+]

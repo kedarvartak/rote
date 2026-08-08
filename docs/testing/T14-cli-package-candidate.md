@@ -1,5 +1,10 @@
 # T14 — CLI package candidate and clean-install smoke
 
+> **2026-08-08 release addendum:** [T28](T28-registry-provider-quickstart.md) now
+> preserves the public `@rotehq/cli@0.1.0` registry integrity and successful
+> provider-backed empty-directory quickstart. The original candidate evidence below
+> remains unchanged.
+>
 > **2026-08-04 scope addendum:** the authenticated maintainer is not a member of the
 > unrelated `@rote` scope; the attempted publish failed with `E404` before creating any
 > package or consuming version 0.1.0. The maintainer then created and verified ownership

@@ -1,16 +1,17 @@
 # @rotehq/cli
 
 The `rote` command-line interface. It inspects recorded runs and launches recorded,
-verified cold browser-agent tasks against local Chrome. The 0.1.0 package bundles internal
-Rote workspaces into JavaScript, so consumers do not need the monorepo or a TypeScript
-runtime. Later milestones add integrated replay selection, distillation, status, and diff
-commands.
+verified cold browser-agent tasks against local Chrome. The public 0.1.0 package bundles
+internal Rote workspaces into JavaScript, so consumers do not need the monorepo or a
+TypeScript runtime. The source workspace has advanced to 0.2.0-dev.0 for post-release
+work; later milestones add distillation, status, and diff commands.
 
 ## Quickstart
 
-Prerequisites: Node 20+, Chrome/Chromium, and one provider key. The scoped package is
-prepared for the maintainer-owned `rotehq` npm organization but is not registry-published until the final release smoke; see
-[T14](https://github.com/kedarvartak/rote/blob/main/docs/testing/T14-cli-package-candidate.md).
+Prerequisites: Node 20+, Chrome/Chromium, and one provider key. The package is public in
+the maintainer-owned `rotehq` npm organization. Its registry bytes and provider-backed
+empty-directory quickstart are frozen in
+[T28](https://github.com/kedarvartak/rote/blob/main/docs/testing/T28-registry-provider-quickstart.md).
 
 ```bash
 export OPENAI_API_KEY=...
@@ -82,8 +83,9 @@ In particular:
 - No automatic matcher, distillation, arbitrary workflow repair, or repair-management commands yet; candidates are explicit and semantic healing is target-level only.
 - V1 verification currently supports visible text and URL substring checks; richer live
   Expect DSL wiring lands with action-plane hardening.
-- npm's unscoped `rote` name belongs to an unrelated package. The release candidate is
-  `@rotehq/cli`; registry-backed `npx` remains blocked until the final publish and clean-install smoke.
+- npm's unscoped `rote` name belongs to an unrelated package. Use the published
+  `@rotehq/cli`; the immutable 0.1.0 tarball predates B4 and its bundled README retains
+  candidate-era publication wording corrected by T28 and this tracked source.
 - Chrome/Chromium must already be installed or supplied with `--chrome-path`.
 - Cold fallback re-navigates the initial URL, but cannot generically undo server-side side
   effects made before a replay failure. Only use replay for workflows whose authored

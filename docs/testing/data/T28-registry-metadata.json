@@ -1,0 +1,7 @@
+{
+  "name": "@rotehq/cli",
+  "version": "0.1.0",
+  "dist.tarball": "https://registry.npmjs.org/@rotehq/cli/-/cli-0.1.0.tgz",
+  "dist.shasum": "b0a18f34ef0c119128ce567d810712aadfe58d36",
+  "dist.integrity": "sha512-SDQGpvJaI8g/kxJLMbccJDRl7uyMjLeXQ0XxeEjAdG66a6rfEO+NXIo1nRCQsy2CEviEFp45umiMzmHNm7sOdA=="
+}

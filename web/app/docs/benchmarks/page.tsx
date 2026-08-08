@@ -202,11 +202,11 @@ export default function BenchmarksPage() {
         <div className="rounded-sm border hairline bg-surface p-5">
           <div className="flex items-baseline justify-between">
             <p className="font-mono text-sm">G2 · the level</p>
-            <p className="font-mono text-[0.7rem] uppercase tracking-widest text-muted">not yet run</p>
+            <p className="font-mono text-[0.7rem] uppercase tracking-widest text-good">pass · 83.1%</p>
           </div>
           <p className="mt-2 text-[0.85rem] text-ink-2 leading-relaxed">
-            A tokens-per-task win at success parity, ≥15 runs, bootstrap lower
-            bound above the floor. The launch package waits on it.
+            Corrected B2 passes 18/18 attempts per harness against Browser Use
+            0.13.7, with an 83.1% logical-token reduction [82.1–83.9%].
           </p>
         </div>
       </div>

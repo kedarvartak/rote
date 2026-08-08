@@ -507,7 +507,7 @@ export default function Home() {
             <SectionHead
               eyebrow="docs/05 · roadmap"
               title="From a managed window to a substrate"
-              lede="No number, no launch — and the next number is G2's."
+              lede="P1 launched on audited G1/G2 evidence; P2 starts from the frozen enterprise contracts."
             />
           </Reveal>
           <div className="mt-14">
