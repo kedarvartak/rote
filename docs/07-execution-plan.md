@@ -37,7 +37,7 @@ drives sequencing:
 | #57 done: provider-normalized cache accounting, property-tested | caching work is unblocked and cannot fake a win |
 | #49/#50 fixed: B2 11/11 | the matrix measures efficiency, not our bug |
 | #50/#51/#52/#54 done | Planner slips no longer poison success parity; exact fill/select/navigation effects are enforced without an LLM, generic click reaction stays non-enforcing, and final verification remains mandatory |
-| `@rotehq/cli@0.1.0` is published; registry integrity and a clean no-key bin invocation pass | provider-backed registry quickstart and T28 closure (#107) are the remaining launch blockers |
+| `@rotehq/cli@0.1.0` is published; registry integrity, clean no-key bin invocation, and provider-backed T28 quickstart pass | P1 launched; immutable 0.1.0 predates B4 and broader platform qualification remains deferred |
 | B4/B6 remain specified; B5 is now built and certified | T21 isolates post-G2 drift trust from the frozen level gate |
 
 ## P1 — the epics
@@ -108,12 +108,12 @@ exact-prefix routing on the E1 page. Small fixtures remain below provider cache 
 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---|---|---|---|
-| E5.1 | **Publish `@rotehq/cli`** (0.1.0): npm name check, `bin` wiring, quickstart. | 1.5 | E4 green | Package is public; audited registry integrity and clean no-key `npx` bin pass. [T14](testing/T14-cli-package-candidate.md) preserves candidate history; provider-backed registry output belongs in T28. | published; provider smoke deferred (#107) |
+| E5.1 | **Publish `@rotehq/cli`** (0.1.0): npm name check, `bin` wiring, quickstart. | 1.5 | E4 green | Package is public; audited registry integrity and clean no-key `npx` bin pass. [T14](testing/T14-cli-package-candidate.md) preserves candidate history; [T28](testing/T28-registry-provider-quickstart.md) retains the provider-backed registry output. | **done** |
 | E5.2 | **README with the number:** curve graph, G1/G2 results, units, method links, reproduction one-liner. | 0.5 | E1.5, E4.5 | README carries G1/G2 and `npm run reproduce:g2`; CI requires byte-identical Markdown/JSON from raw T13 evidence | done |
 | E5.3 | **Demo:** terminal recording of cold run → explicit warm replay → drift detection and classified plain-agent fallback on the fixture suite. Scoped repair is not built and must not be staged. | 1 | E5.1 | [T16](testing/T16-launch-demo.md): 5-step cold, 5-step zero-token replay, real selector drift fails stale replay then cold verifies; cast + four raw runs linked from README | done |
 | E5.4 | **Known-limitations doc:** no distiller (tier 1 is V2), no routing/speculation, eviction trades recall for cost, weak-fit list from [01](01-problem.md). | 0.5 | — | [known-limitations](known-limitations.md) is linked from README and covers product, browser, safety, evidence, provider, package, and recovery boundaries | done |
 | E5.5 | **Licence check** on competitor dependencies (dependencies, not forks). | 0.5 | — | [third-party review](third-party-licenses.md) records direct licenses, confirms Browser Use is an unmodified MIT dependency, and sets re-review triggers | done |
-| E5.6 | **Launch checklist walk** ([05](05-roadmap.md)) + ship. | 1 | all E5 | every repository-controlled box is checked; registry-backed `npx` remains blocked on maintainer npm scope/auth in #107 | blocked on #107 |
+| E5.6 | **Launch checklist walk** ([05](05-roadmap.md)) + ship. | 1 | all E5 | every repository-controlled box is checked; registry-backed provider `npx` verifies exactly with retained evidence | **done — T28** |
 
 ### E6 — Hygiene, in parallel. ~3 days
 
@@ -151,7 +151,7 @@ would make their weaknesses append-only data.
 
 | ID | Task | Est | Depends on | Acceptance | Status |
 |---|---|---:|---|---|---|
-| E7.1 | **Freeze the enterprise contract corpus** ([#127](https://github.com/kedarvartak/rote/issues/127)): duplicate grids, nested frame/open-shadow contexts, complex controls, SPA/restart cases, and authoritative oracles. | 2–3 | E5.6 | Deterministic fake-world and real-Chrome controls include exact positives, no-ops, unrelated mutation, identity collision, stale context, and restart boundaries; protocol distinguishes single-session endurance from continuation. | blocked (#107) |
+| E7.1 | **Freeze the enterprise contract corpus** ([#127](https://github.com/kedarvartak/rote/issues/127)): duplicate grids, nested frame/open-shadow contexts, complex controls, SPA/restart cases, and authoritative oracles. | 2–3 | E5.6 | Deterministic fake-world and real-Chrome controls include exact positives, no-ops, unrelated mutation, identity collision, stale context, and restart boundaries; protocol distinguishes single-session endurance from continuation. | **ready — next** |
 | E7.2 | **Stable target identity v2** ([#128](https://github.com/kedarvartak/rote/issues/128)): versioned browsing-context and composed-container lineage with fail-closed collision handling. | 4–6 | E7.1 | Distinct repeated-grid targets survive safe reorder/remount/selector rename; unresolved collisions stop before dispatch; v1 artifacts remain unchanged; no values or credentials enter identity. | blocked (E7.1) |
 | E7.3 | **Iframe and open Shadow DOM support** ([#129](https://github.com/kedarvartak/rote/issues/129)): capture → diff → resolve → dispatch across nested same/cross-origin contexts. | 5–8 | E7.2 | E7.1 frame/shadow cases pass exactly; detach/navigation/context mismatch fail before fuzzy dispatch; closed roots return a typed unsupported classification. | blocked (E7.2) |
 | E7.4 | **Authoritative evidence verification** ([#130](https://github.com/kedarvartak/rote/issues/130)): provenance/freshness-bound evidence envelopes plus injected fixture/API/database/download adapters. | 4–6 | E7.1, E7.2 | Declared authoritative outcomes cannot pass from harness conclusion, generic DOM change, stale evidence, or another task's evidence; every verifier exit has invariant coverage. | blocked (E7.2) |
@@ -196,7 +196,7 @@ putting secrets into P2 checkpoints.
 **Assumptions:** 1–3 builders; OSS-first; pinned models stay available through E4;
 provider pricing table refreshed at E4.5.
 
-**Issues (open, tracked):** #107 (provider-backed registry smoke) · #127–#133 (ordered P2 E7 pipeline). **Done:** #50 · #51 · #52 · #54 · #136.
+**Issues (open, tracked):** #127–#133 (ordered P2 E7 pipeline). **Done:** #50 · #51 · #52 · #54 · #107 · #136.
 
 **Dependencies:** provider usage APIs (#57 contract) · Browser Use as a dependency,
 never a fork · CDP/Chrome stability on the measurement page.

@@ -21,6 +21,23 @@ Browser agents forget at three timescales, and pay again at every one. Rote trea
 context window as a managed resource: a budget, an eviction policy, a layout contract, and
 a trust gate on the way back in.
 
+## Quickstart
+
+Prerequisites: Node 20+, Chrome/Chromium, and an OpenAI key.
+
+```bash
+export OPENAI_API_KEY=...
+npx --yes @rotehq/cli@0.1.0 run \
+  "Confirm that the page says Rote quickstart ready." \
+  --url 'data:text/html,<h1>Rote quickstart ready</h1>' \
+  --verify-text 'Rote quickstart ready' \
+  --model gpt-4.1-mini --max-steps 3
+```
+
+The data URL is a local smoke. Only automate pages you are authorized to use, and provide
+an independent terminal-state verifier. See [T28](docs/testing/T28-registry-provider-quickstart.md)
+for the frozen empty-directory registry run.
+
 ## The problem
 
 A typical browser agent loop is expensive and serialized:
@@ -72,7 +89,7 @@ Rote is a complete browser-agent harness with four efficiency planes (see
 4. **Learning** — record every run, learn playbooks/site memory/transition models, and feed
    that knowledge back into replay, hints, resolution, and prediction.
 
-The first launch target is intentionally narrow and measurable:
+The P1 launch target was intentionally narrow and measurable:
 
 ```text
 same browser tasks as Browser Use → fewer tokens → success parity → raw benchmark data
@@ -226,7 +243,7 @@ head-to-head gate. First live run against a real browser and model
 ([T1](docs/testing/T1-openai-dry-run.md)) completed B1 in the minimum four actions; B2 now
 passes 11/11 after [#49](https://github.com/kedarvartak/rote/issues/49).
 
-We are in **P1 = tier 0, working memory**. Its four levers, honestly:
+**P1 tier-0 working memory launched on 2026-08-08; P2 is current.** The four tier-0 levers, honestly:
 
 | Lever | State |
 |---|---|
@@ -239,11 +256,11 @@ Not built: the playbook distiller (V1 replays hand-written playbooks), the match
 memory, model routing, speculation. **Tier 1 is table stakes and we are late to it** —
 Skyvern ships record → generated code → code replay with automatic AI fallback today; its documented zero-reasoning path must not be assumed for every generated artifact ([docs/04](docs/04-competition.md)). `docs/02-architecture.md` §Status is authoritative.
 
-**No number, no launch.** G1 passes its public 30% slope-reduction floor: 37.2%
+**No number, no launch was enforced.** G1 passes its public 30% slope-reduction floor: 37.2%
 (95% CI 35.6–38.8%) at success parity. B1/B3 retain their original level evidence and T20 restores B2/full G2 with an exact
 eight-value oracle. Cache economics still
 lose at G1's shortest cell. The CLI tarball, demo, and one-command reproduction pass;
-`@rotehq/cli@0.1.0` is registry-published and its audited integrity plus clean no-key bin invocation pass; the provider-backed registry quickstart and T28 launch record remain deferred in #107. Read the [known limitations](docs/known-limitations.md) before trying Rote and see
+`@rotehq/cli@0.1.0` is registry-published. Its audited integrity, clean no-key bin invocation, and provider-backed empty-directory quickstart pass; [T28](docs/testing/T28-registry-provider-quickstart.md) retains the exact manifest, trajectory, and raw receipt. Read the [known limitations](docs/known-limitations.md) before trying Rote and see
 [T14](docs/testing/T14-cli-package-candidate.md) for packaging evidence.
 
 ![Implemented and target package topology](docs/diagrams/package-map.svg)

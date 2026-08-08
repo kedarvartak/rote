@@ -14,8 +14,8 @@ the only tier where nobody else is building.
 | Phase | Theme | Tier | Launch headline | Target |
 |---|---|---|---|---|
 | **P0** — done | Foundations | — | — (internal) | done |
-| **P1** — *here* | **V1: working memory** | **0** | **"The first browser agent with a managed context window"** | 2026-Q3 |
-| P2 | V2: the harness that learns | 1, 2 | "Your 50th task on a site costs a fraction of your 1st" | 2026-Q4 |
+| **P1** — done | **V1: working memory** | **0** | **"The first browser agent with a managed context window"** | launched 2026-08-08 |
+| **P2** — *here* | V2: the harness that learns | 1, 2 | "Your 50th task on a site costs a fraction of your 1st" | 2026-Q4 |
 | P3 | V3: faster than the model thinks | 2 | "Warm flows bounded by think-time only" | 2027-Q1 |
 | P4 | Fleet & enterprise | — | "10K tasks/day, audited, lowest $ per task" | 2027-Q2–Q3 |
 | P5 | Platform | — | "The efficiency substrate other agents build on" | 2027-Q4+ |
@@ -36,7 +36,7 @@ community/OSS, docs-as-constitution.
 Core schemas + Expect DSL, lossless recorder, verified replay executor, benchmark matrix
 + per-source accounting. Carries forward unchanged.
 
-## P1 — V1: working memory *(we are here)*
+## P1 — V1: working memory *(launched 2026-08-08)*
 
 **A browser agent that manages its context window, and a curve that proves it.**
 
@@ -96,8 +96,8 @@ deepest differentiator and the riskiest machinery (shadow contexts, promotion at
 | W3 loop + context assembler | **done and OpenAI-economics qualified** — cache-key routing plus immutability guards preserve logical accounting and win long-cell billed cost in T11 |
 | W4 action plane | done — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50) |
 | W5 benchmark + the number | **done, corrected and refreshed** — T20 restores historical B2/full G2 against Browser Use 0.13.6; T25 separately certifies fresh corrected B2 against 0.13.7 with 83.1% lower logical tokens (95% CI 82.1–83.9%) at 18/18 exact parity per harness |
-| W6 launch package | package/demo/reproduction done; npm publication separately blocked |
-| **W7 working memory (new)** | #57 accounting **done** → G1/corrected G2/B5 **passed** → registry package published (provider-backed smoke open) → deterministic compaction built under waiver |
+| W6 launch package | **done** — public `@rotehq/cli@0.1.0`, demo, reproduction, and provider-backed T28 registry smoke |
+| **W7 working memory (new)** | #57 accounting **done** → G1/corrected G2/B5 **passed** → registry package/T28 **passed** → deterministic compaction built after 0.1.0 under waiver |
 
 **No longer blocking the number:** [#49](https://github.com/kedarvartak/rote/issues/49)
 and [#50](https://github.com/kedarvartak/rote/issues/50) are fixed — `expect` is now
@@ -111,11 +111,13 @@ is dropped with a recorded classification into the existing semantic resolution 
 Both still fail closed when no safe action can be resolved. The known planner-boundary
 robustness defects no longer block an honest success-parity measurement.
 
-**Blocking the launch:** corrected B2 and deterministic B5 now pass
+**Launch closed:** corrected B2 and deterministic B5 pass
 ([T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md)).
-`@rotehq/cli@0.1.0` is published and its registry metadata/integrity plus no-key bin invocation pass; the provider-backed registry quickstart and T28 closure remain #107. The runnable demo and one-command
-evidence reproduction are complete. The final gate walk and exact closure
-procedure are recorded in [launch readiness](launch-readiness.md).
+`@rotehq/cli@0.1.0` is published; registry metadata/integrity, a no-key bin invocation,
+and the provider-backed exact quickstart pass. [T28](testing/T28-registry-provider-quickstart.md)
+retains the empty-directory command, manifest, trajectory, and reconciled receipt. The
+runnable demo and one-command evidence reproduction are complete; the final gate walk is
+recorded in [launch readiness](launch-readiness.md).
 
 ### Exit gate
 
@@ -151,7 +153,7 @@ measured 37.2% (95% CI 35.6–38.8%) over 15 complete matched repetitions ([T10]
 
 ### Launch checklist
 
-- [ ] `npx` quickstart works on a clean machine with only an API key
+- [x] `npx` quickstart works from an empty directory with only an API key ([T28](testing/T28-registry-provider-quickstart.md))
 - [x] Benchmark reproduction is one command (`npm run reproduce:g2`); raw JSONL/receipts are downloadable
 - [x] Every published G1/G2 efficiency claim carries a number, units, and a link to method
 - [x] **The curve is a graph in the README**, with the method and the raw data

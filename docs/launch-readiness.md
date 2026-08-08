@@ -1,13 +1,12 @@
 # P1 launch readiness
 
-**Decision updated 2026-07-26: BLOCKED — do not announce or tag a release yet.**
+**Decision updated 2026-08-08: LAUNCHED — all P1 release gates pass.**
 
-T20 corrects B2 with 18/18 exact-oracle successes per harness and restores full historical G2. T25 separately refreshes corrected B2 against Browser Use 0.13.7 with 18/18 fresh exact successes per harness. Formal
-T21 deterministic B5 drift now passes. `@rotehq/cli@0.1.0` is npm-published and its
-registry integrity plus clean no-key bin invocation pass. The provider-backed registry
-quickstart, T28 record, and launch declaration remain deferred in
-[#107](https://github.com/kedarvartak/rote/issues/107); the unscoped `rote` and original
-`@rote` scope belong to unrelated owners.
+T20 corrects B2 with 18/18 exact-oracle successes per harness; T25 separately refreshes
+corrected B2 against Browser Use 0.13.7 with 18/18 fresh exact successes per harness. T21
+passes deterministic target-drift recovery. `@rotehq/cli@0.1.0` is npm-published, its
+registry bytes match the audited source artifact, and T28 completes the provider-backed
+registry quickstart from an empty directory.
 
 ## Gate walk
 
@@ -17,6 +16,7 @@ quickstart, T28 record, and launch declaration remain deferred in
 | OpenAI cache economics | qualified with short-cell loss | [T11](testing/T11-cache-key-economics.md): WP-N25 cost win; WP-N09 interval crosses parity |
 | G2 tokens/task level | **pass, corrected and refreshed** | B1/B3 retain exact 0.13.6 parity evidence; T20 restores corrected B2 historically, and T25 separately certifies 83.1% lower logical tokens (95% CI 82.1–83.9%) against 0.13.7 at 18/18 fresh exact parity per harness |
 | CLI package shape | pass | [T14](testing/T14-cli-package-candidate.md): build, pack, clean install, bin, live data URL and B1 |
+| Registry-backed provider quickstart | **pass** | [T28](testing/T28-registry-provider-quickstart.md): empty-directory `npx @rotehq/cli@0.1.0`, independent visible-text verification, exact registry integrity, manifest, trajectory, and reconciled raw receipt |
 | Eviction recall trade | fail-closed, task remains unsupported | [T18](testing/T18-eviction-recall-trade.md): missing fact is `recall_unavailable`; fabricated answer is `verification_failed` |
 | Failed replay fallback | pass with rollback limit | [T15](testing/T15-replay-fallback.md): failed cheap path remains failed; cold fallback verifies |
 | Runnable terminal demo | pass | [T16](testing/T16-launch-demo.md): cold → explicit zero-token replay → real drift detection/full fallback |
@@ -24,27 +24,23 @@ quickstart, T28 record, and launch declaration remain deferred in
 | Known limitations | published | [Known limitations](known-limitations.md) linked from README |
 | Competitor/dependency license review | pass | [Third-party review](third-party-licenses.md): Browser Use is an unmodified MIT dependency, not a fork |
 | Typecheck, lint, sacred invariants, package/script tests | pass | mandatory CI |
-| Registry-backed `npx` with only provider key | **PARTIAL — package/bin pass; provider-backed exact run deferred** | #107 |
 
-## Exact release closure
-
-The full G2 gate is restored. A maintainer with the chosen npm scope performs these steps; none may be inferred from a
-404 response. The `rotehq` organization is now confirmed maintainer-owned:
+## Release closure
 
 1. [x] Confirm maintainer ownership of `rotehq` and freeze `@rotehq/cli`.
-2. [x] From the merge commit, run `npm ci && npm test && npm run build`.
-3. [x] Pack and audit the seven-file tarball; registry integrity and shasum match it.
-4. [x] Publish 0.1.0 with public access and invoke its registry-backed bin in an empty directory.
-5. [ ] In an empty directory with no checkout, run the README data-URL command through
-   registry-backed `npx @rotehq/cli@0.1.0`. It must independently verify and leave
-   a valid manifest/trajectory.
-6. [ ] Publish that receipt as T28, check the final roadmap box, mark E5.1/E5.6 done,
-   and only then tag/announce P1.
+2. [x] Build, test, pack, and audit the seven-file tarball from source commit
+   `5564443558c9eb9e48d29ff1aca80d205cf0d32b`.
+3. [x] Publish `@rotehq/cli@0.1.0` with public access; registry integrity and shasum match.
+4. [x] Invoke the registry-backed bin without a provider key in an empty directory.
+5. [x] Run the README data-URL command through registry-backed `npx` with only an OpenAI
+   key; independently verify live visible text and retain a valid manifest/trajectory.
+6. [x] Publish [T28](testing/T28-registry-provider-quickstart.md), reconcile the raw receipt,
+   and close #107.
 
-## Not launch blockers, still not claims
+## Claims that did not expand at launch
 
-cross-provider B5 and arbitrary workflow repair, scheduled compaction, distillation, automatic matching, site memory, model routing, and
-speculation remain deferred. The launch is tier-0 working memory, not learned memory.
-
-The product website in PR #101 is useful collateral but is not allowed to override this
-technical gate. A green website PR cannot turn an unverified provider-backed registry path into a launch.
+P1 is one pinned tier-0 release, not a universal benchmark result. It does not establish
+cross-provider/model or broad production-site generality, vision, arbitrary workflow
+repair, transactional rollback, learned matching, or automated distillation. B4
+compaction was built after the immutable 0.1.0 artifact and still awaits E7.6's 50+ step
+provider/SPA qualification. See [known limitations](known-limitations.md).
