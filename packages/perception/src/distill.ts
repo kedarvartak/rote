@@ -74,12 +74,16 @@ function roleOf(element: CapturedElement): string {
 }
 
 function nameOf(element: CapturedElement): string {
+  const inputType = element.tag === 'input' ? (element.attributes['type'] ?? 'text') : undefined;
+  const buttonValue = inputType && ['button', 'reset', 'submit'].includes(inputType)
+    ? element.attributes['value']
+    : undefined;
   return (
     element.attributes['aria-label'] ??
     element.attributes['data-rote-name'] ??
     element.attributes['placeholder'] ??
     element.attributes['name'] ??
-    element.attributes['value'] ??
+    buttonValue ??
     element.text
   ).trim();
 }
@@ -95,8 +99,17 @@ function selectorHint(element: CapturedElement): string | undefined {
 }
 
 function stableId(element: CapturedElement, role: string, name: string): StableNodeId {
-  const ancestryBucket = Math.floor(element.depth / 2);
-  // Selector hints are deliberately excluded: IDs must survive an id/name attribute rename
-  // so the action resolver can recover through the semantic fallback chain (docs/02 C2).
-  return { hash: sha256Hex(`${role}\u0000${name}\u0000${ancestryBucket}`).slice(0, 16) };
+  const contextKey = element.attributes['data-rote-context-key'] ?? 'top';
+  const containerLineage = element.attributes['data-rote-container-lineage'] ?? '';
+  const contextHash = sha256Hex(contextKey).slice(0, 16);
+  const containerHash = sha256Hex(containerLineage || 'root').slice(0, 16);
+  // Selector hints and control values are deliberately excluded: v2 must survive
+  // harmless selector drift without turning credentials into durable artifacts.
+  // see docs/02-architecture.md "Stable IDs".
+  return {
+    version: 2,
+    hash: sha256Hex(`v2\u0000${role}\u0000${name}\u0000${contextHash}\u0000${containerHash}`).slice(0, 16),
+    contextHash,
+    containerHash,
+  };
 }

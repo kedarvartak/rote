@@ -1,4 +1,4 @@
-import type { DistilledNode } from '@rote/perception';
+import { stableNodeRef, type DistilledNode } from '@rote/perception';
 
 export interface ElementResolutionTarget {
   selector: string;
@@ -24,6 +24,15 @@ export class ElementResolutionError extends Error {
   }
 }
 
+/** Raised when more than one live element retains the requested semantic identity. */
+export class ElementResolutionAmbiguityError extends ElementResolutionError {
+  constructor(target: ElementResolutionTarget, readonly candidateCount: number) {
+    super(target);
+    this.name = 'ElementResolutionAmbiguityError';
+    this.message = `ambiguous browser target identity: ${candidateCount} candidates`;
+  }
+}
+
 /** Raised when independently grounded semantic hints identify different elements. */
 export class ElementResolutionConflictError extends ElementResolutionError {
   constructor(
@@ -43,7 +52,7 @@ export function resolveElementTarget(
   target: ElementResolutionTarget,
 ): ElementResolutionResult {
   const stableMatches = target.stableId
-    ? nodes.filter((candidate) => candidate.id.hash === target.stableId && candidate.selectorHint)
+    ? nodes.filter((candidate) => stableNodeRef(candidate.id) === target.stableId && candidate.selectorHint)
     : [];
   const role = target.role ? normalize(target.role) : undefined;
   const name = target.name ? normalize(target.name) : undefined;
@@ -52,6 +61,13 @@ export function resolveElementTarget(
       normalize(candidate.role) === role && normalize(candidate.name) === name && candidate.selectorHint
     ))
     : [];
+
+  // INVARIANT: residual v2 collisions stop before text/selector fallback. Choosing
+  // the first repeated control would turn identity uncertainty into a dispatch.
+  if (stableMatches.length > 1) throw new ElementResolutionAmbiguityError(target, stableMatches.length);
+  if (stableMatches.length === 0 && semanticMatches.length > 1) {
+    throw new ElementResolutionAmbiguityError(target, semanticMatches.length);
+  }
 
   // INVARIANT: two independently grounded semantic identities may not be mixed.
   // A selector can legitimately drift, but a stable ID for one element plus the
@@ -94,7 +110,7 @@ export function resolveElementTarget(
 }
 
 function result(node: DistilledNode, strategy: ElementResolutionStrategy): ElementResolutionResult {
-  return { selector: node.selectorHint!, strategy, stableId: node.id.hash };
+  return { selector: node.selectorHint!, strategy, stableId: stableNodeRef(node.id) };
 }
 
 function textSimilarity(left: string, right: string): number {

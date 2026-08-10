@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { captureStaticHtml } from '@rote/browser';
-import { distillPage } from '@rote/perception';
+import { distillPage, stableNodeRef } from '@rote/perception';
 import {
   ElementResolutionError,
   evaluateBrowserExpect,
@@ -15,7 +15,7 @@ const baseline = distillPage(fixture('../b2-vendor-form.html'));
 const baselineSubmit = baseline.find((node) => node.selectorHint === '#registration-submit')!;
 const target = {
   selector: '#registration-submit',
-  stableId: baselineSubmit.id.hash,
+  stableId: stableNodeRef(baselineSubmit.id),
   role: baselineSubmit.role,
   name: baselineSubmit.name,
   text: baselineSubmit.name,

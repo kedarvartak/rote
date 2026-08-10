@@ -73,6 +73,9 @@ jobs:
       - name: Enterprise fixture Chrome contract
         if: steps.detect.outputs.present == 'true'
         run: npm run test:enterprise-chrome --workspace @rote/bench
+      - name: Target identity v2 Chrome contract
+        if: steps.detect.outputs.present == 'true'
+        run: npm run test:identity-chrome --workspace @rote/action
 
   # Design docs are the constitution — broken internal links are bugs.
   docs:

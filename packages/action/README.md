@@ -9,7 +9,7 @@ resilient semantic element resolution before dispatch, and zero-LLM post-action 
 - `SettlednessTimeoutError` — typed timeout carrying the last activity sample.
 - `SettledBrowserPageSession` — wraps `navigate`, `fill`, `select`, and `click` with post-action settledness gates; callers may declare a measured background-request floor while DOM quietness remains mandatory.
 - `resolveElementTarget(nodes, target)` — resolves unique stable ID → unique role+name → unambiguous text proximity; selector-only legacy actions use their supplied selector, while semantic hints grounded to different rows fail before dispatch.
-- `ElementResolutionError` / `ElementResolutionConflictError` — typed failures for an unresolvable target or stable-ID/role-name field splicing.
+- `ElementResolutionError` / `ElementResolutionAmbiguityError` / `ElementResolutionConflictError` — typed failures for an unresolvable target, a residual identity collision before fallback, or stable-ID/role-name field splicing.
 - `evaluateBrowserExpect` / `assertBrowserExpect` — live checks for visible/absent selectors, input values, URL substrings, and visible text.
 - `BrowserExpectationError` — typed model-authored postcondition failure carrying the assertion and page URL.
 - `derivePostActionEvidence(input)` — compares settled before/after captures: fill/select values and canonical navigation targets are strong enforced effects; click DOM/URL changes are explicitly non-enforcing reaction evidence.
@@ -25,4 +25,5 @@ timeout through `--settle-timeout-ms`.
 
 ```bash
 npm test --workspace @rote/action
+npm run test:identity-chrome --workspace @rote/action
 ```

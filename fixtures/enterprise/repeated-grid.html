@@ -9,7 +9,7 @@
     <tr data-row-key="invoice-1042"><th>Contoso</th><td>USD 410</td><td><button aria-label="Approve invoice" data-fixture-target-key="invoice-1042">Approve</button></td></tr>
     <tr data-row-key="invoice-1043"><th>Fabrikam</th><td>USD 410</td><td><button aria-label="Approve invoice" data-fixture-target-key="invoice-1043" data-destructive="true">Approve</button></td></tr>
   </tbody></table>
-  <section aria-label="Virtualized approvals">
+  <section aria-label="Virtualized approvals" data-row-key="invoice-2001">
     <p data-virtual-label>Showing invoice 2001</p>
     <button aria-label="Approve invoice" data-fixture-target-key="invoice-2001" data-virtual-action>Approve</button>
     <button type="button" data-remount>Show next virtual row</button>
@@ -30,6 +30,7 @@
     const virtualContainer = document.querySelector('[aria-label="Virtualized approvals"]');
     document.querySelector('[data-remount]').addEventListener('click', () => {
       virtualKey = 'invoice-2002';
+      virtualContainer.dataset.rowKey = virtualKey;
       virtualContainer.querySelector('[data-virtual-label]').textContent = 'Showing invoice 2002';
       const oldButton = virtualContainer.querySelector('[data-virtual-action]');
       const replacement = oldButton.cloneNode(true);

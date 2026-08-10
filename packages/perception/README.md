@@ -9,10 +9,12 @@ dump when a compact tree of actionable elements is enough.
 
 ## Public API
 
-- `distillPage(page)` — keep visible interactive/content-bearing nodes, derive associated-label and ARIA names, prune hidden/empty/duplicate content, retain capture-proven selectors, and assign roles, stable IDs, and diffable checkbox/radio state.
+- `distillPage(page)` — keep visible interactive/content-bearing nodes, derive associated-label and ARIA names, prune hidden/empty/duplicate content, retain capture-proven selectors, and assign roles, identity-v2 IDs, and diffable checkbox/radio state. V2 hashes browsing context and allowlisted container lineage while excluding selectors and control values.
 - `renderObservation(nodes, { maxChars })` — render a compact, budgeted full observation.
 - `diffObservations(base, current)` / `applyObservationDiff(base, diff)` — ordered stable-ID diffs with exact reconstruction and malformed-diff rejection.
 - `renderAdaptiveObservation(nodes, options)` — use ordinary-budget full/diff observations; when no diff base exists, emit one explicitly metered grounded snapshot under a separate hard bootstrap ceiling, then return to diffs. Throws `ObservationBootstrapLimitError` before planning above that ceiling.
+- `StableNodeIdV1Schema` / `StableNodeIdV2Schema` / `StableNodeIdSchema` — preserve historical IDs unchanged while parsing and emitting explicit context-aware v2 identities.
+- `StableNodeRefSchema` / `stableNodeRef(id)` — preserve the identity version in planner/action/trajectory references (`v2:<hash>`), while accepting historical unprefixed v1 references.
 - `estimateTokens(text)` — approximate token count for budget tests.
 
 ## Running tests

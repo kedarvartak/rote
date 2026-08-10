@@ -40,7 +40,7 @@ describe('drift repair never silently dispatches an ungrounded target', () => {
 
     expect(result).toEqual({
       ok: false,
-      error: expect.objectContaining({ code: 'BROWSER_REPLAY_TOOL_ERROR' }),
+      error: expect.objectContaining({ code: 'BROWSER_TARGET_AMBIGUOUS' }),
     });
     expect(page.clicked).toEqual([]);
   });

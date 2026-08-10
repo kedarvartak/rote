@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { captureStaticHtml } from '@rote/browser';
-import { distillPage, type DistilledNode } from '@rote/perception';
-import { ElementResolutionConflictError, ElementResolutionError, resolveElementTarget } from '../src/index.js';
+import { distillPage, stableNodeRef, type DistilledNode } from '@rote/perception';
+import { ElementResolutionAmbiguityError, ElementResolutionConflictError, ElementResolutionError, resolveElementTarget } from '../src/index.js';
 
 const nodes: DistilledNode[] = [
   {
@@ -31,8 +31,8 @@ describe('resolveElementTarget', () => {
 
     expect(resolveElementTarget(after, {
       selector: '#submit',
-      stableId: before.id.hash,
-    })).toEqual({ selector: '#submit-v2', strategy: 'stable-id', stableId: before.id.hash });
+      stableId: stableNodeRef(before.id),
+    })).toEqual({ selector: '#submit-v2', strategy: 'stable-id', stableId: stableNodeRef(before.id) });
   });
 
   it('prefers a stable node ID over a stale supplied selector', () => {
@@ -98,13 +98,21 @@ describe('resolveElementTarget', () => {
     });
   });
 
-  it('rejects ambiguous semantic matches instead of clicking the first candidate', () => {
+  it('rejects ambiguous semantic matches with a typed failure instead of clicking the first candidate', () => {
     const duplicate = { ...nodes[0]!, id: { hash: 'dddddddddddddddd' }, selectorHint: '#second-submit' };
     expect(() => resolveElementTarget([...nodes, duplicate], {
       selector: '#stale',
       role: 'button',
       name: 'Submit registration',
-    })).toThrow(ElementResolutionError);
+    })).toThrow(ElementResolutionAmbiguityError);
+  });
+
+  it('rejects a residual stable-ID collision before selector fallback', () => {
+    const duplicate = { ...nodes[0]!, selectorHint: '#second-submit' };
+    expect(() => resolveElementTarget([...nodes, duplicate], {
+      selector: '#second-submit',
+      stableId: 'aaaaaaaaaaaaaaaa',
+    })).toThrow(ElementResolutionAmbiguityError);
   });
 
   it('does not use a stale selector when supplied semantic identity misses', () => {

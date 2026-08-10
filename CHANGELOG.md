@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Emit versioned target identity v2 from browsing context and hashed allowlisted container lineage, preserve v1 artifacts, exclude control values, and qualify repeated-grid stability in property tests and mandatory real Chrome (#144).
 - **P2**: Freeze 19 synthetic enterprise browser contract cases with task/freshness-bound external oracles, dispatch-free failure controls, separate 60-step SPA and restart lifecycles, and a repeated real-Chrome fixture smoke before implementing E7 mechanisms (#142).
 - **P1**: Launch public `@rotehq/cli@0.1.0` after an empty-directory provider-backed `npx` run independently verifies live page text and freezes registry integrity, manifest, trajectory, and reconciled raw receipt as T28 (#141).
 - **P1**: Add a runnable cosmetic-drift demo (`scripts/demo/cosmetic-diff-demo.ts`, no API key) showing a full redesign costing a ~6-token zero-delta diff while a hidden real change surfaces as one line, with a terminal recording (`docs/demo/cosmetic-diff-demo.gif`), a README pointer, and a website deep-dive (`/docs/cosmetic-drift`) covering the distiller bottleneck, the drift gradient, and the #138 opacity fix (#139).
@@ -22,9 +23,11 @@ labeled `skip-changelog`.
 - **P1**: Add `web/` — the product website (Next.js 15 + Tailwind v4, all routes static): a landing page with an animated tier-0 eviction hero and the G1/T11 headline numbers, an architecture page built from docs/02 embedding the design diagrams, and a docs section (overview, benchmarks & runs with audited figures from `docs/testing/data/`, packages, roadmap) (#101)
 
 ### Changed
+- **P2**: Stop residual stable-ID or role/name collisions with typed ambiguity before text or selector fallback (#144).
 - **P1**: Rework the website's `/docs/cosmetic-drift` deep-dive for scanability: lead with the demo recording and a three-step token strip (65 → 6 → 11 tokens), explain the fix as a kept/dropped distiller split with a pipeline flow line, compress the drift gradient into a table with cost chips, and crop the dead space out of the terminal GIF (#140).
 
 ### Docs
+- **P2**: Make structural action-contract drift the cross-cutting P2 trust-gate priority while stating that identity v2 alone does not establish semantic compatibility (#144).
 - **P1/P2**: Order enterprise browser readiness behind registry launch: freeze adversarial oracles, version target identity, add iframe/open-shadow contexts, require authoritative outcome evidence, expand grounded actions, certify long SPAs, then add multi-session continuation (#134).
 - **P1**: Freeze #54’s zero-LLM post-action evidence design: enforce exact fill/select/navigation effects, keep generic click reactions shadow-only until no-op/background-mutation/download qualification, and prohibit exposing captured values through planner diffs (#122).
 - **P1**: Correct competitor claims after a 2026-07-25 source-level survey (browser-use 0.13.6, Skyvern, Stagehand v3, magnitude-core): observation eviction is table stakes across the field, browser-use ships default-on history compaction, and harness element ids are runtime-stable — while A4/B3 rows in the capability matrix were stale in Rote's disfavor (built and measured, marked unbuilt). Updates docs/04's matrix and prose, A3/A4/A11/B4 entries in docs/06, the O(n²)/"nobody" framing in docs/README, docs/02, docs/05, README, and the website copy. Rote's unique tier-0 claims narrow to cross-step observation diffs and semantic element identity, both measured (#109)

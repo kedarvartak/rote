@@ -163,12 +163,28 @@ measured 37.2% (95% CI 35.6–38.8%) over 15 complete matched repetitions ([T10]
       distiller — tier 1 is V2**; eviction trades recall for cost)
 - [x] [Licence check](third-party-licenses.md) confirms competitor dependencies, not forks
 
-## P2 — V2: tiers 1 and 2, the harness that learns (~14–18 weeks total; ~13–17 remain after E7.1)
+## P2 — V2: tiers 1 and 2, the harness that learns (~14–18 weeks total; ~12–16 remain after E7.2)
 
 Episodic and semantic memory go live; the learning curve becomes the product. **This is
 catch-up on tier 1 and a lead on tier 2** — Skyvern ships the former, nobody ships the
 latter ([04](04-competition.md)). Sequenced after V1 because tier 0 is where we are alone
 and tier 1 is where we are behind; parity is worth less than a position.
+
+### Priority: structural action-contract drift
+
+[#143](https://github.com/kedarvartak/rote/issues/143) is the cross-cutting P2 trust gate.
+Cosmetic and selector drift are insufficient: a control can retain an apparent identity
+while its required interaction, browsing context, safety class, destination, side effect,
+or authoritative outcome changes. Reuse must classify that as `contract_mismatch` before
+dispatch rather than treating target resolution as permission to act.
+
+The enterprise order remains binding. Identity v2 provides a trustworthy subject; composed
+contexts locate it; authoritative evidence defines the required outcome; action vocabulary
+adds versioned affordance/precondition/effect contracts; endurance tests remount and mutate
+those contracts; only then may the distiller persist them. The first public demonstration
+must show cosmetic redesign continuing, harmless selector/remount drift resolving, and a
+same-looking semantic contract change dispatching nothing with clean cold fallback. E7.2
+alone is identity infrastructure, **not** structural-drift support.
 
 1. **History compaction** (B4) — **built first under the explicit #107 implementation
    waiver.** Deterministic action-aware compaction bounds planner-visible history while
@@ -180,11 +196,11 @@ and tier 1 is where we are behind; parity is worth less than a position.
    iframe/open-shadow, control, authoritative-evidence, SPA, and restart cases bind exact
    external outcomes or dispatch-free failures. Direct fixture controls pass in Chrome;
    no product mechanism or enterprise-readiness claim follows.
-3. **Version target identity before learning it — next** ([#128](https://github.com/kedarvartak/rote/issues/128)) — v1 hashes role, accessible
-   name, and a coarse depth bucket and can collide in repeated grids. Identity v2 adds
-   browsing-context and stable composed-container lineage, detects residual ambiguity
+3. **Version target identity before learning it — built** ([#128](https://github.com/kedarvartak/rote/issues/128)) — v1 hashes role, accessible
+   name, and a coarse depth bucket and can collide in repeated grids. Identity v2 hashes
+   browsing context and allowlisted composed-container lineage, detects residual ambiguity
    before dispatch, excludes sensitive values, and preserves v1 artifacts append-only.
-4. **Composed browsing contexts** ([#129](https://github.com/kedarvartak/rote/issues/129)) — capture, diff, resolution, and dispatch
+4. **Composed browsing contexts — next** ([#129](https://github.com/kedarvartak/rote/issues/129)) — capture, diff, resolution, and dispatch
    across nested same/cross-origin iframes and open shadow roots. Closed roots remain a
    typed unsupported boundary; context mismatch precedes fuzzy matching.
 5. **Authoritative outcome evidence** ([#130](https://github.com/kedarvartak/rote/issues/130)) — versioned evidence envelopes and

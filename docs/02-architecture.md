@@ -56,7 +56,7 @@ confuse in an architecture doc; this is the boundary.
 | Core schemas, Expect DSL, templating, fingerprinting | — | **built** |
 | Recorder — append-only, crash-safe, fsync-per-event | 1 | **built** |
 | Replay executor — verified, zero-model on hand-written playbooks | 1 | **built** — B5 repairs stale selectors from retained semantic identity before dispatch and fails closed on ambiguity ([T21](testing/T21-b5-drift-certification.md)) |
-| CDP browser backend, perception (distill → stable IDs → budget) | 0 | **built for the top-level light DOM** — v1 IDs hash role/name/coarse depth and can collide in repeated grids; iframe/open-shadow traversal and context-aware identity are planned in E7.2–E7.3 |
+| CDP browser backend, perception (distill → stable IDs → budget) | 0 | **built for top-level light DOM with identity v2** — new IDs hash browsing context plus allowlisted composed-container lineage, repeated keyed rows survive reorder/remount, and residual collisions fail before dispatch; iframe/open-shadow population remains E7.3 |
 | Agent loop, context assembler, tagged LLM client | 0 | **built** |
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
 | Enterprise contract corpus (E7.1) | — | **frozen and fixture-qualified** — 19 synthetic grid/frame/shadow/control/SPA/restart cases bind exact external oracles or dispatch-free typed failures; direct real-Chrome fixture controls pass, but product mechanisms remain #128–#133 ([T29](testing/T29-enterprise-contract-corpus.md)) |
@@ -66,6 +66,7 @@ confuse in an architecture doc; this is the boundary.
 | **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Cache-layout discipline** (B3) | 0 | **built and economically qualified on OpenAI** — exact immutable prefixes receive deterministic cache-routing keys; WP-N25 cost falls 20.5% and clears Browser Use by 16.0% with both 95% intervals above zero ([T11](testing/T11-cache-key-economics.md)) |
 | **History compaction** (B4) | 0 | **built deterministically; long-run qualification pending** — action history compacts after 24 actions on 16-action boundaries, retaining an exact tail plus provenance-preserving representatives; E7.6 owns 50+ step provider/SPA certification |
+| Structural action-contract drift gate | 1 | **not built** — #143 is the P2 priority spanning contexts, authoritative evidence, action contracts, endurance, and distillation; E7.2 identity is necessary but does not prove semantic compatibility |
 | **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
 | **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
 | **Site memory, model routing, speculation** | 2 | **not built** — designed below |
@@ -270,7 +271,9 @@ whole transcript every step, so **hit rate ≈ spend**. Tests fail if any volati
 
 ```ts
 // perception
-interface StableNodeId { hash: string }        // role + name + ancestry content hash
+type StableNodeId =
+  | { hash: string }                           // historical v1, immutable
+  | { version: 2; hash: string; contextHash: string; containerHash: string }
 type Observation =
   | { kind: 'full';    page: PageIdentity; tree: DistilledNode[]; tokens: number }
   | { kind: 'diff';    page: PageIdentity; baseSeq: number; changes: NodeChange[] }
@@ -302,13 +305,23 @@ cross-run learning possible at all. The field's ids are runtime identities — C
 backend-node ids or per-scrape counters — that die on navigation, so no other harness
 can name an element across runs (see [04](04-competition.md), 2026-07-25 source read).
 
-The current commitment is explicitly **v1, not enterprise-complete**:
-`hash(role, accessible name, floor(DOM depth / 2))`. Coarse depth is not ancestry. Repeated
-controls in data grids can therefore collide, and `distillPage` also deduplicates repeated
-non-interactive content by role/name. E7.2 must version identity before distiller v1 learns
-it: add browsing-context and stable composed-container lineage, preserve semantic rename
-recovery, reject residual ambiguity before dispatch, exclude sensitive values, and leave
-historical v1 artifacts untouched.
+Historical artifacts retain **v1**:
+`hash(role, accessible name, floor(DOM depth / 2))`. New captures emit **v2**:
+`hash(v2, role, accessible name, context hash, container-lineage hash)`, accompanied by its
+version and component hashes. Planner/action/trajectory references use `v2:<hash>` while
+historical v1 references remain unprefixed. Capture hashes only allowlisted semantic ancestors (`role`,
+`aria-label`, explicit row key, and container kind); it ignores generic layout wrappers,
+selectors, and control values. Repeated keyed rows therefore remain distinct through
+reorder, remount, and selector rename. An unkeyed repeated control can still collide by
+design, but typed ambiguity now stops before text or selector fallback. V1 remains parseable
+without in-place migration; a historical target may degrade through exact role/name recovery
+or fail cleanly. E7.3 will populate non-top-level browsing contexts.
+
+Identity answers **which control**, not **whether its behavior is still compatible**.
+[#143](https://github.com/kedarvartak/rote/issues/143) adds the structural action-contract
+trust gate across E7.3–E7.6 and distiller v1. Until that gate compares versioned affordance,
+safety, precondition, and authoritative-effect contracts before dispatch, Rote does not
+claim protection from a same-looking control whose semantics changed.
 
 ### Enterprise browser contracts (E7.1 frozen; mechanisms planned)
 
@@ -318,8 +331,8 @@ one before it ([07 §E7](07-execution-plan.md)):
 1. **Done:** freeze 19 adversarial synthetic fixtures and authoritative outcome oracles
    (#127, [T29](testing/T29-enterprise-contract-corpus.md)). The direct fixture smoke is
    not traversal/action support.
-2. **Next:** version context-aware target identity and collision behavior (#128).
-3. Carry that identity through nested same/cross-origin iframes and open shadow roots;
+2. **Done:** version context-aware target identity and collision behavior (#128).
+3. **Next:** carry that identity through nested same/cross-origin iframes and open shadow roots;
    classify closed roots unsupported (#129).
 4. Version verification evidence with provenance, freshness, task binding, and injected
    authoritative adapters (#130). UI state remains supporting evidence, not forbidden.
