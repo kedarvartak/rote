@@ -23,7 +23,8 @@ See `src/index.ts`. Highlights:
 - **`ToolCaller` / `LlmClient`** — the two injected boundaries; `McpToolCaller`
   and `TaggedExecutorLlmClient` back provider-neutral MCP replay; the explicit
   `AnthropicLlmClient` remains available for opt-in compatibility, while
-  `BrowserToolCaller` adapts a stateful CDP page for verified browser replay.
+  `BrowserToolCaller` adapts a stateful CDP page for verified browser replay and returns
+  `BROWSER_TARGET_AMBIGUOUS` without dispatch when identity-v2 candidates collide.
 - **`rote-replay <playbook.yaml> --params '{...}'`** bin — reads
   `ROTE_DOWNSTREAM_COMMAND`/`ROTE_DOWNSTREAM_ARGS`, `ROTE_TARGET_IDENTITY`,
   `ROTE_TASK_SPEC`, `ROTE_BASE_DIR` from the environment; slot/judgment steps

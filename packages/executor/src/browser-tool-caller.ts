@@ -1,4 +1,4 @@
-import { resolveElementTarget, type ElementResolutionTarget } from '@rote/action';
+import { ElementResolutionAmbiguityError, resolveElementTarget, type ElementResolutionTarget } from '@rote/action';
 import type { CapturedElement, CapturedPage } from '@rote/browser';
 import { distillPage } from '@rote/perception';
 import type { ToolCallOutcome, ToolCaller } from './tool-caller.js';
@@ -66,7 +66,15 @@ export class BrowserToolCaller implements ToolCaller {
       return { ok: true, result: pageResult(page, extra) };
     } catch (error) {
       const failure = error instanceof Error ? error : new Error(String(error));
-      return { ok: false, error: { message: failure.message, code: 'BROWSER_REPLAY_TOOL_ERROR' } };
+      return {
+        ok: false,
+        error: {
+          message: failure.message,
+          code: failure instanceof ElementResolutionAmbiguityError
+            ? 'BROWSER_TARGET_AMBIGUOUS'
+            : 'BROWSER_REPLAY_TOOL_ERROR',
+        },
+      };
     }
   }
 

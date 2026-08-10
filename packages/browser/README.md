@@ -11,7 +11,7 @@ comes in here, then `@rote/perception` turns it into compact observations for th
 ## Public API
 
 - `BrowserCaptureBackend` — minimal capture interface.
-- `CapturedPage` / `CapturedElement` — Zod-backed page capture records.
+- `CapturedPage` / `CapturedElement` — Zod-backed page capture records; static and CDP captures attach hashed, allowlisted top-level container lineage for identity v2 without copying control values into identity.
 - `StaticHtmlBackend` / `captureStaticHtml` — fixture backend with associated-label/`aria-labelledby` accessibility enrichment.
 - `CdpBrowserBackend` — captures from an existing CDP HTTP endpoint.
 - `LaunchingCdpBrowserBackend` — launches local Chrome/Chromium with CDP enabled, an optional deterministic window size, stateful action sessions, and clean shutdown.

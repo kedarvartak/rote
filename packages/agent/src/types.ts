@@ -3,7 +3,7 @@ import type { ElementResolutionResult, PostActionEvidence } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
 import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
 import type { ProviderUsageReceipt } from '@rote/llm';
-import type { AdaptiveRenderedObservation, DistilledNode } from '@rote/perception';
+import { StableNodeRefSchema, type AdaptiveRenderedObservation, type DistilledNode } from '@rote/perception';
 import type { HistoryCompactionPolicy, HistoryCompactionRecord, PlannerActionHistory } from './history-compaction.js';
 
 /**
@@ -22,7 +22,7 @@ import type { HistoryCompactionPolicy, HistoryCompactionRecord, PlannerActionHis
  * authored against ground truth and still decides success (docs/02 "Repair
  * ladder").
  */
-export const BrowserStableIdSchema = z.string().regex(/^[0-9a-f]{16}$/);
+export const BrowserStableIdSchema = StableNodeRefSchema;
 const OptionalBrowserStableIdSchema = z.preprocess(
   (value) => value === undefined || BrowserStableIdSchema.safeParse(value).success ? value : undefined,
   BrowserStableIdSchema.optional(),

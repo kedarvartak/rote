@@ -1,7 +1,7 @@
 import { assertBrowserExpect, assertPostActionEvidence, BrowserExpectationError, derivePostActionEvidence, ElementResolutionConflictError, ElementResolutionError, PostActionEvidenceError, resolveElementTarget, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
 import type { BrowserExpect } from '@rote/core';
-import { distillPage, renderAdaptiveObservation, type DistilledNode } from '@rote/perception';
+import { distillPage, renderAdaptiveObservation, stableNodeRef, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext, assertCacheStablePrefix } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
 import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
@@ -317,7 +317,7 @@ function renderStatefulControls(nodes: readonly DistilledNode[]): string {
   if (selected.length === 0) return '(none selected)';
   return selected.map((node) => JSON.stringify({
     selector: node.selectorHint,
-    stableId: node.id.hash,
+    stableId: stableNodeRef(node.id),
     role: node.role,
     name: node.name,
     checked: true,
@@ -337,7 +337,7 @@ function renderGroundedCandidates(nodes: readonly DistilledNode[], role?: string
   if (candidates.length === 0) return '(none)';
   return candidates.map((node) => JSON.stringify({
     selector: node.selectorHint,
-    stableId: node.id.hash,
+    stableId: stableNodeRef(node.id),
     role: node.role,
     name: node.name,
   })).join('\n');

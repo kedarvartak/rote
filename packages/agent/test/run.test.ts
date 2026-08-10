@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { CapturedPage } from '@rote/browser';
-import { distillPage } from '@rote/perception';
+import { distillPage, stableNodeRef } from '@rote/perception';
 import { BrowserActionGuardError, runBrowserAgent, type BrowserAction, type BrowserAgentVerifier, type BrowserPageSession, type BrowserPlannerClient, type BrowserPlannerRequest } from '../src/index.js';
 
 class FakePage implements BrowserPageSession {
@@ -247,11 +247,11 @@ describe('runBrowserAgent', () => {
       {
         kind: 'click',
         selector: '#registration-submit',
-        stableId: submit.id.hash,
+        stableId: stableNodeRef(submit.id),
         role: 'combobox',
         name: 'country',
       },
-      { kind: 'click', selector: '#registration-submit', stableId: submit.id.hash, role: 'button', name: 'Submit registration' },
+      { kind: 'click', selector: '#registration-submit', stableId: stableNodeRef(submit.id), role: 'button', name: 'Submit registration' },
       { kind: 'done', success: true, summary: 'submitted' },
     ]);
 

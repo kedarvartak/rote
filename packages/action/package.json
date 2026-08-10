@@ -9,6 +9,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:identity-chrome": "ROTE_RUN_CDP_TESTS=1 vitest run test/identity-v2-real-chrome.test.ts",
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {

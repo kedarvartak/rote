@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { sha256Hex } from '@rote/core';
 import type { BrowserCaptureBackend, CapturedElement, CapturedPage } from './types.js';
 
 /** Deterministic fixture backend used until the CDP backend lands in the next P1 slice. */
@@ -28,19 +29,62 @@ const VOID_OR_INLINE = new Set(['input', 'button', 'a', 'select', 'textarea', 'o
 
 function parseElements(html: string): CapturedElement[] {
   const elements: CapturedElement[] = [];
+  const lineageByOffset = containerLineageByOffset(html);
   let match: RegExpExecArray | null;
   while ((match = ELEMENT_RE.exec(html)) !== null) {
     const tag = match[1]?.toLowerCase();
     if (!tag || tag.startsWith('!') || tag === 'script' || tag === 'style') continue;
     const attrs = parseAttributes(match[2] ?? '');
+    const hadCapturedAttributes = Object.keys(attrs).length > 0;
+    // see docs/02-architecture.md "Stable IDs" — only hashed, allowlisted
+    // container landmarks cross the capture boundary; form values never participate.
+    attrs['data-rote-context-key'] = 'top';
+    attrs['data-rote-container-lineage'] = (lineageByOffset.get(match.index) ?? []).join(',');
     const text = stripTags(match[3] ?? '').trim().replace(/\s+/g, ' ');
     const before = html.slice(0, match.index);
     const depth = Math.max(0, (before.match(/</g)?.length ?? 0) - (before.match(/<\s*\//g)?.length ?? 0));
-    if (VOID_OR_INLINE.has(tag) || Object.keys(attrs).length > 0 || text.length > 0) {
+    if (VOID_OR_INLINE.has(tag) || hadCapturedAttributes || text.length > 0) {
       elements.push({ tag, attributes: attrs, text, depth });
     }
   }
   return elements;
+}
+
+const TAG_RE = /<\s*(\/?)\s*([a-zA-Z][a-zA-Z0-9-]*)([^>]*)>/g;
+const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+const CONTAINER_TAGS = new Set(['article', 'dialog', 'fieldset', 'form', 'main', 'nav', 'section', 'table', 'tbody', 'tr']);
+
+interface OpenElement {
+  tag: string;
+  landmark?: string;
+}
+
+function containerLineageByOffset(html: string): Map<number, string[]> {
+  const lineage = new Map<number, string[]>();
+  const stack: OpenElement[] = [];
+  let match: RegExpExecArray | null;
+  while ((match = TAG_RE.exec(html)) !== null) {
+    const closing = match[1] === '/';
+    const tag = match[2]!.toLowerCase();
+    if (closing) {
+      const opening = stack.map((entry) => entry.tag).lastIndexOf(tag);
+      if (opening >= 0) stack.splice(opening);
+      continue;
+    }
+    lineage.set(match.index, stack.flatMap((entry) => entry.landmark ? [entry.landmark] : []));
+    const attributes = parseAttributes(match[3] ?? '');
+    const landmark = containerLandmark(tag, attributes);
+    if (!VOID_TAGS.has(tag) && !match[3]?.trimEnd().endsWith('/')) stack.push({ tag, landmark });
+  }
+  return lineage;
+}
+
+function containerLandmark(tag: string, attributes: Record<string, string>): string | undefined {
+  const rowKey = attributes['data-row-key'];
+  const ariaLabel = attributes['aria-label'];
+  const role = attributes['role'];
+  if (!CONTAINER_TAGS.has(tag) && !rowKey && !ariaLabel && !role) return undefined;
+  return sha256Hex(`${tag}\u0000${role ?? ''}\u0000${ariaLabel ?? ''}\u0000${rowKey ?? ''}`).slice(0, 16);
 }
 
 function enrichAccessibility(elements: CapturedElement[], html: string): CapturedElement[] {

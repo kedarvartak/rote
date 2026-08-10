@@ -25,10 +25,10 @@ scaling, or zero-LLM operation for ordinary tasks.
   nested iframe, and shadow-DOM workflows are not supported or certified. E7.3 adds
   explicit same/cross-origin frame and open-shadow context traversal; closed roots remain
   a typed unsupported boundary.
-- **Stable identity v1 can collide.** It hashes role, accessible name, and a coarse depth
-  bucket—not actual ancestry or container context. Repeated controls in enterprise data
-  grids may therefore resolve ambiguously. E7.2 versions the identity before automated
-  distillation; current ambiguous resolution must fail closed rather than pick a target.
+- **Identity v2 is top-level only.** New captures hash browsing context and allowlisted
+  container lineage, distinguish keyed repeated-grid controls, and fail closed on residual
+  ambiguity. E7.3 must populate nested iframe/open-shadow contexts; unkeyed semantically
+  identical controls intentionally remain ambiguous rather than receiving positional IDs.
 - **The live action vocabulary is narrow.** It supports navigate, fill, select, and click.
   Hover, keyboard chords, file upload, drag/drop, and arbitrary pointer sequences are not
   available. E7.5 adds only grounded, evidence-bearing primitives rather than a generic
@@ -46,8 +46,12 @@ scaling, or zero-LLM operation for ordinary tasks.
   task still does not succeed without an external memory strategy.
 - **Open-ended and creative work is a weak fit.** There may be no stable procedure or
   independent success signal to reuse.
-- **Business-rule drift is not selector drift.** Repair cannot infer that a site's meaning
-  or policy changed, and must not pretend otherwise.
+- **Structural action-contract drift is not yet handled.** Identity v2 can establish which
+  control persisted, but cannot establish that its required interaction, safety class,
+  side effects, or authoritative outcome stayed compatible. #143 is now the cross-cutting
+  P2 priority; incompatible same-looking controls must eventually return `contract_mismatch`
+  before dispatch. Until E7.3–E7.6 and distiller integration land, repair cannot infer that
+  a site's meaning or policy changed and must not pretend otherwise.
 - **Settledness is heuristic.** Long-lived requests and background traffic can exhaust the
   timeout. Historical certification retained such failures instead of hiding them.
 - **Oversized first pages have a hard ceiling.** A grounded emergency bootstrap is allowed
@@ -100,7 +104,7 @@ affected steps. That provider-token overhead has not been recertified. It is
 a fail-closed safety change, not a new efficiency claim.
 
 The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulative-token-curve.md),
-[T11](testing/T11-cache-key-economics.md), [T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md), [T22](testing/T22-stagehand-qualification.md), [T23](testing/T23-skyvern-qualification.md), [T24](testing/T24-browser-use-0137-qualification.md), [T25](testing/T25-browser-use-0137-paired-certification.md), [T26](testing/T26-post-action-evidence-qualification.md), [T27](testing/T27-magnitude-qualification.md), and [T28](testing/T28-registry-provider-quickstart.md).
+[T11](testing/T11-cache-key-economics.md), [T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md), [T22](testing/T22-stagehand-qualification.md), [T23](testing/T23-skyvern-qualification.md), [T24](testing/T24-browser-use-0137-qualification.md), [T25](testing/T25-browser-use-0137-paired-certification.md), [T26](testing/T26-post-action-evidence-qualification.md), [T27](testing/T27-magnitude-qualification.md), [T28](testing/T28-registry-provider-quickstart.md), [T29](testing/T29-enterprise-contract-corpus.md), and [T30](testing/T30-target-identity-v2.md).
 
 ## Provider, packaging, and operations
 
@@ -120,8 +124,9 @@ The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulat
 ## Deliberately deferred
 
 B5 now certifies deterministic semantic target repair only; arbitrary workflow repair remains absent. Long-run B4 qualification, enterprise
-browser mechanisms E7.2–E7.7, distillation, automatic matching, site memory, routing, and
-speculation remain post-G2 work. E7.1's frozen fixture contract is built but confers no
-enterprise-browser capability. Deferral
+browser mechanisms E7.3–E7.7, structural contract compatibility, distillation, automatic
+matching, site memory, routing, and speculation remain post-G2 work. E7.1's frozen fixture
+contract and E7.2's top-level identity v2 are built but confer no general enterprise-browser
+capability. Deferral
 means “not claimed,” not “implicitly working.” The authoritative sequence is
 [07 — Execution plan](07-execution-plan.md).

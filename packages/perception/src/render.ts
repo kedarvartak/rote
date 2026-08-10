@@ -1,4 +1,4 @@
-import type { DistilledNode, RenderedObservation, RenderOptions } from './types.js';
+import { stableNodeRef, type DistilledNode, type RenderedObservation, type RenderOptions } from './types.js';
 
 /** Renders distilled nodes into a compact observation with a hard character budget. */
 export function renderObservation(nodes: readonly DistilledNode[], options: RenderOptions = {}): RenderedObservation {
@@ -30,5 +30,5 @@ export function renderNodeLine(node: DistilledNode): string {
   const selector = node.selectorHint ? ` ${node.selectorHint}` : '';
   const marker = node.interactive ? '*' : '-';
   const state = node.state?.checked === undefined ? '' : ` checked=${String(node.state.checked)}`;
-  return `${marker} [${node.id.hash}] ${node.role}${selector}${node.name ? ` "${node.name}"` : ''}${state}`;
+  return `${marker} [${stableNodeRef(node.id)}] ${node.role}${selector}${node.name ? ` "${node.name}"` : ''}${state}`;
 }
