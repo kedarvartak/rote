@@ -20,11 +20,14 @@ comes in here, then `@rote/perception` turns it into compact observations for th
 - `FixtureSiteServer` — serves static fixture pages from a local directory for deterministic CDP tests.
 
 `LaunchingCdpBrowserBackend` uses `CHROME_PATH` when set, otherwise probes common local
-Chrome/Chromium paths. The CDP integration test is opt-in because hosted CI images may
-ship Chrome variants that do not expose DevTools reliably:
+Chrome/Chromium paths. Its explicit `ws` transport keeps CDP available on supported Node
+20 releases that do not expose a global `WebSocket`, and shutdown waits for Chromium
+before removing its profile. The broad browser-package CDP integration test remains
+opt-in; E7.1 separately runs its frozen enterprise fixture smoke in mandatory CI:
 
 ```bash
 ROTE_RUN_CDP_TESTS=1 npm test --workspace @rote/browser
+npm run test:enterprise-chrome --workspace @rote/bench
 ```
 
 ## Running tests

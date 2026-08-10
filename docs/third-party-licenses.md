@@ -20,6 +20,7 @@ runtime packages remain external npm dependencies and carry their own license fi
 |---|---|---|---|
 | `@anthropic-ai/sdk@0.110.0` | optional Anthropic provider client | MIT | external npm dependency |
 | `openai@6.46.0` | default OpenAI provider client | Apache-2.0 | external npm dependency |
+| `ws@8.21.3` | Node 20 CDP WebSocket transport | MIT | external npm dependency |
 | `yaml@2.9.0` | playbook parser | ISC | external npm dependency |
 | `zod@3.25.76` | runtime schemas | MIT | external npm dependency |
 | `esbuild@0.21.5` | release bundle builder | MIT | development-only; not shipped in the tarball |
