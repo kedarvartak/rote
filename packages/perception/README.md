@@ -9,7 +9,7 @@ dump when a compact tree of actionable elements is enough.
 
 ## Public API
 
-- `distillPage(page)` — keep visible interactive/content-bearing nodes, derive associated-label and ARIA names, prune hidden/empty/duplicate content, retain capture-proven selectors, and assign roles, identity-v2 IDs, and diffable checkbox/radio state. V2 hashes browsing context and allowlisted container lineage while excluding selectors and control values.
+- `distillPage(page)` — keep visible interactive/content-bearing nodes across captured composed contexts, derive associated-label and ARIA names, retain context-local selectors, and assign roles, identity-v2 IDs, and diffable state. V2 hashes durable browsing context and allowlisted container lineage while excluding runtime IDs, document tokens, selectors, and control values.
 - `renderObservation(nodes, { maxChars })` — render a compact, budgeted full observation.
 - `diffObservations(base, current)` / `applyObservationDiff(base, diff)` — ordered stable-ID diffs with exact reconstruction and malformed-diff rejection.
 - `renderAdaptiveObservation(nodes, options)` — use ordinary-budget full/diff observations; when no diff base exists, emit one explicitly metered grounded snapshot under a separate hard bootstrap ceiling, then return to diffs. Throws `ObservationBootstrapLimitError` before planning above that ceiling.

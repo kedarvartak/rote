@@ -3,10 +3,12 @@
 <head><meta charset="utf-8"><title>Nested frame level one</title></head>
 <body>
   <h2>Workspace shell</h2>
-  <iframe title="Nested approval panel" data-context-key="nested-approval"></iframe>
+  <iframe title="Nested approval panel" name="nested-approval" data-context-key="nested-approval"></iframe>
   <script>
-    const scope = new URLSearchParams(location.search).get('scope') ?? 'unknown';
-    document.querySelector('iframe').src = `./frame-level-two.html?scope=${scope}`;
+    const params = new URLSearchParams(location.search);
+    const scope = params.get('scope') ?? 'unknown';
+    const duplicate = params.get('duplicate') === 'true' ? '&duplicate=true' : '';
+    document.querySelector('iframe').src = `./frame-level-two.html?scope=${scope}${duplicate}`;
   </script>
 </body>
 </html>

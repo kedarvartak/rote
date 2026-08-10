@@ -163,7 +163,7 @@ measured 37.2% (95% CI 35.6–38.8%) over 15 complete matched repetitions ([T10]
       distiller — tier 1 is V2**; eviction trades recall for cost)
 - [x] [Licence check](third-party-licenses.md) confirms competitor dependencies, not forks
 
-## P2 — V2: tiers 1 and 2, the harness that learns (~14–18 weeks total; ~12–16 remain after E7.2)
+## P2 — V2: tiers 1 and 2, the harness that learns (~14–18 weeks total; ~11–15 remain after E7.3)
 
 Episodic and semantic memory go live; the learning curve becomes the product. **This is
 catch-up on tier 1 and a lead on tier 2** — Skyvern ships the former, nobody ships the
@@ -200,10 +200,12 @@ alone is identity infrastructure, **not** structural-drift support.
    name, and a coarse depth bucket and can collide in repeated grids. Identity v2 hashes
    browsing context and allowlisted composed-container lineage, detects residual ambiguity
    before dispatch, excludes sensitive values, and preserves v1 artifacts append-only.
-4. **Composed browsing contexts — next** ([#129](https://github.com/kedarvartak/rote/issues/129)) — capture, diff, resolution, and dispatch
-   across nested same/cross-origin iframes and open shadow roots. Closed roots remain a
-   typed unsupported boundary; context mismatch precedes fuzzy matching.
-5. **Authoritative outcome evidence** ([#130](https://github.com/kedarvartak/rote/issues/130)) — versioned evidence envelopes and
+4. **Composed browsing contexts — built** ([#129](https://github.com/kedarvartak/rote/issues/129),
+   [T31](testing/T31-composed-browser-contexts.md)) — CDP capture, diff, resolution, and
+   dispatch cross nested same/cross-origin frames and open shadow roots. Stable context
+   paths exclude runtime IDs; stale documents, context splicing, duplicate inner controls,
+   and declared closed roots stop before mutation.
+5. **Authoritative outcome evidence — next** ([#130](https://github.com/kedarvartak/rote/issues/130)) — versioned evidence envelopes and
    injected API/database/download-event adapters. UI evidence remains useful support but
    cannot alone satisfy a task that declares an authoritative outcome requirement.
 6. **Enterprise action vocabulary** ([#131](https://github.com/kedarvartak/rote/issues/131)) — grounded hover, explicit keyboard

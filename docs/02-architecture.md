@@ -56,11 +56,11 @@ confuse in an architecture doc; this is the boundary.
 | Core schemas, Expect DSL, templating, fingerprinting | — | **built** |
 | Recorder — append-only, crash-safe, fsync-per-event | 1 | **built** |
 | Replay executor — verified, zero-model on hand-written playbooks | 1 | **built** — B5 repairs stale selectors from retained semantic identity before dispatch and fails closed on ambiguity ([T21](testing/T21-b5-drift-certification.md)) |
-| CDP browser backend, perception (distill → stable IDs → budget) | 0 | **built for top-level light DOM with identity v2** — new IDs hash browsing context plus allowlisted composed-container lineage, repeated keyed rows survive reorder/remount, and residual collisions fail before dispatch; iframe/open-shadow population remains E7.3 |
+| CDP browser backend, perception (distill → stable IDs → budget) | 0 | **built for top-level, nested same/cross-origin frames, and nested open shadow roots** — identity v2 carries durable context paths; runtime frame IDs/document tokens stay out of identity; stale/context-mismatch/ambiguity stop before dispatch; declared closed roots are typed unsupported ([T31](testing/T31-composed-browser-contexts.md)) |
 | Agent loop, context assembler, tagged LLM client | 0 | **built** |
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
 | Enterprise contract corpus (E7.1) | — | **frozen and fixture-qualified** — 19 synthetic grid/frame/shadow/control/SPA/restart cases bind exact external oracles or dispatch-free typed failures; direct real-Chrome fixture controls pass, but product mechanisms remain #128–#133 ([T29](testing/T29-enterprise-contract-corpus.md)) |
-| Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built for navigate/fill/select/click** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50); hover, keyboard chords, upload, and drag/drop are planned in E7.5 |
+| Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built for navigate/fill/select/click across captured composed contexts** — [T31](testing/T31-composed-browser-contexts.md) qualifies nested-context click dispatch; [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50); hover, keyboard chords, upload, and drag/drop are planned in E7.5 |
 | Final verification | — | **built, with a narrow public surface** — every success requires an injected verifier, but CLI verification is visible-text/URL based; authoritative evidence envelopes and adapters are planned in E7.4 |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built and recall-stress tested** — post-eviction context marks the recall boundary; unavailable facts and fabricated comparisons fail closed ([T18](testing/T18-eviction-recall-trade.md)) |
 | **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
@@ -315,7 +315,10 @@ selectors, and control values. Repeated keyed rows therefore remain distinct thr
 reorder, remount, and selector rename. An unkeyed repeated control can still collide by
 design, but typed ambiguity now stops before text or selector fallback. V1 remains parseable
 without in-place migration; a historical target may degrade through exact role/name recovery
-or fail cleanly. E7.3 will populate non-top-level browsing contexts.
+or fail cleanly. E7.3 now populates non-top-level browsing contexts with versioned ordered
+frame/shadow segments, a durable `contextHash`, and a fresh `documentToken`. The token is
+excluded from identity but checked immediately before dispatch, so navigation or detach
+between resolution and action returns a typed stale-context failure.
 
 Identity answers **which control**, not **whether its behavior is still compatible**.
 [#143](https://github.com/kedarvartak/rote/issues/143) adds the structural action-contract
@@ -332,9 +335,10 @@ one before it ([07 §E7](07-execution-plan.md)):
    (#127, [T29](testing/T29-enterprise-contract-corpus.md)). The direct fixture smoke is
    not traversal/action support.
 2. **Done:** version context-aware target identity and collision behavior (#128).
-3. **Next:** carry that identity through nested same/cross-origin iframes and open shadow roots;
-   classify closed roots unsupported (#129).
-4. Version verification evidence with provenance, freshness, task binding, and injected
+3. **Done:** carry identity through nested same/cross-origin iframes and open shadow roots;
+   reject stale/context-spliced actions and classify declared closed roots unsupported
+   (#129, [T31](testing/T31-composed-browser-contexts.md)).
+4. **Next:** version verification evidence with provenance, freshness, task binding, and injected
    authoritative adapters (#130). UI state remains supporting evidence, not forbidden.
 5. Add grounded hover, keyboard, allowlisted upload, and drag/drop only with action-specific
    evidence, redaction, settledness, and typed unsupported exits (#131).

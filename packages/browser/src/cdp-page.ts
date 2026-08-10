@@ -1,5 +1,6 @@
-import { captureStaticHtml } from './static-backend.js';
-import type { CapturedPage } from './types.js';
+import { ClosedShadowRootUnsupportedError } from './browser-context.js';
+import { captureComposedPage, evaluateInContext, resolveLiveBrowserContext, type LiveBrowserContext } from './cdp-composed-context.js';
+import type { BrowserContextCoordinate, CapturedPage } from './types.js';
 import { CdpClient, createCdpTarget } from './cdp-client.js';
 
 export interface CdpPageOptions {
@@ -21,6 +22,7 @@ export interface CdpActivitySample {
 export class CdpPage {
   private readonly pendingRequests = new Set<string>();
   private readonly unsubscribe: Array<() => void> = [];
+  private contexts = new Map<string, LiveBrowserContext>();
 
   private constructor(private readonly client: CdpClient) {
     this.unsubscribe.push(
@@ -50,111 +52,48 @@ export class CdpPage {
     await loaded;
   }
 
-  /** Captures the current page into Rote's normalized page shape. */
+  /** Captures top-level, frame, and open-shadow contexts into one normalized page. */
   async capture(): Promise<CapturedPage> {
-    const html = await this.evaluateString(`(() => {
-      const clone = document.documentElement.cloneNode(true);
-      // Both queries must exclude their root. The document-level query includes
-      // <html> while the clone-level query does not, shifting
-      // every visibility bit onto the next element on real pages.
-      const liveElements = document.documentElement.querySelectorAll('*');
-      const clonedElements = clone.querySelectorAll('*');
-      const uniqueSelector = (element) => {
-        if (element.id) return '#' + CSS.escape(element.id);
-        const parts = [];
-        let current = element;
-        while (current && current !== document.documentElement) {
-          let part = current.tagName.toLowerCase();
-          const parent = current.parentElement;
-          if (!parent) break;
-          const sameTag = Array.from(parent.children).filter((sibling) => sibling.tagName === current.tagName);
-          if (sameTag.length > 1) part += ':nth-of-type(' + (sameTag.indexOf(current) + 1) + ')';
-          parts.unshift(part);
-          if (parent.id) {
-            parts.unshift('#' + CSS.escape(parent.id));
-            break;
-          }
-          current = parent;
-        }
-        const selector = parts.join(' > ');
-        return selector && document.querySelectorAll(selector).length === 1 ? selector : undefined;
-      };
-      liveElements.forEach((live, index) => {
-        const copied = clonedElements[index];
-        if (!copied) return;
-        const style = getComputedStyle(live);
-        const visible = !live.hidden && style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0' && live.getClientRects().length > 0;
-        copied.setAttribute('data-rote-visible', visible ? 'true' : 'false');
-        if (visible && live.matches('a, button, input, textarea, select, [role]')) {
-          const selector = uniqueSelector(live);
-          if (selector) copied.setAttribute('data-rote-selector', selector);
-        }
-      });
-      const liveControls = document.querySelectorAll('input, textarea, select');
-      const clonedControls = clone.querySelectorAll('input, textarea, select');
-      liveControls.forEach((live, index) => {
-        const copied = clonedControls[index];
-        if (!copied) return;
-        copied.setAttribute('value', live.value);
-        if (live instanceof HTMLInputElement && (live.type === 'checkbox' || live.type === 'radio')) {
-          if (live.checked) copied.setAttribute('checked', 'checked');
-          else copied.removeAttribute('checked');
-        }
-        if (copied.tagName === 'TEXTAREA') copied.textContent = live.value;
-        if (copied.tagName === 'SELECT') {
-          Array.from(copied.options).forEach((option) => {
-            if (option.value === live.value) option.setAttribute('selected', 'selected');
-            else option.removeAttribute('selected');
-          });
-        }
-      });
-      return clone.outerHTML;
-    })()`);
-    const url = await this.evaluateString('location.href');
-    return captureStaticHtml(url, html);
+    const captured = await captureComposedPage(this.client);
+    this.contexts = captured.contexts;
+    return captured.page;
   }
 
-  /** Fills an input-like element and dispatches input/change events for page scripts. */
-  async fill(selector: string, value: string): Promise<void> {
-    await this.evaluateVoid(`(() => {
-      const element = document.querySelector(${JSON.stringify(selector)});
-      if (!element || !("value" in element)) throw new Error("fillable element not found: ${escapeForTemplate(selector)}");
+  /** Fills an input-like element in its captured composed context. */
+  async fill(selector: string, value: string, context?: BrowserContextCoordinate): Promise<void> {
+    const encoded = JSON.stringify(value);
+    await this.evaluateTarget(selector, context, `
+      if (!("value" in element)) throw new Error("fillable element not found");
       element.focus();
-      element.value = ${JSON.stringify(value)};
-      element.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText", data: ${JSON.stringify(value)} }));
+      element.value = ${encoded};
+      element.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText", data: ${encoded} }));
       element.dispatchEvent(new Event("change", { bubbles: true }));
-    })()`);
+    `);
   }
 
-  /** Selects an option value and dispatches input/change events. */
-  async select(selector: string, value: string): Promise<void> {
-    await this.evaluateVoid(`(() => {
-      const element = document.querySelector(${JSON.stringify(selector)});
-      if (!element || element.tagName !== "SELECT") throw new Error("select element not found: ${escapeForTemplate(selector)}");
-      element.value = ${JSON.stringify(value)};
-      if (element.value !== ${JSON.stringify(value)}) throw new Error("option not found: ${escapeForTemplate(value)}");
+  /** Selects an option value in its captured composed context. */
+  async select(selector: string, value: string, context?: BrowserContextCoordinate): Promise<void> {
+    const encoded = JSON.stringify(value);
+    await this.evaluateTarget(selector, context, `
+      if (element.tagName !== "SELECT") throw new Error("select element not found");
+      element.value = ${encoded};
+      if (element.value !== ${encoded}) throw new Error("option not found");
       element.dispatchEvent(new Event("input", { bubbles: true }));
       element.dispatchEvent(new Event("change", { bubbles: true }));
-    })()`);
+    `);
   }
 
-  /** Clicks an element by selector using the page's DOM event path. */
-  async click(selector: string): Promise<void> {
-    const href = await this.evaluate<string | null>(`(() => {
-      const element = document.querySelector(${JSON.stringify(selector)});
+  /** Clicks an element in its captured composed context. */
+  async click(selector: string, context?: BrowserContextCoordinate): Promise<void> {
+    const href = await this.evaluateTarget<string | null>(selector, context, `
       return element instanceof HTMLAnchorElement && !element.download && element.target !== '_blank' ? element.href : null;
-    })()`);
+    `);
     try {
-      await this.evaluateVoid(`(() => {
-        const element = document.querySelector(${JSON.stringify(selector)});
-        if (!element) throw new Error("clickable element not found: ${escapeForTemplate(selector)}");
-        element.click();
-      })()`);
+      await this.evaluateTarget(selector, context, 'element.click();');
     } catch (error) {
-      // Navigation can destroy the Runtime context before CDP returns the click
-      // result. Reissuing the captured same-tab href makes the completed action
-      // observable instead of misclassifying a successful link as a fatal click.
-      if (!href) throw error;
+      // Top-level same-tab navigation can destroy the execution context before CDP
+      // returns. Nested contexts must never promote their navigation into the top page.
+      if (!href || context?.path.length) throw error;
       await this.navigate(href);
     }
   }
@@ -189,14 +128,21 @@ export class CdpPage {
     if (typeof params['requestId'] === 'string') this.pendingRequests.delete(params['requestId']);
   }
 
-  private async evaluateString(expression: string): Promise<string> {
-    const value = await this.evaluate<unknown>(expression);
-    if (typeof value !== 'string') throw new Error(`CDP expression did not return a string: ${expression}`);
-    return value;
-  }
-
-  private async evaluateVoid(expression: string): Promise<void> {
-    await this.evaluate<unknown>(expression);
+  private async evaluateTarget<T = void>(
+    selector: string,
+    context: BrowserContextCoordinate | undefined,
+    body: string,
+  ): Promise<T> {
+    if (!context) {
+      return this.evaluate<T>(targetExpression(selector, [], body));
+    }
+    const live = await resolveLiveBrowserContext(this.client, this.contexts, context);
+    if (live.unsupported) throw new ClosedShadowRootUnsupportedError(context.contextHash);
+    return evaluateInContext<T>(
+      this.client,
+      live.executionContextId,
+      targetExpression(selector, live.shadowSelectors, body),
+    );
   }
 }
 
@@ -212,6 +158,16 @@ async function evaluate<T>(client: CdpClient, expression: string): Promise<T> {
   return result.result.value as T;
 }
 
-function escapeForTemplate(value: string): string {
-  return value.replaceAll('\\', '\\\\').replaceAll('"', '\\"');
+function targetExpression(selector: string, shadowSelectors: readonly string[], body: string): string {
+  return `(() => {
+    let root = document;
+    for (const hostSelector of ${JSON.stringify(shadowSelectors)}) {
+      const host = root.querySelector(hostSelector);
+      if (!host || !host.shadowRoot) throw new Error('open shadow context is unavailable');
+      root = host.shadowRoot;
+    }
+    const element = root.querySelector(${JSON.stringify(selector)});
+    if (!element) throw new Error('target not found in composed browser context');
+    ${body}
+  })()`;
 }

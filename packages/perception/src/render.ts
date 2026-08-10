@@ -30,5 +30,6 @@ export function renderNodeLine(node: DistilledNode): string {
   const selector = node.selectorHint ? ` ${node.selectorHint}` : '';
   const marker = node.interactive ? '*' : '-';
   const state = node.state?.checked === undefined ? '' : ` checked=${String(node.state.checked)}`;
-  return `${marker} [${stableNodeRef(node.id)}] ${node.role}${selector}${node.name ? ` "${node.name}"` : ''}${state}`;
+  const context = node.context?.path.length ? ` context=${node.context.contextHash}` : '';
+  return `${marker} [${stableNodeRef(node.id)}] ${node.role}${selector}${node.name ? ` "${node.name}"` : ''}${context}${state}`;
 }

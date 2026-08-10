@@ -15,8 +15,10 @@ comes in here, then `@rote/perception` turns it into compact observations for th
 - `StaticHtmlBackend` / `captureStaticHtml` — fixture backend with associated-label/`aria-labelledby` accessibility enrichment.
 - `CdpBrowserBackend` — captures from an existing CDP HTTP endpoint.
 - `LaunchingCdpBrowserBackend` — launches local Chrome/Chromium with CDP enabled, an optional deterministic window size, stateful action sessions, and clean shutdown.
-- `CdpPage` — stateful CDP page session with navigation/actions, correctly aligned live visibility, capture-proven unique selectors for id-less controls, form/checked-state capture, same-tab link recovery across destroyed CDP contexts, and network/DOM activity sampling.
+- `CdpPage` — stateful CDP page session with navigation/actions, composed capture through nested same/cross-origin frames and open shadow roots, correctly aligned live visibility, context-local selectors, stale-document checks before dispatch, form/checked-state capture, top-level same-tab link recovery, and network/DOM activity sampling.
 - `captureStaticHtml` — preserves nested screen-reader label text as the associated control's accessible name.
+- `BrowserContextCoordinateSchema` / `browserContextCoordinate` — versioned durable frame/shadow paths plus fresh document tokens; runtime CDP IDs never enter identity.
+- `BrowserContextMismatchError` / `BrowsingContextStaleError` / `ClosedShadowRootUnsupportedError` — fail-closed context boundaries.
 - `FixtureSiteServer` — serves static fixture pages from a local directory for deterministic CDP tests.
 
 `LaunchingCdpBrowserBackend` uses `CHROME_PATH` when set, otherwise probes common local

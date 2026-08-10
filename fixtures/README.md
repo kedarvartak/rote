@@ -16,6 +16,7 @@ Golden test data shared across packages and milestones.
 - `sites/b2-vendor-drift.html` — full eight-field B5 fixture with query-selected field,
   submit, wrapper, destructive-decoy, and ambiguity mutations under the exact T20 oracle.
 - `enterprise/` — E7.1's synthetic contract corpus: repeated/virtualized grids (now also
-  the T30 identity-v2 product qualification), nested same/cross-origin frames, nested open and closed shadow roots, complex controls, and a
-  60-transition SPA with explicit restart checkpoints. Fixture DOM status is diagnostic;
+  the T30 identity-v2 product qualification), nested same/cross-origin frames and nested
+  open/declared-closed shadow roots (also T31's composed-context product qualification),
+  complex controls, and a 60-transition SPA with explicit restart checkpoints. Fixture DOM status is diagnostic;
   exact outcomes live in the separate `EnterpriseFixtureServer` oracle state.

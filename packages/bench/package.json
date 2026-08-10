@@ -13,11 +13,14 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:enterprise-chrome": "ROTE_RUN_CDP_TESTS=1 vitest run test/enterprise-real-chrome.test.ts",
+    "test:enterprise-context-chrome": "ROTE_RUN_CDP_TESTS=1 vitest run test/enterprise-composed-context-real-chrome.test.ts",
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@rote/action": "*",
     "@rote/browser": "*",
     "@rote/core": "*",
+    "@rote/executor": "*",
     "@rote/perception": "*",
     "@rote/recorder": "*",
     "zod": "^3.23.8"

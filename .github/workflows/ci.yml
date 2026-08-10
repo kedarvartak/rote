@@ -76,6 +76,9 @@ jobs:
       - name: Target identity v2 Chrome contract
         if: steps.detect.outputs.present == 'true'
         run: npm run test:identity-chrome --workspace @rote/action
+      - name: Composed browser context Chrome contract
+        if: steps.detect.outputs.present == 'true'
+        run: npm run test:enterprise-context-chrome --workspace @rote/bench
 
   # Design docs are the constitution — broken internal links are bugs.
   docs:
