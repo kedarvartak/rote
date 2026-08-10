@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Enterprise frame contract</title></head>
+<body>
+  <h1>Composed browsing contexts</h1>
+  <iframe title="Same-origin workspace" data-context-key="same-workspace" src="./frame-level-one.html?scope=same"></iframe>
+  <iframe title="Cross-origin workspace" data-context-key="cross-workspace" src="{{CROSS_ORIGIN}}/frame-level-one.html?scope=cross"></iframe>
+  <button type="button" data-remount-same-frame>Remount same-origin workspace</button>
+  <p data-ui-status>Ready</p>
+  <script>
+    let epoch = 1;
+    document.querySelector('[data-remount-same-frame]').addEventListener('click', () => {
+      epoch += 1;
+      const oldFrame = document.querySelector('[data-context-key="same-workspace"]');
+      const replacement = oldFrame.cloneNode();
+      replacement.dataset.contextEpoch = String(epoch);
+      replacement.src = `./frame-level-one.html?scope=same&epoch=${epoch}`;
+      oldFrame.replaceWith(replacement);
+      document.querySelector('[data-ui-status]').textContent = `Remounted epoch ${epoch}`;
+    });
+  </script>
+</body>
+</html>

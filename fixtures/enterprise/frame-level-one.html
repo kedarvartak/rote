@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Nested frame level one</title></head>
+<body>
+  <h2>Workspace shell</h2>
+  <iframe title="Nested approval panel" data-context-key="nested-approval"></iframe>
+  <script>
+    const scope = new URLSearchParams(location.search).get('scope') ?? 'unknown';
+    document.querySelector('iframe').src = `./frame-level-two.html?scope=${scope}`;
+  </script>
+</body>
+</html>

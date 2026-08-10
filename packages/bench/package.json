@@ -12,6 +12,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:enterprise-chrome": "ROTE_RUN_CDP_TESTS=1 vitest run test/enterprise-real-chrome.test.ts",
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {

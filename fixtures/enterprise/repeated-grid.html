@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Enterprise repeated grid contract</title></head>
+<body>
+  <h1>Invoice approvals</h1>
+  <p data-ui-status aria-live="polite">Ready</p>
+  <table aria-label="Pending invoices"><tbody>
+    <tr data-row-key="invoice-1041"><th>Northwind</th><td>USD 410</td><td><button aria-label="Approve invoice" data-fixture-target-key="invoice-1041">Approve</button></td></tr>
+    <tr data-row-key="invoice-1042"><th>Contoso</th><td>USD 410</td><td><button aria-label="Approve invoice" data-fixture-target-key="invoice-1042">Approve</button></td></tr>
+    <tr data-row-key="invoice-1043"><th>Fabrikam</th><td>USD 410</td><td><button aria-label="Approve invoice" data-fixture-target-key="invoice-1043" data-destructive="true">Approve</button></td></tr>
+  </tbody></table>
+  <section aria-label="Virtualized approvals">
+    <p data-virtual-label>Showing invoice 2001</p>
+    <button aria-label="Approve invoice" data-fixture-target-key="invoice-2001" data-virtual-action>Approve</button>
+    <button type="button" data-remount>Show next virtual row</button>
+  </section>
+  <button aria-label="Approve invoice" data-fixture-target-key="ambiguous-a" data-ambiguous="true">Approve</button>
+  <button aria-label="Approve invoice" data-fixture-target-key="ambiguous-b" data-ambiguous="true">Approve</button>
+  <script type="module">
+    import { markUiStatus, postAuthoritativeEvent } from './fixture-runtime.js';
+    const taskId = 'grid-contract';
+    for (const button of document.querySelectorAll('[data-row-key] button')) {
+      button.addEventListener('click', async () => {
+        const targetKey = button.dataset.fixtureTargetKey;
+        await postAuthoritativeEvent({ event_id: `grid-${targetKey}`, task_id: taskId, kind: 'grid_activated', target_key: targetKey, payload: { decision: 'approved' } });
+        markUiStatus(`UI says approved ${targetKey}`);
+      });
+    }
+    let virtualKey = 'invoice-2001';
+    const virtualContainer = document.querySelector('[aria-label="Virtualized approvals"]');
+    document.querySelector('[data-remount]').addEventListener('click', () => {
+      virtualKey = 'invoice-2002';
+      virtualContainer.querySelector('[data-virtual-label]').textContent = 'Showing invoice 2002';
+      const oldButton = virtualContainer.querySelector('[data-virtual-action]');
+      const replacement = oldButton.cloneNode(true);
+      replacement.dataset.fixtureTargetKey = virtualKey;
+      oldButton.replaceWith(replacement);
+      wireVirtual(replacement);
+    });
+    function wireVirtual(button) {
+      button.addEventListener('click', async () => {
+        const targetKey = button.dataset.fixtureTargetKey;
+        await postAuthoritativeEvent({ event_id: `virtual-${targetKey}`, task_id: taskId, kind: 'grid_activated', target_key: targetKey, payload: { decision: 'approved', remounted: true } });
+        markUiStatus(`UI says approved ${targetKey}`);
+      });
+    }
+    wireVirtual(document.querySelector('[data-virtual-action]'));
+    // Ambiguous controls intentionally have no listener: dispatching either is never a valid resolution.
+  </script>
+</body>
+</html>

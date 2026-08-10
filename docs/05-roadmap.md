@@ -163,7 +163,7 @@ measured 37.2% (95% CI 35.6–38.8%) over 15 complete matched repetitions ([T10]
       distiller — tier 1 is V2**; eviction trades recall for cost)
 - [x] [Licence check](third-party-licenses.md) confirms competitor dependencies, not forks
 
-## P2 — V2: tiers 1 and 2, the harness that learns (~14–18 weeks; re-estimate after E7.1)
+## P2 — V2: tiers 1 and 2, the harness that learns (~14–18 weeks total; ~13–17 remain after E7.1)
 
 Episodic and semantic memory go live; the learning curve becomes the product. **This is
 catch-up on tier 1 and a lead on tier 2** — Skyvern ships the former, nobody ships the
@@ -175,11 +175,12 @@ and tier 1 is where we are behind; parity is worth less than a position.
    preserving an append-only tail between 16-action boundaries, where one cache miss is
    explicit. The mechanism completes tier 0 structurally; E7.6 still must qualify 50+
    step provider economics and SPA parity before any linear-scaling or cost claim.
-2. **Freeze the enterprise browser contract corpus** ([#127](https://github.com/kedarvartak/rote/issues/127)) — adversarial repeated grids,
-   nested iframe/open-shadow contexts, realistic input controls, a long-lived SPA, restart
-   boundaries, and authoritative non-UI oracles. Tests precede mechanisms so no
-   implementation gets to define its own passing case.
-3. **Version target identity before learning it** ([#128](https://github.com/kedarvartak/rote/issues/128)) — v1 hashes role, accessible
+2. **Freeze the enterprise browser contract corpus — done** ([#127](https://github.com/kedarvartak/rote/issues/127),
+   [T29](testing/T29-enterprise-contract-corpus.md)). Nineteen synthetic repeated-grid,
+   iframe/open-shadow, control, authoritative-evidence, SPA, and restart cases bind exact
+   external outcomes or dispatch-free failures. Direct fixture controls pass in Chrome;
+   no product mechanism or enterprise-readiness claim follows.
+3. **Version target identity before learning it — next** ([#128](https://github.com/kedarvartak/rote/issues/128)) — v1 hashes role, accessible
    name, and a coarse depth bucket and can collide in repeated grids. Identity v2 adds
    browsing-context and stable composed-container lineage, detects residual ambiguity
    before dispatch, excludes sensitive values, and preserves v1 artifacts append-only.

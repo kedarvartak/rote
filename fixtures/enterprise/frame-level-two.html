@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Nested frame level two</title></head>
+<body>
+  <button aria-label="Approve invoice" data-fixture-target-key="nested-frame-approval">Approve</button>
+  <p data-ui-status>Ready</p>
+  <script type="module">
+    import { markUiStatus, postAuthoritativeEvent } from './fixture-runtime.js';
+    const scope = new URLSearchParams(location.search).get('scope') ?? 'unknown';
+    document.querySelector('button').addEventListener('click', async () => {
+      await postAuthoritativeEvent({ event_id: `frame-${scope}`, task_id: 'frame-contract', kind: 'frame_activated', target_key: 'nested-frame-approval', payload: { scope } });
+      markUiStatus('UI says approved');
+    });
+  </script>
+</body>
+</html>

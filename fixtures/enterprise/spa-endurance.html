@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Enterprise SPA endurance contract</title></head>
+<body>
+  <h1>Single-session endurance</h1>
+  <p data-route>/workflow/0</p>
+  <p data-remount-epoch>Remount epoch 0</p>
+  <section data-virtual-window aria-label="Virtualized workflow row"><button data-spa-next>Advance transition 1</button></section>
+  <section aria-label="Continuation checkpoint">
+    <label>Checkpoint number <input type="number" min="1" max="3" value="1" data-checkpoint-number></label>
+    <button type="button" data-checkpoint>Commit synthetic checkpoint</button>
+  </section>
+  <p data-background>Background idle</p>
+  <p data-ui-status>Ready</p>
+  <script type="module">
+    import { markUiStatus, postAuthoritativeEvent } from './fixture-runtime.js';
+    let transition = 0;
+    let remountEpoch = 0;
+    const virtualWindow = document.querySelector('[data-virtual-window]');
+    function mountNextButton() {
+      virtualWindow.replaceChildren();
+      const button = document.createElement('button');
+      button.dataset.spaNext = '';
+      button.textContent = `Advance transition ${transition + 1}`;
+      button.addEventListener('click', advance);
+      virtualWindow.append(button);
+    }
+    async function advance() {
+      if (transition >= 60) return;
+      transition += 1;
+      if (transition % 5 === 0) remountEpoch += 1;
+      const route = `/workflow/${transition}`;
+      history.pushState({ transition }, '', route);
+      document.querySelector('[data-route]').textContent = route;
+      document.querySelector('[data-remount-epoch]').textContent = `Remount epoch ${remountEpoch}`;
+      await postAuthoritativeEvent({ event_id: `spa-${transition}`, task_id: 'spa-contract', kind: 'spa_transition', target_key: `transition-${transition}`, payload: { route, remount_epoch: remountEpoch, virtual_row: 1000 + transition } });
+      markUiStatus(`UI says transition ${transition} complete`);
+      mountNextButton();
+      // This unrelated request is diagnostic churn and cannot satisfy the task oracle.
+      fetch(`{{ORACLE_ORIGIN}}/api/oracle?task_id=background-heartbeat`).then(() => {
+        document.querySelector('[data-background]').textContent = `Background heartbeat ${transition}`;
+      });
+    }
+    mountNextButton();
+    document.querySelector('[data-checkpoint]').addEventListener('click', async () => {
+      const checkpoint = Number(document.querySelector('[data-checkpoint-number]').value);
+      await postAuthoritativeEvent({ event_id: `continuation-${checkpoint}`, task_id: 'continuation-contract', kind: 'continuation_checkpoint', target_key: `checkpoint-${checkpoint}`, payload: { checkpoint, expected_restart_before_next: checkpoint < 3 } });
+      markUiStatus(`UI says checkpoint ${checkpoint} committed`);
+    });
+  </script>
+</body>
+</html>

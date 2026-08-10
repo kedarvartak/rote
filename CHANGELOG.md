@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Freeze 19 synthetic enterprise browser contract cases with task/freshness-bound external oracles, dispatch-free failure controls, separate 60-step SPA and restart lifecycles, and a repeated real-Chrome fixture smoke before implementing E7 mechanisms (#142).
 - **P1**: Launch public `@rotehq/cli@0.1.0` after an empty-directory provider-backed `npx` run independently verifies live page text and freezes registry integrity, manifest, trajectory, and reconciled raw receipt as T28 (#141).
 - **P1**: Add a runnable cosmetic-drift demo (`scripts/demo/cosmetic-diff-demo.ts`, no API key) showing a full redesign costing a ~6-token zero-delta diff while a hidden real change surfaces as one line, with a terminal recording (`docs/demo/cosmetic-diff-demo.gif`), a README pointer, and a website deep-dive (`/docs/cosmetic-drift`) covering the distiller bottleneck, the drift gradient, and the #138 opacity fix (#139).
 - **P2**: Bound planner-visible action history with deterministic cache-amortized compaction, preserve exact recent actions and real older representatives, record redacted boundaries, and fail explicitly when evicted detail is required (#137).

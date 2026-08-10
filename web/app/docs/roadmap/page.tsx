@@ -321,7 +321,7 @@ export default function RoadmapPage() {
             G1 and corrected G2 pass. Public <code className="font-mono text-[0.85em] text-ink">@rotehq/cli@0.1.0</code>{" "}
             matches its audited registry artifact, and T28 verifies the
             provider-backed quickstart from an empty directory. P1 launched
-            without expanding its one-provider, pinned-cell claims; E7.1 is next.
+            without expanding its one-provider, pinned-cell claims. E7.1's synthetic contract corpus is frozen; identity v2 is next.
           </p>
         </div>
       </Reveal>
