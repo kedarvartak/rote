@@ -1,0 +1,820 @@
+{
+  "schema_version": 1,
+  "protocol_id": "p2-enterprise-contract-corpus-v1",
+  "corpus_version": "e7.1-v1",
+  "record_kind": "qualification_fixture",
+  "synthetic_data_only": true,
+  "initial_state": {
+    "reset_method": "POST",
+    "reset_endpoint": "/api/reset",
+    "reset_before_each_case": true,
+    "event_count": 0,
+    "spa_transition_count": 0
+  },
+  "viewport": {
+    "width_css_px": 1440,
+    "height_css_px": 900
+  },
+  "endurance": {
+    "single_session_transitions": 60,
+    "multi_session_restarts": 2,
+    "report_separately": true
+  },
+  "prohibited_success_signals": [
+    "harness_conclusion",
+    "generic_dom_change",
+    "stale_evidence",
+    "other_task_evidence"
+  ],
+  "claims_allowed": [],
+  "cases": [
+    {
+      "id": "E7-GRID-EXACT",
+      "category": "repeated_grid",
+      "fixture": "fixtures/enterprise/repeated-grid.html",
+      "task": "Approve only invoice 1042.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive",
+        "identity_collision"
+      ],
+      "required_capabilities": [
+        "identity_v2",
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=grid-contract&generation={reset_generation}",
+        "task_id": "grid-contract",
+        "expected_events": [
+          {
+            "kind": "grid_activated",
+            "target_key": "invoice-1042",
+            "payload_sha256": "dd0397dbad6f6b07c4fd7e228ee5afca39dce5b038bf2781c3d251114ca79cd9"
+          }
+        ]
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-GRID-AMBIGUOUS",
+      "category": "repeated_grid",
+      "fixture": "fixtures/enterprise/repeated-grid.html",
+      "task": "Approve the invoice using either indistinguishable unkeyed control.",
+      "mode": "single_session",
+      "positive": false,
+      "controls": [
+        "ambiguous_target",
+        "identity_collision"
+      ],
+      "required_capabilities": [
+        "identity_v2"
+      ],
+      "oracle": {
+        "kind": "typed_failure",
+        "classification": "target_ambiguous",
+        "dispatch_count": 0
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-GRID-VIRTUALIZED",
+      "category": "virtualized_grid",
+      "fixture": "fixtures/enterprise/repeated-grid.html",
+      "task": "After the virtual row remounts, approve invoice 2002.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive"
+      ],
+      "required_capabilities": [
+        "identity_v2",
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=grid-contract&generation={reset_generation}",
+        "task_id": "grid-contract",
+        "expected_events": [
+          {
+            "kind": "grid_activated",
+            "target_key": "invoice-2002",
+            "payload_sha256": "08fb3672a6171ec3898f5513a436ffa014482a01ceefaa54361338ed1b2ced53"
+          }
+        ]
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-FRAME-SAME",
+      "category": "same_origin_frame",
+      "fixture": "fixtures/enterprise/frame-host.html",
+      "task": "Approve through both levels of the same-origin nested frame.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive"
+      ],
+      "required_capabilities": [
+        "identity_v2",
+        "iframe_traversal",
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=frame-contract&generation={reset_generation}",
+        "task_id": "frame-contract",
+        "expected_events": [
+          {
+            "kind": "frame_activated",
+            "target_key": "nested-frame-approval",
+            "payload_sha256": "5745ef722c5a164df5f065755ccc803ab2ced424e2e8e749f456850b0511c94e"
+          }
+        ]
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-FRAME-CROSS",
+      "category": "cross_origin_frame",
+      "fixture": "fixtures/enterprise/frame-host.html",
+      "task": "Approve through both levels of the cross-origin nested frame.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive"
+      ],
+      "required_capabilities": [
+        "identity_v2",
+        "iframe_traversal",
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=frame-contract&generation={reset_generation}",
+        "task_id": "frame-contract",
+        "expected_events": [
+          {
+            "kind": "frame_activated",
+            "target_key": "nested-frame-approval",
+            "payload_sha256": "17766ada2a708d626edfbea6ce015ae453ee83bb2b44d1f172337039d0528487"
+          }
+        ]
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-FRAME-STALE",
+      "category": "same_origin_frame",
+      "fixture": "fixtures/enterprise/frame-host.html",
+      "task": "Use a target captured before the same-origin frame is remounted.",
+      "mode": "single_session",
+      "positive": false,
+      "controls": [
+        "stale_context"
+      ],
+      "required_capabilities": [
+        "identity_v2",
+        "iframe_traversal"
+      ],
+      "oracle": {
+        "kind": "typed_failure",
+        "classification": "browsing_context_stale",
+        "dispatch_count": 0
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-SHADOW-OPEN",
+      "category": "open_shadow_root",
+      "fixture": "fixtures/enterprise/shadow-controls.html",
+      "task": "Approve through two nested open shadow roots.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive"
+      ],
+      "required_capabilities": [
+        "identity_v2",
+        "open_shadow_traversal",
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=shadow-contract&generation={reset_generation}",
+        "task_id": "shadow-contract",
+        "expected_events": [
+          {
+            "kind": "shadow_activated",
+            "target_key": "open-shadow-approval",
+            "payload_sha256": "f48f8118573fb02506223aa2ec5559f9aeb8eb65d4bdef984cef59cb09f7bf95"
+          }
+        ]
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-SHADOW-CLOSED",
+      "category": "closed_shadow_root",
+      "fixture": "fixtures/enterprise/shadow-controls.html",
+      "task": "Attempt to address the control inside the closed shadow root.",
+      "mode": "single_session",
+      "positive": false,
+      "controls": [
+        "closed_root"
+      ],
+      "required_capabilities": [
+        "identity_v2",
+        "open_shadow_traversal"
+      ],
+      "oracle": {
+        "kind": "typed_failure",
+        "classification": "closed_shadow_root_unsupported",
+        "dispatch_count": 0
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-CONTROL-HOVER",
+      "category": "complex_control",
+      "fixture": "fixtures/enterprise/complex-controls.html",
+      "task": "Open the hover menu and archive the synthetic record.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive"
+      ],
+      "required_capabilities": [
+        "hover",
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=controls-contract&generation={reset_generation}",
+        "task_id": "controls-contract",
+        "expected_events": [
+          {
+            "kind": "hover_selected",
+            "target_key": "hover-archive",
+            "payload_sha256": "1e9a65feaffb81c05479e8f11d32bb24377d589c09a350e67798252d0ffcbd0b"
+          }
+        ]
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-CONTROL-CHORD",
+      "category": "complex_control",
+      "fixture": "fixtures/enterprise/complex-controls.html",
+      "task": "Enter the synthetic note and commit it with Control+Enter.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive"
+      ],
+      "required_capabilities": [
+        "keyboard",
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=controls-contract&generation={reset_generation}",
+        "task_id": "controls-contract",
+        "expected_events": [
+          {
+            "kind": "chord_committed",
+            "target_key": "command-note",
+            "payload_sha256": "52eba3b40b1fe574cfba958813e5568b87fdae70839076af34675eef1ea0e522"
+          }
+        ]
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-CONTROL-UPLOAD",
+      "category": "complex_control",
+      "fixture": "fixtures/enterprise/complex-controls.html",
+      "task": "Upload only upload-synthetic.txt through the allowlisted text input.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive"
+      ],
+      "required_capabilities": [
+        "upload",
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=controls-contract&generation={reset_generation}",
+        "task_id": "controls-contract",
+        "expected_events": [
+          {
+            "kind": "upload_committed",
+            "target_key": "synthetic-upload",
+            "payload_sha256": "9f663ab43ba7b97e3bb11b4ea4a99dbd8d267b28d96cd572732888e68f9c1ac6"
+          }
+        ]
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-CONTROL-DRAG",
+      "category": "complex_control",
+      "fixture": "fixtures/enterprise/complex-controls.html",
+      "task": "Drag synthetic record 7 to the approved target.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive"
+      ],
+      "required_capabilities": [
+        "drag_drop",
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=controls-contract&generation={reset_generation}",
+        "task_id": "controls-contract",
+        "expected_events": [
+          {
+            "kind": "drag_dropped",
+            "target_key": "drop-approved",
+            "payload_sha256": "0214e6556c6b7cc98f64423ea7972532f451ed9151c43305d9b118b43bc8ad5e"
+          }
+        ]
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-CONTROL-DOWNLOAD",
+      "category": "complex_control",
+      "fixture": "fixtures/enterprise/complex-controls.html",
+      "task": "Download the synthetic enterprise report.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive"
+      ],
+      "required_capabilities": [
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "browser_download_event",
+        "suggested_filename": "enterprise-report.txt",
+        "sha256": "3f4aa27417344a8f219a74176616ec004cadce4fdd7b0730beb0923019fd0cc4"
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-EVIDENCE-NOOP",
+      "category": "authoritative_evidence",
+      "fixture": "fixtures/enterprise/complex-controls.html",
+      "task": "Click the no-op control while unrelated DOM mutation occurs.",
+      "mode": "single_session",
+      "positive": false,
+      "controls": [
+        "no_op",
+        "unrelated_mutation"
+      ],
+      "required_capabilities": [
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "typed_failure",
+        "classification": "authoritative_effect_missing",
+        "dispatch_count": 0
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-EVIDENCE-STALE",
+      "category": "authoritative_evidence",
+      "fixture": "fixtures/enterprise/complex-controls.html",
+      "task": "Reuse otherwise-correct evidence from the prior reset generation.",
+      "mode": "single_session",
+      "positive": false,
+      "controls": [
+        "stale_evidence"
+      ],
+      "required_capabilities": [
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "typed_failure",
+        "classification": "authoritative_evidence_stale",
+        "dispatch_count": 0
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-EVIDENCE-TASK",
+      "category": "authoritative_evidence",
+      "fixture": "fixtures/enterprise/complex-controls.html",
+      "task": "Use controls-contract evidence to satisfy another task.",
+      "mode": "single_session",
+      "positive": false,
+      "controls": [
+        "task_mismatch"
+      ],
+      "required_capabilities": [
+        "authoritative_evidence"
+      ],
+      "oracle": {
+        "kind": "typed_failure",
+        "classification": "authoritative_evidence_task_mismatch",
+        "dispatch_count": 0
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-SPA-60",
+      "category": "spa_endurance",
+      "fixture": "fixtures/enterprise/spa-endurance.html",
+      "task": "Complete exactly 60 single-session transitions.",
+      "mode": "single_session",
+      "positive": true,
+      "controls": [
+        "exact_positive"
+      ],
+      "required_capabilities": [
+        "identity_v2",
+        "authoritative_evidence",
+        "history_compaction"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=spa-contract&generation={reset_generation}",
+        "task_id": "spa-contract",
+        "expected_events": [
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-1",
+            "payload_sha256": "20ff4e6a23d7dc174837e618b52e9d44868a1de507e88ea83a1de8d3e1a94a69"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-2",
+            "payload_sha256": "33ec258720d61f7bdbe660e415c0bde7959bf7ac4ed1e7fa0b17f36a5e871013"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-3",
+            "payload_sha256": "e4a7ae1afac6d43b17d89952dfc3c4b00593799e5db217498c03db9c25cb0189"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-4",
+            "payload_sha256": "e950311843401fd98849cefb496ef37a5e28cf4ac53465f2dff15b4b1cef2681"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-5",
+            "payload_sha256": "dd7e79b91d8bb72afccf3b56537e00df34976eef12fb15c5f841dc2aed55adbf"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-6",
+            "payload_sha256": "19d7accf27b36e98490b2d48b51b47a8d4b3389631da9a974fdb851473bdf093"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-7",
+            "payload_sha256": "6645a31cb5318e6e166db6de5b141060c4fa73c132ffc0948aee2a55f2a77953"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-8",
+            "payload_sha256": "72325a49030dba9b00aa996c1bc371c35e694bdac569c797af561bebd7f97daf"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-9",
+            "payload_sha256": "d6f84a5b12c576a39da8af7e59d58f254c5756f54c15c207378edb564fafe9ae"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-10",
+            "payload_sha256": "c663ce4aee42725a238514d60bf2f079dbfc6d47681e11824d5f2f0ad958491a"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-11",
+            "payload_sha256": "8b69d2ec1b026e613fd4e7bb5a020937dc533e73952321c5f9bd5990e13ed971"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-12",
+            "payload_sha256": "80a32df24a54b85f0995fbd45797e277f90ee2042cd2ef76e226f09cdeaad20f"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-13",
+            "payload_sha256": "c576f3c1a95d5dd3e5cc854cae6e7def542e7f283ac06ecb2b4fbb840b7ddaf0"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-14",
+            "payload_sha256": "c07e66c4eae06b519271cb65d5565dd905d9c6150d110c18d866ed8e74b86933"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-15",
+            "payload_sha256": "c755f05601b08f4259afb0d02bcf15e315077b7d3fb1133fec6eff2b12f533ec"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-16",
+            "payload_sha256": "9a0f06a0b47d8edac146a67d479949b00889d7ee0e57bc1ab569f82fdb37ca0a"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-17",
+            "payload_sha256": "a5f52cbaa5b969dcde0e03fb0504be8555fbbe86b53b1d79e5a4d7b6dc62d41e"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-18",
+            "payload_sha256": "3de1108de8a6a8bb767c30ea75dd9d76d4547b88b81ce4c11c4d875698060587"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-19",
+            "payload_sha256": "115768d8a9bc3d3b123084266888194fd02f92b406c8a2f43f37fbca08cc1c2d"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-20",
+            "payload_sha256": "093b3c5c2d5fdea54bbf194ce0afd4d838074fd8bc0665220c88fbc7f6a7a5b7"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-21",
+            "payload_sha256": "2f1ded1a6ad47b2b290c3aa06d5ecc15cd1c44be5182c3235613ab6c11ca3ae1"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-22",
+            "payload_sha256": "b583871e9ffe66ba09b221ba150c5694de3bbeb18e559ecb34ab6e7e1d5f3d67"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-23",
+            "payload_sha256": "38915642756401db50c548814058cebb7d3295b5095d67e04c3cd4fd826354e9"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-24",
+            "payload_sha256": "41969be7b70a919a98382a2637a11738b274a6c5d059c5827fe6bc0db2349f0e"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-25",
+            "payload_sha256": "f34d6a1ec277c2c2cde9565a8061087451870d547faa6a387cf60d8b53fada60"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-26",
+            "payload_sha256": "66d0fb7e15391d0b4b393df831a33ab8a9d79880c834d55605e8fea199008679"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-27",
+            "payload_sha256": "db4f1c717c9e26610031bff4b38b5da0ce796194fa5a2345e66194f97990d599"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-28",
+            "payload_sha256": "cfff3c8eb25b98f49906433b98b93abc268a80f5b416843e7fd216f200a9499d"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-29",
+            "payload_sha256": "bffb12fbcc0bf9d93656dab1801071c969c884547553d9f56b80427fe53ebdda"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-30",
+            "payload_sha256": "8c18c00b57ac3615d46ad4880c49882b0610c0424008db1059e1b7904baa99be"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-31",
+            "payload_sha256": "d4bbebee3930a335c2c46b5836ab356171d753a39a5c826905487c151c4e8789"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-32",
+            "payload_sha256": "319e0436487e34ebe9e78b30b35c424272eed03cde5c9efbebc23725a02a2605"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-33",
+            "payload_sha256": "8d4721d3f95ed2543586f77b74ebb8f66b6c1166f658f99d79f9e30baf85b064"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-34",
+            "payload_sha256": "1b28c8ca21a84d0d15d9f985736ff08c2955bbba4e01a6818d4be3bf8771452c"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-35",
+            "payload_sha256": "f76019c6cbafbf01d7a4e6d562880a3838db6b36c3f0978f8af637bb40465119"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-36",
+            "payload_sha256": "a17c9c9dc0fbb4499e0c8f517e6048abfee0ce977622aa28fd52b2da0a639e62"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-37",
+            "payload_sha256": "868ede92dad8c2d0294c95c62dbdaa1c66e1c7bcf50152bc0a9afeec40fe9194"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-38",
+            "payload_sha256": "fe3f2c94e27dd2f788c48fdf06ebed17f4d5a0770d17366cc9627a239d8b80e4"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-39",
+            "payload_sha256": "b8a87b285481160fbdc70a92b9ac1944658ff003335f93927687dc1a38dc36c9"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-40",
+            "payload_sha256": "3b8ce56ddfb618dde0462dcb6539c372b8168ad84b2c54350e65e64efe393311"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-41",
+            "payload_sha256": "41c165e562dfffb2f57a29135797314c00238eb658a46bc1e424cd938ff6ea7a"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-42",
+            "payload_sha256": "004db011f71f00160d36c6e9695251600eee015612273ed85547ff2ba241a587"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-43",
+            "payload_sha256": "82ddc9649166062887446492b5735dcdfe952726800eee52294a897f257e1c3b"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-44",
+            "payload_sha256": "02b96840d79ea3516287a134dc56cfbed442670e1a96c72cc5d17d129852f2a7"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-45",
+            "payload_sha256": "89cda585013adaf1bd90ccb445e477471898f7664f8c47804eaf1982061a086d"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-46",
+            "payload_sha256": "31a630736ab12f0249e1cd971f2ccd9e82e068c9bf3fd17a210a5c897fe12194"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-47",
+            "payload_sha256": "0d9523e1d8c38ac80e6101a061efff6574372952e6bc8d5085431018fe1e6193"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-48",
+            "payload_sha256": "6358198b611e9440fc2b1e6d85108ccf697a1e91a5fbf9139c15e9884ca3dead"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-49",
+            "payload_sha256": "d1598d5e3614a906c6d8b3e532d9a5dd7799bed07ff000aa2ba578a10f7c636e"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-50",
+            "payload_sha256": "6e7d68c018517888c66f69bbf25e5bd6b4d80d4302996db59bd491c73cfbeb6b"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-51",
+            "payload_sha256": "3bac4c5b46f8699d57d5e2bb80e9b44c132ed98b46e8ca70e27031573e502ea5"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-52",
+            "payload_sha256": "6ba37bb174901faa35c65c9f6d928e399d54a9a1afde15ae32f660a86d7f5458"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-53",
+            "payload_sha256": "5f97127609d062be95d11729bbe4c5f6bc2625b444d599c1074c9c50d504b097"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-54",
+            "payload_sha256": "80c958180025d2c9a802961fc98a507888b1d7b23be59b11c30b934f40e46cc4"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-55",
+            "payload_sha256": "a4a52d51a1a147a904b790a47bd22ef911710b74d06a23158fc43c225c19b98f"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-56",
+            "payload_sha256": "2b97c25aca1822fbab251897340761f9af9ca8139c847a18c8289a1a2280915d"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-57",
+            "payload_sha256": "93cd1f3d8a6409f2f084072ee7684ba5cd9c837d09d62ca4ff041a9f65606ce2"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-58",
+            "payload_sha256": "8cc6ff04d674df55b0fab4f4001f31472df14bf2f074602f43133e6a636a1488"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-59",
+            "payload_sha256": "8fd92f75d5d4238241e24442568e1b8f4e6a0185476571fed947f46eb7c54a3c"
+          },
+          {
+            "kind": "spa_transition",
+            "target_key": "transition-60",
+            "payload_sha256": "1727b847ed5eaebe02237e1ec891100bd774288d2a65819124fe2b615b4970e7"
+          }
+        ],
+        "expected_spa_transitions": 60
+      },
+      "process_restarts": 0
+    },
+    {
+      "id": "E7-CONTINUATION-RESTART",
+      "category": "multi_session_continuation",
+      "fixture": "fixtures/enterprise/spa-endurance.html",
+      "task": "Commit checkpoints 1, 2, and 3 across two controlled browser-process restarts.",
+      "mode": "multi_session",
+      "positive": true,
+      "controls": [
+        "exact_positive",
+        "restart_boundary"
+      ],
+      "required_capabilities": [
+        "identity_v2",
+        "authoritative_evidence",
+        "continuation"
+      ],
+      "oracle": {
+        "kind": "server_state",
+        "endpoint": "/api/oracle?task_id=continuation-contract&generation={reset_generation}",
+        "task_id": "continuation-contract",
+        "expected_events": [
+          {
+            "kind": "continuation_checkpoint",
+            "target_key": "checkpoint-1",
+            "payload_sha256": "f58fca6002d8a4c21e26c20842293ea9675e0a03f7b1f4dd7766b8c0b3669f7b"
+          },
+          {
+            "kind": "continuation_checkpoint",
+            "target_key": "checkpoint-2",
+            "payload_sha256": "73207f05635f27278e9a1ff804d1d4edbf37131caec4c94e1f58763b9f8ea3c3"
+          },
+          {
+            "kind": "continuation_checkpoint",
+            "target_key": "checkpoint-3",
+            "payload_sha256": "ec8c3cc44d3e4496eae1d621127de395e49df80d1a39906158eec83109521121"
+          }
+        ]
+      },
+      "process_restarts": 2
+    },
+    {
+      "id": "E7-CONTINUATION-MISMATCH",
+      "category": "multi_session_continuation",
+      "fixture": "fixtures/enterprise/spa-endurance.html",
+      "task": "Resume after a checkpoint generation or task binding mismatch.",
+      "mode": "multi_session",
+      "positive": false,
+      "controls": [
+        "restart_boundary",
+        "task_mismatch"
+      ],
+      "required_capabilities": [
+        "identity_v2",
+        "authoritative_evidence",
+        "continuation"
+      ],
+      "oracle": {
+        "kind": "typed_failure",
+        "classification": "continuation_state_mismatch",
+        "dispatch_count": 0
+      },
+      "process_restarts": 1
+    }
+  ]
+}

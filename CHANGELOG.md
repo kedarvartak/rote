@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Freeze 19 synthetic enterprise browser contract cases with task/freshness-bound external oracles, dispatch-free failure controls, separate 60-step SPA and restart lifecycles, and a repeated real-Chrome fixture smoke before implementing E7 mechanisms (#142).
 - **P1**: Launch public `@rotehq/cli@0.1.0` after an empty-directory provider-backed `npx` run independently verifies live page text and freezes registry integrity, manifest, trajectory, and reconciled raw receipt as T28 (#141).
 - **P1**: Add a runnable cosmetic-drift demo (`scripts/demo/cosmetic-diff-demo.ts`, no API key) showing a full redesign costing a ~6-token zero-delta diff while a hidden real change surfaces as one line, with a terminal recording (`docs/demo/cosmetic-diff-demo.gif`), a README pointer, and a website deep-dive (`/docs/cosmetic-drift`) covering the distiller bottleneck, the drift gradient, and the #138 opacity fix (#139).
 - **P2**: Bound planner-visible action history with deterministic cache-amortized compaction, preserve exact recent actions and real older representatives, record redacted boundaries, and fail explicitly when evicted detail is required (#137).
@@ -33,6 +34,7 @@ labeled `skip-changelog`.
 - **P1**: Redraw all design diagrams via the Excalidraw MCP (base hand-drawn Virgil font) around the memory spine, and state build status inside each diagram (solid = built, dashed = designed). The previous set predated the repositioning: it cited a dead doc number (docs/15), called the capability matrix's Rote column a "designed target" where docs/04 now insists it shows today's build, claimed diffs and provider cache hits as if live (both documented inert/absent), and framed the Skyvern comparison as "why Rote wins" where docs/04 concedes we are late to tier 1. Adds `tier0-curve.svg` — the O(n²) bill and the four levers on it, V1's headline, previously undiagrammed (embedded in README and docs/01); embeds the previously-orphaned perception pipeline in docs/02; rebuilds the package map with the packages that actually exist (`action`, `agent`, `llm` were missing). `t1-b2-false-negative.svg` is deliberately untouched as a historical test record. (#63)
 
 ### Fixed
+- **P2**: Use an explicit WebSocket transport on Node 20 and wait for Chromium exit before profile cleanup, keeping mandatory enterprise fixture CDP tests portable and race-free (#142).
 - **P1**: Parse inline opacity instead of substring-matching it, so translucent controls (`opacity:0.5`, mid-fade animations) stay in the distilled observation rather than vanishing as spurious diff removals; only exact `opacity:0`/`0%` is treated as invisible (#138).
 - **P1**: Replace B2's generic completion oracle with a required composite DOM signal containing all eight exact requested values, expand zero-model replay to bind/verify every field, version the protocol, and withdraw the historical B2 parity/reduction claim until a corrective matrix is collected (#111).
 - **P1**: Remove `touch-action: none` from the website's G1 curve chart — a touch landing on the chart could not scroll the page past it (#101)

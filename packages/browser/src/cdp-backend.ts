@@ -59,9 +59,12 @@ export class LaunchingCdpBrowserBackend implements BrowserCaptureBackend {
   }
 
   async close(): Promise<void> {
-    this.child?.kill('SIGTERM');
+    const child = this.child;
     this.child = undefined;
-    if (this.userDataDir) await rm(this.userDataDir, { recursive: true, force: true });
+    if (child) await stopChrome(child);
+    // Chrome can hold profile files briefly after SIGTERM; waiting for process exit
+    // prevents cleanup from racing those final writes on Node 20 CI.
+    if (this.userDataDir) await rm(this.userDataDir, { recursive: true, force: true, maxRetries: 3, retryDelay: 50 });
     this.userDataDir = undefined;
     this.endpoint = undefined;
   }
@@ -123,6 +126,19 @@ function waitForDevtoolsEndpoint(child: ChildProcess): Promise<string> {
       reject(new Error(`Chrome exited before DevTools endpoint was ready: ${String(code)}`));
     });
   });
+}
+
+async function stopChrome(child: ChildProcess): Promise<void> {
+  if (child.exitCode !== null || child.signalCode !== null) return;
+  const exited = new Promise<void>((resolveExit) => child.once('exit', () => resolveExit()));
+  child.kill('SIGTERM');
+  const graceful = await Promise.race([
+    exited.then(() => true),
+    new Promise<false>((resolveTimeout) => setTimeout(() => resolveTimeout(false), 2000)),
+  ]);
+  if (graceful) return;
+  child.kill('SIGKILL');
+  await exited;
 }
 
 function firstPresent(paths: readonly string[]): string | undefined {

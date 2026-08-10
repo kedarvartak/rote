@@ -32,6 +32,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
     "openai": "^6.46.0",
+    "ws": "^8.18.0",
     "yaml": "^2.6.0",
     "zod": "^3.23.8"
   },

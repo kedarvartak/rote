@@ -28,7 +28,7 @@ Browser Use 0.13.7 with fresh exact pairs; T26 qualifies zero-LLM strong action 
 while keeping generic click reaction non-enforcing. Public `@rotehq/cli@0.1.0` matches its
 audited bytes, and T28 verifies the provider-backed quickstart from an empty directory.
 Post-G1 cache routing wins long-cell cost while the shortest cell still crosses parity.
-P2 begins with B4 built and E7.1's adversarial contract corpus next.
+P2 began with B4, then froze E7.1's 19-case adversarial corpus and external oracles; identity v2 (#128) is next. The fixture smoke is not enterprise-browser support.
 
 ## The memory spine
 

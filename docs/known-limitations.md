@@ -35,8 +35,10 @@ scaling, or zero-LLM operation for ordinary tasks.
   event escape hatch.
 - **Long-running SPA and cross-session workflows are unqualified.** Route remounts,
   virtualized controls, background traffic, 50+ interaction tasks, and continuation after
-  browser/process restart have no certification. E7.6 covers single-session endurance;
-  E7.7 separately covers fingerprint-gated continuation without storing credentials.
+  browser/process restart have no product certification. E7.1's direct Chrome smoke only
+  proves the synthetic fixtures/oracles behave deterministically; E7.6 covers
+  single-session endurance and E7.7 separately covers fingerprint-gated continuation
+  without storing credentials.
 - **Recall across pages is weak.** The tier-0 policy keeps what the agent did, not every
   page it saw. Compare-across-pages tasks can lose evidence that was evicted. The planner
   now receives an explicit recall boundary and can fail as `recall_unavailable`; fabricated
@@ -118,7 +120,8 @@ The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulat
 ## Deliberately deferred
 
 B5 now certifies deterministic semantic target repair only; arbitrary workflow repair remains absent. Long-run B4 qualification, enterprise
-browser contracts E7.1–E7.7, distillation, automatic matching, site memory, routing, and
-speculation remain post-G2 work. Deferral
+browser mechanisms E7.2–E7.7, distillation, automatic matching, site memory, routing, and
+speculation remain post-G2 work. E7.1's frozen fixture contract is built but confers no
+enterprise-browser capability. Deferral
 means “not claimed,” not “implicitly working.” The authoritative sequence is
 [07 — Execution plan](07-execution-plan.md).

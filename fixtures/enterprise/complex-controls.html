@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><title>Enterprise control contract</title>
+  <style>[data-hover-menu] [role="menu"] { display: none; } [data-hover-menu]:hover [role="menu"], [data-hover-menu][data-open="true"] [role="menu"] { display: block; } [draggable="true"] { border: 1px solid; padding: 8px; } [data-drop-target] { min-height: 30px; border: 1px dashed; }</style>
+</head>
+<body>
+  <h1>Enterprise controls</h1>
+  <section data-hover-menu tabindex="0"><span>Actions</span><div role="menu"><button role="menuitem" data-fixture-target-key="hover-archive">Archive synthetic record</button></div></section>
+  <label>Command note <textarea data-chord-input></textarea></label><p>Commit with Control+Enter.</p>
+  <label>Upload synthetic text <input type="file" accept="text/plain,.txt" data-upload></label>
+  <div draggable="true" data-drag-source data-fixture-target-key="drag-record-7">Synthetic record 7</div>
+  <div data-drop-target data-fixture-target-key="drop-approved">Drop approved record here</div>
+  <a href="./enterprise-report.txt" download="enterprise-report.txt" data-download>Download synthetic report</a>
+  <button type="button" data-no-op>No-op with unrelated DOM mutation</button>
+  <button type="button" data-ui-only>Show fake UI success only</button>
+  <p data-ui-status aria-live="polite">Ready</p>
+  <script type="module">
+    import { markUiStatus, postAuthoritativeEvent } from './fixture-runtime.js';
+    const menu = document.querySelector('[data-hover-menu]');
+    menu.addEventListener('pointerenter', () => { menu.dataset.open = 'true'; });
+    menu.querySelector('[role="menuitem"]').addEventListener('click', async () => {
+      await postAuthoritativeEvent({ event_id: 'control-hover', task_id: 'controls-contract', kind: 'hover_selected', target_key: 'hover-archive', payload: { command: 'archive' } });
+      markUiStatus('UI says archived');
+    });
+    document.querySelector('[data-chord-input]').addEventListener('keydown', async (event) => {
+      if (!(event.ctrlKey && event.key === 'Enter')) return;
+      event.preventDefault();
+      await postAuthoritativeEvent({ event_id: 'control-chord', task_id: 'controls-contract', kind: 'chord_committed', target_key: 'command-note', payload: { chord: 'Control+Enter', text: event.currentTarget.value } });
+      markUiStatus('UI says chord committed');
+    });
+    document.querySelector('[data-upload]').addEventListener('change', async (event) => {
+      const file = event.currentTarget.files?.[0];
+      if (!file || file.type !== 'text/plain' || file.size > 1024) return;
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const digest = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map((value) => value.toString(16).padStart(2, '0')).join('');
+      await postAuthoritativeEvent({ event_id: 'control-upload', task_id: 'controls-contract', kind: 'upload_committed', target_key: 'synthetic-upload', payload: { filename: file.name, bytes: file.size, sha256: digest } });
+      markUiStatus('UI says upload committed');
+    });
+    const source = document.querySelector('[data-drag-source]');
+    source.addEventListener('dragstart', (event) => event.dataTransfer.setData('text/plain', source.dataset.fixtureTargetKey));
+    const drop = document.querySelector('[data-drop-target]');
+    drop.addEventListener('dragover', (event) => event.preventDefault());
+    drop.addEventListener('drop', async (event) => {
+      event.preventDefault();
+      const sourceKey = event.dataTransfer.getData('text/plain');
+      await postAuthoritativeEvent({ event_id: 'control-drag', task_id: 'controls-contract', kind: 'drag_dropped', target_key: drop.dataset.fixtureTargetKey, payload: { source_key: sourceKey } });
+      markUiStatus('UI says drop committed');
+    });
+    document.querySelector('[data-download]').addEventListener('click', async () => {
+      await postAuthoritativeEvent({ event_id: 'control-download', task_id: 'controls-contract', kind: 'download_requested', target_key: 'enterprise-report', payload: { filename: 'enterprise-report.txt' } });
+    });
+    document.querySelector('[data-no-op]').addEventListener('click', () => {
+      const unrelated = document.createElement('aside');
+      unrelated.textContent = 'Background refresh complete';
+      document.body.append(unrelated);
+    });
+    document.querySelector('[data-ui-only]').addEventListener('click', () => markUiStatus('Success'));
+  </script>
+</body>
+</html>

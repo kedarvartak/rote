@@ -50,6 +50,8 @@ See `src/index.ts`. Highlights:
 - **`buildB5Report` / `rote-bench b5-report`** — audits real-Chrome drift receipts, exact live verification, semantic repair rate, observed silent failures, fail-closed ambiguity, and repair cost against the corrected cold B2 denominator.
 - **`buildCurveReport` / `rote-bench curve-report`** — fail-closed audit of matched curve receipts, seeded-bootstrap cell and slope intervals, success parity, cache/cost/latency buckets, A4 ratios, and dependency-free Markdown/SVG/JSON publication.
 - **`buildCurveCacheEconomics` / `rote-bench curve-cache-report`** — audit versioned before/after cache evidence and publish model-priced hit-rate and cost confidence intervals plus a cost-curve SVG.
+- **`EnterpriseContractProtocolSchema` / `parseEnterpriseContractProtocol`** — freeze E7.1's synthetic enterprise categories, lifecycle split, exact external oracles, and dispatch-free failure controls before later mechanisms choose an implementation.
+- **`EnterpriseFixtureServer`** — serve the corpus on distinct loopback origins and retain reset-generation/task-bound authoritative events outside the DOM. It is test instrumentation, not the future E7.4 product adapter.
 
 ## Spec format
 
@@ -260,4 +262,5 @@ repetitions and emit the matching number of competitor runs into the sidecar.
 
 ```bash
 npm test --workspace @rote/bench
+npm run test:enterprise-chrome --workspace @rote/bench
 ```

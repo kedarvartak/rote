@@ -16,7 +16,7 @@ await build({
   format: 'esm',
   sourcemap: true,
   legalComments: 'external',
-  external: ['@anthropic-ai/sdk', 'openai', 'yaml', 'zod'],
+  external: ['@anthropic-ai/sdk', 'openai', 'ws', 'yaml', 'zod'],
 });
 
 await copyFile(new URL('../../LICENSE', packageRoot), new URL('dist/LICENSE', packageRoot));

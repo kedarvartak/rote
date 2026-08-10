@@ -13,10 +13,12 @@
   },
   "dependencies": {
     "@rote/core": "*",
+    "ws": "^8.18.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
+    "@types/ws": "^8.5.13",
     "typescript": "^5.6.3",
     "vitest": "^2.1.4"
   }

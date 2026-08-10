@@ -1,4 +1,5 @@
 import { get, request } from 'node:http';
+import WebSocket, { type MessageEvent } from 'ws';
 
 export interface CdpClientOptions {
   webSocketDebuggerUrl: string;

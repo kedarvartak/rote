@@ -59,6 +59,7 @@ confuse in an architecture doc; this is the boundary.
 | CDP browser backend, perception (distill → stable IDs → budget) | 0 | **built for the top-level light DOM** — v1 IDs hash role/name/coarse depth and can collide in repeated grids; iframe/open-shadow traversal and context-aware identity are planned in E7.2–E7.3 |
 | Agent loop, context assembler, tagged LLM client | 0 | **built** |
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
+| Enterprise contract corpus (E7.1) | — | **frozen and fixture-qualified** — 19 synthetic grid/frame/shadow/control/SPA/restart cases bind exact external oracles or dispatch-free typed failures; direct real-Chrome fixture controls pass, but product mechanisms remain #128–#133 ([T29](testing/T29-enterprise-contract-corpus.md)) |
 | Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built for navigate/fill/select/click** — [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50); hover, keyboard chords, upload, and drag/drop are planned in E7.5 |
 | Final verification | — | **built, with a narrow public surface** — every success requires an injected verifier, but CLI verification is visible-text/URL based; authoritative evidence envelopes and adapters are planned in E7.4 |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built and recall-stress tested** — post-eviction context marks the recall boundary; unavailable facts and fabricated comparisons fail closed ([T18](testing/T18-eviction-recall-trade.md)) |
@@ -309,13 +310,15 @@ it: add browsing-context and stable composed-container lineage, preserve semanti
 recovery, reject residual ambiguity before dispatch, exclude sensitive values, and leave
 historical v1 artifacts untouched.
 
-### Enterprise browser contracts (planned, after P1 launch)
+### Enterprise browser contracts (E7.1 frozen; mechanisms planned)
 
 Implementation order is binding because every later layer persists assumptions from the
 one before it ([07 §E7](07-execution-plan.md)):
 
-1. Freeze adversarial fixtures and authoritative outcome oracles (#127).
-2. Version context-aware target identity and collision behavior (#128).
+1. **Done:** freeze 19 adversarial synthetic fixtures and authoritative outcome oracles
+   (#127, [T29](testing/T29-enterprise-contract-corpus.md)). The direct fixture smoke is
+   not traversal/action support.
+2. **Next:** version context-aware target identity and collision behavior (#128).
 3. Carry that identity through nested same/cross-origin iframes and open shadow roots;
    classify closed roots unsupported (#129).
 4. Version verification evidence with provenance, freshness, task binding, and injected
