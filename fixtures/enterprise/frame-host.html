@@ -3,8 +3,8 @@
 <head><meta charset="utf-8"><title>Enterprise frame contract</title></head>
 <body>
   <h1>Composed browsing contexts</h1>
-  <iframe title="Same-origin workspace" data-context-key="same-workspace" src="./frame-level-one.html?scope=same"></iframe>
-  <iframe title="Cross-origin workspace" data-context-key="cross-workspace" src="{{CROSS_ORIGIN}}/frame-level-one.html?scope=cross"></iframe>
+  <iframe title="Same-origin workspace" name="same-workspace" data-context-key="same-workspace" src="./frame-level-one.html?scope=same"></iframe>
+  <iframe title="Cross-origin workspace" name="cross-workspace" data-context-key="cross-workspace" src="{{CROSS_ORIGIN}}/frame-level-one.html?scope=cross"></iframe>
   <button type="button" data-remount-same-frame>Remount same-origin workspace</button>
   <p data-ui-status>Ready</p>
   <script>

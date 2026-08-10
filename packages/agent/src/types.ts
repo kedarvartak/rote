@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { ElementResolutionResult, PostActionEvidence } from '@rote/action';
-import type { CapturedPage } from '@rote/browser';
+import type { BrowserContextCoordinate, CapturedPage } from '@rote/browser';
 import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
 import type { ProviderUsageReceipt } from '@rote/llm';
 import { StableNodeRefSchema, type AdaptiveRenderedObservation, type DistilledNode } from '@rote/perception';
@@ -23,6 +23,7 @@ import type { HistoryCompactionPolicy, HistoryCompactionRecord, PlannerActionHis
  * ladder").
  */
 export const BrowserStableIdSchema = StableNodeRefSchema;
+const BrowserContextHashSchema = z.string().regex(/^[0-9a-f]{16}$/);
 const OptionalBrowserStableIdSchema = z.preprocess(
   (value) => value === undefined || BrowserStableIdSchema.safeParse(value).success ? value : undefined,
   BrowserStableIdSchema.optional(),
@@ -40,9 +41,9 @@ const BrowserPlannerFailureClassificationSchema = z.literal('recall_unavailable'
 
 export const BrowserActionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('navigate'), url: z.string().min(1), expect: BrowserExpectSchema.optional() }),
-  z.object({ kind: z.literal('fill'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
-  z.object({ kind: z.literal('select'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
-  z.object({ kind: z.literal('click'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('fill'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, contextHash: BrowserContextHashSchema.optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('select'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, contextHash: BrowserContextHashSchema.optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('click'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, contextHash: BrowserContextHashSchema.optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), expect: BrowserExpectSchema.optional() }),
   z.object({
     kind: z.literal('done'),
     success: z.boolean(),
@@ -86,9 +87,9 @@ function hasMalformedStableId(input: unknown): boolean {
 export interface BrowserPageSession {
   navigate(url: string): Promise<void>;
   capture(): Promise<CapturedPage>;
-  fill(selector: string, value: string): Promise<void>;
-  select(selector: string, value: string): Promise<void>;
-  click(selector: string): Promise<void>;
+  fill(selector: string, value: string, context?: BrowserContextCoordinate): Promise<void>;
+  select(selector: string, value: string, context?: BrowserContextCoordinate): Promise<void>;
+  click(selector: string, context?: BrowserContextCoordinate): Promise<void>;
 }
 
 export interface PlannerContext {

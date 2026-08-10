@@ -1,3 +1,4 @@
+import { BrowserContextCoordinateSchema } from '@rote/browser';
 import { z } from 'zod';
 
 /** Parses immutable historical role/name/coarse-depth node identities. */
@@ -40,6 +41,7 @@ export const DistilledNodeSchema = z.object({
   selectorHint: z.string().optional(),
   depth: z.number().int().nonnegative(),
   interactive: z.boolean(),
+  context: BrowserContextCoordinateSchema.optional(),
   state: z.object({ checked: z.boolean().optional() }).optional(),
 });
 export type DistilledNode = z.infer<typeof DistilledNodeSchema>;

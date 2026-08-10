@@ -30,6 +30,7 @@ export function distillPage(page: CapturedPage): DistilledNode[] {
       selectorHint: selectorHint(element),
       depth: element.depth,
       interactive,
+      ...(element.context ? { context: element.context } : {}),
       ...(role === 'checkbox' || role === 'radio'
         ? { state: { checked: 'checked' in element.attributes } }
         : {}),
@@ -101,7 +102,7 @@ function selectorHint(element: CapturedElement): string | undefined {
 function stableId(element: CapturedElement, role: string, name: string): StableNodeId {
   const contextKey = element.attributes['data-rote-context-key'] ?? 'top';
   const containerLineage = element.attributes['data-rote-container-lineage'] ?? '';
-  const contextHash = sha256Hex(contextKey).slice(0, 16);
+  const contextHash = element.context?.contextHash ?? sha256Hex(contextKey).slice(0, 16);
   const containerHash = sha256Hex(containerLineage || 'root').slice(0, 16);
   // Selector hints and control values are deliberately excluded: v2 must survive
   // harmless selector drift without turning credentials into durable artifacts.

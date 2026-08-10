@@ -30,6 +30,20 @@ describe('cache layout immutability', () => {
     );
   });
 
+  it('keeps browsing-context coordinates and document tokens below the stable cache line', () => {
+    const contextHash = '1234567890abcdef';
+    const documentToken = 'fedcba0987654321';
+    const context = assemblePlannerContext({
+      ...base,
+      observation: `button context=${contextHash} document=${documentToken}`,
+    });
+
+    expect(context.stablePrefix).not.toContain(contextHash);
+    expect(context.stablePrefix).not.toContain(documentToken);
+    expect(context.volatileSuffix).toContain(contextHash);
+    expect(context.volatileSuffix).toContain(documentToken);
+  });
+
   it('allows page, observation, and append-only history churn below the stable line', () => {
     const first = assemblePlannerContext(base);
     const second = assemblePlannerContext({

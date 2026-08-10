@@ -1,3 +1,4 @@
+import type { BrowserContextCoordinate } from '@rote/browser';
 import { stableNodeRef, type DistilledNode } from '@rote/perception';
 
 export interface ElementResolutionTarget {
@@ -6,6 +7,7 @@ export interface ElementResolutionTarget {
   role?: string;
   name?: string;
   text?: string;
+  contextHash?: string;
 }
 
 export type ElementResolutionStrategy = 'stable-id' | 'role-name' | 'text-proximity' | 'selector';
@@ -14,6 +16,7 @@ export interface ElementResolutionResult {
   selector: string;
   strategy: ElementResolutionStrategy;
   stableId?: string;
+  context?: BrowserContextCoordinate;
 }
 
 /** Raised when no actionable selector can be resolved through the fallback chain. */
@@ -21,6 +24,15 @@ export class ElementResolutionError extends Error {
   constructor(readonly target: ElementResolutionTarget) {
     super(`could not resolve browser target: ${JSON.stringify(target)}`);
     this.name = 'ElementResolutionError';
+  }
+}
+
+/** Raised when a target's durable browsing context is absent from the live capture. */
+export class ElementResolutionContextMismatchError extends ElementResolutionError {
+  constructor(target: ElementResolutionTarget, readonly contextHash: string) {
+    super(target);
+    this.name = 'ElementResolutionContextMismatchError';
+    this.message = `browser target context mismatch: ${contextHash}`;
   }
 }
 
@@ -51,13 +63,27 @@ export function resolveElementTarget(
   nodes: readonly DistilledNode[],
   target: ElementResolutionTarget,
 ): ElementResolutionResult {
+  const contextNodes = target.contextHash
+    ? nodes.filter((candidate) => 'version' in candidate.id && candidate.id.contextHash === target.contextHash)
+    : nodes;
+  // INVARIANT: context mismatch short-circuits before semantic/fuzzy matching.
+  if (target.contextHash && contextNodes.length === 0) {
+    throw new ElementResolutionContextMismatchError(target, target.contextHash);
+  }
+  const stableMatchesOutsideContext = target.stableId && target.contextHash
+    ? nodes.filter((candidate) => stableNodeRef(candidate.id) === target.stableId
+      && 'version' in candidate.id && candidate.id.contextHash !== target.contextHash)
+    : [];
+  if (stableMatchesOutsideContext.length) {
+    throw new ElementResolutionContextMismatchError(target, target.contextHash!);
+  }
   const stableMatches = target.stableId
-    ? nodes.filter((candidate) => stableNodeRef(candidate.id) === target.stableId && candidate.selectorHint)
+    ? contextNodes.filter((candidate) => stableNodeRef(candidate.id) === target.stableId && candidate.selectorHint)
     : [];
   const role = target.role ? normalize(target.role) : undefined;
   const name = target.name ? normalize(target.name) : undefined;
   const semanticMatches = role && name
-    ? nodes.filter((candidate) => (
+    ? contextNodes.filter((candidate) => (
       normalize(candidate.role) === role && normalize(candidate.name) === name && candidate.selectorHint
     ))
     : [];
@@ -84,7 +110,7 @@ export function resolveElementTarget(
 
   const wantedText = target.text ?? target.name;
   if (wantedText) {
-    const ranked = nodes
+    const ranked = contextNodes
       .filter((candidate) => candidate.selectorHint)
       .map((candidate) => ({ candidate, score: textSimilarity(wantedText, candidate.name) }))
       .filter(({ score }) => score >= 0.5)
@@ -101,7 +127,7 @@ export function resolveElementTarget(
   // may be wrong even when the copied selector is uniquely present.
   const selectorMatches = target.stableId
     ? []
-    : nodes.filter((candidate) => candidate.selectorHint === target.selector);
+    : contextNodes.filter((candidate) => candidate.selectorHint === target.selector);
   if (selectorMatches.length === 1) return result(selectorMatches[0]!, 'selector');
 
   const hasSemanticIdentity = Boolean(target.stableId || target.role || target.name || target.text);
@@ -110,7 +136,12 @@ export function resolveElementTarget(
 }
 
 function result(node: DistilledNode, strategy: ElementResolutionStrategy): ElementResolutionResult {
-  return { selector: node.selectorHint!, strategy, stableId: stableNodeRef(node.id) };
+  return {
+    selector: node.selectorHint!,
+    strategy,
+    stableId: stableNodeRef(node.id),
+    ...(node.context ? { context: node.context } : {}),
+  };
 }
 
 function textSimilarity(left: string, right: string): number {

@@ -21,22 +21,23 @@ scaling, or zero-LLM operation for ordinary tasks.
 
 - **Chrome/Chromium only.** The shipped backend uses CDP. Firefox, Safari, mobile browsers,
   and native applications are untested.
-- **Top-level light-DOM perception only.** Canvas-only, vision-heavy, remote-desktop,
-  nested iframe, and shadow-DOM workflows are not supported or certified. E7.3 adds
-  explicit same/cross-origin frame and open-shadow context traversal; closed roots remain
-  a typed unsupported boundary.
-- **Identity v2 is top-level only.** New captures hash browsing context and allowlisted
-  container lineage, distinguish keyed repeated-grid controls, and fail closed on residual
-  ambiguity. E7.3 must populate nested iframe/open-shadow contexts; unkeyed semantically
-  identical controls intentionally remain ambiguous rather than receiving positional IDs.
+- **Composed-context support is synthetic and Chrome-only.** T31 qualifies nested same/cross-
+  origin frames and nested open shadow roots on explicit deterministic fixture keys. Canvas,
+  vision-heavy, remote-desktop, Firefox/Safari, and broad production sites remain untested.
+  Declared closed-root hosts return typed unsupported; an undeclared closed root is invisible
+  to page JavaScript and may look absent rather than discoverably closed.
+- **Identity v2 still requires semantic landmarks.** Frame names, shadow-host keys, and
+  container lineage distinguish the qualified contexts without runtime IDs. Unkeyed
+  semantically identical frames/controls intentionally fail closed rather than receiving
+  positional identities.
 - **The live action vocabulary is narrow.** It supports navigate, fill, select, and click.
   Hover, keyboard chords, file upload, drag/drop, and arbitrary pointer sequences are not
   available. E7.5 adds only grounded, evidence-bearing primitives rather than a generic
   event escape hatch.
 - **Long-running SPA and cross-session workflows are unqualified.** Route remounts,
   virtualized controls, background traffic, 50+ interaction tasks, and continuation after
-  browser/process restart have no product certification. E7.1's direct Chrome smoke only
-  proves the synthetic fixtures/oracles behave deterministically; E7.6 covers
+  browser/process restart have no product certification. T31 proves only synthetic
+  composed-context mechanisms and short exact actions; E7.6 covers
   single-session endurance and E7.7 separately covers fingerprint-gated continuation
   without storing credentials.
 - **Recall across pages is weak.** The tier-0 policy keeps what the agent did, not every
@@ -50,7 +51,7 @@ scaling, or zero-LLM operation for ordinary tasks.
   control persisted, but cannot establish that its required interaction, safety class,
   side effects, or authoritative outcome stayed compatible. #143 is now the cross-cutting
   P2 priority; incompatible same-looking controls must eventually return `contract_mismatch`
-  before dispatch. Until E7.3–E7.6 and distiller integration land, repair cannot infer that
+  before dispatch. Until E7.4–E7.6 and distiller integration land, repair cannot infer that
   a site's meaning or policy changed and must not pretend otherwise.
 - **Settledness is heuristic.** Long-lived requests and background traffic can exhaust the
   timeout. Historical certification retained such failures instead of hiding them.
@@ -104,7 +105,7 @@ affected steps. That provider-token overhead has not been recertified. It is
 a fail-closed safety change, not a new efficiency claim.
 
 The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulative-token-curve.md),
-[T11](testing/T11-cache-key-economics.md), [T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md), [T22](testing/T22-stagehand-qualification.md), [T23](testing/T23-skyvern-qualification.md), [T24](testing/T24-browser-use-0137-qualification.md), [T25](testing/T25-browser-use-0137-paired-certification.md), [T26](testing/T26-post-action-evidence-qualification.md), [T27](testing/T27-magnitude-qualification.md), [T28](testing/T28-registry-provider-quickstart.md), [T29](testing/T29-enterprise-contract-corpus.md), and [T30](testing/T30-target-identity-v2.md).
+[T11](testing/T11-cache-key-economics.md), [T20](testing/T20-b2-exact-certification.md), [T21](testing/T21-b5-drift-certification.md), [T22](testing/T22-stagehand-qualification.md), [T23](testing/T23-skyvern-qualification.md), [T24](testing/T24-browser-use-0137-qualification.md), [T25](testing/T25-browser-use-0137-paired-certification.md), [T26](testing/T26-post-action-evidence-qualification.md), [T27](testing/T27-magnitude-qualification.md), [T28](testing/T28-registry-provider-quickstart.md), [T29](testing/T29-enterprise-contract-corpus.md), [T30](testing/T30-target-identity-v2.md), and [T31](testing/T31-composed-browser-contexts.md).
 
 ## Provider, packaging, and operations
 
@@ -124,9 +125,9 @@ The canonical evidence and confidence intervals are [T10](testing/T10-g1-cumulat
 ## Deliberately deferred
 
 B5 now certifies deterministic semantic target repair only; arbitrary workflow repair remains absent. Long-run B4 qualification, enterprise
-browser mechanisms E7.3–E7.7, structural contract compatibility, distillation, automatic
-matching, site memory, routing, and speculation remain post-G2 work. E7.1's frozen fixture
-contract and E7.2's top-level identity v2 are built but confer no general enterprise-browser
-capability. Deferral
+browser mechanisms E7.4–E7.7, structural contract compatibility, distillation, automatic
+matching, site memory, routing, and speculation remain post-G2 work. E7.1's frozen contract,
+E7.2 identity, and E7.3 synthetic composed-context mechanisms are built but confer no broad
+production enterprise-browser capability. Deferral
 means “not claimed,” not “implicitly working.” The authoritative sequence is
 [07 — Execution plan](07-execution-plan.md).

@@ -3,13 +3,13 @@
 <head><meta charset="utf-8"><title>Enterprise shadow contract</title></head>
 <body>
   <h1>Shadow-root approvals</h1>
-  <div id="open-host" data-shadow-mode="open"></div>
-  <div id="closed-host" data-shadow-mode="closed"></div>
+  <div id="open-host" data-context-key="open-approval-root" data-shadow-mode="open"></div>
+  <div id="closed-host" data-context-key="closed-approval-root" data-shadow-mode="closed"></div>
   <p data-ui-status>Ready</p>
   <script type="module">
     import { markUiStatus, postAuthoritativeEvent } from './fixture-runtime.js';
     const openRoot = document.querySelector('#open-host').attachShadow({ mode: 'open' });
-    openRoot.innerHTML = '<section aria-label="Approval shell"><div id="nested-host"></div></section>';
+    openRoot.innerHTML = '<section aria-label="Approval shell"><div id="nested-host" data-context-key="nested-approval-root"></div></section>';
     const nestedRoot = openRoot.querySelector('#nested-host').attachShadow({ mode: 'open' });
     nestedRoot.innerHTML = '<button aria-label="Approve invoice" data-fixture-target-key="open-shadow-approval">Approve</button>';
     nestedRoot.querySelector('button').addEventListener('click', async () => {

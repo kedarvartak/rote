@@ -6,7 +6,13 @@
   <p data-ui-status>Ready</p>
   <script type="module">
     import { markUiStatus, postAuthoritativeEvent } from './fixture-runtime.js';
-    const scope = new URLSearchParams(location.search).get('scope') ?? 'unknown';
+    const params = new URLSearchParams(location.search);
+    const scope = params.get('scope') ?? 'unknown';
+    if (params.get('duplicate') === 'true') {
+      const duplicate = document.querySelector('button').cloneNode(true);
+      duplicate.dataset.fixtureTargetKey = 'nested-frame-ambiguous-decoy';
+      document.querySelector('button').after(duplicate);
+    }
     document.querySelector('button').addEventListener('click', async () => {
       await postAuthoritativeEvent({ event_id: `frame-${scope}`, task_id: 'frame-contract', kind: 'frame_activated', target_key: 'nested-frame-approval', payload: { scope } });
       markUiStatus('UI says approved');

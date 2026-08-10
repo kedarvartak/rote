@@ -1,14 +1,14 @@
-import { ElementResolutionAmbiguityError, resolveElementTarget, type ElementResolutionTarget } from '@rote/action';
-import type { CapturedElement, CapturedPage } from '@rote/browser';
+import { ElementResolutionAmbiguityError, ElementResolutionContextMismatchError, resolveElementTarget, type ElementResolutionTarget } from '@rote/action';
+import { BrowsingContextStaleError, ClosedShadowRootUnsupportedError, type BrowserContextCoordinate, type CapturedElement, type CapturedPage } from '@rote/browser';
 import { distillPage } from '@rote/perception';
 import type { ToolCallOutcome, ToolCaller } from './tool-caller.js';
 
 export interface BrowserReplayPage {
   navigate(url: string): Promise<void>;
   capture(): Promise<CapturedPage>;
-  fill(selector: string, value: string): Promise<void>;
-  select(selector: string, value: string): Promise<void>;
-  click(selector: string): Promise<void>;
+  fill(selector: string, value: string, context?: BrowserContextCoordinate): Promise<void>;
+  select(selector: string, value: string, context?: BrowserContextCoordinate): Promise<void>;
+  click(selector: string, context?: BrowserContextCoordinate): Promise<void>;
 }
 
 /** Typed failure for an unsupported or malformed browser replay tool call. */
@@ -32,20 +32,20 @@ export class BrowserToolCaller implements ToolCaller {
           break;
         case 'browser.fill': {
           const target = await this.resolveTarget(tool, args);
-          await this.page.fill(target.selector, requiredString(tool, args, 'value'));
+          await this.page.fill(target.selector, requiredString(tool, args, 'value'), target.context);
           extra = target.extra;
           break;
         }
         case 'browser.select': {
           const target = await this.resolveTarget(tool, args);
-          await this.page.select(target.selector, requiredString(tool, args, 'value'));
+          await this.page.select(target.selector, requiredString(tool, args, 'value'), target.context);
           extra = target.extra;
           break;
         }
         case 'browser.click':
         case 'browser.download_file': {
           const target = await this.resolveTarget(tool, args);
-          await this.page.click(target.selector);
+          await this.page.click(target.selector, target.context);
           extra = target.extra;
           break;
         }
@@ -70,9 +70,7 @@ export class BrowserToolCaller implements ToolCaller {
         ok: false,
         error: {
           message: failure.message,
-          code: failure instanceof ElementResolutionAmbiguityError
-            ? 'BROWSER_TARGET_AMBIGUOUS'
-            : 'BROWSER_REPLAY_TOOL_ERROR',
+          code: browserFailureCode(failure),
         },
       };
     }
@@ -81,7 +79,7 @@ export class BrowserToolCaller implements ToolCaller {
   private async resolveTarget(
     tool: string,
     args: Record<string, unknown>,
-  ): Promise<{ selector: string; extra: Record<string, unknown> }> {
+  ): Promise<{ selector: string; context?: BrowserContextCoordinate; extra: Record<string, unknown> }> {
     const requestedSelector = requiredString(tool, args, 'selector');
     const target: ElementResolutionTarget = {
       selector: requestedSelector,
@@ -89,22 +87,40 @@ export class BrowserToolCaller implements ToolCaller {
       ...(optionalString(tool, args, 'role') ? { role: optionalString(tool, args, 'role') } : {}),
       ...(optionalString(tool, args, 'name') ? { name: optionalString(tool, args, 'name') } : {}),
       ...(optionalString(tool, args, 'text') ? { text: optionalString(tool, args, 'text') } : {}),
+      ...(optionalString(tool, args, 'contextHash') ? { contextHash: optionalString(tool, args, 'contextHash') } : {}),
     };
-    const hasSemanticIdentity = Boolean(target.stableId || target.role || target.name || target.text);
+    const hasSemanticIdentity = Boolean(target.stableId || target.contextHash || target.role || target.name || target.text);
     if (!hasSemanticIdentity) return { selector: requestedSelector, extra: {} };
-    const resolution = resolveElementTarget(distillPage(await this.page.capture()), target);
+    const capture = await this.page.capture();
+    const unsupported = target.contextHash
+      ? capture.unsupportedContexts?.find((candidate) => candidate.coordinate.contextHash === target.contextHash)
+      : undefined;
+    if (unsupported?.classification === 'closed_shadow_root_unsupported') {
+      throw new ClosedShadowRootUnsupportedError(unsupported.coordinate.contextHash);
+    }
+    const resolution = resolveElementTarget(distillPage(capture), target);
     return {
       selector: resolution.selector,
+      ...(resolution.context ? { context: resolution.context } : {}),
       extra: {
         target_resolution: {
           requested_selector: requestedSelector,
           resolved_selector: resolution.selector,
           strategy: resolution.strategy,
           repaired: requestedSelector !== resolution.selector,
+          ...(resolution.context ? { context: resolution.context } : {}),
         },
       },
     };
   }
+}
+
+function browserFailureCode(error: Error): string {
+  if (error instanceof ElementResolutionAmbiguityError) return 'BROWSER_TARGET_AMBIGUOUS';
+  if (error instanceof ElementResolutionContextMismatchError) return 'BROWSER_CONTEXT_MISMATCH';
+  if (error instanceof BrowsingContextStaleError) return 'BROWSER_CONTEXT_STALE';
+  if (error instanceof ClosedShadowRootUnsupportedError) return 'CLOSED_SHADOW_ROOT_UNSUPPORTED';
+  return 'BROWSER_REPLAY_TOOL_ERROR';
 }
 
 function pageResult(page: CapturedPage, extra: Record<string, unknown>): Record<string, unknown> {

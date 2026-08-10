@@ -88,7 +88,7 @@ const ARC: Entry[] = [
     ships: [
       "Playbook distiller — trajectories become verified playbooks",
       "Matcher: semantic match + bind behind the fingerprint gate",
-      "B4 compaction and top-level identity v2 are built; structural action-contract drift is the trust-gate priority before learning",
+      "B4, identity v2, and synthetic nested frame/open-shadow contexts are built; authoritative evidence is next",
     ],
   },
   {
@@ -321,7 +321,7 @@ export default function RoadmapPage() {
             G1 and corrected G2 pass. Public <code className="font-mono text-[0.85em] text-ink">@rotehq/cli@0.1.0</code>{" "}
             matches its audited registry artifact, and T28 verifies the
             provider-backed quickstart from an empty directory. P1 launched
-            without expanding its one-provider, pinned-cell claims. E7.1's corpus and top-level identity v2 are built; composed contexts are next, with structural action-contract drift the cross-cutting P2 priority.
+            without expanding its one-provider, pinned-cell claims. E7.1's corpus, identity v2, and T31 synthetic composed contexts are built; authoritative evidence is next, with structural action-contract drift still the cross-cutting P2 priority.
           </p>
         </div>
       </Reveal>

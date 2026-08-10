@@ -127,7 +127,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
             options.beforeAction?.({ action, nodes, resolvedSelector: resolution?.selector });
           }
           if (action.kind !== 'done') {
-            await applyAction(options.page, action, resolution?.selector);
+            await applyAction(options.page, action, resolution?.selector, resolution?.context);
             const postActionPage = await options.page.capture();
             // Reuse the settled post-action capture as the next planner observation;
             // derived evidence adds no browser capture or LLM call to the loop.
@@ -279,7 +279,7 @@ function resolvedExpect(expect: BrowserExpect, originalSelector?: string, resolv
 
 function resolveAction(action: BrowserAction, nodes: readonly DistilledNode[]): ElementResolutionResult | undefined {
   if (action.kind === 'navigate' || action.kind === 'done') return undefined;
-  const hasSemanticIdentity = Boolean(action.stableId || action.role || action.name || action.text);
+  const hasSemanticIdentity = Boolean(action.stableId || action.contextHash || action.role || action.name || action.text);
   if (!hasSemanticIdentity && !nodes.some((node) => node.selectorHint === action.selector)) {
     // The shared resolver retains selector-only compatibility for stored legacy
     // actions. A live planner has the current observation and may not dispatch an
@@ -293,19 +293,20 @@ async function applyAction(
   page: RunBrowserAgentOptions['page'],
   action: BrowserAction,
   resolvedSelector?: string,
+  context?: ElementResolutionResult['context'],
 ): Promise<void> {
   switch (action.kind) {
     case 'navigate':
       await page.navigate(action.url);
       return;
     case 'fill':
-      await page.fill(resolvedSelector ?? action.selector, action.value);
+      await page.fill(resolvedSelector ?? action.selector, action.value, context);
       return;
     case 'select':
-      await page.select(resolvedSelector ?? action.selector, action.value);
+      await page.select(resolvedSelector ?? action.selector, action.value, context);
       return;
     case 'click':
-      await page.click(resolvedSelector ?? action.selector);
+      await page.click(resolvedSelector ?? action.selector, context);
       return;
     case 'done':
       return;
@@ -318,6 +319,7 @@ function renderStatefulControls(nodes: readonly DistilledNode[]): string {
   return selected.map((node) => JSON.stringify({
     selector: node.selectorHint,
     stableId: stableNodeRef(node.id),
+    ...(node.context?.path.length ? { contextHash: node.context.contextHash } : {}),
     role: node.role,
     name: node.name,
     checked: true,
@@ -338,6 +340,7 @@ function renderGroundedCandidates(nodes: readonly DistilledNode[], role?: string
   return candidates.map((node) => JSON.stringify({
     selector: node.selectorHint,
     stableId: stableNodeRef(node.id),
+    ...(node.context?.path.length ? { contextHash: node.context.contextHash } : {}),
     role: node.role,
     name: node.name,
   })).join('\n');
