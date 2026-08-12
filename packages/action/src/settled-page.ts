@@ -1,6 +1,13 @@
 import type { CapturedPage } from '@rote/browser';
-import { BrowserCapabilityUnsupportedError, type AllowedUploadFile, type NormalizedKeyChord } from './action-contract.js';
+import { BrowserCapabilityUnsupportedError, type NormalizedKeyChord } from './action-contract.js';
 import { waitForSettled, type BrowserActivityProbe, type WaitForSettledOptions } from './settledness.js';
+
+/** Redacted dispatch shape for one allowlisted upload; `file_id` stays with the caller. */
+export interface UploadDispatchFile {
+  name: string;
+  mimeType: string;
+  contentBase64: string;
+}
 
 export interface SettleableBrowserPage extends BrowserActivityProbe {
   navigate(url: string): Promise<void>;
@@ -11,7 +18,7 @@ export interface SettleableBrowserPage extends BrowserActivityProbe {
   /** E7.5 verbs are optional: a backend without one yields a typed unsupported failure, never a silent substitute. */
   hover?(selector: string): Promise<void>;
   press?(selector: string, chord: NormalizedKeyChord): Promise<void>;
-  upload?(selector: string, file: Pick<AllowedUploadFile, 'name' | 'mime_type' | 'content_base64'>): Promise<void>;
+  upload?(selector: string, file: UploadDispatchFile): Promise<void>;
   dragAndDrop?(sourceSelector: string, targetSelector: string): Promise<void>;
 }
 
@@ -58,7 +65,7 @@ export class SettledBrowserPageSession {
     await waitForSettled(this.page, this.options);
   }
 
-  async upload(selector: string, file: Pick<AllowedUploadFile, 'name' | 'mime_type' | 'content_base64'>): Promise<void> {
+  async upload(selector: string, file: UploadDispatchFile): Promise<void> {
     if (!this.page.upload) throw new BrowserCapabilityUnsupportedError('upload');
     await this.page.upload(selector, file);
     await waitForSettled(this.page, this.options);
