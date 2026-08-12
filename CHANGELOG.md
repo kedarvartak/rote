@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Gate task success on versioned authoritative outcome evidence: strict digest-only envelopes with subject and freshness binding, task-declared required classes that UI or model judgment can never satisfy, typed missing/stale/task-mismatch/inconsistent failures, and injected fixture/API/database/download adapters (#146).
 - **P2**: Capture, diff, resolve, and dispatch through nested same/cross-origin frames and open shadow roots with durable context paths, fresh document tokens, exact external fixture oracles, and mandatory real-Chrome qualification (#145).
 - **P2**: Emit versioned target identity v2 from browsing context and hashed allowlisted container lineage, preserve v1 artifacts, exclude control values, and qualify repeated-grid stability in property tests and mandatory real Chrome (#144).
 - **P2**: Freeze 19 synthetic enterprise browser contract cases with task/freshness-bound external oracles, dispatch-free failure controls, separate 60-step SPA and restart lifecycles, and a repeated real-Chrome fixture smoke before implementing E7 mechanisms (#142).

@@ -4,3 +4,4 @@ export * from './context.js';
 export * from './history-compaction.js';
 export * from './tagged-llm-planner.js';
 export * from './file-run-recorder.js';
+export * from './evidence.js';

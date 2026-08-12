@@ -25,6 +25,13 @@ See `src/index.ts` for the full export list. Highlights:
   `PlaybookMismatchError`).
 - **Serialization** — `writeTrajectoryJsonl` / `parseTrajectoryJsonl`,
   `writePlaybookYaml` / `parsePlaybookYaml`.
+- **Verification evidence (E7.4)** — `VerificationEvidenceEnvelopeSchema` (versioned,
+  strict, digest-only — a raw payload or credential field fails parse),
+  `EvidencePolicySchema` (only authoritative classes are requirable),
+  `evaluateEvidencePolicy` (pure: classifies missing / task-mismatch / stale /
+  inconsistent in order), `buildEvidenceEnvelope` / `digestEvidencePayload`
+  (canonical key-order-independent digests), and the injected
+  `AuthoritativeEvidenceAdapter` interface.
 
 ## Known v1 limitations (tracked, not silently missing)
 
