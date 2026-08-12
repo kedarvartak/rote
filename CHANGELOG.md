@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Add grounded hover, explicit normalized keyboard chords, id-referenced allowlisted file upload, and same-context drag/drop as shared product verbs with per-step safety classes, structural file redaction, typed unsupported/allowlist/chord/context failures, never-enforced reaction evidence, and real-Chrome qualification against the frozen control oracles (#147).
 - **P2**: Gate task success on versioned authoritative outcome evidence: strict digest-only envelopes with subject and freshness binding, task-declared required classes that UI or model judgment can never satisfy, typed missing/stale/task-mismatch/inconsistent failures, and injected fixture/API/database/download adapters (#146).
 - **P2**: Capture, diff, resolve, and dispatch through nested same/cross-origin frames and open shadow roots with durable context paths, fresh document tokens, exact external fixture oracles, and mandatory real-Chrome qualification (#145).
 - **P2**: Emit versioned target identity v2 from browsing context and hashed allowlisted container lineage, preserve v1 artifacts, exclude control values, and qualify repeated-grid stability in property tests and mandatory real Chrome (#144).
