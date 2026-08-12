@@ -1,4 +1,4 @@
-import { assertBrowserExpect, assertPostActionEvidence, BrowserExpectationError, derivePostActionEvidence, ElementResolutionConflictError, ElementResolutionError, PostActionEvidenceError, resolveElementTarget, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
+import { assertBrowserExpect, assertPostActionEvidence, BrowserCapabilityUnsupportedError, BrowserExpectationError, classifyBrowserActionSafety, derivePostActionEvidence, DragContextMismatchError, ElementResolutionConflictError, ElementResolutionError, normalizeKeyChord, PostActionEvidenceError, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
 import type { BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, stableNodeRef, type DistilledNode } from '@rote/perception';
@@ -23,6 +23,22 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
   let plannerStablePrefix: string | undefined;
   let observationHistoryEvicted = false;
   let pendingPage: CapturedPage | undefined;
+  // Advertise only verbs this backend can dispatch, once, so the stable prefix
+  // stays byte-identical across steps (cache-layout immutability). `upload` is
+  // additionally gated on a non-empty allowlist — a verb with zero legal
+  // arguments is an invitation to invent one.
+  const supportedVerbs = ([
+    ...(options.page.hover ? ['hover' as const] : []),
+    ...(options.page.press ? ['press' as const] : []),
+    ...(options.page.upload && options.uploadFiles?.length ? ['upload' as const] : []),
+    ...(options.page.dragAndDrop ? ['dragAndDrop' as const] : []),
+  ]);
+  const enterpriseActions = supportedVerbs.length > 0
+    ? {
+      verbs: supportedVerbs,
+      ...(options.uploadFiles?.length ? { uploadFileIds: options.uploadFiles.map((file) => file.file_id) } : {}),
+    }
+    : undefined;
 
   try {
     for (let step = 0; step < maxSteps; step += 1) {
@@ -60,6 +76,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         stateSummary: renderStatefulControls(nodes),
         ...(observationHistoryEvicted ? { observationHistoryEvicted: true } : {}),
         ...(pendingRepair ? { repair: pendingRepair } : {}),
+        ...(enterpriseActions ? { enterpriseActions } : {}),
       });
       if (context.history.compaction) observationHistoryEvicted = true;
       plannerStablePrefix = assertCacheStablePrefix(plannerStablePrefix, context.stablePrefix);
@@ -88,14 +105,20 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
 
       let actionError: Error | undefined;
       let resolution: ElementResolutionResult | undefined;
+      let dispatch: PreparedDispatch | undefined;
       let postActionEvidence: PostActionEvidence | undefined;
       if (action.kind !== 'done') {
         try {
           try {
-            resolution = resolveAction(action, nodes);
+            dispatch = prepareDispatch(action, nodes, options.uploadFiles);
+            resolution = dispatch.resolution;
             options.beforeAction?.({ action, nodes, resolvedSelector: resolution?.selector });
           } catch (error) {
-            const repairable = error instanceof ElementResolutionError || error instanceof BrowserActionGuardError;
+            // Upload-allowlist and drag-context violations are planner targeting
+            // mistakes caught before any side effect, so they buy the same single
+            // grounded correction as an unresolvable element (#131).
+            const repairable = error instanceof ElementResolutionError || error instanceof BrowserActionGuardError
+              || error instanceof UploadNotAllowlistedError || error instanceof DragContextMismatchError;
             if (!repairable || maxTargetRepairs < 1) throw error;
             // The action has not executed, so one bounded repair may copy a grounded
             // target from the same observation. This is distinct from postcondition
@@ -123,18 +146,23 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
               ...(planned.classifications ?? []),
               ...normalized.classifications,
             ]);
-            resolution = resolveAction(action, nodes);
+            dispatch = prepareDispatch(action, nodes, options.uploadFiles);
+            resolution = dispatch.resolution;
             options.beforeAction?.({ action, nodes, resolvedSelector: resolution?.selector });
           }
           if (action.kind !== 'done') {
-            await applyAction(options.page, action, resolution?.selector, resolution?.context);
+            await applyAction(options.page, action, dispatch);
             const postActionPage = await options.page.capture();
             // Reuse the settled post-action capture as the next planner observation;
             // derived evidence adds no browser capture or LLM call to the loop.
             pendingPage = postActionPage;
             postActionEvidence = derivePostActionEvidence({
               action,
-              ...(action.kind === 'navigate' ? {} : { resolvedSelector: resolution?.selector ?? action.selector }),
+              ...(action.kind === 'navigate' ? {} : {
+                resolvedSelector: action.kind === 'dragAndDrop'
+                  ? dispatch?.targetResolution?.selector ?? action.targetSelector
+                  : resolution?.selector ?? action.selector,
+              }),
               before: page,
               after: postActionPage,
             });
@@ -167,6 +195,8 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         durationMs: Math.max(0, clock() - startedAt),
         ...(actionError ? { error: actionError.message } : {}),
         ...(resolution ? { resolution } : {}),
+        ...(dispatch?.targetResolution ? { targetResolution: dispatch.targetResolution } : {}),
+        ...(action.kind !== 'done' ? { actionSafety: classifyBrowserActionSafety(action.kind) } : {}),
       };
       steps.push(recordedStep);
       await options.recorder?.recordStep(recordedStep);
@@ -277,6 +307,51 @@ function resolvedExpect(expect: BrowserExpect, originalSelector?: string, resolv
   return expect;
 }
 
+interface PreparedDispatch {
+  resolution?: ElementResolutionResult;
+  /** Present only for `dragAndDrop`. */
+  targetResolution?: ElementResolutionResult;
+  /** Present only for a validated `upload`; content stays out of every record. */
+  uploadFile?: AllowedUploadFile;
+}
+
+/**
+ * Resolves every grounded target and validates verb-specific preconditions
+ * before anything dispatches: the upload allowlist (#131 — ids only, no
+ * filesystem reach-through) and the same-browsing-context rule for drag
+ * (a shared DataTransfer cannot cross execution contexts).
+ */
+function prepareDispatch(
+  action: BrowserAction,
+  nodes: readonly DistilledNode[],
+  uploadFiles: readonly AllowedUploadFile[] | undefined,
+): PreparedDispatch {
+  if (action.kind === 'navigate' || action.kind === 'done') return {};
+  const resolution = resolveAction(action, nodes);
+  if (action.kind === 'upload') {
+    const file = uploadFiles?.find((candidate) => candidate.file_id === action.fileId);
+    // INVARIANT: an upload outside the injected allowlist never reaches a
+    // backend; the error names ids only, never file names, paths, or content.
+    if (!file) throw new UploadNotAllowlistedError(action.fileId, (uploadFiles ?? []).map((candidate) => candidate.file_id));
+    return { ...(resolution ? { resolution } : {}), uploadFile: file };
+  }
+  if (action.kind === 'dragAndDrop') {
+    const targetResolution = resolveElementTarget(nodes, {
+      selector: action.targetSelector,
+      ...(action.targetStableId ? { stableId: action.targetStableId } : {}),
+      ...(action.targetRole ? { role: action.targetRole } : {}),
+      ...(action.targetName ? { name: action.targetName } : {}),
+      ...(action.targetText ? { text: action.targetText } : {}),
+      ...(action.contextHash ? { contextHash: action.contextHash } : {}),
+    });
+    if (resolution?.context?.contextHash !== targetResolution.context?.contextHash) {
+      throw new DragContextMismatchError(resolution?.context?.contextHash, targetResolution.context?.contextHash);
+    }
+    return { ...(resolution ? { resolution } : {}), targetResolution };
+  }
+  return resolution ? { resolution } : {};
+}
+
 function resolveAction(action: BrowserAction, nodes: readonly DistilledNode[]): ElementResolutionResult | undefined {
   if (action.kind === 'navigate' || action.kind === 'done') return undefined;
   const hasSemanticIdentity = Boolean(action.stableId || action.contextHash || action.role || action.name || action.text);
@@ -292,9 +367,10 @@ function resolveAction(action: BrowserAction, nodes: readonly DistilledNode[]): 
 async function applyAction(
   page: RunBrowserAgentOptions['page'],
   action: BrowserAction,
-  resolvedSelector?: string,
-  context?: ElementResolutionResult['context'],
+  dispatch: PreparedDispatch | undefined,
 ): Promise<void> {
+  const resolvedSelector = dispatch?.resolution?.selector;
+  const context = dispatch?.resolution?.context;
   switch (action.kind) {
     case 'navigate':
       await page.navigate(action.url);
@@ -307,6 +383,35 @@ async function applyAction(
       return;
     case 'click':
       await page.click(resolvedSelector ?? action.selector, context);
+      return;
+    case 'hover':
+      // INVARIANT: a backend without a verb fails typed before side effects;
+      // there is no generic event-dispatch fallback (#131).
+      if (!page.hover) throw new BrowserCapabilityUnsupportedError('hover');
+      await page.hover(resolvedSelector ?? action.selector, context);
+      return;
+    case 'press':
+      if (!page.press) throw new BrowserCapabilityUnsupportedError('press');
+      await page.press(resolvedSelector ?? action.selector, normalizeKeyChord(action.chord), context);
+      return;
+    case 'upload': {
+      if (!page.upload) throw new BrowserCapabilityUnsupportedError('upload');
+      const file = dispatch?.uploadFile;
+      if (!file) throw new UploadNotAllowlistedError(action.fileId, []);
+      await page.upload(resolvedSelector ?? action.selector, {
+        name: file.name,
+        mimeType: file.mime_type,
+        contentBase64: file.content_base64,
+      }, context);
+      return;
+    }
+    case 'dragAndDrop':
+      if (!page.dragAndDrop) throw new BrowserCapabilityUnsupportedError('dragAndDrop');
+      await page.dragAndDrop(
+        resolvedSelector ?? action.selector,
+        dispatch?.targetResolution?.selector ?? action.targetSelector,
+        context,
+      );
       return;
     case 'done':
       return;

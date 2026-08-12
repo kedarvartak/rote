@@ -43,6 +43,15 @@ export interface AssemblePlannerContextOptions {
   observationHistoryEvicted?: boolean;
   /** Set on a scoped repair call; rendered into the volatile suffix only. */
   repair?: BrowserExpectFailure;
+  /**
+   * E7.5 verbs the current backend can actually dispatch, plus the run-stable
+   * allowlisted upload ids. Rendered into the stable prefix — both are
+   * constant within a run, so cache-prefix immutability holds (#131).
+   */
+  enterpriseActions?: {
+    verbs: readonly ('hover' | 'press' | 'upload' | 'dragAndDrop')[];
+    uploadFileIds?: readonly string[];
+  };
 }
 
 /** Builds a cache-stable planner prefix and a per-step volatile suffix. */
@@ -58,7 +67,7 @@ Return JSON only; do not wrap it in markdown.
 Task:
 ${options.task}
 
-${ACTION_SCHEMA}
+${ACTION_SCHEMA}${renderEnterpriseActions(options.enterpriseActions)}
 
 ${EXPECT_GUIDANCE}`;
   const history = buildPlannerActionHistory(
@@ -91,8 +100,24 @@ export function assertCacheStablePrefix(expected: string | undefined, actual: st
   return expected ?? actual;
 }
 
+const ENTERPRISE_ACTION_LINES: Record<'hover' | 'press' | 'upload' | 'dragAndDrop', string> = {
+  hover: '- {"kind":"hover","selector":"#id","stableId":"v2:0123456789abcdef","role":"button","name":"Menu label"}',
+  press: '- {"kind":"press","selector":"#id","stableId":"v2:0123456789abcdef","role":"textbox","name":"Field name","chord":"Control+Enter"} (chord = zero or more of Alt/Control/Meta/Shift plus one key)',
+  upload: '- {"kind":"upload","selector":"#id","stableId":"v2:0123456789abcdef","role":"button","name":"File input label","fileId":"<allowlisted id>"}',
+  dragAndDrop: '- {"kind":"dragAndDrop","selector":"#source-id","stableId":"v2:0123456789abcdef","targetSelector":"#target-id","targetRole":"region","targetName":"Drop zone"}',
+};
+
+function renderEnterpriseActions(enterpriseActions: AssemblePlannerContextOptions['enterpriseActions']): string {
+  if (!enterpriseActions || enterpriseActions.verbs.length === 0) return '';
+  const lines = enterpriseActions.verbs.map((verb) => ENTERPRISE_ACTION_LINES[verb]);
+  const uploadIds = enterpriseActions.verbs.includes('upload') && enterpriseActions.uploadFileIds?.length
+    ? `\nAllowlisted upload file ids (the only values valid as "fileId"): ${enterpriseActions.uploadFileIds.join(', ')}`
+    : '';
+  return `\n${lines.join('\n')}${uploadIds}`;
+}
+
 function assertKnownLayoutFields(options: AssemblePlannerContextOptions): void {
-  const allowed = new Set(['task', 'page', 'observation', 'observationMode', 'previousActions', 'historyCompactionPolicy', 'stateSummary', 'observationHistoryEvicted', 'repair']);
+  const allowed = new Set(['task', 'page', 'observation', 'observationMode', 'previousActions', 'historyCompactionPolicy', 'stateSummary', 'observationHistoryEvicted', 'repair', 'enterpriseActions']);
   const unknown = Object.keys(options).filter((key) => !allowed.has(key));
   if (unknown.length > 0) {
     throw new CacheLayoutImmutabilityError(

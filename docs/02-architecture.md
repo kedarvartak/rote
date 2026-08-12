@@ -60,7 +60,7 @@ confuse in an architecture doc; this is the boundary.
 | Agent loop, context assembler, tagged LLM client | 0 | **built** |
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
 | Enterprise contract corpus (E7.1) | — | **frozen and fixture-qualified** — 19 synthetic grid/frame/shadow/control/SPA/restart cases bind exact external oracles or dispatch-free typed failures; direct real-Chrome fixture controls pass, but product mechanisms remain #128–#133 ([T29](testing/T29-enterprise-contract-corpus.md)) |
-| Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built for navigate/fill/select/click across captured composed contexts** — [T31](testing/T31-composed-browser-contexts.md) qualifies nested-context click dispatch; [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50); hover, keyboard chords, upload, and drag/drop are planned in E7.5 |
+| Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built for navigate/fill/select/click/hover/press/upload/dragAndDrop across captured composed contexts** — [T31](testing/T31-composed-browser-contexts.md) qualifies nested-context click dispatch; [T33](testing/T33-enterprise-action-vocabulary.md) qualifies the E7.5 verbs against the frozen control oracles: explicit normalized chords only, uploads restricted to an injected id-referenced allowlist, same-context drag with typed non-draggable failure, and unsupported backend capabilities returning typed errors |
 | Final verification | — | **built with an authoritative evidence gate (E7.4)** — every success requires an injected verifier; tasks may additionally declare required authoritative evidence classes, satisfied only by versioned redacted envelopes from injected fixture/API/database/download adapters with subject and freshness binding ([T32](testing/T32-authoritative-outcome-evidence.md)); the public CLI verifier remains visible-text/URL based and counts as supporting evidence only |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built and recall-stress tested** — post-eviction context marks the recall boundary; unavailable facts and fabricated comparisons fail closed ([T18](testing/T18-eviction-recall-trade.md)) |
 | **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
@@ -345,9 +345,14 @@ one before it ([07 §E7](07-execution-plan.md)):
    subject, generation, and (optionally) exact payload digest match. Missing, stale,
    other-task, and digest-mismatched evidence return typed classifications; an unreachable
    source throws instead of classifying.
-5. **Next:** add grounded hover, keyboard, allowlisted upload, and drag/drop only with action-specific
-   evidence, redaction, settledness, and typed unsupported exits (#131).
-6. Certify B4 on a 50+ transition single-session SPA before adding append-only,
+5. **Done:** add grounded hover, keyboard, allowlisted upload, and drag/drop only with
+   action-specific evidence, redaction, settledness, and typed unsupported exits
+   (#131, [T33](testing/T33-enterprise-action-vocabulary.md)). Chords normalize against
+   an explicit allowlist before dispatch; uploads reference injected allowlisted ids and
+   file material never enters observations, records, errors, or evidence; drag requires
+   one browsing context and a draggable source; new-verb DOM reactions are recorded but
+   never enforced — declared authoritative outcomes stay with E7.4 evidence.
+6. **Next:** certify B4 on a 50+ transition single-session SPA before adding append-only,
    fingerprint-gated multi-session continuation after distiller v1 (#132–#133).
 
 This sequence intentionally puts contracts before learning. Otherwise the distiller would

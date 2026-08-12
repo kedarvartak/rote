@@ -7,6 +7,10 @@ const ActionKindCountsSchema = z.object({
   fill: z.number().int().nonnegative(),
   select: z.number().int().nonnegative(),
   click: z.number().int().nonnegative(),
+  hover: z.number().int().nonnegative(),
+  press: z.number().int().nonnegative(),
+  upload: z.number().int().nonnegative(),
+  dragAndDrop: z.number().int().nonnegative(),
   done: z.number().int().nonnegative(),
 });
 
@@ -148,7 +152,7 @@ function representativeKey(action: BrowserAction): string {
 }
 
 function countActionKinds(actions: readonly BrowserAction[]): z.infer<typeof ActionKindCountsSchema> {
-  const counts = { navigate: 0, fill: 0, select: 0, click: 0, done: 0 };
+  const counts = { navigate: 0, fill: 0, select: 0, click: 0, hover: 0, press: 0, upload: 0, dragAndDrop: 0, done: 0 };
   for (const action of actions) counts[action.kind] += 1;
   return counts;
 }

@@ -25,6 +25,10 @@ See `src/index.ts`. Highlights:
   `AnthropicLlmClient` remains available for opt-in compatibility, while
   `BrowserToolCaller` adapts a stateful CDP page for verified browser replay and returns
   `BROWSER_TARGET_AMBIGUOUS`, `BROWSER_CONTEXT_MISMATCH`, `BROWSER_CONTEXT_STALE`, or `CLOSED_SHADOW_ROOT_UNSUPPORTED` without mutation when identity/context checks fail.
+  E7.5 replay tools (#131): `browser.hover`, `browser.press` (chords normalize or fail
+  `KEY_CHORD_INVALID`), `browser.upload` (injected allowlist, `UPLOAD_NOT_ALLOWLISTED`
+  otherwise), and `browser.drag_and_drop`; a backend without a verb returns
+  `BROWSER_CAPABILITY_UNSUPPORTED` so fallback stays clean.
 - **`rote-replay <playbook.yaml> --params '{...}'`** bin — reads
   `ROTE_DOWNSTREAM_COMMAND`/`ROTE_DOWNSTREAM_ARGS`, `ROTE_TARGET_IDENTITY`,
   `ROTE_TASK_SPEC`, `ROTE_BASE_DIR` from the environment; slot/judgment steps

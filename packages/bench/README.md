@@ -265,4 +265,5 @@ repetitions and emit the matching number of competitor runs into the sidecar.
 npm test --workspace @rote/bench
 npm run test:enterprise-chrome --workspace @rote/bench
 npm run test:enterprise-context-chrome --workspace @rote/bench
+npm run test:enterprise-verbs-chrome --workspace @rote/bench
 ```
