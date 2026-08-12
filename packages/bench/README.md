@@ -51,7 +51,8 @@ See `src/index.ts`. Highlights:
 - **`buildCurveReport` / `rote-bench curve-report`** — fail-closed audit of matched curve receipts, seeded-bootstrap cell and slope intervals, success parity, cache/cost/latency buckets, A4 ratios, and dependency-free Markdown/SVG/JSON publication.
 - **`buildCurveCacheEconomics` / `rote-bench curve-cache-report`** — audit versioned before/after cache evidence and publish model-priced hit-rate and cost confidence intervals plus a cost-curve SVG.
 - **`EnterpriseContractProtocolSchema` / `parseEnterpriseContractProtocol`** — freeze E7.1's synthetic enterprise categories, lifecycle split, exact external oracles, and dispatch-free failure controls before later mechanisms choose an implementation.
-- **`EnterpriseFixtureServer`** — serve the corpus on distinct loopback origins and retain reset-generation/task-bound authoritative events outside the DOM. It is test instrumentation, not the future E7.4 product adapter.
+- **`EnterpriseFixtureServer`** — serve the corpus on distinct loopback origins and retain reset-generation/task-bound authoritative events outside the DOM. It is test instrumentation, not the E7.4 product adapter.
+- **`createEnterpriseOracleEvidenceAdapter`** — bind the E7.1 `/api/oracle` snapshot into the E7.4 evidence contract (#130): the snapshot's own task id and reset generation enter the envelope, an empty snapshot emits nothing (→ `authoritative_effect_missing`), and an unreachable oracle throws.
 
 ## Spec format
 

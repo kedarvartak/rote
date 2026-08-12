@@ -61,7 +61,7 @@ confuse in an architecture doc; this is the boundary.
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
 | Enterprise contract corpus (E7.1) | — | **frozen and fixture-qualified** — 19 synthetic grid/frame/shadow/control/SPA/restart cases bind exact external oracles or dispatch-free typed failures; direct real-Chrome fixture controls pass, but product mechanisms remain #128–#133 ([T29](testing/T29-enterprise-contract-corpus.md)) |
 | Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built for navigate/fill/select/click across captured composed contexts** — [T31](testing/T31-composed-browser-contexts.md) qualifies nested-context click dispatch; [T1](testing/T1-openai-dry-run.md)'s expect defect fixed (#49/#50); hover, keyboard chords, upload, and drag/drop are planned in E7.5 |
-| Final verification | — | **built, with a narrow public surface** — every success requires an injected verifier, but CLI verification is visible-text/URL based; authoritative evidence envelopes and adapters are planned in E7.4 |
+| Final verification | — | **built with an authoritative evidence gate (E7.4)** — every success requires an injected verifier; tasks may additionally declare required authoritative evidence classes, satisfied only by versioned redacted envelopes from injected fixture/API/database/download adapters with subject and freshness binding ([T32](testing/T32-authoritative-outcome-evidence.md)); the public CLI verifier remains visible-text/URL based and counts as supporting evidence only |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built and recall-stress tested** — post-eviction context marks the recall boundary; unavailable facts and fabricated comparisons fail closed ([T18](testing/T18-eviction-recall-trade.md)) |
 | **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Cache-layout discipline** (B3) | 0 | **built and economically qualified on OpenAI** — exact immutable prefixes receive deterministic cache-routing keys; WP-N25 cost falls 20.5% and clears Browser Use by 16.0% with both 95% intervals above zero ([T11](testing/T11-cache-key-economics.md)) |
@@ -338,9 +338,14 @@ one before it ([07 §E7](07-execution-plan.md)):
 3. **Done:** carry identity through nested same/cross-origin iframes and open shadow roots;
    reject stale/context-spliced actions and classify declared closed roots unsupported
    (#129, [T31](testing/T31-composed-browser-contexts.md)).
-4. **Next:** version verification evidence with provenance, freshness, task binding, and injected
-   authoritative adapters (#130). UI state remains supporting evidence, not forbidden.
-5. Add grounded hover, keyboard, allowlisted upload, and drag/drop only with action-specific
+4. **Done:** version verification evidence with provenance, freshness, task binding, and injected
+   authoritative adapters (#130, [T32](testing/T32-authoritative-outcome-evidence.md)).
+   UI state remains supporting evidence, not forbidden: the base verifier stays necessary,
+   while a declared authoritative requirement is satisfiable only by envelopes whose class,
+   subject, generation, and (optionally) exact payload digest match. Missing, stale,
+   other-task, and digest-mismatched evidence return typed classifications; an unreachable
+   source throws instead of classifying.
+5. **Next:** add grounded hover, keyboard, allowlisted upload, and drag/drop only with action-specific
    evidence, redaction, settledness, and typed unsupported exits (#131).
 6. Certify B4 on a 50+ transition single-session SPA before adding append-only,
    fingerprint-gated multi-session continuation after distiller v1 (#132–#133).

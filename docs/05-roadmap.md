@@ -205,10 +205,13 @@ alone is identity infrastructure, **not** structural-drift support.
    dispatch cross nested same/cross-origin frames and open shadow roots. Stable context
    paths exclude runtime IDs; stale documents, context splicing, duplicate inner controls,
    and declared closed roots stop before mutation.
-5. **Authoritative outcome evidence — next** ([#130](https://github.com/kedarvartak/rote/issues/130)) — versioned evidence envelopes and
-   injected API/database/download-event adapters. UI evidence remains useful support but
-   cannot alone satisfy a task that declares an authoritative outcome requirement.
-6. **Enterprise action vocabulary** ([#131](https://github.com/kedarvartak/rote/issues/131)) — grounded hover, explicit keyboard
+5. **Authoritative outcome evidence — built** ([#130](https://github.com/kedarvartak/rote/issues/130),
+   [T32](testing/T32-authoritative-outcome-evidence.md)) — versioned redacted evidence
+   envelopes, a pure policy evaluator, and injected fixture/API/database/download-event
+   adapters. UI evidence remains useful support but cannot alone satisfy a task that
+   declares an authoritative outcome requirement; missing, stale, other-task, and
+   inconsistent evidence fail with typed classifications before any success is reported.
+6. **Enterprise action vocabulary — next** ([#131](https://github.com/kedarvartak/rote/issues/131)) — grounded hover, explicit keyboard
    chords/text, allowlisted file upload, and target-to-target drag/drop. Every verb lands
    with safety classification, redaction, settledness, and action-specific evidence; no
    arbitrary-event escape hatch.

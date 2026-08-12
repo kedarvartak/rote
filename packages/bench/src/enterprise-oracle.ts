@@ -26,7 +26,8 @@ const EnterpriseEventSchema = z.object({
 const EnterpriseOracleEventSchema = EnterpriseEventSchema.omit({ payload: true }).extend({
   payload_sha256: z.string().regex(/^[a-f0-9]{64}$/),
 });
-const EnterpriseOracleSnapshotSchema = z.object({
+/** Wire shape of `/api/oracle` responses; exported so E7.4 evidence adapters can parse them. */
+export const EnterpriseOracleSnapshotSchema = z.object({
   generation: z.number().int().nonnegative(),
   task_id: z.string().min(1),
   events: z.array(EnterpriseOracleEventSchema),
