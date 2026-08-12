@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import type { ElementResolutionResult, PostActionEvidence } from '@rote/action';
+import { normalizeKeyChord } from '@rote/action';
+import type { AllowedUploadFile, BrowserActionSafety, ElementResolutionResult, NormalizedKeyChord, PostActionEvidence } from '@rote/action';
 import type { BrowserContextCoordinate, CapturedPage } from '@rote/browser';
 import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
 import type { ProviderUsageReceipt } from '@rote/llm';
@@ -44,6 +45,21 @@ export const BrowserActionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('fill'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, contextHash: BrowserContextHashSchema.optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
   z.object({ kind: z.literal('select'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, contextHash: BrowserContextHashSchema.optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), value: z.string(), expect: BrowserExpectSchema.optional() }),
   z.object({ kind: z.literal('click'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, contextHash: BrowserContextHashSchema.optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), expect: BrowserExpectSchema.optional() }),
+  // E7.5 verbs (#131). `press.chord` is validated against the explicit chord
+  // allowlist at parse time so an unnormalizable chord is malformed planner
+  // output (one corrective call, #51), never something a dispatch path sees.
+  // `upload` references an injected allowlisted file by id only — names,
+  // paths, and content never appear in a planner-visible action.
+  z.object({ kind: z.literal('hover'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, contextHash: BrowserContextHashSchema.optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('press'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, contextHash: BrowserContextHashSchema.optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), chord: z.string().min(1).superRefine((chord, context) => {
+    try {
+      normalizeKeyChord(chord);
+    } catch (error) {
+      context.addIssue({ code: z.ZodIssueCode.custom, message: error instanceof Error ? error.message : String(error) });
+    }
+  }), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('upload'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, contextHash: BrowserContextHashSchema.optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), fileId: z.string().min(1), expect: BrowserExpectSchema.optional() }),
+  z.object({ kind: z.literal('dragAndDrop'), selector: z.string().min(1), stableId: OptionalBrowserStableIdSchema, contextHash: BrowserContextHashSchema.optional(), role: z.string().optional(), name: z.string().optional(), text: z.string().optional(), targetSelector: z.string().min(1), targetStableId: OptionalBrowserStableIdSchema, targetRole: z.string().optional(), targetName: z.string().optional(), targetText: z.string().optional(), expect: BrowserExpectSchema.optional() }),
   z.object({
     kind: z.literal('done'),
     success: z.boolean(),
@@ -80,7 +96,7 @@ export function normalizeBrowserAction(input: unknown): {
 function hasMalformedStableId(input: unknown): boolean {
   if (typeof input !== 'object' || input === null || !('kind' in input) || !('stableId' in input)) return false;
   const action = input as { kind?: unknown; stableId?: unknown };
-  if (!['fill', 'select', 'click'].includes(String(action.kind)) || action.stableId === undefined) return false;
+  if (!['fill', 'select', 'click', 'hover', 'press', 'upload', 'dragAndDrop'].includes(String(action.kind)) || action.stableId === undefined) return false;
   return !BrowserStableIdSchema.safeParse(action.stableId).success;
 }
 
@@ -90,6 +106,16 @@ export interface BrowserPageSession {
   fill(selector: string, value: string, context?: BrowserContextCoordinate): Promise<void>;
   select(selector: string, value: string, context?: BrowserContextCoordinate): Promise<void>;
   click(selector: string, context?: BrowserContextCoordinate): Promise<void>;
+  /**
+   * E7.5 verbs are optional by design: a backend that lacks one produces a
+   * typed `BrowserCapabilityUnsupportedError` before any side effect, so the
+   * clean fallback path stays reachable (invariant 2). There is deliberately
+   * no generic "dispatch arbitrary event" method.
+   */
+  hover?(selector: string, context?: BrowserContextCoordinate): Promise<void>;
+  press?(selector: string, chord: NormalizedKeyChord, context?: BrowserContextCoordinate): Promise<void>;
+  upload?(selector: string, file: { name: string; mimeType: string; contentBase64: string }, context?: BrowserContextCoordinate): Promise<void>;
+  dragAndDrop?(sourceSelector: string, targetSelector: string, context?: BrowserContextCoordinate): Promise<void>;
 }
 
 export interface PlannerContext {
@@ -203,6 +229,12 @@ export interface RunBrowserAgentOptions {
   maxRepairs?: number;
   /** One pre-action correction for an ungrounded target; set 0 to fail immediately. */
   maxTargetRepairs?: 0 | 1;
+  /**
+   * Uploads the embedder permits, referenced by planner actions via `fileId`
+   * only. Absent or empty means every upload action fails closed before
+   * dispatch — there is no implicit filesystem access (#131).
+   */
+  uploadFiles?: readonly AllowedUploadFile[];
 }
 
 export interface BrowserAgentStep {
@@ -225,6 +257,10 @@ export interface BrowserAgentStep {
   durationMs: number;
   error?: string;
   resolution?: ElementResolutionResult;
+  /** Drop-target resolution for `dragAndDrop`; the source uses `resolution`. */
+  targetResolution?: ElementResolutionResult;
+  /** E7.5 safety classification recorded for every non-`done` dispatched action. */
+  actionSafety?: BrowserActionSafety;
 }
 
 export interface BrowserAgentResult {

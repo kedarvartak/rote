@@ -211,11 +211,14 @@ alone is identity infrastructure, **not** structural-drift support.
    adapters. UI evidence remains useful support but cannot alone satisfy a task that
    declares an authoritative outcome requirement; missing, stale, other-task, and
    inconsistent evidence fail with typed classifications before any success is reported.
-6. **Enterprise action vocabulary — next** ([#131](https://github.com/kedarvartak/rote/issues/131)) — grounded hover, explicit keyboard
-   chords/text, allowlisted file upload, and target-to-target drag/drop. Every verb lands
-   with safety classification, redaction, settledness, and action-specific evidence; no
-   arbitrary-event escape hatch.
-7. **Long-running single-session SPA endurance** ([#132](https://github.com/kedarvartak/rote/issues/132)) — certify 50+ transitions,
+6. **Enterprise action vocabulary — built** ([#131](https://github.com/kedarvartak/rote/issues/131),
+   [T33](testing/T33-enterprise-action-vocabulary.md)) — grounded hover, explicit
+   normalized keyboard chords, id-referenced allowlisted file upload, and same-context
+   target-to-target drag/drop, shared across planner schema, live loop, replay executor,
+   and the CDP backend. Every verb lands with safety classification, redaction,
+   settledness, and reaction-only evidence semantics; unsupported backends fail typed and
+   there is no arbitrary-event escape hatch.
+7. **Long-running single-session SPA endurance — next** ([#132](https://github.com/kedarvartak/rote/issues/132)) — certify 50+ transitions,
    route epochs, remounts, virtualization, background traffic, and bounded context under
    B4. This is deliberately separate from continuation across a browser/process restart.
 8. **Distiller v1** (tier 1) — trajectory → playbook: causal pruning, parameterization,

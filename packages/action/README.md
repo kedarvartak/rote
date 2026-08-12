@@ -14,6 +14,11 @@ resilient semantic element resolution before dispatch, and zero-LLM post-action 
 - `BrowserExpectationError` — typed model-authored postcondition failure carrying the assertion and page URL.
 - `derivePostActionEvidence(input)` — compares settled before/after captures: fill/select values and canonical navigation targets are strong enforced effects; click DOM/URL changes are explicitly non-enforcing reaction evidence.
 - `assertPostActionEvidence(evidence, pageUrl)` / `PostActionEvidenceError` — fail strong missing effects without copying dispatched values into evidence or error messages.
+- `normalizeKeyChord(input)` / `KeyChordError` — canonical explicit chords (sorted Alt/Control/Meta/Shift + one allowlisted key); anything else fails typed before dispatch — chords are never arbitrary script (#131).
+- `classifyBrowserActionSafety(kind)` — versioned E7.5 safety classes (hover=read … upload/dragAndDrop=mutating); unclassified verbs cannot dispatch.
+- `AllowedUploadFileSchema` / `UploadNotAllowlistedError` — injected id-referenced upload allowlist; failures name ids only, never file names, paths, or content.
+- `BrowserCapabilityUnsupportedError` / `DragContextMismatchError` — typed exits for a backend missing a verb and for cross-context drag.
+- `SettledBrowserPageSession` also gates the optional `hover`/`press`/`upload`/`dragAndDrop` verbs when the wrapped page provides them.
 
 The frozen B2 drift suite covers selector renames, wrapper insertion, ambiguity,
 stale-selector decoys, hidden replacements, and delayed SPA state.

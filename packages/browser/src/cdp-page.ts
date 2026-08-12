@@ -98,6 +98,92 @@ export class CdpPage {
     }
   }
 
+  /**
+   * Hovers a grounded target by dispatching the pointer/mouse enter sequence on
+   * it inside its composed context. Synthetic events (not CSS `:hover`) are the
+   * portable path through nested frames/shadow roots; fixtures and real apps
+   * that open menus from `pointerenter`/`mouseover` listeners see exactly this.
+   */
+  async hover(selector: string, context?: BrowserContextCoordinate): Promise<void> {
+    await this.evaluateTarget(selector, context, `
+      const bubbling = new Set(["pointerover", "mouseover", "mousemove"]);
+      for (const type of ["pointerover", "pointerenter", "mouseover", "mouseenter", "mousemove"]) {
+        const Ctor = type.startsWith("pointer") ? PointerEvent : MouseEvent;
+        element.dispatchEvent(new Ctor(type, { bubbles: bubbling.has(type), cancelable: true }));
+      }
+    `);
+  }
+
+  /**
+   * Presses one explicit normalized chord on a focused grounded target. The
+   * chord arrives pre-normalized (see `normalizeKeyChord` in the action package);
+   * this method never evaluates planner-authored strings as code.
+   */
+  async press(
+    selector: string,
+    chord: { key: string; modifiers: readonly string[] },
+    context?: BrowserContextCoordinate,
+  ): Promise<void> {
+    const init = JSON.stringify({
+      key: chord.key,
+      bubbles: true,
+      cancelable: true,
+      ctrlKey: chord.modifiers.includes('Control'),
+      altKey: chord.modifiers.includes('Alt'),
+      shiftKey: chord.modifiers.includes('Shift'),
+      metaKey: chord.modifiers.includes('Meta'),
+    });
+    await this.evaluateTarget(selector, context, `
+      if (element.focus) element.focus();
+      element.dispatchEvent(new KeyboardEvent("keydown", ${init}));
+      element.dispatchEvent(new KeyboardEvent("keyup", { ...${init}, cancelable: false }));
+    `);
+  }
+
+  /**
+   * Assigns one allowlisted file to a grounded file input and verifies the
+   * assignment in the same evaluation — a file input that ends up without
+   * exactly the named file is a failed dispatch, not evidence. File content
+   * transits only this call; it is never captured or recorded.
+   */
+  async upload(
+    selector: string,
+    file: { name: string; mimeType: string; contentBase64: string },
+    context?: BrowserContextCoordinate,
+  ): Promise<void> {
+    await this.evaluateTarget(selector, context, `
+      if (element.tagName !== "INPUT" || element.type !== "file") throw new Error("upload target is not a file input");
+      const bytes = Uint8Array.from(atob(${JSON.stringify(file.contentBase64)}), (char) => char.charCodeAt(0));
+      const transfer = new DataTransfer();
+      transfer.items.add(new File([bytes], ${JSON.stringify(file.name)}, { type: ${JSON.stringify(file.mimeType)} }));
+      element.files = transfer.files;
+      // INVARIANT: dispatch-time strong effect — captures cannot serialize
+      // element.files, so assignment is proven here or the action fails.
+      if (element.files.length !== 1 || element.files[0].name !== ${JSON.stringify(file.name)}) {
+        throw new Error("file input assignment failed");
+      }
+      element.dispatchEvent(new Event("input", { bubbles: true }));
+      element.dispatchEvent(new Event("change", { bubbles: true }));
+    `);
+  }
+
+  /**
+   * Drags a grounded source onto a grounded target in the same composed
+   * context using the standards HTML drag-event sequence with one shared
+   * `DataTransfer`. There is no pointer-simulation fallback yet; a
+   * non-draggable source is a typed dispatch failure, never a silent click.
+   */
+  async dragAndDrop(sourceSelector: string, targetSelector: string, context?: BrowserContextCoordinate): Promise<void> {
+    await this.evaluateTargets(sourceSelector, targetSelector, context, `
+      if (source.draggable !== true) throw new Error("drag source is not draggable");
+      const transfer = new DataTransfer();
+      source.dispatchEvent(new DragEvent("dragstart", { bubbles: true, cancelable: true, dataTransfer: transfer }));
+      target.dispatchEvent(new DragEvent("dragover", { bubbles: true, cancelable: true, dataTransfer: transfer }));
+      target.dispatchEvent(new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer: transfer }));
+      source.dispatchEvent(new DragEvent("dragend", { bubbles: true, dataTransfer: transfer }));
+    `);
+  }
+
   /** Samples pending network requests and a monotonic DOM mutation version. */
   async sampleActivity(): Promise<CdpActivitySample> {
     const mutationVersion = await this.evaluate<number>(`(() => {
@@ -144,6 +230,27 @@ export class CdpPage {
       targetExpression(selector, live.shadowSelectors, body),
     );
   }
+
+  // Both elements must resolve in one evaluation: a shared DataTransfer cannot
+  // cross execution contexts, which is why cross-context drag is rejected a
+  // layer above instead of half-dispatched here.
+  private async evaluateTargets<T = void>(
+    sourceSelector: string,
+    targetSelector: string,
+    context: BrowserContextCoordinate | undefined,
+    body: string,
+  ): Promise<T> {
+    if (!context) {
+      return this.evaluate<T>(pairExpression(sourceSelector, targetSelector, [], body));
+    }
+    const live = await resolveLiveBrowserContext(this.client, this.contexts, context);
+    if (live.unsupported) throw new ClosedShadowRootUnsupportedError(context.contextHash);
+    return evaluateInContext<T>(
+      this.client,
+      live.executionContextId,
+      pairExpression(sourceSelector, targetSelector, live.shadowSelectors, body),
+    );
+  }
 }
 
 async function evaluate<T>(client: CdpClient, expression: string): Promise<T> {
@@ -156,6 +263,22 @@ async function evaluate<T>(client: CdpClient, expression: string): Promise<T> {
     throw new Error(result.exceptionDetails.exception?.description ?? result.exceptionDetails.text ?? 'CDP evaluation failed');
   }
   return result.result.value as T;
+}
+
+function pairExpression(sourceSelector: string, targetSelector: string, shadowSelectors: readonly string[], body: string): string {
+  return `(() => {
+    let root = document;
+    for (const hostSelector of ${JSON.stringify(shadowSelectors)}) {
+      const host = root.querySelector(hostSelector);
+      if (!host || !host.shadowRoot) throw new Error('open shadow context is unavailable');
+      root = host.shadowRoot;
+    }
+    const source = root.querySelector(${JSON.stringify(sourceSelector)});
+    if (!source) throw new Error('drag source not found in composed browser context');
+    const target = root.querySelector(${JSON.stringify(targetSelector)});
+    if (!target) throw new Error('drop target not found in composed browser context');
+    ${body}
+  })()`;
 }
 
 function targetExpression(selector: string, shadowSelectors: readonly string[], body: string): string {

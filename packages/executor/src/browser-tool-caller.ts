@@ -1,4 +1,4 @@
-import { ElementResolutionAmbiguityError, ElementResolutionContextMismatchError, resolveElementTarget, type ElementResolutionTarget } from '@rote/action';
+import { BrowserCapabilityUnsupportedError, ElementResolutionAmbiguityError, ElementResolutionContextMismatchError, KeyChordError, normalizeKeyChord, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionTarget, type NormalizedKeyChord } from '@rote/action';
 import { BrowsingContextStaleError, ClosedShadowRootUnsupportedError, type BrowserContextCoordinate, type CapturedElement, type CapturedPage } from '@rote/browser';
 import { distillPage } from '@rote/perception';
 import type { ToolCallOutcome, ToolCaller } from './tool-caller.js';
@@ -9,6 +9,11 @@ export interface BrowserReplayPage {
   fill(selector: string, value: string, context?: BrowserContextCoordinate): Promise<void>;
   select(selector: string, value: string, context?: BrowserContextCoordinate): Promise<void>;
   click(selector: string, context?: BrowserContextCoordinate): Promise<void>;
+  /** E7.5 verbs; a backend without one yields `BROWSER_CAPABILITY_UNSUPPORTED`, keeping fallback clean. */
+  hover?(selector: string, context?: BrowserContextCoordinate): Promise<void>;
+  press?(selector: string, chord: NormalizedKeyChord, context?: BrowserContextCoordinate): Promise<void>;
+  upload?(selector: string, file: { name: string; mimeType: string; contentBase64: string }, context?: BrowserContextCoordinate): Promise<void>;
+  dragAndDrop?(sourceSelector: string, targetSelector: string, context?: BrowserContextCoordinate): Promise<void>;
 }
 
 /** Typed failure for an unsupported or malformed browser replay tool call. */
@@ -21,7 +26,11 @@ export class BrowserReplayToolError extends Error {
 
 /** Adapts a stateful browser page to the replay executor's deterministic ToolCaller boundary. */
 export class BrowserToolCaller implements ToolCaller {
-  constructor(private readonly page: BrowserReplayPage) {}
+  constructor(
+    private readonly page: BrowserReplayPage,
+    /** Injected upload allowlist; replayed upload steps reference `fileId` only (#131). */
+    private readonly options: { uploadFiles?: readonly AllowedUploadFile[] } = {},
+  ) {}
 
   async call(tool: string, args: Record<string, unknown>): Promise<ToolCallOutcome> {
     try {
@@ -46,6 +55,44 @@ export class BrowserToolCaller implements ToolCaller {
         case 'browser.download_file': {
           const target = await this.resolveTarget(tool, args);
           await this.page.click(target.selector, target.context);
+          extra = target.extra;
+          break;
+        }
+        case 'browser.hover': {
+          if (!this.page.hover) throw new BrowserCapabilityUnsupportedError('hover');
+          const target = await this.resolveTarget(tool, args);
+          await this.page.hover(target.selector, target.context);
+          extra = target.extra;
+          break;
+        }
+        case 'browser.press': {
+          if (!this.page.press) throw new BrowserCapabilityUnsupportedError('press');
+          // Chords normalize (or fail typed) before the backend sees them —
+          // replay has no arbitrary-event escape hatch either (#131).
+          const chord = normalizeKeyChord(requiredString(tool, args, 'chord'));
+          const target = await this.resolveTarget(tool, args);
+          await this.page.press(target.selector, chord, target.context);
+          extra = target.extra;
+          break;
+        }
+        case 'browser.upload': {
+          if (!this.page.upload) throw new BrowserCapabilityUnsupportedError('upload');
+          const fileId = requiredString(tool, args, 'fileId');
+          const file = this.options.uploadFiles?.find((candidate) => candidate.file_id === fileId);
+          if (!file) throw new UploadNotAllowlistedError(fileId, (this.options.uploadFiles ?? []).map((candidate) => candidate.file_id));
+          const target = await this.resolveTarget(tool, args);
+          await this.page.upload(target.selector, {
+            name: file.name,
+            mimeType: file.mime_type,
+            contentBase64: file.content_base64,
+          }, target.context);
+          extra = target.extra;
+          break;
+        }
+        case 'browser.drag_and_drop': {
+          if (!this.page.dragAndDrop) throw new BrowserCapabilityUnsupportedError('dragAndDrop');
+          const target = await this.resolveTarget(tool, args);
+          await this.page.dragAndDrop(target.selector, requiredString(tool, args, 'targetSelector'), target.context);
           extra = target.extra;
           break;
         }
@@ -120,6 +167,9 @@ function browserFailureCode(error: Error): string {
   if (error instanceof ElementResolutionContextMismatchError) return 'BROWSER_CONTEXT_MISMATCH';
   if (error instanceof BrowsingContextStaleError) return 'BROWSER_CONTEXT_STALE';
   if (error instanceof ClosedShadowRootUnsupportedError) return 'CLOSED_SHADOW_ROOT_UNSUPPORTED';
+  if (error instanceof BrowserCapabilityUnsupportedError) return 'BROWSER_CAPABILITY_UNSUPPORTED';
+  if (error instanceof UploadNotAllowlistedError) return 'UPLOAD_NOT_ALLOWLISTED';
+  if (error instanceof KeyChordError) return 'KEY_CHORD_INVALID';
   return 'BROWSER_REPLAY_TOOL_ERROR';
 }
 
