@@ -247,7 +247,9 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
    ([T35](testing/T35-action-contract-gate.md)). Gate met: B1/B2 record → distill →
    replay in real Chrome with zero human edits and zero model calls; `verify` is learned
    from the declarative checks the run's verifier proved on the terminal `done` (#155),
-   refusing runs that cannot teach one. Matcher/selection remains open. Gate:
+   refusing runs that cannot teach one. Matcher v1 selects from an append-only library
+   (#157): fingerprint hard gate, deterministic intent/param match at a conservative
+   threshold, misses on near-miss and ambiguity. Gate:
    distilled playbooks replay the fixture suite with zero human edits. **Reaches parity
    with Skyvern's 2026 baseline; the differentiator is the verification contract.**
 9. **Multi-session task continuation — built** ([#133](https://github.com/kedarvartak/rote/issues/133),
@@ -339,7 +341,9 @@ can read; the benchmark as an industry-neutral instrument.
 2. **Small-model hosting** — Fara-class models are self-hostable (7B). Bundled local
    inference or API? Affects adoption friction vs the cost story. Decide in P2 with data.
 3. **Matching threshold policy** — how conservative should τ be at launch? Lean:
-   conservative (prefer misses) + per-playbook learned thresholds.
+   conservative (prefer misses) + per-playbook learned thresholds. **v1 (#157) ships
+   τ = 0.8 token-Jaccard on the value-slotted task text with a 0.05 ambiguity margin;**
+   per-playbook thresholds wait for T0/T4 data from the learning-curve stream.
 4. **Judgment-gate scope** — how much branching can a playbook encode before it is just a
    badly-authored workflow engine? Lean: hard cap (≤2 gates/playbook); tasks needing more
    stay unmemoized.
