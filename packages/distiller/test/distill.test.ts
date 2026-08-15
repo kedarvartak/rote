@@ -1,7 +1,7 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { parsePlaybookYaml, writePlaybookYaml } from '@rote/core';
-import { distillTrajectory, EmptyTrajectoryError, UnparameterizedValueError, type DistillableEvent } from '../src/index.js';
+import { distillTrajectory, EmptyTrajectoryError, UnlearnableVerifyError, UnparameterizedValueError, type DistillableEvent } from '../src/index.js';
 
 const contract = {
   version: 1 as const,
@@ -69,6 +69,7 @@ describe('distiller v1', () => {
     expect(click && 'expect' in click ? click.expect : undefined).toBeUndefined();
     expect(report.playbook.params).toEqual([{ name: 'company_name', type: 'string' }, { name: 'base_url', type: 'string' }]);
     expect(report.playbook.verify).toEqual(options.verify);
+    expect(report.verifySource).toBe('declared');
     // Round-trips through the YAML the executor loads.
     expect(parsePlaybookYaml(writePlaybookYaml(report.playbook))).toEqual(report.playbook);
   });
@@ -107,5 +108,41 @@ describe('distiller v1', () => {
         expect(sent[2]).toBe('{{city}}');
       },
     ));
+  });
+
+  describe('learned verify', () => {
+    const { verify: _declared, ...undeclared } = options;
+    const done = (verification: unknown) => event(5, 'browser.done', { kind: 'done', success: true, summary: 'done' }, { verification });
+    const body = trajectory.slice(0, 5);
+
+    it('learns verify from the declarative checks that held on the recorded success, templated', () => {
+      const report = distillTrajectory([...body, done({
+        success: true, summary: 'task verification passed',
+        checks: [{ text_visible: 'Vendor registration complete | company_name=Acme Tools' }, { url_contains: '/vendors/register#complete' }],
+        evidence_classes: ['fixture_oracle', 'fixture_oracle'],
+      })], undeclared);
+      expect(report.verifySource).toBe('learned');
+      expect(report.playbook.verify).toEqual([{ text_visible: 'Vendor registration complete | company_name={{company_name}}' }, { url_contains: '/vendors/register#complete' }]);
+      expect(report.evidenceClasses).toEqual(['fixture_oracle']);
+      expect(JSON.stringify(report.playbook)).not.toContain('Acme Tools');
+    });
+
+    it('lets a declared verify win over the recorded one', () => {
+      const report = distillTrajectory([...body, done({ success: true, checks: [{ text_visible: 'recorded' }] })], options);
+      expect(report.playbook.verify).toEqual(options.verify);
+      expect(report.verifySource).toBe('declared');
+    });
+
+    it.each([
+      ['no_terminal_verification', undefined],
+      ['verification_failed', { success: false, summary: 'text not visible', checks: [{ text_visible: 'x' }] }],
+      ['no_declarative_checks', { success: true, summary: 'model judged the task complete' }],
+    ] as const)('refuses to guess a verify: %s', (reason, verification) => {
+      // INVARIANT: a playbook whose verify was not proven on a real success is never emitted.
+      let caught: unknown;
+      try { distillTrajectory([...body, done(verification)], undeclared); } catch (error) { caught = error; }
+      expect(caught).toBeInstanceOf(UnlearnableVerifyError);
+      expect((caught as UnlearnableVerifyError).reason).toBe(reason);
+    });
   });
 });

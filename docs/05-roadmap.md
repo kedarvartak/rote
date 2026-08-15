@@ -245,8 +245,9 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
    parameterization that refuses undeclared typed values, assertions from strong evidence
    only, and each step's recorded `actionContract` persisted so replay is contract-gated
    ([T35](testing/T35-action-contract-gate.md)). Gate met: B1/B2 record → distill →
-   replay in real Chrome with zero human edits and zero model calls. Matcher/selection
-   and learned `verify` remain open. Gate:
+   replay in real Chrome with zero human edits and zero model calls; `verify` is learned
+   from the declarative checks the run's verifier proved on the terminal `done` (#155),
+   refusing runs that cannot teach one. Matcher/selection remains open. Gate:
    distilled playbooks replay the fixture suite with zero human edits. **Reaches parity
    with Skyvern's 2026 baseline; the differentiator is the verification contract.**
 9. **Multi-session task continuation — built** ([#133](https://github.com/kedarvartak/rote/issues/133),

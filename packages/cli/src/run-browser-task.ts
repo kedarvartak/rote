@@ -182,7 +182,15 @@ async function runColdBrowserTask(
         if (options.verifyText && !visibleText.includes(options.verifyText)) failures.push(`text "${options.verifyText}" not visible`);
         if (options.verifyUrlContains && !captured.url.includes(options.verifyUrlContains)) failures.push(`URL does not contain "${options.verifyUrlContains}"`);
         return failures.length === 0
-          ? { success: true, summary: 'task verification passed' }
+          ? {
+              success: true,
+              summary: 'task verification passed',
+              // The checks that decided success, so a distilled playbook can learn its `verify`.
+              checks: [
+                ...(options.verifyText ? [{ text_visible: options.verifyText }] : []),
+                ...(options.verifyUrlContains ? [{ url_contains: options.verifyUrlContains }] : []),
+              ],
+            }
           : { success: false, summary: failures.join('; ') };
       },
     },

@@ -51,6 +51,9 @@ export class FileBrowserAgentRunRecorder implements BrowserAgentRunRecorder {
         // Value-free contract of the resolved target (#143); the distiller
         // persists it so replay is contract-gated.
         action_contract: step.actionContract,
+        // What decided the terminal `done` (declarative checks + consumed evidence
+        // classes); the distiller learns `verify` from a recorded success.
+        verification: step.verification,
       },
       duration_ms: step.durationMs,
       error: step.error ? { message: step.error } : undefined,

@@ -36,10 +36,14 @@ describe('live loop records action contracts', () => {
         { kind: 'click', selector: '#registration-submit', role: 'button', name: 'Submit registration' },
         { kind: 'done', success: true, summary: 'submitted' },
       ]),
-      verifier: { async verify() { return { success: true, summary: 'ok' }; } },
+      verifier: { async verify() { return { success: true, summary: 'ok', checks: [{ text_visible: 'Vendor registration complete' }], consumedEvidence: [{ evidence_class: 'fixture_oracle' }, { evidence_class: 'fixture_oracle' }] } as never; } },
       maxSteps: 6,
     });
     const [navigate, fill, click, done] = result.steps;
+    // The terminal step records what decided success — checks + evidence classes —
+    // and only the terminal step does (the distiller learns `verify` from it).
+    expect(done!.verification).toEqual({ success: true, summary: 'ok', checks: [{ text_visible: 'Vendor registration complete' }], evidenceClasses: ['fixture_oracle'] });
+    expect([navigate, fill, click].every((step) => step!.verification === undefined)).toBe(true);
     expect(navigate!.actionContract).toBeUndefined();
     expect(fill!.actionContract).toEqual({
       version: 1,

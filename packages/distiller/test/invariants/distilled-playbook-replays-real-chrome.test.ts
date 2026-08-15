@@ -64,7 +64,9 @@ async function record(runId: string, task: string, actions: BrowserAction[], com
     task,
     page: settled as unknown as BrowserPageSession,
     planner: scripted(actions),
-    verifier: { async verify(capture) { const ok = capture.html.includes(completeText); return { success: ok, summary: ok ? 'complete' : 'incomplete' }; } },
+    // Declarative verifier: it reports the check that decided success, so the
+    // distiller learns `verify` instead of a caller declaring it.
+    verifier: { async verify(capture) { const ok = capture.html.includes(completeText); return { success: ok, summary: ok ? 'complete' : 'incomplete', ...(ok ? { checks: [{ text_visible: completeText }] } : {}) }; } },
     recorder,
     maxSteps: 15,
   });
@@ -116,8 +118,9 @@ describe('distilled playbooks replay the fixture suite in real Chrome', () => {
         { name: 'username', type: 'string', value: B1_VALUES.username },
         { name: 'password', type: 'string', value: B1_VALUES.password },
       ],
-      verify: [{ text_visible: 'quarterly-report.pdf' }],
     });
+    expect(b1Report.verifySource).toBe('learned');
+    expect(b1Report.playbook.verify).toEqual([{ text_visible: 'quarterly-report.pdf' }]);
     const b1Yaml = writePlaybookYaml(b1Report.playbook);
     expect(b1Yaml).not.toContain('secret');
     expect(b1Yaml).not.toContain('analyst');
@@ -127,6 +130,7 @@ describe('distilled playbooks replay the fixture suite in real Chrome', () => {
     expect(await b1Replay.page.evaluate<string>(`document.querySelector('#download-confirmation').textContent`)).toContain('quarterly-report.pdf');
 
     // B2: eight typed values, all templated; exact confirmation summary verified.
+    const summary = `Vendor registration complete | ${Object.entries(B2_VALUES).map(([key, value]) => `${key}=${value}`).join(' | ')}`;
     const b2 = await record('b2', 'Register Acme Tools as a vendor', [
       { kind: 'navigate', url: `${baseUrl}/b2-vendor-form.html` },
       ...B2_FIELDS.map(([param, selector, name, kind]) => (kind === 'fill'
@@ -134,15 +138,17 @@ describe('distilled playbooks replay the fixture suite in real Chrome', () => {
         : { kind: 'select' as const, selector, role: 'combobox', name, value: B2_VALUES[param]! })),
       { kind: 'click', selector: '#registration-submit', role: 'button', name: 'Submit registration' },
       { kind: 'done', success: true, summary: 'registered' },
-    ], 'Vendor registration complete');
-    const summary = `Vendor registration complete | ${Object.entries(B2_VALUES).map(([key, value]) => `${key}=${value}`).join(' | ')}`;
+    ], summary);
     const b2Report = distillTrajectory(b2.events, {
       playbookName: 'b2-distilled',
       intentDescription: b2.manifest.task_spec,
       envFingerprint: { domain: '127.0.0.1', tool_prefixes: ['browser.'] },
       params: [{ name: 'base_url', type: 'string', value: baseUrl }, ...Object.entries(B2_VALUES).map(([name, value]) => ({ name, type: 'string' as const, value }))],
-      verify: [{ text_visible: `Vendor registration complete | ${Object.keys(B2_VALUES).map((key) => `${key}={{${key}}}`).join(' | ')}` }],
     });
+    // The exact confirmation summary was verified live with the run's values; the
+    // learned verify carries it templated, so no typed value persists.
+    expect(b2Report.verifySource).toBe('learned');
+    expect(b2Report.playbook.verify).toEqual([{ text_visible: `Vendor registration complete | ${Object.keys(B2_VALUES).map((key) => `${key}={{${key}}}`).join(' | ')}` }]);
     const b2Yaml = writePlaybookYaml(b2Report.playbook);
     for (const value of Object.values(B2_VALUES)) expect(b2Yaml).not.toContain(value);
     expect(b2Report.playbook.steps).toHaveLength(10);

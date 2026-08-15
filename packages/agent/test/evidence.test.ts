@@ -11,7 +11,7 @@ import {
 
 const subject = { task_id: 'grid-contract', run_id: 'run-1' };
 const page: CapturedPage = { url: 'https://fixture.test/', title: 'Fixture', html: '', elements: [] };
-const passingBase = { async verify() { return { success: true, summary: 'ui checks passed' }; } };
+const passingBase = { async verify() { return { success: true, summary: 'ui checks passed', checks: [{ text_visible: 'Grid activated' as const }] }; } };
 
 const oraclePolicy: EvidencePolicy = EvidencePolicySchema.parse({
   schema_version: 1,
@@ -42,6 +42,8 @@ describe('createEvidenceGatedVerifier', () => {
     expect(verification.success).toBe(true);
     expect(verification.consumedEvidence).toHaveLength(1);
     expect(verification.consumedEvidence![0]!.payload_sha256).toMatch(/^[a-f0-9]{64}$/);
+    // The base verifier's declarative checks survive the gate so the distiller can learn `verify`.
+    expect(verification.checks).toEqual([{ text_visible: 'Grid activated' }]);
   });
 
   it('keeps the base failure verdict without collecting evidence', async () => {
@@ -103,7 +105,7 @@ describe('createEvidenceGatedVerifier', () => {
       subject,
       clock: () => 2_000,
     });
-    expect(await verifier.verify(page, 'task', 'done')).toEqual({ success: true, summary: 'ui checks passed' });
+    expect(await verifier.verify(page, 'task', 'done')).toEqual({ success: true, summary: 'ui checks passed', checks: [{ text_visible: 'Grid activated' }] });
   });
 });
 

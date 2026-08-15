@@ -4,7 +4,7 @@ import type { ActionContract, BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, stableNodeRef, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext, assertCacheStablePrefix } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
-import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPageTransition, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
+import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserAgentStepVerification, type BrowserAgentVerification, type BrowserExpectFailure, type BrowserPageTransition, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
 
 /** Runs the compact-observation browser-agent loop until the planner returns `done`. */
 export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<BrowserAgentResult> {
@@ -192,6 +192,19 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
           actionError = asError(error);
         }
       }
+      // Verification runs before the terminal step is recorded so the run carries
+      // what decided success (and which declarative checks held — the distiller
+      // learns `verify` from them). A verifier that throws still leaves the step
+      // recorded; the error propagates below exactly as before.
+      let verification: BrowserAgentVerification | undefined;
+      let verificationError: Error | undefined;
+      if (action.kind === 'done' && action.success && !actionError) {
+        try {
+          verification = await options.verifier.verify(page, options.task, action.summary);
+        } catch (error) {
+          verificationError = asError(error);
+        }
+      }
       const recordedStep: BrowserAgentStep = {
         step,
         action,
@@ -210,9 +223,11 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(action.kind !== 'done' ? { actionSafety: classifyBrowserActionSafety(action.kind) } : {}),
         ...(dispatch?.actionContract ? { actionContract: dispatch.actionContract } : {}),
         ...(pageTransition ? { pageTransition } : {}),
+        ...(verification ? { verification: recordedVerification(verification) } : {}),
       };
       steps.push(recordedStep);
       await options.recorder?.recordStep(recordedStep);
+      if (verificationError) throw verificationError;
       if (actionError) {
         // see docs/02-architecture.md "Repair ladder" — on assertion failure, never
         // fail the task blindly and never silently continue. The step above is
@@ -241,7 +256,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
           ? undefined
           : action.failureClassification;
         if (success) {
-          const verification = await options.verifier.verify(page, options.task, action.summary);
+          if (!verification) throw new Error('verification did not run for a successful done');
           success = verification.success;
           summary = verification.summary;
           if (!success) failureClassification = 'verification_failed';
@@ -268,6 +283,16 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
     }
     throw failure;
   }
+}
+
+function recordedVerification(verification: BrowserAgentVerification): BrowserAgentStepVerification {
+  const evidence = (verification as { consumedEvidence?: readonly { evidence_class: string }[] }).consumedEvidence;
+  return {
+    success: verification.success,
+    summary: verification.summary,
+    ...(verification.checks && verification.checks.length > 0 ? { checks: [...verification.checks] } : {}),
+    ...(evidence && evidence.length > 0 ? { evidenceClasses: [...new Set(evidence.map((entry) => entry.evidence_class))] } : {}),
+  };
 }
 
 function resultFromSteps(
