@@ -99,7 +99,9 @@ async function recordAndDistill() {
     task: 'Register Acme Tools as a vendor',
     page,
     planner: scriptedPlanner(),
-    verifier: { async verify(capture) { const ok = capture.html.includes(COMPLETE); return { success: ok, summary: ok ? 'complete' : 'incomplete' }; } },
+    // The verifier reports the declarative check that decided success; the
+    // distiller learns `verify` from it — nothing is declared below.
+    verifier: { async verify(capture) { const ok = capture.html.includes(COMPLETE); return { success: ok, summary: ok ? 'complete' : 'incomplete', ...(ok ? { checks: [{ text_visible: COMPLETE }] } : {}) }; } },
     recorder,
     maxSteps: 15,
   });
@@ -110,7 +112,6 @@ async function recordAndDistill() {
     intentDescription: run.manifest.task_spec,
     envFingerprint: { domain: 'fixture.test', tool_prefixes: ['browser.'] },
     params: Object.entries(VALUES).map(([name, value]) => ({ name, type: 'string' as const, value })),
-    verify: [{ text_visible: COMPLETE }],
   });
 }
 
@@ -138,6 +139,9 @@ describe('distilled playbooks replay the fixture suite with zero human edits', (
     const yaml = writePlaybookYaml(report.playbook);
     for (const value of Object.values(VALUES)) expect(yaml).not.toContain(value);
     expect(report.playbook.params.map((param) => param.name).sort()).toEqual(Object.keys(VALUES).sort());
+    // `verify` was learned from the recorded verification, not declared.
+    expect(report.verifySource).toBe('learned');
+    expect(report.playbook.verify).toEqual([{ text_visible: COMPLETE }]);
 
     const fresh = new StaticB2Page(FORM_HTML);
     const result = await replay(yaml, fresh);
@@ -145,6 +149,17 @@ describe('distilled playbooks replay the fixture suite with zero human edits', (
     expect(result.completedStepIds).toHaveLength(10);
     expect(fresh.submitted).toBe(true);
     expect([...fresh.values.entries()]).toEqual(FIELDS.map(([param, selector]) => [selector, VALUES[param]!]));
+  });
+
+  it('never reports success from a learned verify when the page does not confirm', async () => {
+    // INVARIANT (sacred #1): the learned verify is a real gate — a page that
+    // accepts every step but never shows the confirmation replays to failure.
+    const report = await recordAndDistill();
+    const silent = new StaticB2Page(FORM_HTML);
+    silent.click = async (selector: string) => { silent.clicks.push(selector); };
+    const result = await replay(writePlaybookYaml(report.playbook), silent);
+    expect(result.outcome).not.toBe('success');
+    expect(silent.clicks).toHaveLength(1);
   });
 
   it('replays the distilled playbook through harmless selector drift and stops it before a contract change', async () => {

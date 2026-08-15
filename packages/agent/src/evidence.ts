@@ -107,6 +107,7 @@ export function createEvidenceGatedVerifier(options: EvidenceGatedVerifierOption
         return {
           success: true,
           summary: `${base.summary}; authoritative evidence satisfied (${verdict.consumed.length} envelope(s))`,
+          ...(base.checks ? { checks: base.checks } : {}),
           consumedEvidence: verdict.consumed,
         };
       }

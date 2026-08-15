@@ -25,7 +25,12 @@ value?
   contract-gated before dispatch.
 - **Assertions**: `expect` only from strong evidence — `input_value … equals {{param}}` for
   fill/select, `url_contains <path>` for navigate; click/hover/press/upload/drag get no
-  synthesized assertion. `verify` is caller-declared.
+  synthesized assertion. `verify` is **learned** (since #155): the agent records on the
+  terminal `done` the declarative checks its verifier evaluated and that held (plus the
+  authoritative evidence classes the E7.4 gate consumed); the distiller emits those
+  checks, templated, as `verify`. A caller may still declare one; a run whose verifier
+  reported no checks fails with `UnlearnableVerifyError` — a `verify` that was not proven
+  on a real success is never emitted.
 - **Parameterization**: every declared param value is replaced by `{{name}}` in dispatched
   values, URLs, expectations, and the intent text; a fill/select value matching no param
   fails (`UnparameterizedValueError`, names the step, never the value) unless literals are
@@ -52,8 +57,16 @@ value?
 - No causal analysis beyond dispatch evidence and last-write-wins; dead-end exploration
   that *did* dispatch is kept (replaying it is harmless and honest, pruning it would be a
   guess).
-- No learned `verify`: the final oracle is declared by the caller, and authoritative
-  outcome requirements (E7.4) are not yet expressed in playbook YAML.
+- Learned `verify` is limited to what the verifier can state declaratively (text/URL/
+  selector/input-value primitives); model-judgment verifiers teach nothing. Authoritative
+  outcome requirements (E7.4) are reported (`evidenceClasses`) but not yet expressed in
+  playbook YAML, so a replay must attach the same evidence policy itself.
+
+Gate re-run after #155: B1 and B2 record → distill (no declared `verify`) → replay in real
+Chrome still pass with zero edits and zero model calls; the B2 playbook's learned verify is
+the exact templated confirmation summary. The static invariant suite adds the fail-closed
+case: a page that accepts every step but never confirms replays to failure under the
+learned verify.
 
 ## Reproduce
 

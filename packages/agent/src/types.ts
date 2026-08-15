@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { normalizeKeyChord } from '@rote/action';
 import type { AllowedUploadFile, BrowserActionSafety, ElementResolutionResult, NormalizedKeyChord, PostActionEvidence } from '@rote/action';
 import type { BrowserContextCoordinate, CapturedPage } from '@rote/browser';
-import { BrowserExpectSchema, type ActionContract, type TokenUsage, type TokenUsageSource } from '@rote/core';
+import { BrowserExpectSchema, type ActionContract, type BrowserExpect, type TokenUsage, type TokenUsageSource } from '@rote/core';
 import type { ProviderUsageReceipt } from '@rote/llm';
 import { StableNodeRefSchema, type AdaptiveRenderedObservation, type DistilledNode } from '@rote/perception';
 import type { HistoryCompactionPolicy, HistoryCompactionRecord, PlannerActionHistory } from './history-compaction.js';
@@ -175,6 +175,14 @@ export interface BrowserPlannerClient {
 export interface BrowserAgentVerification {
   success: boolean;
   summary: string;
+  /**
+   * The declarative checks this verifier evaluated and that held (text/URL/selector
+   * primitives of the Expect DSL). Recorded on the run so the distiller can learn a
+   * playbook's `verify` from a real success instead of a caller declaring it. A
+   * verifier that decides by model judgment or opaque logic omits them — such a run
+   * cannot teach a `verify` and the distiller refuses rather than guessing.
+   */
+  checks?: readonly BrowserExpect[];
 }
 
 export interface BrowserAgentVerifier {
@@ -237,6 +245,16 @@ export interface RunBrowserAgentOptions {
   uploadFiles?: readonly AllowedUploadFile[];
 }
 
+/** Verification outcome recorded on the terminal `done` step (value-free apart from the checks themselves). */
+export interface BrowserAgentStepVerification {
+  success: boolean;
+  summary: string;
+  /** Declarative checks that held; the distiller learns `verify` from these. */
+  checks?: readonly BrowserExpect[];
+  /** Authoritative evidence classes the gate consumed (E7.4); a learned playbook must be replayed under the same policy. */
+  evidenceClasses?: readonly string[];
+}
+
 export interface BrowserAgentStep {
   step: number;
   action: BrowserAction;
@@ -261,6 +279,8 @@ export interface BrowserAgentStep {
   targetResolution?: ElementResolutionResult;
   /** E7.5 safety classification recorded for every non-`done` dispatched action. */
   actionSafety?: BrowserActionSafety;
+  /** Independent verification result; present only on a planner-declared successful `done`. */
+  verification?: BrowserAgentStepVerification;
   /**
    * Value-free action contract derived from the resolved live target before dispatch
    * (#143): what the distiller may later persist so replay can detect a same-looking

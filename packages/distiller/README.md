@@ -19,8 +19,14 @@ refuses.
   assertion. Every declared param value is replaced by `{{name}}` in dispatched values,
   URLs, expectations, and the intent text; a fill/select value that matches no param
   fails with `UnparameterizedValueError` (naming the step, never the value) unless
-  `literalValues: 'allow'` is passed. `verify` is caller-declared. Returns a
-  `DistillReport` (playbook, kept, pruned, contractedStepIds, usedParams).
+  `literalValues: 'allow'` is passed. `verify` is **learned** from the run's terminal
+  verification record — the declarative checks the verifier reported as having held on
+  the successful `done`, templated like every other value — unless the caller declares
+  one; a run whose verifier reported no checks (model judgment, opaque logic) fails with
+  `UnlearnableVerifyError` rather than guessing. Returns a `DistillReport` (playbook,
+  kept, pruned, contractedStepIds, usedParams, `verifySource: 'declared' | 'learned'`,
+  `evidenceClasses` the recorded verification consumed — replay must run under the same
+  evidence policy, which playbook YAML cannot yet declare).
 - `loadRecordedRun(baseDir, runId)` — I/O edge: reads `runs/<id>/manifest.json` and
   `trajectory.jsonl`, resolves inline/blob results, and refuses runs whose outcome is not
   `success`.

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   ActionContractSchema,
+  BrowserExpectSchema,
   EnvFingerprintPatternSchema,
   ExpectSchema,
   ParamSchema,
@@ -36,6 +37,13 @@ export const RecordedBrowserStepResultSchema = z.object({
 }).passthrough();
 export type RecordedBrowserStepResult = z.infer<typeof RecordedBrowserStepResultSchema>;
 
+/** The verification record the agent writes on a successful `done` (subset the distiller reads). */
+export const RecordedVerificationSchema = z.object({
+  success: z.boolean(),
+  checks: z.array(BrowserExpectSchema).optional(),
+  evidence_classes: z.array(z.string()).optional(),
+}).passthrough();
+
 /** One trajectory event with its result resolved (inline or from its blob). */
 export const DistillableEventSchema = z.object({
   event: TrajectoryEventSchema,
@@ -55,8 +63,14 @@ export const DistillOptionsSchema = z.object({
   intentDescription: z.string().min(1),
   envFingerprint: EnvFingerprintPatternSchema,
   params: z.array(DistillParamSchema).default([]),
-  /** Final verification is caller-declared: the trajectory does not carry the verifier's checks. */
-  verify: z.array(ExpectSchema).min(1),
+  /**
+   * Final verification. Declared by the caller when given; otherwise **learned** from
+   * the run's terminal verification record — the declarative checks the verifier
+   * evaluated and that held on the successful `done`. A run whose verifier reported
+   * no such checks (model judgment, opaque logic) cannot teach a `verify` and
+   * distillation fails with `UnlearnableVerifyError` rather than guessing.
+   */
+  verify: z.array(ExpectSchema).min(1).optional(),
   /**
    * `fail` (default): a fill/select value that matches no declared param aborts
    * distillation — a playbook must never silently persist a typed value that might
@@ -71,6 +85,14 @@ export class UnparameterizedValueError extends Error {
   constructor(readonly stepId: string, readonly tool: string) {
     super(`step ${stepId} (${tool}) dispatched a value that matches no declared param; declare it or pass literalValues: 'allow'`);
     this.name = 'UnparameterizedValueError';
+  }
+}
+
+/** Raised when no `verify` was declared and the run's terminal verification carries no declarative checks to learn from. */
+export class UnlearnableVerifyError extends Error {
+  constructor(readonly reason: 'no_terminal_verification' | 'verification_failed' | 'no_declarative_checks') {
+    super(`verify cannot be learned from this run (${reason}); declare verify or record a run whose verifier reports its checks`);
+    this.name = 'UnlearnableVerifyError';
   }
 }
 
@@ -94,6 +116,14 @@ export interface DistillReport {
   contractedStepIds: string[];
   /** Params actually referenced by the playbook. */
   usedParams: string[];
+  /** Whether `verify` came from the caller or was learned from the recorded terminal verification. */
+  verifySource: 'declared' | 'learned';
+  /**
+   * Authoritative evidence classes the recorded verification consumed (E7.4). A
+   * playbook cannot yet declare an evidence policy, so replay must be run under the
+   * same policy for the learned `verify` to mean what it meant at record time.
+   */
+  evidenceClasses: string[];
 }
 
 const ELEMENT_TOOLS = new Set(['browser.fill', 'browser.select', 'browser.click', 'browser.hover', 'browser.press', 'browser.upload', 'browser.dragAndDrop']);
@@ -119,9 +149,16 @@ export function distillTrajectory(events: readonly DistillableEvent[], input: Di
   const parsed = events.map((entry) => DistillableEventSchema.parse(entry)).sort((a, b) => a.event.seq - b.event.seq);
   const pruned: DistillReport['pruned'] = [];
   const candidates: Array<{ seq: number; tool: string; args: Record<string, unknown>; result: RecordedBrowserStepResult }> = [];
+  let terminalVerification: z.infer<typeof RecordedVerificationSchema> | undefined;
 
   for (const { event, result } of parsed) {
-    if (event.tool === 'browser.done') { pruned.push({ seq: event.seq, reason: 'terminal_done' }); continue; }
+    if (event.tool === 'browser.done') {
+      pruned.push({ seq: event.seq, reason: 'terminal_done' });
+      const record = result && typeof result === 'object' ? (result as Record<string, unknown>)['verification'] : undefined;
+      const verification = RecordedVerificationSchema.safeParse(record);
+      if (verification.success) terminalVerification = verification.data;
+      continue;
+    }
     if (event.tool !== 'browser.navigate' && !ELEMENT_TOOLS.has(event.tool)) { pruned.push({ seq: event.seq, reason: 'unsupported_tool' }); continue; }
     const recorded = RecordedBrowserStepResultSchema.safeParse(result ?? {});
     if (!recorded.success || !recorded.data.post_action_evidence) { pruned.push({ seq: event.seq, reason: 'not_dispatched' }); continue; }
@@ -207,6 +244,22 @@ export function distillTrajectory(events: readonly DistillableEvent[], input: Di
     previousId = id;
   }
 
+  // Learned verify: only checks that actually held on the recorded success, templated
+  // like every other value so a param never persists literally.
+  let verify: Expect[];
+  let verifySource: DistillReport['verifySource'];
+  if (options.verify) {
+    verify = options.verify;
+    verifySource = 'declared';
+  } else {
+    if (!terminalVerification) throw new UnlearnableVerifyError('no_terminal_verification');
+    if (!terminalVerification.success) throw new UnlearnableVerifyError('verification_failed');
+    if (!terminalVerification.checks || terminalVerification.checks.length === 0) throw new UnlearnableVerifyError('no_declarative_checks');
+    verify = terminalVerification.checks.map((check) => templateExpect(check, options.params, usedParams));
+    verifySource = 'learned';
+  }
+  const evidenceClasses = [...new Set(terminalVerification?.evidence_classes ?? [])];
+
   const playbook = PlaybookSchema.parse({
     playbook: options.playbookName,
     version: 1,
@@ -215,7 +268,7 @@ export function distillTrajectory(events: readonly DistillableEvent[], input: Di
     task_signature: { intent_description: templateValue(options.intentDescription, options.params, new Set()).text, env_fingerprint: options.envFingerprint },
     params: options.params.filter((param) => usedParams.has(param.name)).map(({ name, type }) => ({ name, type })),
     steps,
-    verify: options.verify,
+    verify,
     confidence: 1,
   });
   // INVARIANT: no declared param value survives literally in a dispatched value,
@@ -226,7 +279,15 @@ export function distillTrajectory(events: readonly DistillableEvent[], input: Di
       if (leaf.includes(param.value)) throw new UnparameterizedValueError('(playbook)', `value of ${param.name} leaked`);
     }
   }
-  return { playbook, kept: keptReport, pruned, contractedStepIds, usedParams: [...usedParams] };
+  return { playbook, kept: keptReport, pruned, contractedStepIds, usedParams: [...usedParams], verifySource, evidenceClasses };
+}
+
+/** Templates the asserted value of a declarative check; selectors are identity and stay literal. */
+function templateExpect(check: Expect, params: readonly DistillParam[], used: Set<string>): Expect {
+  if ('text_visible' in check) return { text_visible: templateValue(check.text_visible, params, used).text };
+  if ('url_contains' in check) return { url_contains: templateValue(check.url_contains, params, used).text };
+  if ('input_value' in check) return { input_value: check.input_value, equals: templateValue(check.equals, params, used).text };
+  return check;
 }
 
 /** Strings the playbook would *send or assert* — the places a captured input could leak. */
