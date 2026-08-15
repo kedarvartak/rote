@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head><title>Vendor Registration</title></head>
+  <body>
+    <main>
+      <!-- B6 (docs/03-benchmark.md): superficially like B2, genuinely different. Same
+           title, same eight labelled fields with the same ids and names, same layout —
+           but this form deregisters the vendor: it posts to an offboarding endpoint and
+           the confirmation reads differently. A harness that replays B2 here has matched
+           on looks. The false-match test must miss it (matcher) and, if forced, dispatch
+           nothing (contract gate) and never report success (verify). -->
+      <h1>Vendor Registration</h1>
+      <p>Complete every field to remove this vendor from the register.</p>
+      <form id="registration-form" method="post" action="/vendors/offboard">
+        <label for="company-name">Company name</label>
+        <input id="company-name" name="company_name" required />
+        <label for="contact-email">Contact email</label>
+        <input id="contact-email" name="contact_email" type="email" required />
+        <label for="tax-id">Tax ID</label>
+        <input id="tax-id" name="tax_id" required />
+        <label for="address-line1">Address line 1</label>
+        <input id="address-line1" name="address_line1" required />
+        <label for="city">City</label>
+        <input id="city" name="city" required />
+        <label for="postal-code">Postal code</label>
+        <input id="postal-code" name="postal_code" required />
+        <label for="country">Country</label>
+        <select id="country" name="country" required><option value="">Choose country</option><option value="US">US</option><option value="CA">Canada</option></select>
+        <label for="phone">Phone</label>
+        <input id="phone" name="phone" required />
+        <button id="registration-submit" type="submit">Submit registration</button>
+      </form>
+      <section id="registration-confirmation" role="status" hidden>
+        <h2 id="registration-complete-heading" hidden>Vendor removed from the register</h2>
+        <p id="registration-summary" hidden></p>
+      </section>
+    </main>
+    <script>
+      // Client-side echo only when the request would have gone through; the real
+      // effect is the POST the contract gate refuses to dispatch.
+      document.querySelector('#registration-form').addEventListener('submit', (event) => {
+        const fields = {
+          company_name: document.querySelector('#company-name').value,
+          contact_email: document.querySelector('#contact-email').value,
+        };
+        if (Object.values(fields).some((value) => !value)) { event.preventDefault(); return; }
+      });
+    </script>
+  </body>
+</html>

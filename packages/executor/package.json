@@ -12,7 +12,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "test:contract-gate-chrome": "ROTE_RUN_CDP_TESTS=1 vitest run test/cdp-action-contract-gate.test.ts"
   },
   "dependencies": {
     "@rote/browser": "*",

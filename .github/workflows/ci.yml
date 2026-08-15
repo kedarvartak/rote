@@ -91,6 +91,9 @@ jobs:
       - name: Enterprise continuation Chrome contract
         if: steps.detect.outputs.present == 'true'
         run: npm run test:enterprise-continuation-chrome --workspace @rote/bench
+      - name: Action-contract gate + B6 false-match Chrome contract
+        if: steps.detect.outputs.present == 'true'
+        run: npm run test:contract-gate-chrome --workspace @rote/executor
       - name: Action-contract drift demo (Chrome, self-checking)
         if: steps.detect.outputs.present == 'true'
         run: npm run demo:action-contract -- --json > /dev/null

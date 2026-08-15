@@ -23,7 +23,13 @@ const request = { task: 'Register Acme Tools as a vendor', params: { company_nam
 describe('matcher v1', () => {
   it('slots param values out of the task before scoring, so a same-shape task matches exactly', () => {
     expect(intentScore(request.task, request.params, vendor)).toBe(1);
-    expect(intentScore(request.task, request.params, customer)).toBeCloseTo(4 / 6, 5);
+    // "vendor" is a content token of the customer playbook's intent that the vendor task
+    // lacks — coverage fails and the score is 0, not a diluted 0.67.
+    expect(intentScore(request.task, request.params, customer)).toBe(0);
+    // Dropping a function word or adding one keeps coverage; extra content lowers Jaccard.
+    expect(intentScore('Register Acme Tools as vendor', request.params, vendor)).toBeCloseTo(4 / 5, 5);
+    expect(intentScore('Please register Acme Tools as a vendor', request.params, vendor)).toBeCloseTo(5 / 6, 5);
+    expect(intentScore('Register Acme Tools as a vendor and then delete it', request.params, vendor)).toBeLessThan(0.7);
     expect(matchPlaybook({ ...request, candidates: [entry(vendor)] })).toMatchObject({ kind: 'match', score: 1, bindings: { company_name: 'Acme Tools' }, considered: 1 });
   });
 
@@ -36,7 +42,7 @@ describe('matcher v1', () => {
 
   it('prefers misses: near-miss below the threshold, ambiguity between distinct playbooks, unbindable params', () => {
     // T4 near-miss (docs/03 B6): superficially like B2, genuinely different — must not match.
-    expect(matchPlaybook({ ...request, task: 'Register Acme Tools as a customer', candidates: [entry(vendor)] })).toMatchObject({ kind: 'no_match', reason: 'below_threshold', best: { score: expect.closeTo(4 / 6, 5) } });
+    expect(matchPlaybook({ ...request, task: 'Register Acme Tools as a customer', candidates: [entry(vendor)] })).toMatchObject({ kind: 'no_match', reason: 'below_threshold', best: { score: 0 } });
     // Two distinct playbooks with the same intent: the task text cannot single one out.
     const twin = playbook('b2-vendor-alt', 'Register {{company_name}} as a vendor');
     expect(matchPlaybook({ ...request, candidates: [entry(vendor), entry(twin)] })).toMatchObject({ kind: 'no_match', reason: 'ambiguous' });

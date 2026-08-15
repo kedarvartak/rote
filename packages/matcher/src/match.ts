@@ -86,20 +86,34 @@ export function matchPlaybook(request: MatchRequest): MatchResult {
 }
 
 /**
- * Intent score in [0, 1]: token Jaccard between the task text (with every provided
- * param value replaced by its `{{name}}` slot) and the playbook's intent template.
+ * Intent score in [0, 1]. Two conditions, both about preferring misses:
+ * - **coverage**: every content token of the playbook's intent (slots and stopwords
+ *   aside) must appear in the task — a playbook does what its intent says, and a
+ *   task that does not mention "registration" gives no licence to run a registration
+ *   procedure, however long and similar the rest of the sentence is (docs/03 B6:
+ *   "deregistration" must miss even at Jaccard 0.82);
+ * - **Jaccard** over all tokens between the task (with every provided param value
+ *   replaced by its `{{name}}` slot) and the intent, so extra material in the task
+ *   (", then delete the vendor") still lowers the score below the threshold.
  * Slotting values out first means "Register Acme Tools as a vendor" scores 1.0
- * against "Register {{company_name}} as a vendor" — and 0.67 against the same
- * sentence ending in "customer", which a conservative threshold rejects.
+ * against "Register {{company_name}} as a vendor".
  */
 export function intentScore(task: string, params: ParamBindings, playbook: Playbook): number {
   const slotted = slotValues(task, params);
   const a = tokens(slotted);
   const b = tokens(playbook.task_signature.intent_description);
   if (a.size === 0 || b.size === 0) return 0;
+  for (const token of b) if (isContentToken(token) && !a.has(token)) return 0;
   let intersection = 0;
   for (const token of a) if (b.has(token)) intersection += 1;
   return intersection / (a.size + b.size - intersection);
+}
+
+/** Function words a task may drop or add without changing what procedure it asks for. */
+const STOPWORDS = new Set(['a', 'an', 'the', 'as', 'with', 'to', 'of', 'for', 'and', 'then', 'in', 'on', 'into', 'at', 'by', 'from', 'this', 'that', 'it', 'its', 'please']);
+
+function isContentToken(token: string): boolean {
+  return !token.startsWith('{{') && !STOPWORDS.has(token);
 }
 
 function slotValues(text: string, params: ParamBindings): string {
