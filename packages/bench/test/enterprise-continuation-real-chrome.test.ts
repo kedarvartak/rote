@@ -3,10 +3,11 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it } from 'vitest';
+import { SettledBrowserPageSession } from '@rote/action';
 import { findChromeExecutable, LaunchingCdpBrowserBackend, type CdpPage } from '@rote/browser';
 import { ContinuationMismatchError, continueTask, FileCheckpointStore } from '@rote/continuation';
 import { buildEnvFingerprint, PlaybookSchema, type Playbook } from '@rote/core';
-import { BrowserToolCaller, type LlmClient, type ToolCaller } from '@rote/executor';
+import { BrowserToolCaller, type BrowserReplayPage, type LlmClient, type ToolCaller } from '@rote/executor';
 import { parseEnterpriseContractProtocol } from '../src/enterprise-contract.js';
 import { createEnterpriseOracleEvidenceAdapter } from '../src/enterprise-evidence.js';
 import { EnterpriseFixtureServer } from '../src/enterprise-oracle.js';
@@ -84,7 +85,10 @@ async function newProcess(chromePath: string): Promise<CdpPage> {
 
 async function session(chromePath: string, options: { principal?: string; stopAfterStepId?: string; params?: Record<string, string> }) {
   const page = await newProcess(chromePath);
-  const tool = new CountingToolCaller(new BrowserToolCaller(page));
+  // Settled dispatch: the fixture posts its authoritative event after the click, so
+  // the checkpoint's evidence reference must be collected after the page is quiet.
+  const settled = new SettledBrowserPageSession(page, { quietWindowMs: 150, timeoutMs: 5_000, maxPendingRequests: 1 });
+  const tool = new CountingToolCaller(new BrowserToolCaller(settled as unknown as BrowserReplayPage));
   const url = server!.url('/spa-endurance.html');
   const result = continueTask({
     taskId: 'continuation-contract',
@@ -134,6 +138,9 @@ describe('E7.7 multi-session continuation (real Chrome)', () => {
     expect(firstResult.mode).toBe('fresh');
     expect(firstResult.replay.outcome).toBe('interrupted');
     expect((await snapshot('continuation-contract')).events).toHaveLength(1);
+    // The checkpoint must reference the authoritative event, or a later stale/diverged
+    // check would have nothing to compare (the settled dispatch above guarantees it).
+    expect((await new FileCheckpointStore(baseDir).latest('continuation-contract'))?.evidence_refs).toHaveLength(1);
 
     // Session 2: new process, resume from checkpoint seq 1, commit 2, go away.
     const second = await session(chromePath, { stopAfterStepId: 'click_commit_2' });
@@ -164,6 +171,7 @@ describe('E7.7 multi-session continuation (real Chrome)', () => {
     server.reset();
     await (await session(chromePath, { stopAfterStepId: 'click_commit_1' })).result;
     expect((await snapshot('continuation-contract')).events).toHaveLength(1);
+    expect((await new FileCheckpointStore(baseDir).latest('continuation-contract'))?.evidence_refs).toHaveLength(1);
     server.reset();
     const stale = await session(chromePath, {});
     await expect(stale.result).rejects.toBeInstanceOf(ContinuationMismatchError);
