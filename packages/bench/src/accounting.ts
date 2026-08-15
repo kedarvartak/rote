@@ -1,7 +1,8 @@
-import type { RunManifest, TokenUsageSource } from '@rote/core';
+import { TokenUsageSourceSchema, type RunManifest, type TokenUsageSource } from '@rote/core';
 import type { BenchCell, BenchReport, BenchSummaryRow, TokenTotals, WarmComparison } from './types.js';
 
-const SOURCES: TokenUsageSource[] = ['planner', 'matcher', 'slot', 'judgment', 'repair', 'verify', 'distill'];
+// Derived from the schema so a new tag (route/predict) can never be dropped from per-source totals.
+const SOURCES: TokenUsageSource[] = [...TokenUsageSourceSchema.options];
 
 /** Sums tagged provider usage from manifests; totals by source must add up exactly. */
 export function summarizeTokenUsage(manifests: readonly RunManifest[]): TokenTotals {

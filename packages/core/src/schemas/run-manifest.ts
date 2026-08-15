@@ -20,6 +20,12 @@ export const TokenUsageSourceSchema = z.enum([
   'repair',
   'verify',
   'distill',
+  // P2 items 10/12: a model-based routing decision or next-action prediction must
+  // be tagged with these. v1 routing and prediction are deterministic and spend
+  // nothing under them; the tags exist so a future model stage cannot hide inside
+  // `planner`.
+  'route',
+  'predict',
 ]);
 export type TokenUsageSource = z.infer<typeof TokenUsageSourceSchema>;
 

@@ -23,7 +23,7 @@ much of the design is not, and some of what the docs marked built was not.
 4. **Everything versioned** — store mutations are append-only; no in-place edits of
    playbooks or patches.
 5. **Every LLM call is tagged** — all usage goes through the shared LLM client wrapper
-   with a `source` tag (`planner|matcher|slot|repair|verify|distill`). Direct SDK calls
+   with a `source` tag (`planner|matcher|slot|judgment|repair|verify|distill|route|predict`). Direct SDK calls
    outside the wrapper fail lint.
 
 ## Code practices

@@ -39,6 +39,14 @@ export interface RunBrowserTaskOptions {
    */
   siteBriefChars?: number;
   /**
+   * Model routing (P2 item 12): a cheaper model that takes a cold-path step when the
+   * shadow predictor is confident (`routeMinConfidence`, default 0.9); the frontier
+   * `model` takes every other step, repair, and escalation. Requires prior runs of the
+   * task in this environment for any step to route.
+   */
+  routineModel?: string;
+  routeMinConfidence?: number;
+  /**
    * Fixed run id for the recorded artifacts. The benchmark command driver sets
    * this (via `ROTE_RUN_ID`) so it can address the run it just produced; omitted
    * for normal use, where a random id is assigned (see #40 / docs/05 W5).
@@ -65,6 +73,8 @@ export interface BrowserTaskResult {
   siteBrief?: { chars: number; hinted: number; used: number };
   /** Cold path only, when earlier successful runs of the same task and environment exist: shadow-predictor agreement with the planner. */
   prediction?: { priorRuns: number; predicted: number; hits: number };
+  /** Cold path only, when `--routine-model` was given: which planner took the steps. */
+  routing?: { routine: number; frontier: number; escalations: number };
 }
 
 export type BrowserTaskSelection =
@@ -88,6 +98,8 @@ export interface BrowserReplayRunInput {
 export interface RunBrowserTaskDependencies {
   backend?: BrowserTaskBackend;
   planner?: BrowserPlannerClient;
+  /** Injected routine planner (tests); otherwise built from `routineModel`. */
+  routinePlanner?: BrowserPlannerClient;
   runReplay?: (input: BrowserReplayRunInput) => Promise<BrowserTaskResult>;
 }
 
@@ -170,7 +182,7 @@ export async function runBrowserTask(
       // (see docs/02-architecture.md "Invariants"). Cold execution navigates from the pinned initial URL before planning.
     }
 
-    const cold = await runColdBrowserTask(options, target, page, fingerprint, dependencies.planner);
+    const cold = await runColdBrowserTask(options, target, page, fingerprint, dependencies.planner, dependencies.routinePlanner);
     const fingerprintFallback = 'fallbackReason' in selection
       ? { fallbackReason: selection.fallbackReason }
       : undefined;
@@ -197,10 +209,14 @@ async function runColdBrowserTask(
   page: BrowserPageSession,
   fingerprint: EnvFingerprint,
   injectedPlanner?: BrowserPlannerClient,
+  injectedRoutinePlanner?: BrowserPlannerClient,
 ): Promise<BrowserTaskResult> {
   const planner = injectedPlanner ?? new TaggedLlmBrowserPlanner(
     createTaggedLlmClientFromEnv({ model: options.model }),
   );
+  // The routine planner is a second fully tagged planner on a cheaper model; the
+  // routing decision itself is deterministic (no `route` model call in v1).
+  const routine = injectedRoutinePlanner ?? (options.routineModel ? new TaggedLlmBrowserPlanner(createTaggedLlmClientFromEnv({ model: options.routineModel })) : undefined);
   const recorder = new FileBrowserAgentRunRecorder({ task: options.task, envFingerprint: fingerprint, baseDir: options.baseDir, runId: options.runId });
   try {
     await page.navigate(target.toString());
@@ -226,6 +242,7 @@ async function runColdBrowserTask(
     planner,
     ...(brief && brief.text ? { siteBrief: { text: brief.text, hintedStableIds: brief.hintedStableIds } } : {}),
     ...(predictor ? { predictor } : {}),
+    ...(routine ? { routing: { routine, ...(options.routeMinConfidence !== undefined ? { minConfidence: options.routeMinConfidence } : {}) } } : {}),
     verifier: {
       async verify(captured) {
         const failures: string[] = [];
@@ -259,6 +276,7 @@ async function runColdBrowserTask(
     ...(result.failureClassification ? { failureClassification: result.failureClassification } : {}),
     ...(result.siteBriefUtility ? { siteBrief: result.siteBriefUtility } : {}),
     ...(predictor && result.predictionSummary ? { prediction: { priorRuns: priors.length, ...result.predictionSummary } } : {}),
+    ...(result.routingSummary ? { routing: result.routingSummary } : {}),
   };
 }
 

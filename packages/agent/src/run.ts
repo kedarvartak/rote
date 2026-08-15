@@ -1,11 +1,11 @@
 import { ActionContractUnavailableError, assertBrowserExpect, assertPostActionEvidence, BrowserCapabilityUnsupportedError, deriveActionContract, BrowserExpectationError, classifyBrowserActionSafety, derivePostActionEvidence, DragContextMismatchError, ElementResolutionConflictError, ElementResolutionError, ElementResolutionStaleIdentityError, normalizeKeyChord, PostActionEvidenceError, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
-import { pageKey, type ActionContract, type BrowserExpect } from '@rote/core';
-import { actionKeyOf, sameAction } from '@rote/predictor';
+import { pageKey, type ActionContract, type BrowserExpect, type TokenUsage } from '@rote/core';
+import { actionKeyOf, sameAction, type NextActionPrediction } from '@rote/predictor';
 import { distillPage, renderAdaptiveObservation, stableNodeRef, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext, assertCacheStablePrefix } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
-import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserAgentStepVerification, type BrowserAgentVerification, type SiteBriefInput, type SiteBriefUtility, type BrowserExpectFailure, type BrowserPageTransition, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
+import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserAgentStepVerification, type BrowserAgentVerification, type BrowserModelRouting, type BrowserStepRoute, type SiteBriefInput, type SiteBriefUtility, type BrowserExpectFailure, type BrowserPageTransition, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
 
 /** Runs the compact-observation browser-agent loop until the planner returns `done`. */
 export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<BrowserAgentResult> {
@@ -96,8 +96,12 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       });
       if (context.history.compaction) observationHistoryEvicted = true;
       plannerStablePrefix = assertCacheStablePrefix(plannerStablePrefix, context.stablePrefix);
-      // INVARIANT: planner calls are always source-tagged for benchmark accounting.
-      let planned = await options.planner.plan(source, {
+      // see docs/02 "Decision plane" (P2 item 12) — model routing: a confident shadow
+      // prediction marks a warm, known move; the routine planner may take it, the
+      // frontier planner takes everything else (and every repair/escalation).
+      const route = chooseRoute(options.routing, shadow, pendingRepair !== undefined);
+      const stepPlanner = route.planner === 'routine' && options.routing ? options.routing.routine : options.planner;
+      const request = {
         task: options.task,
         step,
         page: pageState,
@@ -105,7 +109,20 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         previousActions: context.history.visibleActions,
         context,
         ...(pendingRepair ? { repair: pendingRepair } : {}),
-      });
+      };
+      // INVARIANT: planner calls are always source-tagged for benchmark accounting.
+      let planned: BrowserPlannerResponse;
+      const escalationUsage: TokenUsage[] = [];
+      try {
+        planned = await stepPlanner.plan(source, request);
+      } catch (error) {
+        // Escalation contract: a routine planner that fails closed on its own output
+        // costs its call and nothing else — the frontier re-plans the same step.
+        if (route.planner !== 'routine' || !(error instanceof BrowserPlannerOutputError)) throw error;
+        escalationUsage.push(...error.usages);
+        route.escalated = 'planner_output';
+        planned = await options.planner.plan(source, request);
+      }
       pendingRepair = undefined;
       assertPlannerUsageSources(planned, source);
       const initialUsage = planned.usage;
@@ -140,6 +157,8 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
             // The action has not executed, so one bounded repair may copy a grounded
             // target from the same observation. This is distinct from postcondition
             // repair, where repeating an already-performed action would be unsafe.
+            // A routed routine step escalates here: the frontier owns every repair.
+            if (route.planner === 'routine') route.escalated = 'target_repair';
             planned = await options.planner.plan('repair', {
               task: options.task,
               step,
@@ -233,6 +252,8 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(pageTransition ? { pageTransition } : {}),
         ...(verification ? { verification: recordedVerification(verification) } : {}),
         ...(shadow ? { prediction: { ...(shadow.predicted ? { predicted: shadow.predicted } : {}), confidence: shadow.confidence, source: shadow.source, hit: sameAction(shadow.predicted, actionKeyOf(action)) } } : {}),
+        ...(options.routing ? { route } : {}),
+        ...(escalationUsage.length > 0 ? { escalationUsage } : {}),
         // Value-free page identity before/after the action: site memory's page graph
         // and selector maps key on these, never on raw URLs.
         ...(currentPageKey ? { pageKey: currentPageKey } : {}),
@@ -323,7 +344,18 @@ function resultFromSteps(
     tokenUsage: tokenUsageFromSteps(steps),
     ...(siteBrief ? { siteBriefUtility: siteBriefUtility(siteBrief, steps) } : {}),
     ...(steps.some((step) => step.prediction) ? { predictionSummary: { predicted: steps.filter((step) => step.prediction).length, hits: steps.filter((step) => step.prediction?.hit).length } } : {}),
+    ...(steps.some((step) => step.route) ? { routingSummary: { routine: steps.filter((step) => step.route?.planner === 'routine').length, frontier: steps.filter((step) => step.route?.planner === 'frontier').length, escalations: steps.filter((step) => step.route?.escalated).length } } : {}),
   };
+}
+
+const DEFAULT_ROUTE_MIN_CONFIDENCE = 0.9;
+
+/** Deterministic routing decision (no model call): routine only for a confident, non-repair step. */
+function chooseRoute(routing: BrowserModelRouting | undefined, shadow: NextActionPrediction | undefined, repair: boolean): BrowserStepRoute {
+  if (!routing) return { planner: 'frontier', reason: 'no_routing' };
+  if (repair) return { planner: 'frontier', reason: 'repair' };
+  if (shadow?.predicted && shadow.confidence >= (routing.minConfidence ?? DEFAULT_ROUTE_MIN_CONFIDENCE)) return { planner: 'routine', reason: 'prediction_confident' };
+  return { planner: 'frontier', reason: 'no_confident_prediction' };
 }
 
 /** docs/03 "hint utility": hinted identities the planner actually dispatched. */
@@ -341,7 +373,8 @@ function siteBriefUtility(brief: SiteBriefInput, steps: readonly BrowserAgentSte
 }
 
 function tokenUsageFromSteps(steps: readonly BrowserAgentStep[]) {
-  return steps.flatMap((entry) => [entry.usage, ...(entry.repairUsage ?? [])]);
+  // Escalated routine calls are spend too — never hidden from the run's accounting.
+  return steps.flatMap((entry) => [entry.usage, ...(entry.repairUsage ?? []), ...(entry.escalationUsage ?? [])]);
 }
 
 function uniqueClassifications(
