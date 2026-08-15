@@ -157,7 +157,7 @@ would make their weaknesses append-only data.
 | E7.4 | **Authoritative evidence verification** ([#130](https://github.com/kedarvartak/rote/issues/130)): provenance/freshness-bound evidence envelopes plus injected fixture/API/database/download adapters. | 4–6 | E7.1, E7.2 | Declared authoritative outcomes cannot pass from harness conclusion, generic DOM change, stale evidence, or another task's evidence; every verifier exit has invariant coverage. | **ready — next** |
 | E7.5 | **Enterprise action vocabulary** ([#131](https://github.com/kedarvartak/rote/issues/131)): grounded hover, keyboard text/chords, allowlisted upload, and target-to-target drag/drop. | 6–9 | E7.3, E7.4 | Fake and CDP backends share Zod verbs; every action has safety, settledness, redaction, and effect semantics; unsupported capabilities fail cleanly; no arbitrary-event escape hatch. | blocked (E7.3, E7.4) |
 | E7.6 | **Long-running single-session SPA certification** ([#132](https://github.com/kedarvartak/rote/issues/132)): 50+ transitions with routes, remounts, virtualization, background traffic, and B4. | 5–8 | B4, E7.3–E7.5 | ≥15 exact runs with authoritative verification, zero silent failures, bounded context/metadata/settle units, and clean `recall_unavailable` behavior. | blocked (E7.3–E7.5; B4 mechanism done) |
-| E7.7 | **Multi-session task continuation** ([#133](https://github.com/kedarvartak/rote/issues/133)): append-only checkpoints across browser/process restarts. | 6–10 | distiller v1, E7.6 | Two controlled restarts reach exact outcome; fingerprint/state/evidence/version mismatch stops before action; credentials stay outside artifacts; continuation is reported separately from replay. | blocked (distiller, E7.6) |
+| E7.7 | **Multi-session task continuation** ([#133](https://github.com/kedarvartak/rote/issues/133)): append-only checkpoints across browser/process restarts. | 6–10 | distiller v1, E7.6 | Two controlled restarts reach exact outcome; fingerprint/state/evidence/version mismatch stops before action; credentials stay outside artifacts; continuation is reported separately from replay. | unblocked (distiller v1 [T36](testing/T36-distiller-v1.md), E7.6 [T34](testing/T34-spa-endurance-certification.md)) — next |
 
 ### P2 sequence after E7
 
@@ -172,9 +172,9 @@ distiller v1 can persist that contract. Same-looking incompatible controls dispa
    increments; it bounds the mechanism but remains an initial schedule until E7.6 measures
    50+ step cache economics.
 2. **E7.1–E7.6** in dependency order. E7.6 is B4's enterprise endurance gate.
-3. **Distiller v1** — trajectory → playbook only after target, context, action, and
-   evidence contracts are versioned. Gate: distilled playbooks replay the fixture suite
-   with zero human edits.
+3. **Distiller v1 — done** ([T36](testing/T36-distiller-v1.md)) — trajectory → playbook
+   after target, context, action, and evidence contracts were versioned. Gate met:
+   distilled B1/B2 playbooks replay the fixture suite in real Chrome with zero human edits.
 4. **E7.7 multi-session continuation** — after a learned procedure exists to resume.
 5. **Predictor kill-gate first**: ≥70% warm next-action accuracy offline on recorded
    runs, before any speculation systems work. Costs no systems work; can kill P3 early.

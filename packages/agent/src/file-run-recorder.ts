@@ -48,6 +48,9 @@ export class FileBrowserAgentRunRecorder implements BrowserAgentRunRecorder {
         post_action_evidence: step.postActionEvidence,
         history_compaction: step.historyCompaction,
         resolution: step.resolution,
+        // Value-free contract of the resolved target (#143); the distiller
+        // persists it so replay is contract-gated.
+        action_contract: step.actionContract,
       },
       duration_ms: step.durationMs,
       error: step.error ? { message: step.error } : undefined,

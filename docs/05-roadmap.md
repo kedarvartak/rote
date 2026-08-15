@@ -235,13 +235,16 @@ recorded on every live element step. Distiller v1 is what persists them.
    settledness is bounded under long-lived background traffic, and success is exact
    authoritative evidence only. Provider-billed B4 economics remain unmeasured; continuation
    across a browser/process restart is #133.
-8. **Distiller v1 — next** (tier 1) — trajectory → playbook: causal pruning, parameterization,
-   assertion synthesis. It follows the identity, context, action, and evidence contracts
-   so learned playbooks do not fossilize v1 collisions or UI-only assertions, and it
-   persists each step's recorded `actionContract` so replay is contract-gated ([T35](testing/T35-action-contract-gate.md)). Gate:
+8. **Distiller v1 — built** (tier 1, [T36](testing/T36-distiller-v1.md)) — trajectory →
+   playbook, deterministic: dispatch-evidence pruning with reasons, last-write-wins,
+   parameterization that refuses undeclared typed values, assertions from strong evidence
+   only, and each step's recorded `actionContract` persisted so replay is contract-gated
+   ([T35](testing/T35-action-contract-gate.md)). Gate met: B1/B2 record → distill →
+   replay in real Chrome with zero human edits and zero model calls. Matcher/selection
+   and learned `verify` remain open. Gate:
    distilled playbooks replay the fixture suite with zero human edits. **Reaches parity
    with Skyvern's 2026 baseline; the differentiator is the verification contract.**
-9. **Multi-session task continuation** ([#133](https://github.com/kedarvartak/rote/issues/133)) — append-only checkpoints resume an
+9. **Multi-session task continuation — next** ([#133](https://github.com/kedarvartak/rote/issues/133)) — append-only checkpoints resume an
    incomplete controlled workflow across browser/process restarts only after fingerprint,
    live-state, and authoritative-evidence revalidation. Credentials and profile management
    remain P4; continuation is reported separately from replay and learned matching.
