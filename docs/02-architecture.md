@@ -70,7 +70,7 @@ confuse in an architecture doc; this is the boundary.
 | **Multi-session continuation** (E7.7) | 1 | **built** ([T37](testing/T37-multi-session-continuation.md)) — append-only `TaskCheckpoint` log bound by environment/principal/procedure/bindings digests plus authoritative-evidence references; resume gate runs before any action; executor skips completed steps and checkpoints after each one; verified across real Chrome process restarts |
 | **Playbook distiller** (trajectory → playbook) | 1 | **built (v1, deterministic)** — [T36](testing/T36-distiller-v1.md): keeps dispatched actions (evidence present), prunes with reasons (done, pre-dispatch failures, superseded writes), carries resolved identity + context + recorded action contract, synthesizes `expect` from strong evidence only, learns `verify` from the declarative checks the verifier proved on the recorded success (refusing runs that cannot teach one), templates every declared value and refuses undeclared typed values; B1/B2 record → distill → replay in real Chrome with zero LLM calls and zero edits |
 | **Matcher** (select + bind) | 1 | **built (v1, deterministic)** — `@rote/matcher`: fingerprint hard gate before any comparison, task text with param values slotted out scored against the templated intent, every declared param must bind, conservative threshold (0.8) with an ambiguity margin, append-only playbook library; T0 same-shape/new-params selects and replays with zero model calls, T4 near-misses miss; no model call yet (a semantic stage would be tagged `matcher`) |
-| **Site memory** (store + derivation) | 2 | **built as a store** (`@rote/site-memory`) — strict value-free `SiteMemoryRecord` v1 (selector maps, form semantics, page edges, settle priors, coded quirks) partitioned by fingerprint hash, append-only with crash-tolerant reads, derived deterministically from recorded runs (page-key digests recorded per step), consolidated on read with confidence × freshness; the token-budgeted *brief* is not yet rendered into context |
+| **Site memory** (store + derivation) | 2 | **built as a store** (`@rote/site-memory`) — strict value-free `SiteMemoryRecord` v1 (selector maps, form semantics, page edges, settle priors, coded quirks) partitioned by fingerprint hash, append-only with crash-tolerant reads, derived deterministically from recorded runs (page-key digests recorded per step), consolidated on read with confidence × freshness, and rendered as a hard-budgeted advisory *brief* into the planner's cache-stable prefix with hint-utility telemetry on the run; whether the brief earns its tokens (T2) is unmeasured until a provider-billed learning-curve run |
 | **Model routing, speculation** | 2 | **not built** — designed below |
 
 Packages that exist: `core recorder executor bench cli browser perception action agent llm`.
@@ -237,8 +237,8 @@ semantics until transactional recovery exists.
 ```ts
 async function runTask(task: TaskSpec, deps: HarnessDeps): Promise<TaskResult> {
   const fp = await fingerprint(deps.session);          // invariant 3: hard gate
-  const brief = deps.memory.brief(fp, task);           // site memory, ≤1K tokens  [planned]
-  const ctx = ContextAssembler.init({ task, brief });  // owns cache layout
+  const brief = renderSiteBrief(view, { maxChars });   // site memory, hard budget  [built: @rote/site-memory]
+  const ctx = ContextAssembler.init({ task, brief });  // owns cache layout; brief sits in the stable prefix
 
   const match = matchPlaybook({ task, params, envFingerprint: fp, candidates }); // [built: @rote/matcher]
   if (match.kind === 'match')                          // gate → intent ≥ τ → unique

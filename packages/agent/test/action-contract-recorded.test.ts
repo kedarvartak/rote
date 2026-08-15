@@ -68,3 +68,18 @@ describe('live loop records action contracts', () => {
     expect(fill!.nextPageKey).toBe(key);
   });
 });
+
+describe('site brief utility', () => {
+  it('reports hint utility: how many hinted identities the planner actually dispatched', async () => {
+    const plan = () => scripted([{ kind: 'click', selector: '#registration-submit', role: 'button', name: 'Submit registration' }, { kind: 'done', success: true, summary: 'ok' }]);
+    const probe = await runBrowserAgent({ task: 'Register', page: page(), planner: plan(), verifier: { async verify() { return { success: true, summary: 'ok' }; } }, maxSteps: 4 });
+    const submitId = probe.steps[0]!.resolution!.stableId!;
+    expect(probe.siteBriefUtility).toBeUndefined();
+    const result = await runBrowserAgent({
+      task: 'Register', page: page(), planner: plan(), verifier: { async verify() { return { success: true, summary: 'ok' }; } }, maxSteps: 4,
+      siteBrief: { text: `Site memory (advisory):\n- button "Submit registration" [${submitId}] on page 0123456789abcdef resolved as #registration-submit\n- textbox "Company name" [v2:ffffffffffffffff] on page 0123456789abcdef resolved as #company-name`, hintedStableIds: [submitId, 'v2:ffffffffffffffff'] },
+    });
+    // Two hints offered, one acted on — the number docs/03 calls hint utility.
+    expect(result.siteBriefUtility).toEqual({ chars: expect.any(Number), hinted: 2, used: 1 });
+  });
+});

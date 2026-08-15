@@ -109,4 +109,19 @@ describe('assemblePlannerContext', () => {
     expect(context.stablePrefix).not.toContain('#query');
     expect(context.volatileSuffix).toContain('#query');
   });
+
+  it('renders a site brief in the stable prefix (cache-safe) and nothing at all when the brief is empty', () => {
+    const base = { task: 'Register Acme as a vendor', page: { url: 'https://portal.test/start', title: 'Start' }, observation: 'x', observationMode: 'full' as const, previousActions: [] };
+    const cold = assemblePlannerContext(base);
+    const empty = assemblePlannerContext({ ...base, siteBrief: '' });
+    // T3 (docs/03): a cold site pays nothing — byte-identical to no brief.
+    expect(empty.stablePrefix).toBe(cold.stablePrefix);
+    const briefed = assemblePlannerContext({ ...base, siteBrief: 'Site memory (advisory):\n- form on page abcd: textbox "Company name" [v2:aaaaaaaaaaaaaaaa]' });
+    expect(briefed.stablePrefix).toContain('Site memory (advisory)');
+    expect(briefed.stablePrefix).toContain('Use it as a hint only');
+    expect(briefed.volatileSuffix).toBe(cold.volatileSuffix);
+    // Same brief on a later step: prefix unchanged.
+    const later = assemblePlannerContext({ ...base, siteBrief: 'Site memory (advisory):\n- form on page abcd: textbox "Company name" [v2:aaaaaaaaaaaaaaaa]', observation: 'y', observationMode: 'diff', previousActions: [{ kind: 'click', selector: '#c' }] });
+    expect(later.stablePrefix).toBe(briefed.stablePrefix);
+  });
 });

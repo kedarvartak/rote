@@ -277,8 +277,11 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
     hash, derived deterministically from recorded runs (the agent now records page-key
     digests per step), consolidated on read with confidence × freshness. Its brief is
     tier-0 content and must live inside the token budget — a 2K brief at 5% utility is
-    overhead, not memory; rendering that brief into the context assembler is the
-    remaining half.
+    overhead, not memory. **Brief built (#158)**: `renderSiteBrief` ranks facts by page
+    and confidence × freshness under a hard character cap with fixed wording, the agent
+    renders it into the cache-stable prefix as a hint, and every run reports hint
+    utility (hinted vs dispatched identities). Whether it earns its tokens is the T2
+    measurement (≥30% at parity; retreat below 15%) — provider-billed, not yet run.
 12. **Model routing** — `grounded-routine` on a small model, escalation contract, per-site
     calibration. New `route`/`predict` tags (invariant 5; CLAUDE.md updated same PR).
 
