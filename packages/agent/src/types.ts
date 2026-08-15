@@ -281,6 +281,10 @@ export interface BrowserAgentStep {
   actionSafety?: BrowserActionSafety;
   /** Independent verification result; present only on a planner-declared successful `done`. */
   verification?: BrowserAgentStepVerification;
+  /** 16-hex digest of origin+pathname of the page the step acted on (site memory keys on it; never a raw URL). */
+  pageKey?: string;
+  /** Same digest for the settled page after dispatch; differs from `pageKey` on a page edge. */
+  nextPageKey?: string;
   /**
    * Value-free action contract derived from the resolved live target before dispatch
    * (#143): what the distiller may later persist so replay can detect a same-looking

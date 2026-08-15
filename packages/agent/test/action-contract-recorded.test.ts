@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { captureStaticHtml } from '@rote/browser';
+import { pageKey } from '@rote/core';
 import { runBrowserAgent, type BrowserAction, type BrowserPageSession, type BrowserPlannerClient } from '../src/index.js';
 
 // see docs/02 "Structural action-contract drift" (#143) — the live loop records
@@ -61,5 +62,9 @@ describe('live loop records action contracts', () => {
     // The recorded contract never carries the typed value.
     expect(JSON.stringify(fill!.actionContract)).not.toContain('Acme');
     expect(done!.actionContract).toBeUndefined();
+    // Page identity travels as digests only (site memory keys on them).
+    const key = pageKey('https://fixture.test/vendors/register');
+    expect(fill!.pageKey).toBe(key);
+    expect(fill!.nextPageKey).toBe(key);
   });
 });
