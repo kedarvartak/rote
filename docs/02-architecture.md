@@ -140,7 +140,7 @@ it fails honestly.
 | **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built and measured** — 849 WordPress certification diffs have a 24-character median and 99.6% median reduction against their preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Prefix-cache `[stable][history]`** (B3) | discounted billing on the surviving prefix | **built and OpenAI-economics qualified** — exact-prefix routing cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% ([T11](testing/T11-cache-key-economics.md)) |
 | **Scheduled compaction** (B4) | action history → O(1) in steps; cumulative action-history input → O(n) | **built deterministically; not yet provider/SPA-qualified** |
-| **Replay** (B2) | 0 steps, 0 tokens | distiller v1 built ([T36](testing/T36-distiller-v1.md)); matcher v1 selects from the library (`@rote/matcher`) |
+| **Replay** (B2) | 0 steps, 0 tokens | distiller v1 built ([T36](testing/T36-distiller-v1.md)); matcher v1 selects from the library (`@rote/matcher`); `rote run` consults it and `rote distill` fills it |
 
 ### Caching: exact-prefix routing, measured economics
 

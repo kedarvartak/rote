@@ -3,3 +3,5 @@ export * from './format.js';
 export * from './cli.js';
 export * from './run-browser-task.js';
 export * from './create-replay-candidate.js';
+export * from './distill-run.js';
+export * from './continue-browser-task.js';
