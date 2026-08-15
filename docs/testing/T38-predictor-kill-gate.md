@@ -24,6 +24,10 @@ predictor — trace matching over prior runs of the same task — guess the next
 - **Granularity**: full trajectories score **kind + target** (stable id, else selector /
   URL path); the G1 curve records (T9/T10/T11 `*-rote.jsonl`) recorded only the action
   kind, so they score **kind-only** and are reported, not aggregated into the gate.
+  Curve records written after #154 carry `action_target` (the same value-free
+  derivation, `curveActionTarget`) and are scored kind+target automatically
+  (`curveRunsGranularity`). One agent step may span several provider calls (planner +
+  repairs); it is one step for the predictor.
 - **Verdict**: pass iff aggregate kind+target accuracy ≥ 0.70; the Wilson 95% lower
   bound is reported alongside.
 
@@ -37,23 +41,35 @@ predictor — trace matching over prior runs of the same task — guess the next
 | T25 paired B2 certification | kind+target | 18 / 1 | 180 | 100% | 97.9–100% |
 | T26 post-action evidence (B1–B3) | kind+target | 9 / 3 | 57 | 100% | 93.7–100% |
 | **Aggregate (gate)** | **kind+target** | **189 / —** | **1,520** | **99.4%** | **98.9–99.7%** |
-| T10 G1 WordPress curve (5 tasks × 15 runs) | kind-only | 75 / 5 | 1,314 | 94.7% | 93.3–95.8% |
-| T11 cache-key WordPress curve | kind-only | 75 / 5 | 1,307 | 94.0% | 92.6–95.2% |
-| T9 tag-qualification WordPress | kind-only | 15 / 5 | 261 | 93.1% | 89.4–95.6% |
+| T10 G1 WordPress curve (5 tasks × 15 runs) | kind-only | 75 / 5 | 1,275 | 96.5% | 95.3–97.4% |
+| T11 cache-key WordPress curve | kind-only | 75 / 5 | 1,275 | 96.5% | 95.3–97.4% |
+| T9 tag-qualification WordPress | kind-only | 15 / 5 | 255 | 96.5% | 93.4–98.1% |
 
 **Verdict: pass** — 99.4% (lower bound 98.9%) against the 70% kill threshold on
-kind+target; 93–95% kind-only on the live WordPress runs (per task 90–100%).
+kind+target; 96.5% kind-only on the live WordPress runs (per task 94–100%).
+
+*Correction (#154):* the first publication of this table counted 39 `repair` provider
+calls in the WordPress collections as additional steps (1,314 / 1,307 / 261 steps at
+94.7% / 94.0% / 93.1%). A repair is a second model call for the *same* agent step; the
+predictor is scored per step. Deduplicating by `agent_step_index` gives the rows above —
+and shows the three collections carry the **same** planner verb sequences run for run
+(75/75 identical between T10 and T11), so the kind-only evidence is one signal, not three.
 
 ## Honest reading
 
 - The kind+target corpus is fixture-heavy: B1–B3 and the B5 mutations are short,
   near-deterministic procedures a live planner reproduces almost identically, so 99.4%
   is optimistic. The WordPress runs carry real provider variability (10–26 steps, retries,
-  reformulations) and still predict 93–95% by verb — but they did not record targets, so
-  the whole-action number for a real portal is **not** yet measured.
+  reformulations) and still predict 96.5% by verb — but the curve protocol fixes each
+  task's step count and the planner's verb sequence is near-identical across runs, and
+  they did not record targets, so the whole-action number for a real portal is **not**
+  yet measured.
 - The gate is therefore passed on the evidence that exists, with one condition carried
-  into predictor work: record `stableId`/selector per step in future curve runs so the
-  next measurement is kind+target on real pages before speculation ships.
+  into predictor work: record `stableId`/selector per step in curve runs so the next
+  measurement is kind+target on real pages before speculation ships. **The recording half
+  is done (#154)**: `roteCurveRecordsFromRun` writes `action_target` on every measurement
+  record and the gate scores such data sets kind+target; the provider-billed run that
+  produces them is still to be made.
 - Trace matching sees only history; a predictor with the observation can only do better.
   This is why the floor clearing 70% comfortably is meaningful.
 

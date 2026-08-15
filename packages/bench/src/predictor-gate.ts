@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { parseTrajectoryJsonl, type TrajectoryEvent } from '@rote/core';
+import { curveActionTarget } from './curve-action-target.js';
 
 // see docs/05-roadmap.md P2 item 10 — the predictor kill gate. "≥70% warm
 // next-action accuracy on recorded runs, or P3's speculation thesis dies early."
@@ -87,38 +88,49 @@ const CurveRecordSchema = z.object({
   run_id: z.string().min(1),
   agent_step_index: z.number().int().nonnegative(),
   action_kind: z.string().min(1),
+  action_target: z.string().optional(),
   record_kind: z.string().optional(),
 }).passthrough();
 
 /**
- * Parses G1 curve measurement records (T9/T10/T11 `*-rote.jsonl`), which recorded
- * only the action kind per step: kind-only runs for a coarser, provider-live signal.
+ * Parses G1 curve measurement records (`*-rote.jsonl`). Runs recorded before the
+ * T38 condition carry only the action kind (target ''); runs recorded with
+ * `action_target` carry the value-free target and evaluate as `kind_target`
+ * (see `curveRunsGranularity`). One provider call may span several records of
+ * the same agent step (repairs); the step's action is recorded once.
  */
 export function runsFromCurveRecords(text: string, taskKey: (runId: string) => string = defaultTaskKey): RecordedRun[] {
-  const byRun = new Map<string, Array<{ index: number; kind: string }>>();
+  const byRun = new Map<string, Map<number, ActionKey>>();
   for (const line of text.split('\n')) {
     if (line.trim() === '') continue;
     const parsed = CurveRecordSchema.safeParse(JSON.parse(line));
     if (!parsed.success || (parsed.data.record_kind !== undefined && parsed.data.record_kind !== 'measurement')) continue;
-    const list = byRun.get(parsed.data.run_id) ?? [];
-    list.push({ index: parsed.data.agent_step_index, kind: parsed.data.action_kind });
-    byRun.set(parsed.data.run_id, list);
+    const steps = byRun.get(parsed.data.run_id) ?? new Map<number, ActionKey>();
+    steps.set(parsed.data.agent_step_index, { kind: parsed.data.action_kind, target: parsed.data.action_target ?? '' });
+    byRun.set(parsed.data.run_id, steps);
   }
-  return [...byRun.entries()].map(([runId, list]) => ({
+  return [...byRun.entries()].map(([runId, steps]) => ({
     runId,
     taskKey: taskKey(runId),
-    actions: list.sort((a, b) => a.index - b.index).map((entry) => ({ kind: entry.kind, target: '' })),
+    actions: [...steps.entries()].sort((a, b) => a[0] - b[0]).map(([, action]) => action),
   }));
+}
+
+/**
+ * `kind_target` when every recorded step that has a target to record (anything
+ * but `done`) carries one; otherwise the data set can only be scored by verb.
+ */
+export function curveRunsGranularity(runs: readonly RecordedRun[]): DataSetEvaluation['granularity'] {
+  const targeted = runs.flatMap((run) => run.actions).filter((action) => action.kind !== 'done');
+  return targeted.length > 0 && targeted.every((action) => action.target !== '') ? 'kind_target' : 'kind_only';
 }
 
 export function actionKey(event: TrajectoryEvent): ActionKey {
   const kind = event.tool.replace(/^browser\./, '');
   const args = event.args;
-  if (kind === 'done') return { kind, target: '' };
-  if (kind === 'navigate') return { kind, target: typeof args['url'] === 'string' ? safePath(args['url']) : '' };
-  const stableId = typeof args['stableId'] === 'string' ? args['stableId'] : undefined;
-  const selector = typeof args['selector'] === 'string' ? args['selector'] : '';
-  return { kind, target: stableId ?? selector };
+  const optional = (key: string) => (typeof args[key] === 'string' ? (args[key] as string) : undefined);
+  // Same derivation the curve runner records, so offline and live-recorded keys agree.
+  return { kind, target: curveActionTarget({ kind, stableId: optional('stableId'), selector: optional('selector'), url: optional('url') }) };
 }
 
 export function sameAction(left: ActionKey | undefined, right: ActionKey): boolean {
@@ -251,12 +263,4 @@ export function summarizePredictorGate(evaluations: readonly DataSetEvaluation[]
       lower_bound_clears: interval[0] >= threshold,
     },
   });
-}
-
-function safePath(url: string): string {
-  try {
-    return new URL(url).pathname;
-  } catch {
-    return url;
-  }
 }

@@ -550,8 +550,9 @@ a session virtualizer, and a predictor over recorded runs. Research with blind d
 models reaches ~55% accuracy for ~20% latency; trajectory memory should predict warm
 sites far better. Kill gate: ≥70% top-1 accuracy offline, before any systems work —
 **passed** by a history-only trace matcher ([T38](testing/T38-predictor-kill-gate.md):
-99.4% kind+target on fixture runs, 93–95% by verb on live WordPress runs whose targets
-were not recorded).
+99.4% kind+target on fixture runs, 96.5% by verb on live WordPress runs whose targets
+were not recorded; curve runs now record a value-free `action_target` per step so the
+next billed collection scores kind+target on real pages).
 
 ## Run economics
 

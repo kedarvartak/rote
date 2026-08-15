@@ -261,10 +261,12 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
     models, offline simulation. *The kill gate came first and cost no systems work*:
     **≥70% warm next-action accuracy** on recorded runs, else P3's speculation thesis
     dies early. [T38](testing/T38-predictor-kill-gate.md): a history-only trace matcher
-    predicts 99.4% kind+target over 1,520 warm steps of fixture runs and 93–95% by verb
-    over 2,882 live WordPress steps — the thesis stays alive, with one condition carried
-    forward: record targets in future curve runs so the whole-action number is measured
-    on real pages before speculation ships.
+    predicts 99.4% kind+target over 1,520 warm steps of fixture runs and 96.5% by verb
+    over 2,805 live WordPress steps (corrected in #154: repairs are not steps) — the
+    thesis stays alive, with one condition carried forward: the whole-action number must
+    be measured on real pages before speculation ships. Curve runs now record a value-free
+    `action_target` per step and the gate scores them kind+target (#154); the
+    provider-billed run that produces that data is the remaining half.
 11. **Site memory** (tier 2) — per-fingerprint selector maps, form semantics, page graph,
     settle-time priors, quirks. Append-only, confidence + freshness. Advisory only: it
     *informs*, never *executes*, so it can be wrong without being dangerous. Its brief is
