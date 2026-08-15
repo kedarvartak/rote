@@ -14,7 +14,9 @@ import { LaunchingCdpBrowserBackend } from '@rote/browser';
 import { BrowserToolCaller, runPlaybook } from '@rote/executor';
 import { createTaggedLlmClientFromEnv } from '@rote/llm';
 import { FilePlaybookLibrary, matchPlaybook, type NoMatchReason } from '@rote/matcher';
+import { NextActionPredictor, runsFromEvents } from '@rote/predictor';
 import { consolidateSiteMemory, FileSiteMemoryStore, renderSiteBrief } from '@rote/site-memory';
+import { listRuns, showRun } from './runs.js';
 
 export interface RunBrowserTaskOptions {
   task: string;
@@ -61,6 +63,8 @@ export interface BrowserTaskResult {
   selection?: BrowserTaskSelection;
   /** Cold path only: the site brief's size and how much of it the planner used (docs/03 hint utility). */
   siteBrief?: { chars: number; hinted: number; used: number };
+  /** Cold path only, when earlier successful runs of the same task and environment exist: shadow-predictor agreement with the planner. */
+  prediction?: { priorRuns: number; predicted: number; hits: number };
 }
 
 export type BrowserTaskSelection =
@@ -211,11 +215,17 @@ async function runColdBrowserTask(
   const brief = briefChars > 0
     ? renderSiteBrief(consolidateSiteMemory(await new FileSiteMemoryStore(options.baseDir ?? '.rote').read(fingerprint.fingerprint_hash), { now: new Date() }), { maxChars: briefChars })
     : undefined;
+  // Shadow predictor from earlier successful runs of this exact task in this
+  // environment (P2 item 10): its agreement with the planner is recorded per step
+  // and never dispatched — the live-page hit rate T38 could not measure offline.
+  const priors = await priorRunsForTask(options.baseDir ?? '.rote', options.task, fingerprint.fingerprint_hash);
+  const predictor = priors.length > 0 ? new NextActionPredictor(priors) : undefined;
   const result = await runBrowserAgent({
     task: options.task,
     page,
     planner,
     ...(brief && brief.text ? { siteBrief: { text: brief.text, hintedStableIds: brief.hintedStableIds } } : {}),
+    ...(predictor ? { predictor } : {}),
     verifier: {
       async verify(captured) {
         const failures: string[] = [];
@@ -248,7 +258,16 @@ async function runColdBrowserTask(
     phase: 'cold',
     ...(result.failureClassification ? { failureClassification: result.failureClassification } : {}),
     ...(result.siteBriefUtility ? { siteBrief: result.siteBriefUtility } : {}),
+    ...(predictor && result.predictionSummary ? { prediction: { priorRuns: priors.length, ...result.predictionSummary } } : {}),
   };
+}
+
+/** Successful recorded runs with the same task text and environment fingerprint, as predictor corpus. */
+async function priorRunsForTask(baseDir: string, task: string, fingerprintHash: string) {
+  const summaries = await listRuns(baseDir);
+  const matching = summaries.filter((entry) => entry.manifest?.outcome === 'success' && entry.manifest.task_spec === task && entry.manifest.env_fingerprint.fingerprint_hash === fingerprintHash);
+  const events = (await Promise.all(matching.map((entry) => showRun(baseDir, entry.run_id)))).flatMap((detail) => detail.events);
+  return runsFromEvents(events, () => 'task');
 }
 
 const DEFAULT_SITE_BRIEF_CHARS = 1200;

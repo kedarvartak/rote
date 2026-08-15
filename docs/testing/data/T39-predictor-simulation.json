@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "predictor": "ensemble-v1",
+  "runs": 189,
+  "tasks": 13,
+  "predicted_steps": 1520,
+  "hits": 1511,
+  "hit_rate": 0.9940789473684211,
+  "by_source": [
+    {
+      "source": "first_action",
+      "steps": 4,
+      "hits": 0,
+      "hit_rate": 0
+    },
+    {
+      "source": "trace",
+      "steps": 1516,
+      "hits": 1511,
+      "hit_rate": 0.9967018469656992
+    }
+  ],
+  "calibration": [
+    {
+      "bucket": "0.0–0.2",
+      "lower": 0,
+      "upper": 0.2,
+      "steps": 0,
+      "hits": 0,
+      "hit_rate": 0,
+      "mean_confidence": 0
+    },
+    {
+      "bucket": "0.2–0.4",
+      "lower": 0.2,
+      "upper": 0.4,
+      "steps": 381,
+      "hits": 376,
+      "hit_rate": 0.9868766404199475,
+      "mean_confidence": 0.3312808398950117
+    },
+    {
+      "bucket": "0.4–0.6",
+      "lower": 0.4,
+      "upper": 0.6,
+      "steps": 0,
+      "hits": 0,
+      "hit_rate": 0,
+      "mean_confidence": 0
+    },
+    {
+      "bucket": "0.6–0.8",
+      "lower": 0.6,
+      "upper": 0.8,
+      "steps": 175,
+      "hits": 173,
+      "hit_rate": 0.9885714285714285,
+      "mean_confidence": 0.6670000000000014
+    },
+    {
+      "bucket": "0.8–1.0",
+      "lower": 0.8,
+      "upper": 1,
+      "steps": 964,
+      "hits": 962,
+      "hit_rate": 0.9979253112033195,
+      "mean_confidence": 0.9979190871369296
+    }
+  ],
+  "thresholds": [
+    {
+      "threshold": 0.5,
+      "coverage": 0.7493421052631579,
+      "precision": 0.9964881474978051,
+      "acted": 1139,
+      "hits": 1135
+    },
+    {
+      "threshold": 0.7,
+      "coverage": 0.6342105263157894,
+      "precision": 0.9979253112033195,
+      "acted": 964,
+      "hits": 962
+    },
+    {
+      "threshold": 0.8,
+      "coverage": 0.6342105263157894,
+      "precision": 0.9979253112033195,
+      "acted": 964,
+      "hits": 962
+    },
+    {
+      "threshold": 0.9,
+      "coverage": 0.6236842105263158,
+      "precision": 0.9978902953586498,
+      "acted": 948,
+      "hits": 946
+    },
+    {
+      "threshold": 0.95,
+      "coverage": 0.6223684210526316,
+      "precision": 1,
+      "acted": 946,
+      "hits": 946
+    }
+  ]
+}

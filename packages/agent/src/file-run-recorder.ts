@@ -57,6 +57,9 @@ export class FileBrowserAgentRunRecorder implements BrowserAgentRunRecorder {
         // Value-free page identity (site memory keys on digests, never URLs).
         page_key: step.pageKey,
         next_page_key: step.nextPageKey,
+        // Shadow prediction vs the planner's choice (value-free keys); the real-page
+        // predictor hit rate is read from here.
+        prediction: step.prediction,
       },
       duration_ms: step.durationMs,
       error: step.error ? { message: step.error } : undefined,

@@ -1,6 +1,7 @@
 import { ActionContractUnavailableError, assertBrowserExpect, assertPostActionEvidence, BrowserCapabilityUnsupportedError, deriveActionContract, BrowserExpectationError, classifyBrowserActionSafety, derivePostActionEvidence, DragContextMismatchError, ElementResolutionConflictError, ElementResolutionError, ElementResolutionStaleIdentityError, normalizeKeyChord, PostActionEvidenceError, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
 import { pageKey, type ActionContract, type BrowserExpect } from '@rote/core';
+import { actionKeyOf, sameAction } from '@rote/predictor';
 import { distillPage, renderAdaptiveObservation, stableNodeRef, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext, assertCacheStablePrefix } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
@@ -75,6 +76,9 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       // as one: docs/02 makes cheap recovery an efficiency claim, so repair spend has
       // to be visible in the accounting rather than hidden inside planner totals.
       const source: BrowserPlannerSource = pendingRepair ? 'repair' : 'planner';
+      // Shadow prediction from value-free history — scored after the planner
+      // answers, recorded on the step, never dispatched.
+      const shadow = options.predictor?.predict(previousActions.map((entry) => actionKeyOf(entry)));
       const context = assemblePlannerContext({
         task: options.task,
         page: pageState,
@@ -228,6 +232,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(dispatch?.actionContract ? { actionContract: dispatch.actionContract } : {}),
         ...(pageTransition ? { pageTransition } : {}),
         ...(verification ? { verification: recordedVerification(verification) } : {}),
+        ...(shadow ? { prediction: { ...(shadow.predicted ? { predicted: shadow.predicted } : {}), confidence: shadow.confidence, source: shadow.source, hit: sameAction(shadow.predicted, actionKeyOf(action)) } } : {}),
         // Value-free page identity before/after the action: site memory's page graph
         // and selector maps key on these, never on raw URLs.
         ...(currentPageKey ? { pageKey: currentPageKey } : {}),
@@ -317,6 +322,7 @@ function resultFromSteps(
     steps,
     tokenUsage: tokenUsageFromSteps(steps),
     ...(siteBrief ? { siteBriefUtility: siteBriefUtility(siteBrief, steps) } : {}),
+    ...(steps.some((step) => step.prediction) ? { predictionSummary: { predicted: steps.filter((step) => step.prediction).length, hits: steps.filter((step) => step.prediction?.hit).length } } : {}),
   };
 }
 

@@ -3,6 +3,7 @@ import { normalizeKeyChord } from '@rote/action';
 import type { AllowedUploadFile, BrowserActionSafety, ElementResolutionResult, NormalizedKeyChord, PostActionEvidence } from '@rote/action';
 import type { BrowserContextCoordinate, CapturedPage } from '@rote/browser';
 import { BrowserExpectSchema, type ActionContract, type BrowserExpect, type TokenUsage, type TokenUsageSource } from '@rote/core';
+import type { ActionKey, NextActionPrediction } from '@rote/predictor';
 import type { ProviderUsageReceipt } from '@rote/llm';
 import { StableNodeRefSchema, type AdaptiveRenderedObservation, type DistilledNode } from '@rote/perception';
 import type { HistoryCompactionPolicy, HistoryCompactionRecord, PlannerActionHistory } from './history-compaction.js';
@@ -234,6 +235,24 @@ export interface SiteBriefUtility {
   used: number;
 }
 
+/**
+ * Shadow next-action predictor (P2 item 10 systems work): consulted before every
+ * planner call with the value-free history, compared with what the planner then
+ * chose, and recorded — never dispatched. This is how the real-page hit rate and
+ * calibration are measured on live runs before speculation (P3) may act on it.
+ */
+export interface BrowserActionPredictor {
+  predict(history: readonly ActionKey[]): NextActionPrediction;
+}
+
+/** Recorded per step: what the shadow predictor said and whether the planner agreed. */
+export interface BrowserStepPrediction {
+  predicted?: ActionKey;
+  confidence: number;
+  source: NextActionPrediction['source'];
+  hit: boolean;
+}
+
 export interface RunBrowserAgentOptions {
   task: string;
   page: BrowserPageSession;
@@ -241,6 +260,8 @@ export interface RunBrowserAgentOptions {
   verifier: BrowserAgentVerifier;
   /** Advisory site brief for the stable prefix; omit for a cold site (T3: Rote gets out of the way). */
   siteBrief?: SiteBriefInput;
+  /** Shadow predictor; predictions are recorded against the planner's choice and never dispatched. */
+  predictor?: BrowserActionPredictor;
   /** Optional deterministic pre-dispatch policy; thrown guard errors get one repair. */
   beforeAction?: (input: BrowserActionGuardInput) => void;
   recorder?: BrowserAgentRunRecorder;
@@ -304,6 +325,8 @@ export interface BrowserAgentStep {
   actionSafety?: BrowserActionSafety;
   /** Independent verification result; present only on a planner-declared successful `done`. */
   verification?: BrowserAgentStepVerification;
+  /** Shadow prediction made before this step's planner call, scored against the planner's action. */
+  prediction?: BrowserStepPrediction;
   /** 16-hex digest of origin+pathname of the page the step acted on (site memory keys on it; never a raw URL). */
   pageKey?: string;
   /** Same digest for the settled page after dispatch; differs from `pageKey` on a page edge. */
@@ -344,4 +367,6 @@ export interface BrowserAgentResult {
   tokenUsage: readonly TokenUsage[];
   /** Present when a site brief was supplied: its size and how much of it the planner used. */
   siteBriefUtility?: SiteBriefUtility;
+  /** Present when a shadow predictor was supplied: steps predicted and how many the planner agreed with. */
+  predictionSummary?: { predicted: number; hits: number };
 }

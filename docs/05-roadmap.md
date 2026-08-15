@@ -263,8 +263,13 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
    pass; completed steps are never dispatched again; interrupted writes recover without
    in-place edits. Credentials and profile management remain P4; continuation is
    reported separately from replay and learned matching.
-10. **Predictor — kill gate passed; systems work next** — trace matching, transition
-    models, offline simulation. *The kill gate came first and cost no systems work*:
+10. **Predictor — kill gate passed; systems v1 built** — `@rote/predictor` (#160,
+    [T39](testing/T39-predictor-systems.md)): trace matching + transition-model
+    ensemble with a monotone confidence, offline calibration/coverage simulation, and
+    shadow mode in the agent and `rote run` (predictions scored against the planner and
+    recorded, never dispatched). Confidence is under-calibrated on the fixture corpus, so
+    live calibration is required before any threshold is chosen. *The kill gate came
+    first and cost no systems work*:
     **≥70% warm next-action accuracy** on recorded runs, else P3's speculation thesis
     dies early. [T38](testing/T38-predictor-kill-gate.md): a history-only trace matcher
     predicts 99.4% kind+target over 1,520 warm steps of fixture runs and 96.5% by verb
