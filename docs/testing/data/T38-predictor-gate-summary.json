@@ -171,45 +171,45 @@
       "granularity": "kind_only",
       "runs": 75,
       "tasks": 5,
-      "predicted_steps": 1314,
-      "kind_target_correct": 1244,
-      "kind_only_correct": 1244,
-      "kind_target_accuracy": 0.9467275494672754,
-      "kind_only_accuracy": 0.9467275494672754,
+      "predicted_steps": 1275,
+      "kind_target_correct": 1230,
+      "kind_only_correct": 1230,
+      "kind_target_accuracy": 0.9647058823529412,
+      "kind_only_accuracy": 0.9647058823529412,
       "wilson_95": [
-        0.9332306681791903,
-        0.9576200423429981
+        0.9531008935855135,
+        0.9735190496219998
       ],
       "per_task": [
         {
           "task": "rote-WP-N09",
           "runs": 15,
-          "steps": 149,
-          "accuracy": 0.9865771812080537
+          "steps": 135,
+          "accuracy": 1
         },
         {
           "task": "rote-WP-N13",
           "runs": 15,
-          "steps": 196,
-          "accuracy": 0.9897959183673469
+          "steps": 195,
+          "accuracy": 1
         },
         {
           "task": "rote-WP-N17",
           "runs": 15,
-          "steps": 263,
-          "accuracy": 0.9429657794676806
+          "steps": 255,
+          "accuracy": 0.9411764705882353
         },
         {
           "task": "rote-WP-N21",
           "runs": 15,
-          "steps": 321,
-          "accuracy": 0.9345794392523364
+          "steps": 315,
+          "accuracy": 0.9523809523809523
         },
         {
           "task": "rote-WP-N25",
           "runs": 15,
-          "steps": 385,
-          "accuracy": 0.922077922077922
+          "steps": 375,
+          "accuracy": 0.96
         }
       ]
     },
@@ -218,45 +218,45 @@
       "granularity": "kind_only",
       "runs": 75,
       "tasks": 5,
-      "predicted_steps": 1307,
-      "kind_target_correct": 1229,
-      "kind_only_correct": 1229,
-      "kind_target_accuracy": 0.9403213465952563,
-      "kind_only_accuracy": 0.9403213465952563,
+      "predicted_steps": 1275,
+      "kind_target_correct": 1230,
+      "kind_only_correct": 1230,
+      "kind_target_accuracy": 0.9647058823529412,
+      "kind_only_accuracy": 0.9647058823529412,
       "wilson_95": [
-        0.9261422992582161,
-        0.951919645000315
+        0.9531008935855135,
+        0.9735190496219998
       ],
       "per_task": [
         {
           "task": "rote-WP-N09",
           "runs": 15,
-          "steps": 146,
-          "accuracy": 0.9726027397260274
+          "steps": 135,
+          "accuracy": 1
         },
         {
           "task": "rote-WP-N13",
           "runs": 15,
-          "steps": 197,
-          "accuracy": 0.9898477157360406
+          "steps": 195,
+          "accuracy": 1
         },
         {
           "task": "rote-WP-N17",
           "runs": 15,
-          "steps": 260,
-          "accuracy": 0.9230769230769231
+          "steps": 255,
+          "accuracy": 0.9411764705882353
         },
         {
           "task": "rote-WP-N21",
           "runs": 15,
-          "steps": 323,
-          "accuracy": 0.9040247678018576
+          "steps": 315,
+          "accuracy": 0.9523809523809523
         },
         {
           "task": "rote-WP-N25",
           "runs": 15,
-          "steps": 381,
-          "accuracy": 0.9448818897637795
+          "steps": 375,
+          "accuracy": 0.96
         }
       ]
     },
@@ -265,21 +265,21 @@
       "granularity": "kind_only",
       "runs": 15,
       "tasks": 5,
-      "predicted_steps": 261,
-      "kind_target_correct": 243,
-      "kind_only_correct": 243,
-      "kind_target_accuracy": 0.9310344827586207,
-      "kind_only_accuracy": 0.9310344827586207,
+      "predicted_steps": 255,
+      "kind_target_correct": 246,
+      "kind_only_correct": 246,
+      "kind_target_accuracy": 0.9647058823529412,
+      "kind_only_accuracy": 0.9647058823529412,
       "wilson_95": [
-        0.8936307503894513,
-        0.9559341211771517
+        0.9342958738578401,
+        0.9813225167365647
       ],
       "per_task": [
         {
           "task": "rote-WP-N09",
           "runs": 3,
-          "steps": 29,
-          "accuracy": 0.9310344827586207
+          "steps": 27,
+          "accuracy": 1
         },
         {
           "task": "rote-WP-N13",
@@ -296,14 +296,14 @@
         {
           "task": "rote-WP-N21",
           "runs": 3,
-          "steps": 65,
-          "accuracy": 0.9076923076923077
+          "steps": 63,
+          "accuracy": 0.9523809523809523
         },
         {
           "task": "rote-WP-N25",
           "runs": 3,
-          "steps": 77,
-          "accuracy": 0.9090909090909091
+          "steps": 75,
+          "accuracy": 0.96
         }
       ]
     }

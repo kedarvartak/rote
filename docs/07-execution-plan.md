@@ -178,8 +178,9 @@ distiller v1 can persist that contract. Same-looking incompatible controls dispa
 4. **E7.7 multi-session continuation — done** ([T37](testing/T37-multi-session-continuation.md)).
 5. **Predictor kill-gate — passed** ([T38](testing/T38-predictor-kill-gate.md)): ≥70%
    warm next-action accuracy offline on recorded runs; measured 99.4% kind+target on
-   fixture runs and 93–95% by verb on live WordPress runs. Condition carried forward:
-   record targets in curve runs before speculation systems work.
+   fixture runs and 96.5% by verb on live WordPress runs (corrected in #154). Curve
+   runs now record `action_target` per step; condition carried forward: one billed
+   collection with targets before speculation systems work.
 6. **Site memory** (tier 2, advisory-only) and **model routing** — in that order, each
    behind the measured gates in [03](03-benchmark.md) (T2 ≥30%; ≥50% warm steps off the
    frontier model at parity).

@@ -1,4 +1,5 @@
 import type { TokenUsage } from '@rote/core';
+import { curveActionTarget, type CurveActionLike } from './curve-action-target.js';
 import { CurveStepRecordSchema, parseCurveStepJsonl, type CurveStepRecord } from './curve-protocol.js';
 
 interface ProviderReceiptLike {
@@ -9,7 +10,7 @@ interface ProviderReceiptLike {
 
 interface RoteCurveStepLike {
   step: number;
-  action: { kind: string };
+  action: CurveActionLike;
   observation: {
     mode: 'full' | 'diff' | 'summary' | 'bootstrap';
     text: string;
@@ -86,6 +87,7 @@ export function roteCurveRecordsFromRun(run: RoteCurveRunInput): CurveStepRecord
       cumulative_usage: { ...cumulative },
       provider_usage: receipt.usage,
       action_kind: step.action.kind,
+      action_target: curveActionTarget(step.action),
       observation: {
         mode: step.observation.mode,
         rendered_chars: step.observation.text.length,

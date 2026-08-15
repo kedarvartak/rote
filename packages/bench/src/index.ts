@@ -19,6 +19,7 @@ export * from './headhead-assembler.js';
 export * from './curve-protocol.js';
 export * from './curve-dry-run.js';
 export * from './browser-use-curve.js';
+export * from './curve-action-target.js';
 export * from './rote-curve.js';
 export * from './curve-resume.js';
 export * from './curve-cache-preflight.js';

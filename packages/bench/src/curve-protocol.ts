@@ -111,6 +111,8 @@ const CurveMeasurementStepSchema = CurveStepCommonSchema.extend({
   step_outcome: z.enum(['continued', 'success', 'failure']),
   provider_usage: z.record(z.unknown()).refine((usage) => Object.keys(usage).length > 0, 'provider_usage cannot be empty'),
   action_kind: z.string().min(1).optional(),
+  /** Value-free action target (stable identity ref / selector / URL path) — see `curveActionTarget`; absent on pre-T38 records. */
+  action_target: z.string().optional(),
   observation: z.object({
     mode: z.enum(['full', 'diff', 'summary', 'bootstrap']),
     rendered_chars: z.number().int().nonnegative(),

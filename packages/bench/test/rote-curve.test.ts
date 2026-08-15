@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { roteCurveRecordsFromRun } from '../src/index.js';
+import { curveActionTarget, roteCurveRecordsFromRun } from '../src/index.js';
 
 function step(index: number, overrides: Record<string, unknown> = {}) {
   return {
@@ -97,5 +97,21 @@ describe('Rote G1 curve records', () => {
       ...base,
       steps: [step(0, { providerReceipt: { provider: 'openai', model: 'other', usage: { input_tokens: 1 } } })],
     })).toThrow('expected openai/gpt-4.1-mini');
+  });
+
+  it('records a value-free action target per step: stable id, else selector, URL path for navigate, none for done', () => {
+    // see docs/testing/T38-predictor-kill-gate.md — the carried condition: future
+    // curve runs must record what each action targeted, never what was typed.
+    const base = { protocolId: 'p', taskId: 'WP-N07', provider: 'openai' as const, model: 'gpt-4.1-mini', runId: 'rote-WP-N07-r01', repetition: 1, targetSteps: 4, outcome: 'success' as const };
+    const records = roteCurveRecordsFromRun({ ...base, steps: [
+      step(0, { action: { kind: 'navigate', url: 'https://portal.example/wp-admin/edit.php?post_type=page&secret=1' } }),
+      step(2, { action: { kind: 'fill', selector: '#user_login', stableId: 'v2:aaaaaaaaaaaaaaaa', value: 'hunter2' } }),
+      step(3, { action: { kind: 'click', selector: 'button.save' } }),
+      step(1),
+    ] });
+    expect(records.map((record) => (record.record_kind === 'measurement' ? record.action_target : undefined))).toEqual(['/wp-admin/edit.php', 'v2:aaaaaaaaaaaaaaaa', 'button.save', '']);
+    expect(JSON.stringify(records)).not.toContain('hunter2');
+    expect(JSON.stringify(records)).not.toContain('secret=1');
+    expect(curveActionTarget({ kind: 'navigate', url: 'not a url' })).toBe('not a url');
   });
 });
