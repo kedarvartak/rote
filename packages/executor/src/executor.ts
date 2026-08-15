@@ -30,7 +30,7 @@ import {
   type WorldState,
 } from './world-state.js';
 
-export type ExecutorOutcome = 'success' | 'failure' | 'fallback';
+export type ExecutorOutcome = 'success' | 'failure' | 'fallback' | 'interrupted';
 
 export interface ExecutorResult {
   outcome: ExecutorOutcome;
@@ -64,6 +64,25 @@ export interface ExecutorDeps {
   retryPolicy?: RetryPolicy;
   sleep?: (ms: number) => Promise<void>;
   clock?: () => Date;
+  /**
+   * Multi-session continuation (#133): steps already completed by an earlier
+   * session are skipped — never dispatched again — and step-produced bindings
+   * (slot/judgment outputs) are re-seeded. Caller-supplied params are passed as
+   * usual; a checkpoint never carries them.
+   */
+  resume?: {
+    completedStepIds: readonly string[];
+    stepBindings?: Readonly<Record<string, string>>;
+  };
+  /**
+   * Awaited after every completed step, before the next dispatch — the hook a
+   * continuation controller uses to append a checkpoint durably. Throwing aborts
+   * the run as a failure (a checkpoint that cannot be written must not be
+   * followed by a side effect the next session cannot see).
+   */
+  onStepCompleted?: (event: { stepId: string; completedStepIds: readonly string[]; stepBindings: Readonly<Record<string, string>> }) => Promise<void>;
+  /** Controlled interruption after this step completes; the run ends `interrupted` (tests, staged rollouts). */
+  stopAfterStepId?: string;
 }
 
 /** Judgment output outside its declared enum is a hard error, never a silently-chosen branch (docs/05-roadmap.md M2). */
@@ -111,9 +130,11 @@ export async function runPlaybook(
   const startedAt = clock().toISOString();
 
   let seq = 0;
-  const bindings: ParamBindings = { ...params };
+  const bindings: ParamBindings = { ...params, ...(deps.resume?.stepBindings ?? {}) };
   const tokenUsage: TokenUsage[] = [];
   const completedStepIds: string[] = [];
+  const stepBindings: Record<string, string> = { ...(deps.resume?.stepBindings ?? {}) };
+  const alreadyCompleted = new Set(deps.resume?.completedStepIds ?? []);
   const attempts: Record<string, number> = {};
   const repairedStepIds: string[] = [];
   let world = initialWorldState();
@@ -149,7 +170,7 @@ export async function runPlaybook(
       run_id: runId,
       task_spec: deps.taskSpec,
       env_fingerprint: deps.envFingerprint,
-      outcome: outcome === 'success' ? 'success' : 'failure',
+      outcome: outcome === 'success' ? 'success' : outcome === 'interrupted' ? 'abandoned' : 'failure',
       started_at: startedAt,
       ended_at: clock().toISOString(),
       token_usage: tokenUsage,
@@ -206,6 +227,12 @@ export async function runPlaybook(
   for (const stepId of topoOrder(playbook.steps)) {
     const step = byId.get(stepId);
     if (!step) continue; // unreachable for a PlaybookSchema-validated playbook
+    if (alreadyCompleted.has(step.id)) {
+      // INVARIANT: a step an earlier session completed is never dispatched again —
+      // resume must not repeat a side effect (#133).
+      completedStepIds.push(step.id);
+      continue;
+    }
     // Semantic target healing occurs before dispatch in BrowserToolCaller. A failed
     // step still downgrades to fallback; replay never asks an LLM to improvise.
     const maxAttempts = step.on_fail === 'retry' ? retryPolicy.maxAttempts : 1;
@@ -224,6 +251,18 @@ export async function runPlaybook(
     }
     completedStepIds.push(step.id);
     if (result.repaired) repairedStepIds.push(step.id);
+    if (step.kind === 'slot') stepBindings[step.llm_fill.into] = String(bindings[step.llm_fill.into] ?? '');
+    if (step.kind === 'judgment') stepBindings[step.id] = String(bindings[step.id] ?? '');
+    if (deps.onStepCompleted) {
+      try {
+        await deps.onStepCompleted({ stepId: step.id, completedStepIds: [...completedStepIds], stepBindings: { ...stepBindings } });
+      } catch (error) {
+        return finish('failure', `checkpoint after step ${step.id} failed: ${error instanceof Error ? error.message : String(error)}`, step.id, 'CHECKPOINT_WRITE_FAILED');
+      }
+    }
+    if (deps.stopAfterStepId === step.id) {
+      return finish('interrupted', `interrupted after step ${step.id}`, undefined, 'INTERRUPTED');
+    }
   }
 
   for (const v of playbook.verify) {

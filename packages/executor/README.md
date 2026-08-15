@@ -17,6 +17,12 @@ See `src/index.ts`. Highlights:
   built until M6 and downgrades to an immediate fallback), then checks
   `verify[]` before ever reporting success. Emits its own trajectory via
   `@rote/recorder`'s building blocks — replays are runs too.
+- **Continuation hooks (#133)** — `deps.resume: {completedStepIds, stepBindings}` skips
+  steps an earlier session completed (never dispatched again) and re-seeds step-produced
+  bindings; `deps.onStepCompleted` is awaited after each completed step so a checkpoint
+  is durable before the next dispatch (a throwing hook ends the run
+  `failure`/`CHECKPOINT_WRITE_FAILED`); `deps.stopAfterStepId` ends the run with the
+  `interrupted` outcome; `ExecutorResult.failureCode` classifies fallbacks.
 - **`evaluateExpect`** — pure: the closed Expect DSL against a `WorldState`.
 - **`observationFromResult` / `mergeWorldState`** — pure: the tool-agnostic
   convention this package reads a result through (see "Known v1 limitations").

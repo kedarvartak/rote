@@ -16,12 +16,14 @@
     "test:enterprise-context-chrome": "ROTE_RUN_CDP_TESTS=1 vitest run test/enterprise-composed-context-real-chrome.test.ts",
     "test:enterprise-verbs-chrome": "ROTE_RUN_CDP_TESTS=1 vitest run test/enterprise-verbs-real-chrome.test.ts",
     "test:enterprise-endurance-chrome": "ROTE_RUN_CDP_TESTS=1 vitest run test/enterprise-endurance-real-chrome.test.ts",
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "test:enterprise-continuation-chrome": "ROTE_RUN_CDP_TESTS=1 vitest run test/enterprise-continuation-real-chrome.test.ts"
   },
   "dependencies": {
     "@rote/action": "*",
     "@rote/agent": "*",
     "@rote/browser": "*",
+    "@rote/continuation": "*",
     "@rote/core": "*",
     "@rote/executor": "*",
     "@rote/perception": "*",

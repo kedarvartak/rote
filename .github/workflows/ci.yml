@@ -88,6 +88,9 @@ jobs:
       - name: Distiller v1 Chrome gate
         if: steps.detect.outputs.present == 'true'
         run: npm run test:distill-chrome --workspace @rote/distiller
+      - name: Enterprise continuation Chrome contract
+        if: steps.detect.outputs.present == 'true'
+        run: npm run test:enterprise-continuation-chrome --workspace @rote/bench
 
   # Design docs are the constitution — broken internal links are bugs.
   docs:
