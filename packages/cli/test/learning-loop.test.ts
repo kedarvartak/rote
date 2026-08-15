@@ -99,6 +99,10 @@ describe('CLI learning loop', () => {
     expect(near.selection).toMatchObject({ source: 'library', matched: false, reason: 'below_threshold', considered: 1 });
     expect(near.siteBrief).toMatchObject({ hinted: 2, used: 2 });
     expect(near.siteBrief!.chars).toBeLessThanOrEqual(1200);
+    // A second cold run of the *same* task text: the shadow predictor built from the
+    // first successful run agrees with the scripted planner on every step, dispatching nothing itself.
+    const again = await runBrowserTask({ task: 'Register Acme Tools as a vendor', url: START, baseDir, verifyText: 'Vendor registration complete', siteBriefChars: 0 }, { backend: new FakeBackend(new VendorPage()), planner: scripted('Acme Tools') });
+    expect(again.prediction).toEqual({ priorRuns: 1, predicted: 3, hits: 3 });
     // Brief disabled: cold path pays nothing.
     const off = await runBrowserTask({ task: 'Register Blue Fern Supply as a customer', url: START, baseDir, verifyText: 'Vendor registration complete', siteBriefChars: 0 }, { backend: new FakeBackend(new VendorPage()), planner: scripted('Blue Fern Supply') });
     expect(off.siteBrief).toBeUndefined();

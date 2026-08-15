@@ -71,6 +71,7 @@ confuse in an architecture doc; this is the boundary.
 | **Playbook distiller** (trajectory → playbook) | 1 | **built (v1, deterministic)** — [T36](testing/T36-distiller-v1.md): keeps dispatched actions (evidence present), prunes with reasons (done, pre-dispatch failures, superseded writes), carries resolved identity + context + recorded action contract, synthesizes `expect` from strong evidence only, learns `verify` from the declarative checks the verifier proved on the recorded success (refusing runs that cannot teach one), templates every declared value and refuses undeclared typed values; B1/B2 record → distill → replay in real Chrome with zero LLM calls and zero edits |
 | **Matcher** (select + bind) | 1 | **built (v1, deterministic)** — `@rote/matcher`: fingerprint hard gate before any comparison, task text with param values slotted out scored against the templated intent, every declared param must bind, conservative threshold (0.8) with an ambiguity margin, append-only playbook library; T0 same-shape/new-params selects and replays with zero model calls, T4 near-misses miss; no model call yet (a semantic stage would be tagged `matcher`) |
 | **Site memory** (store + derivation) | 2 | **built as a store** (`@rote/site-memory`) — strict value-free `SiteMemoryRecord` v1 (selector maps, form semantics, page edges, settle priors, coded quirks) partitioned by fingerprint hash, append-only with crash-tolerant reads, derived deterministically from recorded runs (page-key digests recorded per step), consolidated on read with confidence × freshness, and rendered as a hard-budgeted advisory *brief* into the planner's cache-stable prefix with hint-utility telemetry on the run; whether the brief earns its tokens (T2) is unmeasured until a provider-billed learning-curve run |
+| **Predictor** (shadow) | — | **built (v1)** — `@rote/predictor` ensemble + offline simulation ([T39](testing/T39-predictor-systems.md)); records per-step agreement with the planner in the agent and `rote run`, never dispatches |
 | **Model routing, speculation** | 2 | **not built** — designed below |
 
 Packages that exist: `core recorder executor bench cli browser perception action agent llm`.
@@ -553,7 +554,11 @@ sites far better. Kill gate: ≥70% top-1 accuracy offline, before any systems w
 **passed** by a history-only trace matcher ([T38](testing/T38-predictor-kill-gate.md):
 99.4% kind+target on fixture runs, 96.5% by verb on live WordPress runs whose targets
 were not recorded; curve runs now record a value-free `action_target` per step so the
-next billed collection scores kind+target on real pages).
+next billed collection scores kind+target on real pages). Systems v1 is built
+([T39](testing/T39-predictor-systems.md)): `@rote/predictor`'s trace+transition ensemble
+runs in *shadow mode* inside the agent and `rote run`, recording per-step agreement with
+the planner and never dispatching; its confidence must be calibrated on live runs before
+speculation may act on it.
 
 ## Run economics
 

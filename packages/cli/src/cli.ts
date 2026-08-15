@@ -90,6 +90,7 @@ export async function main(
       ...(result.replayRepairs !== undefined ? [`replay repairs: ${result.replayRepairs}`] : []),
       ...(fallback ? [fallback] : []),
       ...(result.siteBrief ? [`site brief: ${result.siteBrief.chars} chars, ${result.siteBrief.used}/${result.siteBrief.hinted} hints used`] : []),
+      ...(result.prediction ? [`shadow predictor: ${result.prediction.hits}/${result.prediction.predicted} steps agreed (${result.prediction.priorRuns} prior runs)`] : []),
       `steps: ${result.steps}`,
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,
     ].join('\n');

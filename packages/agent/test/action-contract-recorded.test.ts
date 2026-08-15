@@ -83,3 +83,31 @@ describe('site brief utility', () => {
     expect(result.siteBriefUtility).toEqual({ chars: expect.any(Number), hinted: 2, used: 1 });
   });
 });
+
+describe('shadow predictor', () => {
+  it('records each prediction against the planner\'s choice and never dispatches it', async () => {
+    const seen: number[] = [];
+    const predictor = {
+      predict(history: readonly { kind: string; target: string }[]) {
+        seen.push(history.length);
+        // Predicts the click after the fill; before that, guesses wrong on purpose.
+        return history.length === 1
+          ? { predicted: { kind: 'click', target: 'v2:ffffffffffffffff' }, confidence: 0.9, source: 'trace' as const, matchedLength: 1, candidates: [] }
+          : { predicted: { kind: 'navigate', target: '/elsewhere' }, confidence: 0.3, source: 'first_action' as const, matchedLength: 0, candidates: [] };
+      },
+    };
+    const clicks: string[] = [];
+    const site: BrowserPageSession = { ...page(), async click(selector: string) { clicks.push(selector); } };
+    const result = await runBrowserAgent({
+      task: 'Register', page: site,
+      planner: scripted([{ kind: 'fill', selector: '#company-name', role: 'textbox', name: 'Company name', value: 'Acme Tools' }, { kind: 'click', selector: '#registration-submit', role: 'button', name: 'Submit registration' }, { kind: 'done', success: true, summary: 'ok' }]),
+      verifier: { async verify() { return { success: true, summary: 'ok' }; } }, maxSteps: 5, predictor,
+    });
+    expect(seen).toEqual([0, 1, 2]);
+    expect(result.steps.map((step) => step.prediction?.hit)).toEqual([false, false, false]);
+    expect(result.steps[1]!.prediction).toMatchObject({ predicted: { kind: 'click', target: 'v2:ffffffffffffffff' }, confidence: 0.9, source: 'trace' });
+    expect(result.predictionSummary).toEqual({ predicted: 3, hits: 0 });
+    // The predicted-but-wrong click was never dispatched; only the planner's was.
+    expect(clicks).toEqual(['#registration-submit']);
+  });
+});
