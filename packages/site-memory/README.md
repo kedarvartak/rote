@@ -29,9 +29,18 @@ query string.
 - Schema (`@rote/core`): `SiteMemoryRecordSchema` (v1, strict, discriminated on `kind`),
   `pageKey(url)`, `siteMemoryRecordKey(record)`.
 
-Not here yet: the ≤1K-token *site brief* the context assembler will render from a view
-under the tier-0 token budget (roadmap item 11's second half), and settle-prior derivation
-(the schema kind exists; the settledness telemetry that feeds it is not yet recorded per step).
+- `renderSiteBrief(view, { maxChars, currentPageKey?, minScore? })` — pure: the ≤budget
+  *site brief* — facts ranked (current page first, then confidence × freshness), rendered
+  in fixed wording (quirks come from a closed vocabulary; nothing page- or model-authored
+  is added), cut at a **hard** character cap, with `factsIncluded`/`factsDropped` and the
+  `hintedStableIds` it mentions. Empty view or all-stale facts → empty text, so a cold site
+  pays nothing. Pass it to `runBrowserAgent({ siteBrief })`: it lands in the planner's
+  cache-stable prefix and the run reports `siteBriefUtility` (hinted vs used identities —
+  docs/03 "hint utility").
+
+Not here yet: settle-prior derivation (the schema kind exists; the settledness telemetry
+that feeds it is not yet recorded per step), and the provider-billed T2 measurement that
+decides whether the brief earns its tokens (docs/03 T2 ≥30%, retreat below 15%).
 
 ## Tests
 

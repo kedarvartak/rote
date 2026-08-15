@@ -52,6 +52,12 @@ export interface AssemblePlannerContextOptions {
     verbs: readonly ('hover' | 'press' | 'upload' | 'dragAndDrop')[];
     uploadFileIds?: readonly string[];
   };
+  /**
+   * Pre-rendered, pre-budgeted site brief (tier-2 memory as tier-0 content). It is
+   * run-stable by contract, so it belongs in the stable prefix; an empty string
+   * renders no section at all (a cold site pays nothing — docs/03 T3).
+   */
+  siteBrief?: string;
 }
 
 /** Builds a cache-stable planner prefix and a per-step volatile suffix. */
@@ -69,7 +75,7 @@ ${options.task}
 
 ${ACTION_SCHEMA}${renderEnterpriseActions(options.enterpriseActions)}
 
-${EXPECT_GUIDANCE}`;
+${EXPECT_GUIDANCE}${renderSiteBrief(options.siteBrief)}`;
   const history = buildPlannerActionHistory(
     options.previousActions,
     options.historyCompactionPolicy,
@@ -116,8 +122,14 @@ function renderEnterpriseActions(enterpriseActions: AssemblePlannerContextOption
   return `\n${lines.join('\n')}${uploadIds}`;
 }
 
+function renderSiteBrief(brief: string | undefined): string {
+  if (!brief || brief.trim() === '') return '';
+  // Advisory framing is part of the contract: memory informs, the observation decides.
+  return `\n\n${brief.trim()}\nUse it as a hint only: act on what the observation shows, and never assume a remembered control exists.`;
+}
+
 function assertKnownLayoutFields(options: AssemblePlannerContextOptions): void {
-  const allowed = new Set(['task', 'page', 'observation', 'observationMode', 'previousActions', 'historyCompactionPolicy', 'stateSummary', 'observationHistoryEvicted', 'repair', 'enterpriseActions']);
+  const allowed = new Set(['task', 'page', 'observation', 'observationMode', 'previousActions', 'historyCompactionPolicy', 'stateSummary', 'observationHistoryEvicted', 'repair', 'enterpriseActions', 'siteBrief']);
   const unknown = Object.keys(options).filter((key) => !allowed.has(key));
   if (unknown.length > 0) {
     throw new CacheLayoutImmutabilityError(

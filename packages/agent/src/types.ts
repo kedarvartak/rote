@@ -213,11 +213,34 @@ export interface BrowserAgentRunRecorder {
   finish(outcome: 'success' | 'failure', summary: string, tokenUsage: readonly TokenUsage[]): Promise<void>;
 }
 
+/**
+ * Tier-2 site memory rendered as tier-0 content (docs/02 "Tiers 1 and 2"): a
+ * run-stable, value-free, pre-budgeted brief. Advisory — the planner still
+ * observes and every action is still verified — and constant within a run so
+ * it lives in the cache-stable prefix.
+ */
+export interface SiteBriefInput {
+  /** Rendered brief text (already cut to its character budget); empty renders nothing. */
+  text: string;
+  /** Stable identity refs the brief mentions; the run reports how many the planner actually used. */
+  hintedStableIds: readonly string[];
+}
+
+/** docs/03-benchmark.md "hint utility": how much of the brief the planner actually acted on. */
+export interface SiteBriefUtility {
+  chars: number;
+  hinted: number;
+  /** Hinted identities that were dispatched at least once. */
+  used: number;
+}
+
 export interface RunBrowserAgentOptions {
   task: string;
   page: BrowserPageSession;
   planner: BrowserPlannerClient;
   verifier: BrowserAgentVerifier;
+  /** Advisory site brief for the stable prefix; omit for a cold site (T3: Rote gets out of the way). */
+  siteBrief?: SiteBriefInput;
   /** Optional deterministic pre-dispatch policy; thrown guard errors get one repair. */
   beforeAction?: (input: BrowserActionGuardInput) => void;
   recorder?: BrowserAgentRunRecorder;
@@ -319,4 +342,6 @@ export interface BrowserAgentResult {
   failureClassification?: BrowserAgentFailureClassification;
   steps: readonly BrowserAgentStep[];
   tokenUsage: readonly TokenUsage[];
+  /** Present when a site brief was supplied: its size and how much of it the planner used. */
+  siteBriefUtility?: SiteBriefUtility;
 }

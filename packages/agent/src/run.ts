@@ -4,7 +4,7 @@ import { pageKey, type ActionContract, type BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, stableNodeRef, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext, assertCacheStablePrefix } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
-import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserAgentStepVerification, type BrowserAgentVerification, type BrowserExpectFailure, type BrowserPageTransition, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
+import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserAgentStepVerification, type BrowserAgentVerification, type SiteBriefInput, type SiteBriefUtility, type BrowserExpectFailure, type BrowserPageTransition, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
 
 /** Runs the compact-observation browser-agent loop until the planner returns `done`. */
 export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<BrowserAgentResult> {
@@ -88,6 +88,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(observationHistoryEvicted ? { observationHistoryEvicted: true } : {}),
         ...(pendingRepair ? { repair: pendingRepair } : {}),
         ...(enterpriseActions ? { enterpriseActions } : {}),
+        ...(options.siteBrief?.text ? { siteBrief: options.siteBrief.text } : {}),
       });
       if (context.history.compaction) observationHistoryEvicted = true;
       plannerStablePrefix = assertCacheStablePrefix(plannerStablePrefix, context.stablePrefix);
@@ -269,7 +270,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
           if (!success) failureClassification = 'verification_failed';
         }
         // INVARIANT: planner-declared completion is never success until an independent verifier passes.
-        const result = resultFromSteps(success, summary, steps, failureClassification);
+        const result = resultFromSteps(success, summary, steps, failureClassification, options.siteBrief);
         finished = true;
         await options.recorder?.finish(success ? 'success' : 'failure', summary, result.tokenUsage);
         return result;
@@ -277,7 +278,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
     }
 
     const summary = `planner exceeded maxSteps=${maxSteps}`;
-    const result = resultFromSteps(false, summary, steps, 'step_budget_exhausted');
+    const result = resultFromSteps(false, summary, steps, 'step_budget_exhausted', options.siteBrief);
     finished = true;
     await options.recorder?.finish('failure', summary, result.tokenUsage);
     return result;
@@ -307,6 +308,7 @@ function resultFromSteps(
   summary: string,
   steps: BrowserAgentStep[],
   failureClassification?: BrowserAgentResult['failureClassification'],
+  siteBrief?: SiteBriefInput,
 ): BrowserAgentResult {
   return {
     success,
@@ -314,7 +316,22 @@ function resultFromSteps(
     ...(failureClassification ? { failureClassification } : {}),
     steps,
     tokenUsage: tokenUsageFromSteps(steps),
+    ...(siteBrief ? { siteBriefUtility: siteBriefUtility(siteBrief, steps) } : {}),
   };
+}
+
+/** docs/03 "hint utility": hinted identities the planner actually dispatched. */
+function siteBriefUtility(brief: SiteBriefInput, steps: readonly BrowserAgentStep[]): SiteBriefUtility {
+  const dispatched = new Set<string>();
+  for (const step of steps) {
+    if (step.error || step.action.kind === 'done' || step.action.kind === 'navigate') continue;
+    const id = step.resolution?.stableId ?? ('stableId' in step.action ? step.action.stableId : undefined);
+    if (typeof id === 'string') dispatched.add(id);
+  }
+  const hinted = new Set(brief.hintedStableIds);
+  let used = 0;
+  for (const id of hinted) if (dispatched.has(id)) used += 1;
+  return { chars: brief.text.length, hinted: hinted.size, used };
 }
 
 function tokenUsageFromSteps(steps: readonly BrowserAgentStep[]) {
