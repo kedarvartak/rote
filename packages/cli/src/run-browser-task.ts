@@ -13,6 +13,8 @@ import { FileBrowserAgentRunRecorder, runBrowserAgent, TaggedLlmBrowserPlanner, 
 import { LaunchingCdpBrowserBackend } from '@rote/browser';
 import { BrowserToolCaller, runPlaybook } from '@rote/executor';
 import { createTaggedLlmClientFromEnv } from '@rote/llm';
+import { FilePlaybookLibrary, matchPlaybook, type NoMatchReason } from '@rote/matcher';
+import { consolidateSiteMemory, FileSiteMemoryStore, renderSiteBrief } from '@rote/site-memory';
 
 export interface RunBrowserTaskOptions {
   task: string;
@@ -25,7 +27,15 @@ export interface RunBrowserTaskOptions {
   verifyText?: string;
   verifyUrlContains?: string;
   settleTimeoutMs?: number;
+  /** Explicit candidate (bypasses the library); when absent the playbook library is consulted. */
   replayCandidatePath?: string;
+  /** Task inputs for matching and replay binding (`--params`); ignored on the cold path except for the matcher. */
+  params?: Record<string, unknown>;
+  /**
+   * Character budget for the advisory site brief on the cold path (tier-2 memory as
+   * tier-0 content). Default 1200 (≈300 tokens); 0 disables. Empty memory renders nothing.
+   */
+  siteBriefChars?: number;
   /**
    * Fixed run id for the recorded artifacts. The benchmark command driver sets
    * this (via `ROTE_RUN_ID`) so it can address the run it just produced; omitted
@@ -47,7 +57,16 @@ export interface BrowserTaskResult {
   failureClassification?: BrowserAgentFailureClassification;
   /** Stale replay steps recovered by deterministic semantic target resolution. */
   replayRepairs?: number;
+  /** How the playbook (if any) was chosen: an explicit candidate, or the matcher over the library. */
+  selection?: BrowserTaskSelection;
+  /** Cold path only: the site brief's size and how much of it the planner used (docs/03 hint utility). */
+  siteBrief?: { chars: number; hinted: number; used: number };
 }
+
+export type BrowserTaskSelection =
+  | { source: 'candidate' }
+  | { source: 'library'; matched: true; playbook: string; version: number; score: number; considered: number }
+  | { source: 'library'; matched: false; reason: NoMatchReason; considered: number };
 
 export interface BrowserTaskBackend {
   openPage(): Promise<BrowserPageSession>;
@@ -91,9 +110,24 @@ export async function runBrowserTask(
     throw new Error('browser tasks require --verify-text or --verify-url-contains for clean cold fallback');
   }
   const fingerprint = browserEnvironmentFingerprint(target);
-  const candidate = options.replayCandidatePath
-    ? await loadReplayCandidate(options.replayCandidatePath)
-    : undefined;
+  let candidate: BrowserReplayCandidate | undefined;
+  let taskSelection: BrowserTaskSelection | undefined;
+  if (options.replayCandidatePath) {
+    candidate = await loadReplayCandidate(options.replayCandidatePath);
+    taskSelection = { source: 'candidate' };
+  } else {
+    // see docs/02 "Matcher" — the library is consulted for every run: fingerprint
+    // hard gate first, then a conservative deterministic intent/param match. A miss
+    // is a classified cold run, never a guess.
+    const library = await new FilePlaybookLibrary(options.baseDir ?? '.rote').list();
+    const match = matchPlaybook({ task: options.task, params: bindableParams(options.params), envFingerprint: fingerprint, candidates: library });
+    if (match.kind === 'match') {
+      candidate = { playbook_path: match.entry.playbook_path!, fingerprint_hash: match.entry.fingerprint_hash, params: match.bindings };
+      taskSelection = { source: 'library', matched: true, playbook: match.entry.playbook.playbook, version: match.entry.playbook.version, score: match.score, considered: match.considered };
+    } else {
+      taskSelection = { source: 'library', matched: false, reason: match.reason, considered: match.considered };
+    }
+  }
   const selection = selectBrowserExecution(fingerprint.fingerprint_hash, candidate);
   const backend = dependencies.backend ?? new LaunchingCdpBrowserBackend({
     chromePath: options.chromePath,
@@ -123,7 +157,7 @@ export async function runBrowserTask(
       const replay = dependencies.runReplay ?? runVerifiedBrowserReplay;
       try {
         const result = await replay({ candidate, page, fingerprint, options, target });
-        if (result.success) return result;
+        if (result.success) return { ...result, selection: taskSelection };
         replayFallback = { fallbackReason: 'replay_failed', fallbackDetail: result.summary };
       } catch (error) {
         replayFallback = { fallbackReason: 'replay_error', fallbackDetail: asError(error).message };
@@ -136,7 +170,7 @@ export async function runBrowserTask(
     const fingerprintFallback = 'fallbackReason' in selection
       ? { fallbackReason: selection.fallbackReason }
       : undefined;
-    return { ...cold, ...(replayFallback ?? fingerprintFallback) };
+    return { ...cold, ...(replayFallback ?? fingerprintFallback), selection: taskSelection };
   } finally {
     const closeable = rawPage as (BrowserPageSession & { close?: () => void }) | undefined;
     closeable?.close?.();
@@ -171,10 +205,17 @@ async function runColdBrowserTask(
     await recorder.finish('failure', failure.message, []);
     throw failure;
   }
+  // Tier-2 memory as tier-0 content: a hard-budgeted, run-stable advisory brief from
+  // this environment's site memory (empty memory → nothing rendered, nothing paid).
+  const briefChars = options.siteBriefChars ?? DEFAULT_SITE_BRIEF_CHARS;
+  const brief = briefChars > 0
+    ? renderSiteBrief(consolidateSiteMemory(await new FileSiteMemoryStore(options.baseDir ?? '.rote').read(fingerprint.fingerprint_hash), { now: new Date() }), { maxChars: briefChars })
+    : undefined;
   const result = await runBrowserAgent({
     task: options.task,
     page,
     planner,
+    ...(brief && brief.text ? { siteBrief: { text: brief.text, hintedStableIds: brief.hintedStableIds } } : {}),
     verifier: {
       async verify(captured) {
         const failures: string[] = [];
@@ -206,7 +247,19 @@ async function runColdBrowserTask(
     outputTokens: result.tokenUsage.reduce((sum, usage) => sum + usage.output_tokens, 0),
     phase: 'cold',
     ...(result.failureClassification ? { failureClassification: result.failureClassification } : {}),
+    ...(result.siteBriefUtility ? { siteBrief: result.siteBriefUtility } : {}),
   };
+}
+
+const DEFAULT_SITE_BRIEF_CHARS = 1200;
+
+/** Only string/number/boolean values can bind playbook params; anything else is not a param. */
+function bindableParams(params: Record<string, unknown> | undefined): Record<string, string | number | boolean> {
+  const out: Record<string, string | number | boolean> = {};
+  for (const [key, value] of Object.entries(params ?? {})) {
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') out[key] = value;
+  }
+  return out;
 }
 
 async function runVerifiedBrowserReplay(input: BrowserReplayRunInput): Promise<BrowserTaskResult> {

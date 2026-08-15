@@ -249,7 +249,10 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
    from the declarative checks the run's verifier proved on the terminal `done` (#155),
    refusing runs that cannot teach one. Matcher v1 selects from an append-only library
    (#157): fingerprint hard gate, deterministic intent/param match at a conservative
-   threshold, misses on near-miss and ambiguity. Gate:
+   threshold, misses on near-miss and ambiguity. The CLI closes the loop (#159):
+   `rote distill <run_id>` learns playbook + site memory from a recorded run, `rote run`
+   consults the library and renders the site brief, `rote continue` resumes under a
+   task id. Gate:
    distilled playbooks replay the fixture suite with zero human edits. **Reaches parity
    with Skyvern's 2026 baseline; the differentiator is the verification contract.**
 9. **Multi-session task continuation — built** ([#133](https://github.com/kedarvartak/rote/issues/133),

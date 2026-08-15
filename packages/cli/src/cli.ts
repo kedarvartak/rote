@@ -2,12 +2,16 @@ import { formatRunDetail, formatRunsList } from './format.js';
 import { listRuns, showRun } from './runs.js';
 import { runBrowserTask, type BrowserTaskResult, type RunBrowserTaskOptions } from './run-browser-task.js';
 import { createReplayCandidate } from './create-replay-candidate.js';
+import { distillRun, type DistillRunOptions, type DistillRunResult } from './distill-run.js';
+import { ContinuationMismatchError, continueBrowserTask, type ContinueBrowserTaskOptions, type ContinueBrowserTaskResult } from './continue-browser-task.js';
 
 export interface CliDependencies {
   runBrowserTask: (options: RunBrowserTaskOptions) => Promise<BrowserTaskResult>;
+  distillRun?: (options: DistillRunOptions) => Promise<DistillRunResult>;
+  continueBrowserTask?: (options: ContinueBrowserTaskOptions) => Promise<ContinueBrowserTaskResult>;
 }
 
-const defaultDependencies: CliDependencies = { runBrowserTask };
+const defaultDependencies: CliDependencies = { runBrowserTask, distillRun, continueBrowserTask };
 
 /** Dispatches one Rote CLI command and returns its printable output. */
 export async function main(
@@ -31,6 +35,41 @@ export async function main(
     const created = await createReplayCandidate({ playbookPath, ...options });
     return `wrote ${created.path}\nfingerprint: ${created.candidate.fingerprint_hash}`;
   }
+  if (group === 'distill') {
+    if (!subcommand) throw new Error(distillUsage());
+    const options = parseDistillOptions(subcommand, rest, baseDir);
+    const result = await (dependencies.distillRun ?? distillRun)(options);
+    return [
+      `wrote ${result.playbookPath}`,
+      `playbook: ${result.playbook} v${result.version} (fingerprint ${result.fingerprintHash})`,
+      `steps: ${result.kept} kept, ${result.pruned.length} pruned${result.pruned.length ? ` (${result.pruned.map((entry) => `${entry.seq}:${entry.reason}`).join(', ')})` : ''}`,
+      `contracts: ${result.contractedSteps} steps gated`,
+      `verify: ${result.verifySource}${result.evidenceClasses.length ? ` (evidence classes: ${result.evidenceClasses.join(', ')} — replay under the same policy)` : ''}`,
+      `params: ${result.usedParams.length ? result.usedParams.join(', ') : '(none)'}`,
+      `site memory: ${result.siteMemoryRecords} records appended, ${result.siteMemorySkipped} events skipped`,
+    ].join('\n');
+  }
+  if (group === 'continue') {
+    if (!subcommand) throw new Error(continueUsage());
+    const options = parseContinueOptions(subcommand, rest, baseDir);
+    let result: ContinueBrowserTaskResult;
+    try {
+      result = await (dependencies.continueBrowserTask ?? continueBrowserTask)(options);
+    } catch (error) {
+      if (error instanceof ContinuationMismatchError) throw new Error(`continuation refused before any action [${error.classification}: ${error.kind}]: ${error.message}`);
+      throw error;
+    }
+    const lines = [
+      `mode: ${result.mode}${result.resumedFromSeq !== undefined ? ` (from checkpoint ${result.resumedFromSeq})` : ''}`,
+      `resumed steps: ${result.resumedStepIds.length ? result.resumedStepIds.join(', ') : '(none)'}`,
+      `checkpoints written: ${result.checkpointsWritten}`,
+      `outcome: ${result.outcome}${result.failureCode ? ` [${result.failureCode}]` : ''}${result.reason ? ` — ${result.reason}` : ''}`,
+      `run: ${result.runId}`,
+      `completed steps: ${result.completedStepIds.length}`,
+    ];
+    if (result.outcome === 'failure' || result.outcome === 'fallback') throw new Error(lines.join('\n'));
+    return lines.join('\n');
+  }
   if (group === 'run') {
     if (!subcommand) throw new Error(runUsage());
     const options = parseRunOptions(subcommand, rest, baseDir);
@@ -47,13 +86,21 @@ export async function main(
       `success: ${result.summary}`,
       `run: ${result.runId}`,
       `phase: ${result.phase}`,
+      ...(result.selection ? [formatSelection(result.selection)] : []),
       ...(result.replayRepairs !== undefined ? [`replay repairs: ${result.replayRepairs}`] : []),
       ...(fallback ? [fallback] : []),
+      ...(result.siteBrief ? [`site brief: ${result.siteBrief.chars} chars, ${result.siteBrief.used}/${result.siteBrief.hinted} hints used`] : []),
       `steps: ${result.steps}`,
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,
     ].join('\n');
   }
-  throw new Error(`usage: rote runs ls | rote runs show <run_id> | ${runUsage()} | ${candidateUsage()}`);
+  throw new Error(`usage: rote runs ls | rote runs show <run_id> | ${runUsage()} | ${candidateUsage()} | ${distillUsage()} | ${continueUsage()}`);
+}
+
+function formatSelection(selection: NonNullable<BrowserTaskResult['selection']>): string {
+  if (selection.source === 'candidate') return 'selection: explicit candidate';
+  if (selection.matched) return `selection: library match ${selection.playbook} v${selection.version} (score ${selection.score.toFixed(2)}, ${selection.considered} considered)`;
+  return `selection: no library match (${selection.reason}, ${selection.considered} considered)`;
 }
 
 function formatFallback(result: BrowserTaskResult): string | undefined {
@@ -114,7 +161,7 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     throw new Error('--viewport-width and --viewport-height must be provided together');
   }
   const knownFlags = new Set([
-    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--settle-timeout-ms', '--replay-candidate', '--viewport-width', '--viewport-height',
+    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--settle-timeout-ms', '--replay-candidate', '--viewport-width', '--viewport-height', '--params', '--site-brief-chars',
   ]);
   for (const flag of values.keys()) if (!knownFlags.has(flag)) throw new Error(`unknown option: ${flag}`);
   if (!values.has('--verify-text') && !values.has('--verify-url-contains')) throw new Error(runUsage());
@@ -132,7 +179,82 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     verifyUrlContains: values.get('--verify-url-contains'),
     settleTimeoutMs,
     replayCandidatePath: values.get('--replay-candidate'),
+    ...(values.has('--params') ? { params: parseJsonObject(values.get('--params')!, '--params') } : {}),
+    ...(values.has('--site-brief-chars') ? { siteBriefChars: nonNegativeIntegerOption(values, '--site-brief-chars') } : {}),
   };
+}
+
+function parseDistillOptions(runId: string, args: string[], baseDir: string): DistillRunOptions {
+  const values = pairs(args, distillUsage());
+  for (const flag of values.keys()) if (!['--name', '--params', '--domain', '--literal-values'].includes(flag)) throw new Error(`unknown option: ${flag}`);
+  const playbookName = values.get('--name');
+  if (!playbookName) throw new Error(distillUsage());
+  const params = values.has('--params') ? parseJsonObject(values.get('--params')!, '--params') : {};
+  for (const [name, value] of Object.entries(params)) if (typeof value !== 'string' || value.length === 0) throw new Error(`--params value for ${name} must be a non-empty string`);
+  const literal = values.get('--literal-values');
+  if (literal !== undefined && literal !== 'fail' && literal !== 'allow') throw new Error('--literal-values must be fail or allow');
+  return {
+    baseDir, runId, playbookName, params: params as Record<string, string>,
+    ...(values.has('--domain') ? { domain: values.get('--domain')! } : {}),
+    ...(literal ? { literalValues: literal } : {}),
+  };
+}
+
+function parseContinueOptions(taskId: string, args: string[], baseDir: string): ContinueBrowserTaskOptions {
+  const values = pairs(args, continueUsage());
+  for (const flag of values.keys()) if (!['--playbook', '--url', '--params', '--principal', '--stop-after', '--chrome-path', '--settle-timeout-ms'].includes(flag)) throw new Error(`unknown option: ${flag}`);
+  const playbookPath = values.get('--playbook');
+  const url = values.get('--url');
+  if (!playbookPath || !url) throw new Error(continueUsage());
+  const raw = values.has('--params') ? parseJsonObject(values.get('--params')!, '--params') : {};
+  const params: Record<string, string | number | boolean> = {};
+  for (const [name, value] of Object.entries(raw)) {
+    if (typeof value !== 'string' && typeof value !== 'number' && typeof value !== 'boolean') throw new Error(`--params value for ${name} must be a string, number, or boolean`);
+    params[name] = value;
+  }
+  return {
+    baseDir, taskId, playbookPath, url, params,
+    ...(values.has('--principal') ? { principal: values.get('--principal')! } : {}),
+    ...(values.has('--stop-after') ? { stopAfterStepId: values.get('--stop-after')! } : {}),
+    ...(values.has('--chrome-path') ? { chromePath: values.get('--chrome-path')! } : {}),
+    ...(values.has('--settle-timeout-ms') ? { settleTimeoutMs: positiveIntegerOption(values, '--settle-timeout-ms') } : {}),
+  };
+}
+
+function pairs(args: string[], usage: string): Map<string, string> {
+  const values = new Map<string, string>();
+  for (let index = 0; index < args.length; index += 2) {
+    const flag = args[index];
+    const value = args[index + 1];
+    if (!flag?.startsWith('--') || value === undefined) throw new Error(usage);
+    values.set(flag, value);
+  }
+  return values;
+}
+
+function parseJsonObject(text: string, flag: string): Record<string, unknown> {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw new Error(`${flag} must be a JSON object`);
+  }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) throw new Error(`${flag} must be a JSON object`);
+  return parsed as Record<string, unknown>;
+}
+
+function nonNegativeIntegerOption(values: ReadonlyMap<string, string>, flag: string): number {
+  const value = Number.parseInt(values.get(flag) ?? '', 10);
+  if (!Number.isInteger(value) || value < 0) throw new Error(`${flag} must be a non-negative integer`);
+  return value;
+}
+
+function distillUsage(): string {
+  return 'rote distill <run_id> --name <playbook> [--params <json-object of name→value>] [--domain <domain>] [--literal-values fail|allow]';
+}
+
+function continueUsage(): string {
+  return 'rote continue <task_id> --playbook <playbook.yaml> --url <url> [--params <json-object>] [--principal <id>] [--stop-after <step_id>] [--chrome-path <path>] [--settle-timeout-ms <ms>]';
 }
 
 function positiveIntegerOption(values: ReadonlyMap<string, string>, flag: string): number | undefined {
@@ -148,5 +270,5 @@ function candidateUsage(): string {
 }
 
 function runUsage(): string {
-  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>] [--viewport-width <px> --viewport-height <px>] [--replay-candidate <candidate.json>]';
+  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--params <json-object>] [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>] [--viewport-width <px> --viewport-height <px>] [--replay-candidate <candidate.json>] [--site-brief-chars <n>]';
 }
