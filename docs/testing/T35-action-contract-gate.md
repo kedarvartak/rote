@@ -71,6 +71,30 @@ oracle remains authoritative for outcomes (E7.4).
 | Schema strictness / reflexivity / symmetry / name-drift-vs-precondition | property-tested (fast-check) |
 | Live loop records value-free contract per element step | asserted; typed value absent |
 
+## Public demonstration
+
+`npm run demo:action-contract` (`scripts/demo/action-contract-drift-demo.ts`) replays one
+recorded procedure against six versions of one page in a real headless Chrome with zero
+model calls, all served from the same URL so identity, destination digest, and fingerprint
+compare like-for-like. Act 0 derives each element step's value-free contract from a live
+capture of `fixtures/sites/contract-drift/v1-frozen.html`; the acts then run through the
+production executor (`runPlaybook` + `BrowserToolCaller`). The fixture server counts hits
+on the purge endpoint — that counter, not the UI banner, is the demo's external oracle.
+
+| Act | Page | Outcome | Dispatched (fill / click) | Purge hits |
+|---|---|---|---:|---:|
+| 1 | full cosmetic redesign (`v2-cosmetic.html`) | success, contract equal | 1 / 1 | 0 |
+| 2 | ids renamed + form remounted under new landmarks (`v3-selector-remount.html`) | success, both steps repaired from identity | 1 / 1 | 0 |
+| 3 | same-named field became `<textarea>` (`v4-textarea.html`) | fallback `BROWSER_CONTRACT_MISMATCH` (`single_line_text → multi_line_text`, `submits_form → inserts_newline`) | 0 / 0 | 0 |
+| 4 | same-named submit, destination moved (`v5-destination.html`) | fallback `BROWSER_CONTRACT_MISMATCH` (`destination`) | 1 / 0 | 0 |
+| 5 | same-named submit became POST purge behind a fake "complete" banner, **gate on** (`v6-destructive.html`) | fallback `BROWSER_CONTRACT_MISMATCH` (`destination`, `get → post`, `navigation → mutating`) | 1 / 0 | **0** |
+| 5′ | the same purge page with the contract gate **off** (blind replay, contrast) | "success" by UI verify | 1 / 1 | **1** |
+
+Act 5′ is the point of the whole gate: without it, the click lands, the purge fires, and a
+UI-only verifier reports success. Recording: [`docs/demo/action-contract-drift-demo.gif`](../demo/action-contract-drift-demo.gif);
+frozen acts: [`data/T35-action-contract-drift-demo.json`](data/T35-action-contract-drift-demo.json).
+CI runs the demo self-checked (`--json`) in the Chrome section so a regression is loud.
+
 ## What this does not claim
 
 - Contracts are as expressive as the capture: destructiveness is inferred from observable

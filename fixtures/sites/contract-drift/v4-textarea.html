@@ -1,0 +1,13 @@
+<!doctype html>
+<html><head><title>Vendor Registration</title></head><body><main>
+  <!-- Act 3 (#143 demo): same identity, different contract — the company field
+       is now a textarea. Enter inserts a newline instead of submitting; a
+       recorded fill+Enter would silently do something else. -->
+  <h1>Vendor registration</h1>
+  <form id="registration-form">
+    <label for="company-name">Company name</label>
+    <textarea id="company-name" name="company_name"></textarea>
+    <button id="registration-submit" type="submit">Submit registration</button>
+  </form>
+  <section id="registration-confirmation" role="status" hidden>Vendor registration complete</section>
+</main></body></html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html><head><title>Vendor Registration</title></head><body>
+  <!-- Act 2 (#143 demo): harmless structural drift — every id renamed and the
+       form remounted under new landmarks. Recorded selectors are stale; the
+       role/name identity still resolves and the contract is unchanged. -->
+  <header><nav aria-label="Primary"><a href="/">Vendors</a></nav></header>
+  <main><section aria-labelledby="registration-heading">
+    <h1 id="registration-heading">Vendor registration</h1>
+    <div class="registration-panel"><div class="registration-panel__body">
+      <form id="registration-form-v3">
+        <div class="field"><label for="company-name-v3">Company name</label>
+        <input id="company-name-v3" name="company_name" /></div>
+        <div class="actions"><button id="registration-submit-v3" type="submit">Submit registration</button></div>
+      </form>
+    </div></div>
+    <section id="registration-confirmation-v3" role="status" hidden>Vendor registration complete</section>
+  </section></main>
+  <script>
+    document.querySelector('#registration-form-v3').addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!document.querySelector('#company-name-v3').value) return;
+      document.querySelector('#registration-form-v3').hidden = true;
+      document.querySelector('#registration-confirmation-v3').hidden = false;
+    });
+  </script>
+</body></html>
