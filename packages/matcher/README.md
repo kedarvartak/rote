@@ -4,10 +4,12 @@ Tier-1 **selection**: given a task, its params, and the live environment fingerp
 at most one learned playbook from an append-only library — or miss. Two stages in a fixed
 order (`docs/02-architecture.md` "Matcher", CLAUDE.md invariant 3): the **fingerprint hard
 gate** discards every candidate proved on another environment before any semantic
-comparison runs; then a **deterministic intent/param match** — the task text with the
-caller's param values slotted out is compared (token Jaccard) to the playbook's templated
-intent, every declared param must bind, the score must clear a conservative threshold
-(default 0.8), and a distinct playbook within the ambiguity margin (0.05) makes it a miss.
+comparison runs; then a **deterministic intent/param match** — every content token of the
+playbook's intent must appear in the task (coverage: a task that never says "registration"
+cannot select a registration procedure, however similar the rest is), the task text with the
+caller's param values slotted out is scored (token Jaccard) against the templated intent,
+every declared param must bind, the score must clear a conservative threshold (default 0.8),
+and a distinct playbook within the ambiguity margin (0.05) makes it a miss.
 v1 makes **no model call**; a future semantic stage must go through the tagged LLM client
 as `matcher`. The matcher prefers misses: `docs/03-benchmark.md` T4 says any false replay
 is a design kill.

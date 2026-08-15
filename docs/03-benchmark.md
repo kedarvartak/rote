@@ -12,8 +12,9 @@ The first is V1's claim. The second is V2's, and needs the learning plane
 
 ## Task suite
 
-Six browser tasks spanning the memoization difficulty spectrum. B1–B3 are built as frozen
-fixtures (`fixtures/sites/`); B4–B6 are specified, not yet built.
+Six browser tasks spanning the memoization difficulty spectrum. B1–B3 and B6 are built as
+frozen fixtures (`fixtures/sites/`); B4 is specified, not yet built; B5 is B2's drift
+variants (`fixtures/sites/drift/`, T21).
 
 | # | Task | Params | Why it's in the suite |
 |---|---|---|---|
@@ -22,7 +23,7 @@ fixtures (`fixtures/sites/`); B4–B6 are specified, not yet built.
 | **B3** | Search catalog, extract top-N | query, N | parameterized extraction |
 | B4 | Triage: read, categorize, route | item id | includes a judgment gate |
 | B5 | B2 with the DOM mutated between runs | 8 fields | **drift / repair test** |
-| B6 | Superficially like B2, genuinely different | — | **false-match test (must miss)** |
+| **B6** | Superficially like B2, genuinely different (`b6-vendor-offboarding.html`: same title, same eight fields, same ids — posts to an offboarding endpoint) | 8 fields | **false-match test (must miss)** — certified in [T40](testing/T40-b6-false-match.md) |
 
 B6 is the most important row. A benchmark that only rewards replaying is a benchmark you
 can win by replaying wrongly.
@@ -134,7 +135,7 @@ Every task in the stream lands in one transfer cell:
 | **T1 sibling** — different task, shared prefix | B2 → "update bank details" | 2 + 3 | ≥50% of the shared prefix's cold cost |
 | **T2 novel-on-known** — unrelated task, known site | B2 → "export vendor CSV" | 3 advisory | **≥30% reduction at parity — the generalization kill gate** |
 | **T3 novel site** — never-seen site | new portal | none | overhead ≤2%; Rote must get out of the way |
-| **T4 near-miss** — must NOT match | B6 generalized | matcher discipline | false-replay rate 0 |
+| **T4 near-miss** — must NOT match | B6 generalized | matcher discipline | false-replay rate 0 — deterministic certification in [T40](testing/T40-b6-false-match.md): matcher misses, forced replay dispatches no submit, no success path |
 | **T5 drift** — known site, mutated DOM | B5 | all | repair, or detect-and-downgrade; never silently follow a stale fact |
 
 **Kill gates:** T2 <15% → advisory memory isn't worth its complexity; retreat to a replay

@@ -71,5 +71,21 @@ describe('CDP action contract gate', () => {
     expect(refused.error.message).toContain('navigation → mutating');
     expect(await page.evaluate<string>('location.href')).toBe(before);
     expect(await page.evaluate<boolean>(`document.querySelector('#registration-form') !== null`)).toBe(true);
+
+    // B6 (docs/03 false-match test): the offboarding page looks like B2 — same title,
+    // same eight fields, same ids and names — but the same-named submit posts to
+    // /vendors/offboard. A forced B2 replay fills (identity resolves) and then the
+    // gate refuses the submit: no POST, no navigation, form still present.
+    await page.navigate(server.url('b6-vendor-offboarding.html'));
+    expect(await caller.call('browser.fill', fillArgs)).toMatchObject({ ok: true });
+    const b6Before = await page.evaluate<string>('location.href');
+    const b6 = await caller.call('browser.click', clickArgs);
+    expect(b6).toMatchObject({ ok: false, error: { code: 'BROWSER_CONTRACT_MISMATCH' } });
+    if (b6.ok) throw new Error('unreachable');
+    expect(b6.error.message).toContain('destination');
+    expect(b6.error.message).toContain('navigation → mutating');
+    expect(await page.evaluate<string>('location.href')).toBe(b6Before);
+    expect(await page.evaluate<boolean>(`document.querySelector('#registration-form') !== null`)).toBe(true);
+    expect(await page.evaluate<boolean>(`document.querySelector('#registration-confirmation').hidden`)).toBe(true);
   }, 60_000);
 });

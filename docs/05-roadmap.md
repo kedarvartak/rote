@@ -252,7 +252,8 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
    threshold, misses on near-miss and ambiguity. The CLI closes the loop (#159):
    `rote distill <run_id>` learns playbook + site memory from a recorded run, `rote run`
    consults the library and renders the site brief, `rote continue` resumes under a
-   task id. Gate:
+   task id. B6 (docs/03's false-match test) is built and T4 near-miss discipline
+   certified with defence in depth ([T40](testing/T40-b6-false-match.md), #162). Gate:
    distilled playbooks replay the fixture suite with zero human edits. **Reaches parity
    with Skyvern's 2026 baseline; the differentiator is the verification contract.**
 9. **Multi-session task continuation — built** ([#133](https://github.com/kedarvartak/rote/issues/133),
