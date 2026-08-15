@@ -48,6 +48,7 @@ export async function captureComposedPage(client: CdpClient): Promise<ComposedCa
   const elements: CapturedElement[] = [];
   const unsupportedContexts: UnsupportedBrowserContext[] = [];
   let top: SerializedContext | undefined;
+  let topDocumentToken: string | undefined;
 
   for (const entry of frames) {
     const world = await client.send<{ executionContextId: number }>('Page.createIsolatedWorld', {
@@ -56,8 +57,11 @@ export async function captureComposedPage(client: CdpClient): Promise<ComposedCa
       grantUniveralAccess: false,
     });
     const serialized = await evaluateInContext<SerializedContext>(client, world.executionContextId, SERIALIZE_COMPOSED_CONTEXT);
-    if (entry.path.length === 0) top = serialized;
     const documentToken = sha256Hex(entry.frame.loaderId).slice(0, 16);
+    if (entry.path.length === 0) {
+      top = serialized;
+      topDocumentToken = documentToken;
+    }
     const documentCoordinate = browserContextCoordinate(entry.path, documentToken);
     registerContext(contexts, {
       coordinate: documentCoordinate,
@@ -98,6 +102,7 @@ export async function captureComposedPage(client: CdpClient): Promise<ComposedCa
       html: top.html,
       elements,
       ...(unsupportedContexts.length ? { unsupportedContexts } : {}),
+      ...(topDocumentToken ? { documentToken: topDocumentToken } : {}),
     },
     contexts,
   };

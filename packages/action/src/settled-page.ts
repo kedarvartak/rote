@@ -1,12 +1,25 @@
 import type { CapturedPage } from '@rote/browser';
 import { BrowserCapabilityUnsupportedError, type NormalizedKeyChord } from './action-contract.js';
-import { waitForSettled, type BrowserActivityProbe, type WaitForSettledOptions } from './settledness.js';
+import { waitForSettled, type BrowserActivityProbe, type BrowserActivitySample, type WaitForSettledOptions } from './settledness.js';
 
 /** Redacted dispatch shape for one allowlisted upload; `file_id` stays with the caller. */
 export interface UploadDispatchFile {
   name: string;
   mimeType: string;
   contentBase64: string;
+}
+
+/** One measured post-action settle: which verb waited, for how long, and what it saw last. */
+export interface SettleRecord {
+  verb: 'navigate' | 'fill' | 'select' | 'click' | 'hover' | 'press' | 'upload' | 'dragAndDrop';
+  /** Wall-clock milliseconds spent inside the settledness gate. */
+  elapsedMs: number;
+  sample: BrowserActivitySample;
+}
+
+/** Settledness options plus an optional per-action telemetry sink (#132 endurance accounting). */
+export interface SettledBrowserPageSessionOptions extends WaitForSettledOptions {
+  onSettle?: (record: SettleRecord) => void;
 }
 
 export interface SettleableBrowserPage extends BrowserActivityProbe {
@@ -26,12 +39,12 @@ export interface SettleableBrowserPage extends BrowserActivityProbe {
 export class SettledBrowserPageSession {
   constructor(
     private readonly page: SettleableBrowserPage,
-    private readonly options: WaitForSettledOptions = {},
+    private readonly options: SettledBrowserPageSessionOptions = {},
   ) {}
 
   async navigate(url: string): Promise<void> {
     await this.page.navigate(url);
-    await waitForSettled(this.page, this.options);
+    await this.settle('navigate');
   }
 
   async capture(): Promise<CapturedPage> {
@@ -40,40 +53,50 @@ export class SettledBrowserPageSession {
 
   async fill(selector: string, value: string): Promise<void> {
     await this.page.fill(selector, value);
-    await waitForSettled(this.page, this.options);
+    await this.settle('fill');
   }
 
   async select(selector: string, value: string): Promise<void> {
     await this.page.select(selector, value);
-    await waitForSettled(this.page, this.options);
+    await this.settle('select');
   }
 
   async click(selector: string): Promise<void> {
     await this.page.click(selector);
-    await waitForSettled(this.page, this.options);
+    await this.settle('click');
   }
 
   async hover(selector: string): Promise<void> {
     if (!this.page.hover) throw new BrowserCapabilityUnsupportedError('hover');
     await this.page.hover(selector);
-    await waitForSettled(this.page, this.options);
+    await this.settle('hover');
   }
 
   async press(selector: string, chord: NormalizedKeyChord): Promise<void> {
     if (!this.page.press) throw new BrowserCapabilityUnsupportedError('press');
     await this.page.press(selector, chord);
-    await waitForSettled(this.page, this.options);
+    await this.settle('press');
   }
 
   async upload(selector: string, file: UploadDispatchFile): Promise<void> {
     if (!this.page.upload) throw new BrowserCapabilityUnsupportedError('upload');
     await this.page.upload(selector, file);
-    await waitForSettled(this.page, this.options);
+    await this.settle('upload');
   }
 
   async dragAndDrop(sourceSelector: string, targetSelector: string): Promise<void> {
     if (!this.page.dragAndDrop) throw new BrowserCapabilityUnsupportedError('dragAndDrop');
     await this.page.dragAndDrop(sourceSelector, targetSelector);
-    await waitForSettled(this.page, this.options);
+    await this.settle('dragAndDrop');
+  }
+
+  // A settle that times out throws `SettlednessTimeoutError` from waitForSettled;
+  // the sink only ever sees bounded, successful waits, so its totals are the
+  // cost of the policy rather than a mix of costs and failures.
+  private async settle(verb: SettleRecord['verb']): Promise<void> {
+    const clock = this.options.clock ?? Date.now;
+    const startedAt = clock();
+    const sample = await waitForSettled(this.page, this.options);
+    this.options.onSettle?.({ verb, elapsedMs: Math.max(0, clock() - startedAt), sample });
   }
 }

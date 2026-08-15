@@ -14,21 +14,41 @@ interface RuntimeEvaluateResult {
 }
 
 export interface CdpActivitySample {
+  /** Requests the server has not answered yet (no response headers). */
   pendingRequests: number;
+  /** Requests answered but not finished: streaming, SSE, or unconsumed fetch bodies. */
+  streamingResponses: number;
   mutationVersion: number;
+  /** Monotonic counter bumped on every request/response/data/finish edge. */
+  networkVersion: number;
 }
 
 /** Stateful CDP page session for browser-agent navigation, capture, actions, and activity probes. */
 export class CdpPage {
   private readonly pendingRequests = new Set<string>();
+  private readonly streamingResponses = new Set<string>();
+  private networkVersion = 0;
   private readonly unsubscribe: Array<() => void> = [];
   private contexts = new Map<string, LiveBrowserContext>();
 
   private constructor(private readonly client: CdpClient) {
+    // A request stops being "pending" once the server answers. Long-lived
+    // sessions accumulate answered-but-unfinished requests (SSE, long-poll
+    // bodies, fetches whose body nobody reads); counting those as in-flight
+    // makes settledness unreachable after a few transitions (#132). Every
+    // network edge still bumps `networkVersion`, so a streaming body that is
+    // actively delivering chunks keeps the page unsettled.
     this.unsubscribe.push(
       client.onEvent('Network.requestWillBeSent', (params) => {
+        this.networkVersion += 1;
         if (typeof params['requestId'] === 'string') this.pendingRequests.add(params['requestId']);
       }),
+      client.onEvent('Network.responseReceived', (params) => {
+        this.networkVersion += 1;
+        if (typeof params['requestId'] !== 'string') return;
+        if (this.pendingRequests.delete(params['requestId'])) this.streamingResponses.add(params['requestId']);
+      }),
+      client.onEvent('Network.dataReceived', () => { this.networkVersion += 1; }),
       client.onEvent('Network.loadingFinished', (params) => this.finishRequest(params)),
       client.onEvent('Network.loadingFailed', (params) => this.finishRequest(params)),
     );
@@ -184,7 +204,7 @@ export class CdpPage {
     `);
   }
 
-  /** Samples pending network requests and a monotonic DOM mutation version. */
+  /** Samples unanswered requests, streaming responses, and monotonic DOM/network activity versions. */
   async sampleActivity(): Promise<CdpActivitySample> {
     const mutationVersion = await this.evaluate<number>(`(() => {
       if (!globalThis.__roteMutationState) {
@@ -196,7 +216,12 @@ export class CdpPage {
       }
       return globalThis.__roteMutationState.version;
     })()`);
-    return { pendingRequests: this.pendingRequests.size, mutationVersion };
+    return {
+      pendingRequests: this.pendingRequests.size,
+      streamingResponses: this.streamingResponses.size,
+      mutationVersion,
+      networkVersion: this.networkVersion,
+    };
   }
 
   /** Evaluates an expression and returns a JSON-serializable result for tests and probes. */
@@ -211,7 +236,10 @@ export class CdpPage {
   }
 
   private finishRequest(params: Record<string, unknown>): void {
-    if (typeof params['requestId'] === 'string') this.pendingRequests.delete(params['requestId']);
+    this.networkVersion += 1;
+    if (typeof params['requestId'] !== 'string') return;
+    this.pendingRequests.delete(params['requestId']);
+    this.streamingResponses.delete(params['requestId']);
   }
 
   private async evaluateTarget<T = void>(

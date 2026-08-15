@@ -82,6 +82,9 @@ jobs:
       - name: Enterprise action verbs Chrome contract
         if: steps.detect.outputs.present == 'true'
         run: npm run test:enterprise-verbs-chrome --workspace @rote/bench
+      - name: Enterprise SPA endurance Chrome certification
+        if: steps.detect.outputs.present == 'true'
+        run: npm run test:enterprise-endurance-chrome --workspace @rote/bench
 
   # Design docs are the constitution — broken internal links are bugs.
   docs:

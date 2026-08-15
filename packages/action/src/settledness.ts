@@ -1,6 +1,14 @@
 export interface BrowserActivitySample {
+  /** Requests still awaiting a server response. */
   pendingRequests: number;
   mutationVersion: number;
+  /**
+   * Monotonic network-activity version (request start, response, data chunk,
+   * finish). Probes that cannot report it omit it; a change resets the quiet
+   * window exactly like a DOM mutation, so a streaming body that is actively
+   * delivering keeps the page unsettled even though it is no longer "pending".
+   */
+  networkVersion?: number;
 }
 
 export interface BrowserActivityProbe {
@@ -28,7 +36,12 @@ export class SettlednessTimeoutError extends Error {
   }
 }
 
-/** Waits until network activity is zero and DOM mutations stay unchanged for a quiet window. */
+/**
+ * Waits until unanswered requests are within tolerance and DOM/network activity
+ * stays unchanged for a quiet window. The wait is bounded by `timeoutMs`; a
+ * long-lived background channel (SSE, long-poll) that never answers is tolerated
+ * only through an explicit `maxPendingRequests` allowance (#132).
+ */
 export async function waitForSettled(
   probe: BrowserActivityProbe,
   options: WaitForSettledOptions = {},
@@ -49,7 +62,9 @@ export async function waitForSettled(
 
   while (true) {
     const now = clock();
-    const changed = !previous || sample.mutationVersion !== previous.mutationVersion;
+    const changed = !previous
+      || sample.mutationVersion !== previous.mutationVersion
+      || sample.networkVersion !== previous.networkVersion;
     if (changed || sample.pendingRequests > maxPendingRequests) lastChangedAt = now;
     if (sample.pendingRequests <= maxPendingRequests && now - lastChangedAt >= quietWindowMs) return sample;
     if (now - startedAt >= timeoutMs) throw new SettlednessTimeoutError(timeoutMs, sample);
