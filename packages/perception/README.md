@@ -7,6 +7,15 @@ browser I/O; capture lives in `@rote/browser`.
 This is the first piece of the V1 efficiency claim: avoid handing the model a raw page
 dump when a compact tree of actionable elements is enough.
 
+## Affordance (#143)
+
+Every interactive `DistilledNode` carries `affordance`: control kind, input type, Enter
+behavior, 16-hex destination digest (link href / form action origin+path), form method,
+`enabled`, `draggable` — derived only from capture-time attributes and the
+`data-rote-form-action|method|implicit-submit` facts stamped by `@rote/browser`, so static
+and CDP captures agree. It is value-free and never rendered into the observation; it feeds
+`deriveActionContract` in `@rote/action`.
+
 ## Public API
 
 - `distillPage(page)` — keep visible interactive/content-bearing nodes across captured composed contexts, derive associated-label and ARIA names, retain context-local selectors, and assign roles, identity-v2 IDs, and diffable state. V2 hashes durable browsing context and allowlisted container lineage while excluding runtime IDs, document tokens, selectors, and control values.

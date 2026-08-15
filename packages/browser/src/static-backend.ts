@@ -30,6 +30,7 @@ const VOID_OR_INLINE = new Set(['input', 'button', 'a', 'select', 'textarea', 'o
 function parseElements(html: string): CapturedElement[] {
   const elements: CapturedElement[] = [];
   const lineageByOffset = containerLineageByOffset(html);
+  const formByOffset = enclosingFormByOffset(html);
   let match: RegExpExecArray | null;
   while ((match = ELEMENT_RE.exec(html)) !== null) {
     const tag = match[1]?.toLowerCase();
@@ -40,6 +41,14 @@ function parseElements(html: string): CapturedElement[] {
     // container landmarks cross the capture boundary; form values never participate.
     attrs['data-rote-context-key'] = 'top';
     attrs['data-rote-container-lineage'] = (lineageByOffset.get(match.index) ?? []).join(',');
+    // Observable action-contract facts (#143), mirroring the CDP decorator: the
+    // enclosing form's action path/method and whether Enter would submit it.
+    const form = formByOffset.get(match.index);
+    if (form && ['input', 'textarea', 'select', 'button'].includes(tag)) {
+      if (form.action !== undefined) attrs['data-rote-form-action'] = form.action;
+      attrs['data-rote-form-method'] = form.method;
+      if (tag === 'input') attrs['data-rote-implicit-submit'] = form.implicitSubmit ? 'true' : 'false';
+    }
     const text = stripTags(match[3] ?? '').trim().replace(/\s+/g, ' ');
     const before = html.slice(0, match.index);
     const depth = Math.max(0, (before.match(/</g)?.length ?? 0) - (before.match(/<\s*\//g)?.length ?? 0));
@@ -77,6 +86,54 @@ function containerLineageByOffset(html: string): Map<number, string[]> {
     if (!VOID_TAGS.has(tag) && !match[3]?.trimEnd().endsWith('/')) stack.push({ tag, landmark });
   }
   return lineage;
+}
+
+interface EnclosingForm {
+  action?: string;
+  method: string;
+  implicitSubmit: boolean;
+}
+
+/** Nearest enclosing `<form>` per element offset with the facts a fill/click contract needs. */
+function enclosingFormByOffset(html: string): Map<number, EnclosingForm> {
+  const forms: Array<{ start: number; end: number; form: EnclosingForm }> = [];
+  const open: Array<{ start: number; attributes: Record<string, string> }> = [];
+  let match: RegExpExecArray | null;
+  const FORM_RE = /<\s*(\/?)\s*form\b([^>]*)>/gi;
+  while ((match = FORM_RE.exec(html)) !== null) {
+    if (match[1] === '/') {
+      const opened = open.pop();
+      if (!opened) continue;
+      const body = html.slice(opened.start, match.index);
+      const implicitSubmit = /<\s*button\b(?![^>]*type\s*=\s*["']?(?:button|reset))/i.test(body)
+        || /<\s*input\b[^>]*type\s*=\s*["']?(?:submit|image)/i.test(body)
+        || (body.match(/<\s*input\b(?![^>]*type\s*=\s*["']?(?:hidden|checkbox|radio|submit|button|reset|file|image))/gi)?.length ?? 0) === 1;
+      const rawAction = opened.attributes['action'];
+      forms.push({
+        start: opened.start,
+        end: match.index,
+        form: {
+          ...(rawAction !== undefined ? { action: rawAction } : {}),
+          method: (opened.attributes['method'] ?? 'get').toLowerCase(),
+          implicitSubmit,
+        },
+      });
+    } else {
+      open.push({ start: match.index, attributes: parseAttributes(match[2] ?? '') });
+    }
+  }
+  const byOffset = new Map<number, EnclosingForm>();
+  let element: RegExpExecArray | null;
+  const OFFSET_RE = /<\s*[a-zA-Z][a-zA-Z0-9-]*[^>]*>/g;
+  while ((element = OFFSET_RE.exec(html)) !== null) {
+    // Innermost enclosing form wins (last pushed forms close first, so search smallest span).
+    let best: { start: number; end: number; form: EnclosingForm } | undefined;
+    for (const candidate of forms) {
+      if (candidate.start < element.index && element.index < candidate.end && (!best || candidate.end - candidate.start < best.end - best.start)) best = candidate;
+    }
+    if (best) byOffset.set(element.index, best.form);
+  }
+  return byOffset;
 }
 
 function containerLandmark(tag: string, attributes: Record<string, string>): string | undefined {

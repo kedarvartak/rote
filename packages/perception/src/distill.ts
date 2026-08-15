@@ -1,6 +1,6 @@
 import type { CapturedElement, CapturedPage } from '@rote/browser';
 import { sha256Hex } from '@rote/core';
-import type { DistilledNode, StableNodeId } from './types.js';
+import type { DistilledNode, NodeAffordance, StableNodeId } from './types.js';
 
 const INTERACTIVE_TAGS = new Set(['a', 'button', 'input', 'select', 'textarea']);
 const CONTENT_TAGS = new Set(['h1', 'h2', 'h3', 'label', 'p']);
@@ -34,9 +34,76 @@ export function distillPage(page: CapturedPage): DistilledNode[] {
       ...(role === 'checkbox' || role === 'radio'
         ? { state: { checked: 'checked' in element.attributes } }
         : {}),
+      ...(interactive ? { affordance: affordanceOf(element, page.url) } : {}),
     });
   }
   return nodes;
+}
+
+/**
+ * Derives the control's observable contract facts (#143). Only capture-time
+ * attributes participate — tag, type, href, disabled, multiple, draggable, and the
+ * `data-rote-form-*` facts stamped by the browser package — so static and CDP
+ * captures of the same document derive the same affordance.
+ */
+export function affordanceOf(element: CapturedElement, pageUrl: string): NodeAffordance {
+  const attributes = element.attributes;
+  const inputType = element.tag === 'input' ? (attributes['type'] ?? 'text').toLowerCase() : undefined;
+  const control = controlOf(element, inputType);
+  const formAction = attributes['data-rote-form-action'];
+  const rawMethod = attributes['data-rote-form-method'];
+  const formMethod = rawMethod === 'post' || rawMethod === 'dialog' ? rawMethod : rawMethod === 'get' ? 'get' : undefined;
+  const inForm = formMethod !== undefined;
+  const destination = element.tag === 'a' && attributes['href'] !== undefined
+    ? destinationHash(attributes['href'], pageUrl)
+    // Only controls that *go somewhere* carry a destination: links and submit
+    // controls. A field's contract is about how it is filled, not where the form
+    // later posts — otherwise an endpoint version bump would stop every fill.
+    : inForm && control === 'submit'
+      ? destinationHash(formAction ?? pageUrl, pageUrl)
+      : undefined;
+  const enterBehavior: NodeAffordance['enter_behavior'] = control === 'multi_line_text'
+    ? 'inserts_newline'
+    : control === 'single_line_text' && attributes['data-rote-implicit-submit'] === 'true'
+      ? 'submits_form'
+      : 'none';
+  return {
+    control,
+    ...(inputType !== undefined ? { input_type: inputType } : {}),
+    enter_behavior: enterBehavior,
+    ...(destination !== undefined ? { destination_hash: destination } : {}),
+    ...(formMethod !== undefined && destination !== undefined ? { form_method: formMethod } : {}),
+    enabled: !('disabled' in attributes) && attributes['aria-disabled'] !== 'true',
+    draggable: attributes['draggable'] === 'true',
+  };
+}
+
+function controlOf(element: CapturedElement, inputType: string | undefined): NodeAffordance['control'] {
+  if (element.tag === 'a') return 'link';
+  if (element.tag === 'textarea') return 'multi_line_text';
+  if (element.tag === 'select') return 'multiple' in element.attributes ? 'select_multiple' : 'select_single';
+  if (element.tag === 'button') return (element.attributes['type'] ?? 'submit').toLowerCase() === 'submit' ? 'submit' : 'button';
+  if (element.tag === 'input' && inputType) {
+    if (inputType === 'submit' || inputType === 'image') return 'submit';
+    if (inputType === 'button' || inputType === 'reset') return 'button';
+    if (inputType === 'checkbox') return 'checkbox';
+    if (inputType === 'radio') return 'radio';
+    if (inputType === 'file') return 'file';
+    return 'single_line_text';
+  }
+  const role = element.attributes['role'];
+  if (role === 'link') return 'link';
+  if (role === 'button') return 'button';
+  return 'generic';
+}
+
+function destinationHash(target: string, pageUrl: string): string | undefined {
+  try {
+    const url = new URL(target, pageUrl);
+    return sha256Hex(`${url.origin}${url.pathname}`).slice(0, 16);
+  } catch {
+    return undefined;
+  }
 }
 
 function isVisible(element: CapturedElement): boolean {

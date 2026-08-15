@@ -1,6 +1,6 @@
-import { assertBrowserExpect, assertPostActionEvidence, BrowserCapabilityUnsupportedError, BrowserExpectationError, classifyBrowserActionSafety, derivePostActionEvidence, DragContextMismatchError, ElementResolutionConflictError, ElementResolutionError, ElementResolutionStaleIdentityError, normalizeKeyChord, PostActionEvidenceError, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
+import { ActionContractUnavailableError, assertBrowserExpect, assertPostActionEvidence, BrowserCapabilityUnsupportedError, deriveActionContract, BrowserExpectationError, classifyBrowserActionSafety, derivePostActionEvidence, DragContextMismatchError, ElementResolutionConflictError, ElementResolutionError, ElementResolutionStaleIdentityError, normalizeKeyChord, PostActionEvidenceError, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
-import type { BrowserExpect } from '@rote/core';
+import type { ActionContract, BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, stableNodeRef, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext, assertCacheStablePrefix } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
@@ -208,6 +208,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(resolution ? { resolution } : {}),
         ...(dispatch?.targetResolution ? { targetResolution: dispatch.targetResolution } : {}),
         ...(action.kind !== 'done' ? { actionSafety: classifyBrowserActionSafety(action.kind) } : {}),
+        ...(dispatch?.actionContract ? { actionContract: dispatch.actionContract } : {}),
         ...(pageTransition ? { pageTransition } : {}),
       };
       steps.push(recordedStep);
@@ -321,6 +322,8 @@ function resolvedExpect(expect: BrowserExpect, originalSelector?: string, resolv
 
 interface PreparedDispatch {
   resolution?: ElementResolutionResult;
+  /** Contract of the resolved live target (#143); recorded, never enforced against a planner. */
+  actionContract?: ActionContract;
   /** Present only for `dragAndDrop`. */
   targetResolution?: ElementResolutionResult;
   /** Present only for a validated `upload`; content stays out of every record. */
@@ -350,12 +353,14 @@ function prepareDispatch(
     && (resolution.strategy === 'text-proximity' || resolution.strategy === 'selector')) {
     throw new ElementResolutionStaleIdentityError(action, resolution.selector, resolution.stableId);
   }
+  const actionContract = resolution ? contractForResolution(action.kind, resolution, nodes) : undefined;
+  const contractPart = actionContract ? { actionContract } : {};
   if (action.kind === 'upload') {
     const file = uploadFiles?.find((candidate) => candidate.file_id === action.fileId);
     // INVARIANT: an upload outside the injected allowlist never reaches a
     // backend; the error names ids only, never file names, paths, or content.
     if (!file) throw new UploadNotAllowlistedError(action.fileId, (uploadFiles ?? []).map((candidate) => candidate.file_id));
-    return { ...(resolution ? { resolution } : {}), uploadFile: file };
+    return { ...(resolution ? { resolution } : {}), ...contractPart, uploadFile: file };
   }
   if (action.kind === 'dragAndDrop') {
     const targetResolution = resolveElementTarget(nodes, {
@@ -369,9 +374,25 @@ function prepareDispatch(
     if (resolution?.context?.contextHash !== targetResolution.context?.contextHash) {
       throw new DragContextMismatchError(resolution?.context?.contextHash, targetResolution.context?.contextHash);
     }
-    return { ...(resolution ? { resolution } : {}), targetResolution };
+    return { ...(resolution ? { resolution } : {}), ...contractPart, targetResolution };
   }
-  return resolution ? { resolution } : {};
+  return resolution ? { resolution, ...contractPart } : {};
+}
+
+/** Derives the live contract for the resolved node; a legacy node without affordance yields none. */
+function contractForResolution(
+  kind: Exclude<BrowserAction['kind'], 'navigate' | 'done'>,
+  resolution: ElementResolutionResult,
+  nodes: readonly DistilledNode[],
+): ActionContract | undefined {
+  const node = nodes.find((candidate) => (resolution.stableId ? stableNodeRef(candidate.id) === resolution.stableId : candidate.selectorHint === resolution.selector));
+  if (!node) return undefined;
+  try {
+    return deriveActionContract({ verb: kind, node });
+  } catch (error) {
+    if (error instanceof ActionContractUnavailableError) return undefined;
+    throw error;
+  }
 }
 
 function resolveAction(action: BrowserAction, nodes: readonly DistilledNode[]): ElementResolutionResult | undefined {

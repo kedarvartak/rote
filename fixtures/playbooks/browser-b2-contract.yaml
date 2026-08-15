@@ -1,0 +1,69 @@
+# Contract-bearing subset of the B2 registration flow (#143). Each element step
+# carries the value-free action contract derived from the frozen b2-vendor-form
+# fixture at https://fixture.test/vendors/register; replay compares it against
+# the live target before dispatch and returns BROWSER_CONTRACT_MISMATCH on an
+# incompatible affordance, destination, safety, or precondition change.
+playbook: browser-b2-contract
+version: 1
+
+task_signature:
+  intent_description: Submit the vendor registration company field with contract-gated replay
+  env_fingerprint:
+    domain: fixture.test
+    tool_prefixes: [browser.]
+
+params:
+  - name: initial_url
+    type: string
+  - name: company_name
+    type: string
+
+steps:
+  - id: open_registration
+    kind: deterministic
+    tool: browser.navigate
+    args: { url: "{{initial_url}}" }
+    expect: { text_visible: "Company name" }
+    on_fail: fallback
+  - id: fill_company
+    kind: deterministic
+    depends_on: [open_registration]
+    tool: browser.fill
+    args:
+      selector: "#company-name"
+      stableId: "v2:d74d412bb4457dcb"
+      role: textbox
+      name: "Company name"
+      value: "{{company_name}}"
+      contract:
+        version: 1
+        verb: fill
+        target: { role: textbox, name: "Company name", stable_id: "v2:d74d412bb4457dcb" }
+        affordance: { control: single_line_text, input_type: text, enter_behavior: submits_form, draggable: false }
+        safety: local_input
+        preconditions: { visible: true, enabled: true }
+    expect: { input_value: "#company-name", equals: "{{company_name}}" }
+    on_fail: fallback
+  - id: submit_registration
+    kind: deterministic
+    depends_on: [fill_company]
+    tool: browser.click
+    args:
+      selector: "#registration-submit"
+      stableId: "v2:eb12e7244518c290"
+      role: button
+      name: "Submit registration"
+      contract:
+        version: 1
+        verb: click
+        target: { role: button, name: "Submit registration", stable_id: "v2:eb12e7244518c290" }
+        affordance: { control: submit, enter_behavior: none, destination_hash: "a58ac76f172d2339", form_method: get, draggable: false }
+        safety: navigation
+        preconditions: { visible: true, enabled: true }
+    expect: { text_visible: "Vendor registration complete" }
+    on_fail: fallback
+
+verify:
+  - text_visible: "Vendor registration complete"
+
+confidence: 1

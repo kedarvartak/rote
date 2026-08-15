@@ -39,6 +39,13 @@ export interface ExecutorResult {
   completedStepIds: string[];
   failedStepId?: string;
   reason?: string;
+  /**
+   * Typed code of the failure that ended the run (tool error code such as
+   * `BROWSER_CONTRACT_MISMATCH`), so a fallback is classified, not just described.
+   * A pre-dispatch code means the failed step performed no side effect; completed
+   * steps are never implied rolled back either way.
+   */
+  failureCode?: string;
   /** Attempt count per step id that was executed at least once. */
   attempts: Record<string, number>;
   /** Steps whose stale selector was safely replaced by semantic target resolution. */
@@ -70,6 +77,8 @@ export class JudgmentOutOfEnumError extends Error {
 interface StepAttemptResult {
   pass: boolean;
   reason: string;
+  /** Typed tool error code when the step failed at the tool boundary. */
+  code?: string;
   world: WorldState;
   repaired: boolean;
 }
@@ -134,7 +143,7 @@ export async function runPlaybook(
     });
   }
 
-  async function finish(outcome: ExecutorOutcome, reason?: string, failedStepId?: string): Promise<ExecutorResult> {
+  async function finish(outcome: ExecutorOutcome, reason?: string, failedStepId?: string, failureCode?: string): Promise<ExecutorResult> {
     await queue.drain();
     const manifest: RunManifest = {
       run_id: runId,
@@ -146,7 +155,7 @@ export async function runPlaybook(
       token_usage: tokenUsage,
     };
     await writeRunManifest(paths.manifestPath, manifest);
-    return { outcome, runId, completedStepIds, failedStepId, reason, attempts, repairedStepIds };
+    return { outcome, runId, completedStepIds, failedStepId, reason, ...(failureCode ? { failureCode } : {}), attempts, repairedStepIds };
   }
 
   async function attemptStep(step: Step): Promise<StepAttemptResult> {
@@ -157,7 +166,7 @@ export async function runPlaybook(
       const outcome = await deps.toolCaller.call(step.tool, args);
       record(step.tool, args, outcome.ok ? { result: outcome.result } : { error: outcome.error }, Date.now() - t0);
       if (!outcome.ok) {
-        return { pass: false, reason: outcome.error.message, world, repaired: false };
+        return { pass: false, reason: outcome.error.message, ...(outcome.error.code ? { code: outcome.error.code } : {}), world, repaired: false };
       }
       const resolution = targetResolutionFromResult(outcome.result);
       const nextWorld = mergeWorldState(world, observationFromResult(outcome.result), outcome.result);
@@ -211,7 +220,7 @@ export async function runPlaybook(
 
     world = result.world;
     if (!result.pass) {
-      return finish('fallback', result.reason, step.id);
+      return finish('fallback', result.reason, step.id, result.code);
     }
     completedStepIds.push(step.id);
     if (result.repaired) repairedStepIds.push(step.id);

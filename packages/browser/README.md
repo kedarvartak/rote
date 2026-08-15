@@ -12,6 +12,7 @@ comes in here, then `@rote/perception` turns it into compact observations for th
 
 - `BrowserCaptureBackend` — minimal capture interface.
 - `CapturedPage` / `CapturedElement` — Zod-backed page capture records; static and CDP captures attach hashed, allowlisted top-level container lineage for identity v2 without copying control values into identity. CDP captures also carry `documentToken`, the top-level document epoch (hash of the loader id): a same-document `pushState` keeps it, a document load changes it (#132).
+- Captures stamp value-free form facts for the action-contract gate (#143): `data-rote-form-action` (absolute origin+path of the enclosing form's action), `data-rote-form-method`, and for inputs `data-rote-implicit-submit` (whether Enter submits). The CDP decorator and the static parser derive them identically.
 - `CdpPage.sampleActivity()` — reports `pendingRequests` (unanswered), `streamingResponses` (answered but unfinished: SSE, long-poll, unread bodies), a DOM `mutationVersion`, and a `networkVersion` bumped on every request/response/data/finish edge.
 - `StaticHtmlBackend` / `captureStaticHtml` — fixture backend with associated-label/`aria-labelledby` accessibility enrichment.
 - `CdpBrowserBackend` — captures from an existing CDP HTTP endpoint.
