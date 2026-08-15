@@ -69,7 +69,7 @@ confuse in an architecture doc; this is the boundary.
 | Structural action-contract drift gate | 1 | **built for replay** ([T35](testing/T35-action-contract-gate.md)) — versioned value-free `ActionContract` (verb, identity/context, affordance, safety, preconditions, effect reference) is derived from the live capture and compared with the recorded one before dispatch; incompatible affordance/destination/safety/precondition changes return typed `contract_mismatch` with clean classified fallback, cosmetic/selector/wrapper drift continues, the live loop records contracts for the distiller to persist, and `npm run demo:action-contract` demonstrates all of it in real Chrome ([T35 §Public demonstration](testing/T35-action-contract-gate.md#public-demonstration)) |
 | **Multi-session continuation** (E7.7) | 1 | **built** ([T37](testing/T37-multi-session-continuation.md)) — append-only `TaskCheckpoint` log bound by environment/principal/procedure/bindings digests plus authoritative-evidence references; resume gate runs before any action; executor skips completed steps and checkpoints after each one; verified across real Chrome process restarts |
 | **Playbook distiller** (trajectory → playbook) | 1 | **built (v1, deterministic)** — [T36](testing/T36-distiller-v1.md): keeps dispatched actions (evidence present), prunes with reasons (done, pre-dispatch failures, superseded writes), carries resolved identity + context + recorded action contract, synthesizes `expect` from strong evidence only, learns `verify` from the declarative checks the verifier proved on the recorded success (refusing runs that cannot teach one), templates every declared value and refuses undeclared typed values; B1/B2 record → distill → replay in real Chrome with zero LLM calls and zero edits |
-| **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
+| **Matcher** (select + bind) | 1 | **built (v1, deterministic)** — `@rote/matcher`: fingerprint hard gate before any comparison, task text with param values slotted out scored against the templated intent, every declared param must bind, conservative threshold (0.8) with an ambiguity margin, append-only playbook library; T0 same-shape/new-params selects and replays with zero model calls, T4 near-misses miss; no model call yet (a semantic stage would be tagged `matcher`) |
 | **Site memory** (store + derivation) | 2 | **built as a store** (`@rote/site-memory`) — strict value-free `SiteMemoryRecord` v1 (selector maps, form semantics, page edges, settle priors, coded quirks) partitioned by fingerprint hash, append-only with crash-tolerant reads, derived deterministically from recorded runs (page-key digests recorded per step), consolidated on read with confidence × freshness; the token-budgeted *brief* is not yet rendered into context |
 | **Model routing, speculation** | 2 | **not built** — designed below |
 
@@ -140,7 +140,7 @@ it fails honestly.
 | **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built and measured** — 849 WordPress certification diffs have a 24-character median and 99.6% median reduction against their preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Prefix-cache `[stable][history]`** (B3) | discounted billing on the surviving prefix | **built and OpenAI-economics qualified** — exact-prefix routing cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% ([T11](testing/T11-cache-key-economics.md)) |
 | **Scheduled compaction** (B4) | action history → O(1) in steps; cumulative action-history input → O(n) | **built deterministically; not yet provider/SPA-qualified** |
-| **Replay** (B2) | 0 steps, 0 tokens | distiller v1 built ([T36](testing/T36-distiller-v1.md)); matcher/selection still explicit |
+| **Replay** (B2) | 0 steps, 0 tokens | distiller v1 built ([T36](testing/T36-distiller-v1.md)); matcher v1 selects from the library (`@rote/matcher`) |
 
 ### Caching: exact-prefix routing, measured economics
 
@@ -240,9 +240,9 @@ async function runTask(task: TaskSpec, deps: HarnessDeps): Promise<TaskResult> {
   const brief = deps.memory.brief(fp, task);           // site memory, ≤1K tokens  [planned]
   const ctx = ContextAssembler.init({ task, brief });  // owns cache layout
 
-  const match = deps.memory.matchPlaybook(fp, task);   // [planned]
-  if (match?.confidence >= TAU_REPLAY)
-    return deps.executor.replay(match, task.params);   // zero model steps  [built]
+  const match = matchPlaybook({ task, params, envFingerprint: fp, candidates }); // [built: @rote/matcher]
+  if (match.kind === 'match')                          // gate → intent ≥ τ → unique
+    return deps.executor.replay(match.entry.playbook, match.bindings); // zero model steps [built]
 
   while (true) {
     await deps.action.settled(deps.session);                            // built
