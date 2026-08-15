@@ -252,10 +252,14 @@ recorded on every live element step. Distiller v1 is what persists them.
    pass; completed steps are never dispatched again; interrupted writes recover without
    in-place edits. Credentials and profile management remain P4; continuation is
    reported separately from replay and learned matching.
-10. **Predictor — next** — trace matching, transition models, offline simulation. *The kill gate
-    comes first and costs no systems work*: **≥70% warm next-action accuracy** on recorded
-    runs, or P3's speculation thesis dies early and P2 re-scopes to
-    memory-without-prediction.
+10. **Predictor — kill gate passed; systems work next** — trace matching, transition
+    models, offline simulation. *The kill gate came first and cost no systems work*:
+    **≥70% warm next-action accuracy** on recorded runs, else P3's speculation thesis
+    dies early. [T38](testing/T38-predictor-kill-gate.md): a history-only trace matcher
+    predicts 99.4% kind+target over 1,520 warm steps of fixture runs and 93–95% by verb
+    over 2,882 live WordPress steps — the thesis stays alive, with one condition carried
+    forward: record targets in future curve runs so the whole-action number is measured
+    on real pages before speculation ships.
 11. **Site memory** (tier 2) — per-fingerprint selector maps, form semantics, page graph,
     settle-time priors, quirks. Append-only, confidence + freshness. Advisory only: it
     *informs*, never *executes*, so it can be wrong without being dangerous. Its brief is

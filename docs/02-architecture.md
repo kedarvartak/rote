@@ -548,7 +548,10 @@ context — promote on hit, discard on miss, never past the effect boundary. Thi
 action safety classifier (`pure-read` / `local-nav` / `local-write` / `external-effect`),
 a session virtualizer, and a predictor over recorded runs. Research with blind draft
 models reaches ~55% accuracy for ~20% latency; trajectory memory should predict warm
-sites far better. Kill gate: ≥70% top-1 accuracy offline, before any systems work.
+sites far better. Kill gate: ≥70% top-1 accuracy offline, before any systems work —
+**passed** by a history-only trace matcher ([T38](testing/T38-predictor-kill-gate.md):
+99.4% kind+target on fixture runs, 93–95% by verb on live WordPress runs whose targets
+were not recorded).
 
 ## Run economics
 

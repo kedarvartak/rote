@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "predictor": "trace-matching-v0",
+  "threshold": 0.7,
+  "data_sets": [
+    {
+      "id": "T13-g2-rote-trajectories.jsonl",
+      "granularity": "kind_target",
+      "runs": 54,
+      "tasks": 3,
+      "predicted_steps": 347,
+      "kind_target_correct": 338,
+      "kind_only_correct": 340,
+      "kind_target_accuracy": 0.9740634005763689,
+      "kind_only_accuracy": 0.9798270893371758,
+      "wilson_95": [
+        0.9514496602112775,
+        0.9862958418427261
+      ],
+      "per_task": [
+        {
+          "task": "g2-rote-b1",
+          "runs": 18,
+          "steps": 90,
+          "accuracy": 0.9444444444444444
+        },
+        {
+          "task": "g2-rote-b2",
+          "runs": 18,
+          "steps": 180,
+          "accuracy": 1
+        },
+        {
+          "task": "g2-rote-b3",
+          "runs": 18,
+          "steps": 77,
+          "accuracy": 0.948051948051948
+        }
+      ]
+    },
+    {
+      "id": "T20-b2-exact-rote-trajectories.jsonl",
+      "granularity": "kind_target",
+      "runs": 18,
+      "tasks": 1,
+      "predicted_steps": 180,
+      "kind_target_correct": 180,
+      "kind_only_correct": 180,
+      "kind_target_accuracy": 1,
+      "kind_only_accuracy": 1,
+      "wilson_95": [
+        0.979104501755633,
+        1
+      ],
+      "per_task": [
+        {
+          "task": "g2-rote-b2",
+          "runs": 18,
+          "steps": 180,
+          "accuracy": 1
+        }
+      ]
+    },
+    {
+      "id": "T21-b5-drift-trajectories.jsonl",
+      "granularity": "kind_target",
+      "runs": 90,
+      "tasks": 5,
+      "predicted_steps": 756,
+      "kind_target_correct": 756,
+      "kind_only_correct": 756,
+      "kind_target_accuracy": 1,
+      "kind_only_accuracy": 1,
+      "wilson_95": [
+        0.9949443942069814,
+        1
+      ],
+      "per_task": [
+        {
+          "task": "b5-ambiguous-company",
+          "runs": 18,
+          "steps": 36,
+          "accuracy": 1
+        },
+        {
+          "task": "b5-fields-renamed",
+          "runs": 18,
+          "steps": 180,
+          "accuracy": 1
+        },
+        {
+          "task": "b5-stale-selector-decoys",
+          "runs": 18,
+          "steps": 180,
+          "accuracy": 1
+        },
+        {
+          "task": "b5-submit-renamed",
+          "runs": 18,
+          "steps": 180,
+          "accuracy": 1
+        },
+        {
+          "task": "b5-wrappers",
+          "runs": 18,
+          "steps": 180,
+          "accuracy": 1
+        }
+      ]
+    },
+    {
+      "id": "T25-browser-use-0137-certification-rote-trajectories.jsonl",
+      "granularity": "kind_target",
+      "runs": 18,
+      "tasks": 1,
+      "predicted_steps": 180,
+      "kind_target_correct": 180,
+      "kind_only_correct": 180,
+      "kind_target_accuracy": 1,
+      "kind_only_accuracy": 1,
+      "wilson_95": [
+        0.979104501755633,
+        1
+      ],
+      "per_task": [
+        {
+          "task": "g2-rote-b2",
+          "runs": 18,
+          "steps": 180,
+          "accuracy": 1
+        }
+      ]
+    },
+    {
+      "id": "T26-post-action-evidence-trajectories.jsonl",
+      "granularity": "kind_target",
+      "runs": 9,
+      "tasks": 3,
+      "predicted_steps": 57,
+      "kind_target_correct": 57,
+      "kind_only_correct": 57,
+      "kind_target_accuracy": 1,
+      "kind_only_accuracy": 1,
+      "wilson_95": [
+        0.9368611642138491,
+        1
+      ],
+      "per_task": [
+        {
+          "task": "g2-rote-b1",
+          "runs": 3,
+          "steps": 15,
+          "accuracy": 1
+        },
+        {
+          "task": "g2-rote-b2",
+          "runs": 3,
+          "steps": 30,
+          "accuracy": 1
+        },
+        {
+          "task": "g2-rote-b3",
+          "runs": 3,
+          "steps": 12,
+          "accuracy": 1
+        }
+      ]
+    },
+    {
+      "id": "T10-v8-certification-rote.jsonl",
+      "granularity": "kind_only",
+      "runs": 75,
+      "tasks": 5,
+      "predicted_steps": 1314,
+      "kind_target_correct": 1244,
+      "kind_only_correct": 1244,
+      "kind_target_accuracy": 0.9467275494672754,
+      "kind_only_accuracy": 0.9467275494672754,
+      "wilson_95": [
+        0.9332306681791903,
+        0.9576200423429981
+      ],
+      "per_task": [
+        {
+          "task": "rote-WP-N09",
+          "runs": 15,
+          "steps": 149,
+          "accuracy": 0.9865771812080537
+        },
+        {
+          "task": "rote-WP-N13",
+          "runs": 15,
+          "steps": 196,
+          "accuracy": 0.9897959183673469
+        },
+        {
+          "task": "rote-WP-N17",
+          "runs": 15,
+          "steps": 263,
+          "accuracy": 0.9429657794676806
+        },
+        {
+          "task": "rote-WP-N21",
+          "runs": 15,
+          "steps": 321,
+          "accuracy": 0.9345794392523364
+        },
+        {
+          "task": "rote-WP-N25",
+          "runs": 15,
+          "steps": 385,
+          "accuracy": 0.922077922077922
+        }
+      ]
+    },
+    {
+      "id": "T11-cache-key-v1-rote.jsonl",
+      "granularity": "kind_only",
+      "runs": 75,
+      "tasks": 5,
+      "predicted_steps": 1307,
+      "kind_target_correct": 1229,
+      "kind_only_correct": 1229,
+      "kind_target_accuracy": 0.9403213465952563,
+      "kind_only_accuracy": 0.9403213465952563,
+      "wilson_95": [
+        0.9261422992582161,
+        0.951919645000315
+      ],
+      "per_task": [
+        {
+          "task": "rote-WP-N09",
+          "runs": 15,
+          "steps": 146,
+          "accuracy": 0.9726027397260274
+        },
+        {
+          "task": "rote-WP-N13",
+          "runs": 15,
+          "steps": 197,
+          "accuracy": 0.9898477157360406
+        },
+        {
+          "task": "rote-WP-N17",
+          "runs": 15,
+          "steps": 260,
+          "accuracy": 0.9230769230769231
+        },
+        {
+          "task": "rote-WP-N21",
+          "runs": 15,
+          "steps": 323,
+          "accuracy": 0.9040247678018576
+        },
+        {
+          "task": "rote-WP-N25",
+          "runs": 15,
+          "steps": 381,
+          "accuracy": 0.9448818897637795
+        }
+      ]
+    },
+    {
+      "id": "T9-v8-tag-qualification-rote.jsonl",
+      "granularity": "kind_only",
+      "runs": 15,
+      "tasks": 5,
+      "predicted_steps": 261,
+      "kind_target_correct": 243,
+      "kind_only_correct": 243,
+      "kind_target_accuracy": 0.9310344827586207,
+      "kind_only_accuracy": 0.9310344827586207,
+      "wilson_95": [
+        0.8936307503894513,
+        0.9559341211771517
+      ],
+      "per_task": [
+        {
+          "task": "rote-WP-N09",
+          "runs": 3,
+          "steps": 29,
+          "accuracy": 0.9310344827586207
+        },
+        {
+          "task": "rote-WP-N13",
+          "runs": 3,
+          "steps": 39,
+          "accuracy": 1
+        },
+        {
+          "task": "rote-WP-N17",
+          "runs": 3,
+          "steps": 51,
+          "accuracy": 0.9411764705882353
+        },
+        {
+          "task": "rote-WP-N21",
+          "runs": 3,
+          "steps": 65,
+          "accuracy": 0.9076923076923077
+        },
+        {
+          "task": "rote-WP-N25",
+          "runs": 3,
+          "steps": 77,
+          "accuracy": 0.9090909090909091
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "predicted_steps": 1520,
+    "kind_target_accuracy": 0.9940789473684211,
+    "wilson_95": [
+      0.9887850436469968,
+      0.9968817993477261
+    ],
+    "verdict": "pass",
+    "lower_bound_clears": true
+  }
+}

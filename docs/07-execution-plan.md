@@ -176,8 +176,10 @@ distiller v1 can persist that contract. Same-looking incompatible controls dispa
    after target, context, action, and evidence contracts were versioned. Gate met:
    distilled B1/B2 playbooks replay the fixture suite in real Chrome with zero human edits.
 4. **E7.7 multi-session continuation — done** ([T37](testing/T37-multi-session-continuation.md)).
-5. **Predictor kill-gate first**: ≥70% warm next-action accuracy offline on recorded
-   runs, before any speculation systems work. Costs no systems work; can kill P3 early.
+5. **Predictor kill-gate — passed** ([T38](testing/T38-predictor-kill-gate.md)): ≥70%
+   warm next-action accuracy offline on recorded runs; measured 99.4% kind+target on
+   fixture runs and 93–95% by verb on live WordPress runs. Condition carried forward:
+   record targets in curve runs before speculation systems work.
 6. **Site memory** (tier 2, advisory-only) and **model routing** — in that order, each
    behind the measured gates in [03](03-benchmark.md) (T2 ≥30%; ≥50% warm steps off the
    frontier model at parity).
