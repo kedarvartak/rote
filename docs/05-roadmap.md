@@ -191,7 +191,12 @@ strict versioned `ActionContract`, pure derivation from capture-time affordance,
 explicit compatibility matrix, pre-dispatch comparison in `BrowserToolCaller` with a
 classified `BROWSER_CONTRACT_MISMATCH` fallback, adversarial same-identity fixtures
 (input→textarea, changed destination, POST purge behind a fake banner), and contracts
-recorded on every live element step. Distiller v1 is what persists them.
+recorded on every live element step. Distiller v1 persists them ([T36](testing/T36-distiller-v1.md)),
+and the first public demonstration exists: `npm run demo:action-contract` replays one
+recorded procedure against six versions of a page in real Chrome — cosmetic redesign and
+rename/remount continue, textarea/destination/POST-purge variants dispatch nothing with a
+clean classified fallback, and the purge counter (not the banner) shows what blind replay
+would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.md#public-demonstration)).
 
 1. **History compaction** (B4) — **built first under the explicit #107 implementation
    waiver.** Deterministic action-aware compaction bounds planner-visible history while

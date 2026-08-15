@@ -212,6 +212,19 @@ npx tsx scripts/demo/cosmetic-diff-demo.ts
 Edit the HTML inside the script to try your own drift.
 ![Cosmetic-drift demo](docs/demo/cosmetic-diff-demo.gif)
 
+To see the harder half — a control that keeps its identity but changes its *contract* —
+replay one recorded procedure against six versions of a page in a real headless Chrome
+with zero model calls: a cosmetic redesign and an id-rename/remount keep replaying, while
+a field that became a textarea, a submit whose destination moved, and a submit that became
+a POST purge behind a fake "complete" banner dispatch nothing. The last act repeats the
+purge page with the gate off so the purge counter shows what blind replay would have done.
+
+```bash
+npm run demo:action-contract
+```
+
+![Action-contract drift demo](docs/demo/action-contract-drift-demo.gif)
+
 ![Architecture](docs/diagrams/architecture.svg)
 
 ## Design invariants

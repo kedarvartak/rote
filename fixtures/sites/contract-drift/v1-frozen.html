@@ -1,0 +1,21 @@
+<!doctype html>
+<html><head><title>Vendor Registration</title></head><body><main>
+  <!-- Act 0 (#143 demo): the page a run was recorded against. One company field,
+       one submit; submitting shows the confirmation. Every variant is served from
+       the same URL so identity, destination, and fingerprint compare like-for-like. -->
+  <h1>Vendor registration</h1>
+  <form id="registration-form">
+    <label for="company-name">Company name</label>
+    <input id="company-name" name="company_name" />
+    <button id="registration-submit" type="submit">Submit registration</button>
+  </form>
+  <section id="registration-confirmation" role="status" hidden>Vendor registration complete</section>
+  <script>
+    document.querySelector('#registration-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!document.querySelector('#company-name').value) return;
+      document.querySelector('#registration-form').hidden = true;
+      document.querySelector('#registration-confirmation').hidden = false;
+    });
+  </script>
+</main></body></html>

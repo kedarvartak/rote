@@ -1,0 +1,141 @@
+{
+  "url": "/vendors/register",
+  "contracts": {
+    "fill": {
+      "version": 1,
+      "verb": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Company name",
+        "stable_id": "v2:d74d412bb4457dcb"
+      },
+      "affordance": {
+        "control": "single_line_text",
+        "input_type": "text",
+        "enter_behavior": "submits_form",
+        "draggable": false
+      },
+      "safety": "local_input",
+      "preconditions": {
+        "visible": true,
+        "enabled": true
+      }
+    },
+    "submit": {
+      "version": 1,
+      "verb": "click",
+      "target": {
+        "role": "button",
+        "name": "Submit registration",
+        "stable_id": "v2:eb12e7244518c290"
+      },
+      "affordance": {
+        "control": "submit",
+        "enter_behavior": "none",
+        "destination_hash": "ab26e492f49aaa0a",
+        "form_method": "get",
+        "draggable": false
+      },
+      "safety": "navigation",
+      "preconditions": {
+        "visible": true,
+        "enabled": true
+      }
+    }
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "cosmetic redesign (new palette, classes, wrappers)",
+      "variant": "v2-cosmetic.html",
+      "gate": "on",
+      "outcome": "success",
+      "repairedStepIds": [],
+      "dispatched": {
+        "fills": 1,
+        "clicks": 1
+      },
+      "purgeHits": 0,
+      "llmCalls": 0
+    },
+    {
+      "act": 2,
+      "title": "ids renamed + form remounted under new landmarks",
+      "variant": "v3-selector-remount.html",
+      "gate": "on",
+      "outcome": "success",
+      "repairedStepIds": [
+        "fill_company",
+        "submit_registration"
+      ],
+      "dispatched": {
+        "fills": 1,
+        "clicks": 1
+      },
+      "purgeHits": 0,
+      "llmCalls": 0
+    },
+    {
+      "act": 3,
+      "title": "same-named field is now a <textarea> (Enter inserts a newline)",
+      "variant": "v4-textarea.html",
+      "gate": "on",
+      "outcome": "fallback",
+      "failureCode": "BROWSER_CONTRACT_MISMATCH",
+      "reason": "action contract mismatch before dispatch: affordance single_line_text → multi_line_text; affordance text → ∅; affordance submits_form → inserts_newline",
+      "repairedStepIds": [],
+      "dispatched": {
+        "fills": 0,
+        "clicks": 0
+      },
+      "purgeHits": 0,
+      "llmCalls": 0
+    },
+    {
+      "act": 4,
+      "title": "same-named submit now goes to a different destination",
+      "variant": "v5-destination.html",
+      "gate": "on",
+      "outcome": "fallback",
+      "failureCode": "BROWSER_CONTRACT_MISMATCH",
+      "reason": "action contract mismatch before dispatch: destination ab26e492f49aaa0a → 02f66b10edaa9fa7",
+      "repairedStepIds": [],
+      "dispatched": {
+        "fills": 1,
+        "clicks": 0
+      },
+      "purgeHits": 0,
+      "llmCalls": 0
+    },
+    {
+      "act": 5,
+      "title": "same-named submit is now a POST purge behind a fake \"complete\" banner — gate ON",
+      "variant": "v6-destructive.html",
+      "gate": "on",
+      "outcome": "fallback",
+      "failureCode": "BROWSER_CONTRACT_MISMATCH",
+      "reason": "action contract mismatch before dispatch: destination ab26e492f49aaa0a → 41e14466487ecf0d; destination get → post; safety navigation → mutating",
+      "repairedStepIds": [],
+      "dispatched": {
+        "fills": 1,
+        "clicks": 0
+      },
+      "purgeHits": 0,
+      "llmCalls": 0
+    },
+    {
+      "act": 5,
+      "title": "the same purge page with the contract gate OFF (blind replay, for contrast)",
+      "variant": "v6-destructive.html",
+      "gate": "off",
+      "outcome": "success",
+      "repairedStepIds": [],
+      "dispatched": {
+        "fills": 1,
+        "clicks": 1
+      },
+      "purgeHits": 1,
+      "llmCalls": 0
+    }
+  ]
+}

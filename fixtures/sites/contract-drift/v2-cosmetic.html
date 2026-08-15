@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><title>Vendor Registration</title>
+<style>
+  body{font-family:Inter,system-ui;background:#0f172a;color:#e2e8f0;margin:0}
+  .shell{max-width:640px;margin:4rem auto;padding:2.5rem;border-radius:20px;background:#1e293b;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  h1{font-size:2rem;letter-spacing:-.02em} label{display:block;font-size:.75rem;text-transform:uppercase;color:#94a3b8;margin-top:1.5rem}
+  input{width:100%;padding:.9rem 1rem;border-radius:12px;border:2px solid #6366f1;background:#0f172a;color:#e2e8f0}
+  button{margin-top:1.5rem;padding:.9rem 1.5rem;border-radius:999px;background:linear-gradient(90deg,#6366f1,#a855f7);color:#fff;border:0;opacity:.85}
+</style></head><body><main class="shell">
+  <!-- Act 1 (#143 demo): full cosmetic redesign of v1 — new classes, palette,
+       typography, wrappers. Same ids, same contract: replay must continue. -->
+  <h1 class="font-display">Vendor registration</h1>
+  <div class="panel"><div class="panel-body">
+    <form id="registration-form" class="stacked">
+      <div class="field"><label for="company-name">Company name</label>
+      <input id="company-name" name="company_name" class="input-lg" style="font-family:Inter" /></div>
+      <div class="actions"><button id="registration-submit" type="submit" class="btn btn-primary">Submit registration</button></div>
+    </form>
+  </div></div>
+  <section id="registration-confirmation" role="status" hidden style="color:#22c55e;font-weight:600">Vendor registration complete</section>
+  <script>
+    document.querySelector('#registration-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!document.querySelector('#company-name').value) return;
+      document.querySelector('#registration-form').hidden = true;
+      document.querySelector('#registration-confirmation').hidden = false;
+    });
+  </script>
+</main></body></html>
