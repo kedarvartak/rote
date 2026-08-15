@@ -268,4 +268,5 @@ npm run test:enterprise-chrome --workspace @rote/bench
 npm run test:enterprise-context-chrome --workspace @rote/bench
 npm run test:enterprise-verbs-chrome --workspace @rote/bench
 npm run test:enterprise-endurance-chrome --workspace @rote/bench   # ≈75 s, 15 fresh 60-transition runs
+npm run test:enterprise-continuation-chrome --workspace @rote/bench   # E7-CONTINUATION-* across two Chrome process restarts
 ```

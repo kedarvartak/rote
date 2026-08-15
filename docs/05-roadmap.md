@@ -244,11 +244,15 @@ recorded on every live element step. Distiller v1 is what persists them.
    and learned `verify` remain open. Gate:
    distilled playbooks replay the fixture suite with zero human edits. **Reaches parity
    with Skyvern's 2026 baseline; the differentiator is the verification contract.**
-9. **Multi-session task continuation — next** ([#133](https://github.com/kedarvartak/rote/issues/133)) — append-only checkpoints resume an
-   incomplete controlled workflow across browser/process restarts only after fingerprint,
-   live-state, and authoritative-evidence revalidation. Credentials and profile management
-   remain P4; continuation is reported separately from replay and learned matching.
-10. **Predictor** — trace matching, transition models, offline simulation. *The kill gate
+9. **Multi-session task continuation — built** ([#133](https://github.com/kedarvartak/rote/issues/133),
+   [T37](testing/T37-multi-session-continuation.md)) — append-only, digest-bound task
+   checkpoints (`@rote/continuation`) resume an incomplete controlled workflow across
+   real browser/process restarts only after the fingerprint hard gate, principal,
+   procedure-version, bindings, and authoritative-evidence freshness/state checks all
+   pass; completed steps are never dispatched again; interrupted writes recover without
+   in-place edits. Credentials and profile management remain P4; continuation is
+   reported separately from replay and learned matching.
+10. **Predictor — next** — trace matching, transition models, offline simulation. *The kill gate
     comes first and costs no systems work*: **≥70% warm next-action accuracy** on recorded
     runs, or P3's speculation thesis dies early and P2 re-scopes to
     memory-without-prediction.
