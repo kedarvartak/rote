@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { normalizeKeyChord } from '@rote/action';
 import type { AllowedUploadFile, BrowserActionSafety, ElementResolutionResult, NormalizedKeyChord, PostActionEvidence } from '@rote/action';
 import type { BrowserContextCoordinate, CapturedPage } from '@rote/browser';
-import { BrowserExpectSchema, type TokenUsage, type TokenUsageSource } from '@rote/core';
+import { BrowserExpectSchema, type ActionContract, type TokenUsage, type TokenUsageSource } from '@rote/core';
 import type { ProviderUsageReceipt } from '@rote/llm';
 import { StableNodeRefSchema, type AdaptiveRenderedObservation, type DistilledNode } from '@rote/perception';
 import type { HistoryCompactionPolicy, HistoryCompactionRecord, PlannerActionHistory } from './history-compaction.js';
@@ -261,6 +261,13 @@ export interface BrowserAgentStep {
   targetResolution?: ElementResolutionResult;
   /** E7.5 safety classification recorded for every non-`done` dispatched action. */
   actionSafety?: BrowserActionSafety;
+  /**
+   * Value-free action contract derived from the resolved live target before dispatch
+   * (#143): what the distiller may later persist so replay can detect a same-looking
+   * control whose behavior changed. Absent for `navigate`/`done` and for targets
+   * whose capture carries no affordance.
+   */
+  actionContract?: ActionContract;
   /**
    * How this step's page relates to the previous step's (#132). A same-document
    * route change keeps the observation diff base; only a document change resets

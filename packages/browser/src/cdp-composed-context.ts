@@ -230,6 +230,19 @@ const SERIALIZE_COMPOSED_CONTEXT = `(() => {
         const selector = uniqueSelector(live, root);
         if (selector) copied.setAttribute('data-rote-selector', selector);
       }
+      // Observable action-contract facts (#143): which form a control submits
+      // to and whether Enter submits it. Paths only — query strings and values
+      // never cross the capture boundary.
+      const form = live.form instanceof HTMLFormElement ? live.form : (live.closest ? live.closest('form') : null);
+      if (form && live.matches('input, textarea, select, button')) {
+        try { copied.setAttribute('data-rote-form-action', new URL(form.action, document.baseURI).origin + new URL(form.action, document.baseURI).pathname); } catch { /* unparsable action */ }
+        copied.setAttribute('data-rote-form-method', (form.getAttribute('method') || 'get').toLowerCase());
+        if (live instanceof HTMLInputElement) {
+          const submitControl = form.querySelector('button:not([type=button]):not([type=reset]), input[type=submit], input[type=image]');
+          const textFields = form.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]):not([type=reset]):not([type=file]):not([type=image])');
+          copied.setAttribute('data-rote-implicit-submit', submitControl || textFields.length === 1 ? 'true' : 'false');
+        }
+      }
       if (live.matches('input, textarea, select')) {
         copied.setAttribute('value', live.value);
         if (live instanceof HTMLInputElement && (live.type === 'checkbox' || live.type === 'radio')) {

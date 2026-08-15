@@ -10,6 +10,15 @@ beyond what callers pass in. Recording (M1), replay execution (M2), matching
 (M4), and distillation (M5) all depend on `@rote/core` for types and pure
 logic; `@rote/core` itself depends on nothing internal.
 
+## Action contracts (#143)
+
+`ActionContractSchema` (strict, version 1) captures verb, target identity/context,
+value-free affordance, safety class, observable preconditions, and an optional required
+authoritative-effect reference. `compareActionContracts(recorded, current)` applies the
+explicit compatibility matrix: name/stable-id changes are reported drift; verb, role,
+context, affordance, destination, safety, precondition, or declared-effect changes are a
+`contract_mismatch`. See `docs/testing/T35-action-contract-gate.md`.
+
 ## Public API
 
 See `src/index.ts` for the full export list. Highlights:

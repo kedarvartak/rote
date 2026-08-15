@@ -1,6 +1,7 @@
-import { BrowserCapabilityUnsupportedError, ElementResolutionAmbiguityError, ElementResolutionContextMismatchError, KeyChordError, normalizeKeyChord, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionTarget, type NormalizedKeyChord } from '@rote/action';
+import { ActionContractMismatchError, ActionContractUnavailableError, assertActionContract, BrowserCapabilityUnsupportedError, deriveActionContract, ElementResolutionAmbiguityError, ElementResolutionContextMismatchError, KeyChordError, normalizeKeyChord, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionTarget, type NormalizedKeyChord } from '@rote/action';
 import { BrowsingContextStaleError, ClosedShadowRootUnsupportedError, type BrowserContextCoordinate, type CapturedElement, type CapturedPage } from '@rote/browser';
-import { distillPage } from '@rote/perception';
+import { ActionContractSchema, type ActionContractVerb } from '@rote/core';
+import { distillPage, stableNodeRef } from '@rote/perception';
 import type { ToolCallOutcome, ToolCaller } from './tool-caller.js';
 
 export interface BrowserReplayPage {
@@ -137,7 +138,10 @@ export class BrowserToolCaller implements ToolCaller {
       ...(optionalString(tool, args, 'contextHash') ? { contextHash: optionalString(tool, args, 'contextHash') } : {}),
     };
     const hasSemanticIdentity = Boolean(target.stableId || target.contextHash || target.role || target.name || target.text);
-    if (!hasSemanticIdentity) return { selector: requestedSelector, extra: {} };
+    // A recorded contract makes even a selector-only step capture and compare;
+    // without one, legacy selector-only replay keeps its old behavior.
+    const recordedContract = args['contract'] === undefined ? undefined : ActionContractSchema.parse(args['contract']);
+    if (!hasSemanticIdentity && !recordedContract) return { selector: requestedSelector, extra: {} };
     const capture = await this.page.capture();
     const unsupported = target.contextHash
       ? capture.unsupportedContexts?.find((candidate) => candidate.coordinate.contextHash === target.contextHash)
@@ -145,7 +149,23 @@ export class BrowserToolCaller implements ToolCaller {
     if (unsupported?.classification === 'closed_shadow_root_unsupported') {
       throw new ClosedShadowRootUnsupportedError(unsupported.coordinate.contextHash);
     }
-    const resolution = resolveElementTarget(distillPage(capture), target);
+    const nodes = distillPage(capture);
+    const resolution = resolveElementTarget(nodes, target);
+    let contractExtra: Record<string, unknown> = {};
+    if (recordedContract) {
+      // see docs/02 "Structural action-contract drift" (#143) — resolution found
+      // *a* control with this identity; the contract decides whether acting on it
+      // is still the recorded action. Mismatch throws before dispatch.
+      const node = nodes.find((candidate) => (resolution.stableId ? stableNodeRef(candidate.id) === resolution.stableId : candidate.selectorHint === resolution.selector));
+      if (!node) throw new ActionContractUnavailableError(resolution.selector);
+      const current = deriveActionContract({
+        verb: verbForTool(tool),
+        node,
+        ...(recordedContract.required_effect ? { requiredEffect: recordedContract.required_effect } : {}),
+      });
+      const comparison = assertActionContract(recordedContract, current);
+      contractExtra = { action_contract: { compatible: true, drift: comparison.compatible ? comparison.drift : [], safety: current.safety } };
+    }
     return {
       selector: resolution.selector,
       ...(resolution.context ? { context: resolution.context } : {}),
@@ -157,12 +177,29 @@ export class BrowserToolCaller implements ToolCaller {
           repaired: requestedSelector !== resolution.selector,
           ...(resolution.context ? { context: resolution.context } : {}),
         },
+        ...contractExtra,
       },
     };
   }
 }
 
+function verbForTool(tool: string): ActionContractVerb {
+  switch (tool) {
+    case 'browser.fill': return 'fill';
+    case 'browser.select': return 'select';
+    case 'browser.click':
+    case 'browser.download_file': return 'click';
+    case 'browser.hover': return 'hover';
+    case 'browser.press': return 'press';
+    case 'browser.upload': return 'upload';
+    case 'browser.drag_and_drop': return 'dragAndDrop';
+    default: throw new BrowserReplayToolError(tool, 'no action contract verb for tool');
+  }
+}
+
 function browserFailureCode(error: Error): string {
+  if (error instanceof ActionContractMismatchError) return 'BROWSER_CONTRACT_MISMATCH';
+  if (error instanceof ActionContractUnavailableError) return 'ACTION_CONTRACT_UNAVAILABLE';
   if (error instanceof ElementResolutionAmbiguityError) return 'BROWSER_TARGET_AMBIGUOUS';
   if (error instanceof ElementResolutionContextMismatchError) return 'BROWSER_CONTEXT_MISMATCH';
   if (error instanceof BrowsingContextStaleError) return 'BROWSER_CONTEXT_STALE';

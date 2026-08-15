@@ -66,7 +66,7 @@ confuse in an architecture doc; this is the boundary.
 | **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Cache-layout discipline** (B3) | 0 | **built and economically qualified on OpenAI** — exact immutable prefixes receive deterministic cache-routing keys; WP-N25 cost falls 20.5% and clears Browser Use by 16.0% with both 95% intervals above zero ([T11](testing/T11-cache-key-economics.md)) |
 | **History compaction** (B4) | 0 | **built; 60-step SPA endurance certified deterministically** — action history compacts after 24 actions on 16-action boundaries, retaining an exact tail plus provenance-preserving representatives; [T34](testing/T34-spa-endurance-certification.md) certifies ≤31 visible actions and 3 reported boundaries over 60 transitions in 15 fresh real-Chrome runs; provider-billed economics remain unmeasured |
-| Structural action-contract drift gate | 1 | **not built** — #143 is the P2 priority spanning contexts, authoritative evidence, action contracts, endurance, and distillation; E7.2 identity is necessary but does not prove semantic compatibility |
+| Structural action-contract drift gate | 1 | **built for replay** ([T35](testing/T35-action-contract-gate.md)) — versioned value-free `ActionContract` (verb, identity/context, affordance, safety, preconditions, effect reference) is derived from the live capture and compared with the recorded one before dispatch; incompatible affordance/destination/safety/precondition changes return typed `contract_mismatch` with clean classified fallback, cosmetic/selector/wrapper drift continues, and the live loop records contracts for the distiller to persist |
 | **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
 | **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
 | **Site memory, model routing, speculation** | 2 | **not built** — designed below |
@@ -325,9 +325,18 @@ between resolution and action returns a typed stale-context failure.
 
 Identity answers **which control**, not **whether its behavior is still compatible**.
 [#143](https://github.com/kedarvartak/rote/issues/143) adds the structural action-contract
-trust gate across E7.3–E7.6 and distiller v1. Until that gate compares versioned affordance,
-safety, precondition, and authoritative-effect contracts before dispatch, Rote does not
-claim protection from a same-looking control whose semantics changed.
+trust gate ([T35](testing/T35-action-contract-gate.md)). Every distilled interactive node
+carries a value-free `affordance` (control kind, input type, Enter behavior, destination
+digest, form method, enabled, draggable); `deriveActionContract` turns the resolved node plus
+verb into a strict versioned `ActionContract` with a safety class refined by what the
+control observably does; `compareActionContracts` applies an explicit matrix — cosmetic,
+selector, wrapper, name, and stable-id drift continue, while verb, role, context,
+affordance, destination, safety, precondition, or declared-effect changes are
+`contract_mismatch`. Replay compares the recorded contract with the live one **before
+dispatch** and falls back with a typed code; the live loop records the contract on every
+element step so distiller v1 persists behavior, not just identity. The gate is as
+expressive as the capture: a same-path handler whose server behavior changed is caught by
+E7.4's authoritative outcome, not by this comparison.
 
 ### Enterprise browser contracts (E7.1 frozen; mechanisms planned)
 

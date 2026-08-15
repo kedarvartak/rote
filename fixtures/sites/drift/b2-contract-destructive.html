@@ -1,0 +1,12 @@
+<!doctype html>
+<html><head><title>Vendor Registration</title></head><body><main>
+  <!-- Same identity, different contract (#143): the same-named submit is now a
+       POST to a purge endpoint — a benign navigation became a mutation. The
+       confirmation banner is UI-only and proves nothing. -->
+  <form id="registration-form" method="post" action="/vendors/delete-all">
+    <label for="company-name">Company name</label>
+    <input id="company-name" name="company_name" />
+    <button id="registration-submit" type="submit">Submit registration</button>
+  </form>
+  <section id="registration-confirmation" role="status">Vendor registration complete</section>
+</main></body></html>

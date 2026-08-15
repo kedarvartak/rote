@@ -186,6 +186,13 @@ must show cosmetic redesign continuing, harmless selector/remount drift resolvin
 same-looking semantic contract change dispatching nothing with clean cold fallback. E7.2
 alone is identity infrastructure, **not** structural-drift support.
 
+**Status: the gate is built for replay** ([T35](testing/T35-action-contract-gate.md)):
+strict versioned `ActionContract`, pure derivation from capture-time affordance, an
+explicit compatibility matrix, pre-dispatch comparison in `BrowserToolCaller` with a
+classified `BROWSER_CONTRACT_MISMATCH` fallback, adversarial same-identity fixtures
+(input→textarea, changed destination, POST purge behind a fake banner), and contracts
+recorded on every live element step. Distiller v1 is what persists them.
+
 1. **History compaction** (B4) — **built first under the explicit #107 implementation
    waiver.** Deterministic action-aware compaction bounds planner-visible history while
    preserving an append-only tail between 16-action boundaries, where one cache miss is
@@ -230,7 +237,8 @@ alone is identity infrastructure, **not** structural-drift support.
    across a browser/process restart is #133.
 8. **Distiller v1 — next** (tier 1) — trajectory → playbook: causal pruning, parameterization,
    assertion synthesis. It follows the identity, context, action, and evidence contracts
-   so learned playbooks do not fossilize v1 collisions or UI-only assertions. Gate:
+   so learned playbooks do not fossilize v1 collisions or UI-only assertions, and it
+   persists each step's recorded `actionContract` so replay is contract-gated ([T35](testing/T35-action-contract-gate.md)). Gate:
    distilled playbooks replay the fixture suite with zero human edits. **Reaches parity
    with Skyvern's 2026 baseline; the differentiator is the verification contract.**
 9. **Multi-session task continuation** ([#133](https://github.com/kedarvartak/rote/issues/133)) — append-only checkpoints resume an

@@ -25,6 +25,11 @@ See `src/index.ts`. Highlights:
   `AnthropicLlmClient` remains available for opt-in compatibility, while
   `BrowserToolCaller` adapts a stateful CDP page for verified browser replay and returns
   `BROWSER_TARGET_AMBIGUOUS`, `BROWSER_CONTEXT_MISMATCH`, `BROWSER_CONTEXT_STALE`, or `CLOSED_SHADOW_ROOT_UNSUPPORTED` without mutation when identity/context checks fail.
+  Steps whose args carry a recorded `contract` (#143) are contract-gated: the live target's
+  contract is derived after resolution and compared before dispatch; a mismatch returns
+  `BROWSER_CONTRACT_MISMATCH` (nothing dispatched) and `runPlaybook` reports
+  `outcome: fallback` with `failureCode`, `failedStepId`, and untouched `completedStepIds`.
+  Successful gated calls carry `action_contract: {compatible, drift, safety}` in the result.
   E7.5 replay tools (#131): `browser.hover`, `browser.press` (chords normalize or fail
   `KEY_CHORD_INVALID`), `browser.upload` (injected allowlist, `UPLOAD_NOT_ALLOWLISTED`
   otherwise), and `browser.drag_and_drop`; a backend without a verb returns
@@ -65,7 +70,8 @@ See `src/index.ts`. Highlights:
   v1. Calls delegate to the shared source-tagged `@rote/llm` boundary.
 
 The stateful fixture browser playbooks live at
-`fixtures/playbooks/browser-b1-stateful.yaml` and `browser-b2-stateful.yaml`; both replay
+`fixtures/playbooks/browser-b1-stateful.yaml` and `browser-b2-stateful.yaml`
+(`browser-b2-contract.yaml` is the contract-gated subset used by T35); both replay
 through real local Chrome with zero LLM calls in the opt-in CDP suite. B2 binds and
 verifies all eight requested values; generic completion text is not sufficient. Its
 stored actions retain stable ID plus role/name identity, so `BrowserToolCaller` resolves
