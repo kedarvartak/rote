@@ -58,6 +58,21 @@ export class ElementResolutionConflictError extends ElementResolutionError {
   }
 }
 
+/**
+ * Raised when an action re-issues a stable identity that an earlier dispatch already
+ * consumed and that no longer exists in the live capture. On a remounting or
+ * virtualized SPA the fuzzy chain would otherwise heal "the button I already
+ * clicked" onto its similarly named successor — a dispatch the planner never
+ * chose (#132). Rename drift of a never-dispatched identity is unaffected.
+ */
+export class ElementResolutionStaleIdentityError extends ElementResolutionError {
+  constructor(target: ElementResolutionTarget, readonly resolvedSelector: string, readonly resolvedStableId?: string) {
+    super(target);
+    this.name = 'ElementResolutionStaleIdentityError';
+    this.message = `stale browser target identity: ${target.stableId} was already dispatched, is absent from the current observation, and would rebind to ${resolvedSelector}${resolvedStableId ? ` (${resolvedStableId})` : ''}`;
+  }
+}
+
 /** Resolves stable ID → role+name → text proximity → supplied selector. */
 export function resolveElementTarget(
   nodes: readonly DistilledNode[],

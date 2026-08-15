@@ -261,6 +261,24 @@ export interface BrowserAgentStep {
   targetResolution?: ElementResolutionResult;
   /** E7.5 safety classification recorded for every non-`done` dispatched action. */
   actionSafety?: BrowserActionSafety;
+  /**
+   * How this step's page relates to the previous step's (#132). A same-document
+   * route change keeps the observation diff base; only a document change resets
+   * it. Absent on the first step and when neither URL nor document changed.
+   */
+  pageTransition?: BrowserPageTransition;
+}
+
+/** Page epoch relation between consecutive steps; see `BrowserAgentStep.pageTransition`. */
+export interface BrowserPageTransition {
+  /** URL differs from the previous step (real navigation or SPA route push). */
+  routeChanged: boolean;
+  /**
+   * Top-level document was replaced. Derived from `CapturedPage.documentToken`
+   * when both captures carry one; otherwise a URL change is treated as a
+   * document change (legacy backends cannot tell the two apart).
+   */
+  documentChanged: boolean;
 }
 
 export interface BrowserAgentResult {

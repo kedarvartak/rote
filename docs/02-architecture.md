@@ -60,12 +60,12 @@ confuse in an architecture doc; this is the boundary.
 | Agent loop, context assembler, tagged LLM client | 0 | **built** |
 | Benchmark matrix, per-source accounting, head-to-head gate | — | **built** |
 | Enterprise contract corpus (E7.1) | — | **frozen and fixture-qualified** — 19 synthetic grid/frame/shadow/control/SPA/restart cases bind exact external oracles or dispatch-free typed failures; direct real-Chrome fixture controls pass, but product mechanisms remain #128–#133 ([T29](testing/T29-enterprise-contract-corpus.md)) |
-| Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built for navigate/fill/select/click/hover/press/upload/dragAndDrop across captured composed contexts** — [T31](testing/T31-composed-browser-contexts.md) qualifies nested-context click dispatch; [T33](testing/T33-enterprise-action-vocabulary.md) qualifies the E7.5 verbs against the frozen control oracles: explicit normalized chords only, uploads restricted to an injected id-referenced allowlist, same-context drag with typed non-draggable failure, and unsupported backend capabilities returning typed errors |
+| Action plane: settledness, resolution chain, optional expect + scoped repair | — | **built for navigate/fill/select/click/hover/press/upload/dragAndDrop across captured composed contexts; SPA-endurance certified** — [T34](testing/T34-spa-endurance-certification.md) adds document-epoch diff-base retention, the stale-identity dispatch guard, and network-edge settledness with a bounded background-request policy; [T31](testing/T31-composed-browser-contexts.md) qualifies nested-context click dispatch; [T33](testing/T33-enterprise-action-vocabulary.md) qualifies the E7.5 verbs against the frozen control oracles: explicit normalized chords only, uploads restricted to an injected id-referenced allowlist, same-context drag with typed non-draggable failure, and unsupported backend capabilities returning typed errors |
 | Final verification | — | **built with an authoritative evidence gate (E7.4)** — every success requires an injected verifier; tasks may additionally declare required authoritative evidence classes, satisfied only by versioned redacted envelopes from injected fixture/API/database/download adapters with subject and freshness binding ([T32](testing/T32-authoritative-outcome-evidence.md)); the public CLI verifier remains visible-text/URL based and counts as supporting evidence only |
 | **Observation eviction** — keep actions, drop prior observations | 0 | **built and recall-stress tested** — post-eviction context marks the recall boundary; unavailable facts and fabricated comparisons fail closed ([T18](testing/T18-eviction-recall-trade.md)) |
 | **Diff observations** (A4) | 0 | **built and real-page measured** — the G1 certification emits 849 diffs with a 24-character median and 99.6% median reduction relative to each diff's preceding grounded base ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Cache-layout discipline** (B3) | 0 | **built and economically qualified on OpenAI** — exact immutable prefixes receive deterministic cache-routing keys; WP-N25 cost falls 20.5% and clears Browser Use by 16.0% with both 95% intervals above zero ([T11](testing/T11-cache-key-economics.md)) |
-| **History compaction** (B4) | 0 | **built deterministically; long-run qualification pending** — action history compacts after 24 actions on 16-action boundaries, retaining an exact tail plus provenance-preserving representatives; E7.6 owns 50+ step provider/SPA certification |
+| **History compaction** (B4) | 0 | **built; 60-step SPA endurance certified deterministically** — action history compacts after 24 actions on 16-action boundaries, retaining an exact tail plus provenance-preserving representatives; [T34](testing/T34-spa-endurance-certification.md) certifies ≤31 visible actions and 3 reported boundaries over 60 transitions in 15 fresh real-Chrome runs; provider-billed economics remain unmeasured |
 | Structural action-contract drift gate | 1 | **not built** — #143 is the P2 priority spanning contexts, authoritative evidence, action contracts, endurance, and distillation; E7.2 identity is necessary but does not prove semantic compatibility |
 | **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
 | **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
@@ -76,7 +76,7 @@ Designed but absent: `decision predictor memory mcp-server`.
 
 **Tier 0's launch scope is built and measured.** G1 measures eviction/diff growth, T11
 qualifies cache layout, corrected G2 measures task levels, and T21 grades deterministic
-target drift. History compaction landed first under the explicit #107 implementation waiver; T28 subsequently closed P1 launch evidence, and E7.6 still owns long-run qualification ([05](05-roadmap.md)).
+target drift. History compaction landed first under the explicit #107 implementation waiver; T28 subsequently closed P1 launch evidence, and T34 certified 60-step SPA endurance deterministically ([05](05-roadmap.md)).
 
 ## The four planes
 
@@ -197,8 +197,10 @@ actions thereafter, and keeps at least eight exact recent actions plus at most e
 representatives. Boundary metadata records the compacted count and digest without values.
 A disabled policy preserves the unbounded baseline. The 16-action interval is based on
 T10's measured 35–40 logical tokens/action and OpenAI's 128-token cache increments; it is
-a deterministic initial schedule, not yet a provider-cost optimum. E7.6 must qualify the
-cache-miss/savings trade over 50+ steps before any economic claim.
+a deterministic initial schedule, not yet a provider-cost optimum. T34 certifies the
+mechanism over 60 SPA transitions (three reported boundaries, non-growing peaks); the
+provider-billed cache-miss/savings trade over 50+ steps is still required before any
+economic claim.
 
 ### What is unproven
 
@@ -210,8 +212,9 @@ contract remains fail-closed above 100,000 characters.
 The B4 mechanism now structurally bounds planner-visible action count, so its cumulative
 action-history contribution is linear in step count. This does **not** yet prove a linear
 provider curve, production-SPA parity, or a cost win: task text, current observations,
-repair content, cache misses, and provider tokenization remain measured terms, and no
-50+ step certification has run. The frozen pre-cache-key matrix did not prove cost or latency wins. T11 subsequently makes
+repair content, cache misses, and provider tokenization remain measured terms; the only
+50+ step certification so far ([T34](testing/T34-spa-endurance-certification.md)) is
+deterministic and zero-token. The frozen pre-cache-key matrix did not prove cost or latency wins. T11 subsequently makes
 Rote 16.0% cheaper than Browser Use at WP-N25 (95% CI 6.2–26.2%), but WP-N09 still loses
 and crosses parity: this is not a universal cost claim. The eviction trade is now
 fake-world stress-tested to fail cleanly when an earlier-page fact is unavailable (T18),
@@ -352,8 +355,15 @@ one before it ([07 §E7](07-execution-plan.md)):
    file material never enters observations, records, errors, or evidence; drag requires
    one browsing context and a draggable source; new-verb DOM reactions are recorded but
    never enforced — declared authoritative outcomes stay with E7.4 evidence.
-6. **Next:** certify B4 on a 50+ transition single-session SPA before adding append-only,
-   fingerprint-gated multi-session continuation after distiller v1 (#132–#133).
+6. **Done:** certify B4 on a 60-transition single-session SPA through the product loop
+   (#132, [T34](testing/T34-spa-endurance-certification.md)). `CapturedPage.documentToken`
+   separates same-document route pushes from document loads so the diff base survives an
+   SPA transition; an already-dispatched identity that vanished on remount cannot rebind
+   by fuzzy text (`ElementResolutionStaleIdentityError`); settledness counts unanswered
+   requests only and treats every network edge as activity, so long-lived background
+   channels are bounded by policy rather than waited on forever.
+7. **Next:** distiller v1 persists these contracts; append-only, fingerprint-gated
+   multi-session continuation follows (#133).
 
 This sequence intentionally puts contracts before learning. Otherwise the distiller would
 turn target collisions, top-level-only traversal, UI-only assertions, and an incomplete

@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Certify 60-transition single-session SPA endurance through the product loop in 15 fresh real-Chrome runs: same-document route pushes keep the observation diff base via `CapturedPage.documentToken`, already-dispatched remounted identities are rejected before dispatch (`ElementResolutionStaleIdentityError`), settledness counts unanswered requests only and treats every network edge as activity under a frozen bounded background policy, and a pure `certifyEndurance` reports history/context/settle/recorder bounds with the T34 data set re-certified in tests (#148).
 - **P2**: Add grounded hover, explicit normalized keyboard chords, id-referenced allowlisted file upload, and same-context drag/drop as shared product verbs with per-step safety classes, structural file redaction, typed unsupported/allowlist/chord/context failures, never-enforced reaction evidence, and real-Chrome qualification against the frozen control oracles (#147).
 - **P2**: Gate task success on versioned authoritative outcome evidence: strict digest-only envelopes with subject and freshness binding, task-declared required classes that UI or model judgment can never satisfy, typed missing/stale/task-mismatch/inconsistent failures, and injected fixture/API/database/download adapters (#146).
 - **P2**: Capture, diff, resolve, and dispatch through nested same/cross-origin frames and open shadow roots with durable context paths, fresh document tokens, exact external fixture oracles, and mandatory real-Chrome qualification (#145).

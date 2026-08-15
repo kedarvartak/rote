@@ -189,8 +189,9 @@ alone is identity infrastructure, **not** structural-drift support.
 1. **History compaction** (B4) — **built first under the explicit #107 implementation
    waiver.** Deterministic action-aware compaction bounds planner-visible history while
    preserving an append-only tail between 16-action boundaries, where one cache miss is
-   explicit. The mechanism completes tier 0 structurally; E7.6 still must qualify 50+
-   step provider economics and SPA parity before any linear-scaling or cost claim.
+   explicit. The mechanism completes tier 0 structurally; T34 certifies 60-step SPA
+   endurance under it deterministically, and provider-billed 50+ step economics still
+   must be measured before any cost claim.
 2. **Freeze the enterprise browser contract corpus — done** ([#127](https://github.com/kedarvartak/rote/issues/127),
    [T29](testing/T29-enterprise-contract-corpus.md)). Nineteen synthetic repeated-grid,
    iframe/open-shadow, control, authoritative-evidence, SPA, and restart cases bind exact
@@ -218,10 +219,16 @@ alone is identity infrastructure, **not** structural-drift support.
    and the CDP backend. Every verb lands with safety classification, redaction,
    settledness, and reaction-only evidence semantics; unsupported backends fail typed and
    there is no arbitrary-event escape hatch.
-7. **Long-running single-session SPA endurance — next** ([#132](https://github.com/kedarvartak/rote/issues/132)) — certify 50+ transitions,
-   route epochs, remounts, virtualization, background traffic, and bounded context under
-   B4. This is deliberately separate from continuation across a browser/process restart.
-8. **Distiller v1** (tier 1) — trajectory → playbook: causal pruning, parameterization,
+7. **Long-running single-session SPA endurance — built** ([#132](https://github.com/kedarvartak/rote/issues/132),
+   [T34](testing/T34-spa-endurance-certification.md)) — 15 fresh real-Chrome runs complete
+   the frozen 60-transition SPA contract through the product loop under the default B4
+   policy: same-document route pushes keep the diff base (document epochs, not URL
+   epochs), planner-visible history stays ≤31 actions with 3 reported compaction
+   boundaries, already-dispatched remounted identities are rejected before dispatch,
+   settledness is bounded under long-lived background traffic, and success is exact
+   authoritative evidence only. Provider-billed B4 economics remain unmeasured; continuation
+   across a browser/process restart is #133.
+8. **Distiller v1 — next** (tier 1) — trajectory → playbook: causal pruning, parameterization,
    assertion synthesis. It follows the identity, context, action, and evidence contracts
    so learned playbooks do not fossilize v1 collisions or UI-only assertions. Gate:
    distilled playbooks replay the fixture suite with zero human edits. **Reaches parity

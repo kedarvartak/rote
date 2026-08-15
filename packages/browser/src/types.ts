@@ -40,6 +40,13 @@ export const CapturedPageSchema = z.object({
   html: z.string(),
   elements: z.array(CapturedElementSchema),
   unsupportedContexts: z.array(UnsupportedBrowserContextSchema).optional(),
+  /**
+   * Top-level document epoch (hash of the CDP loader id). Same-document route
+   * changes (`history.pushState`) keep it; only a real document load changes it,
+   * so consumers can tell an SPA transition from a navigation (#132). Static and
+   * fake backends omit it and fall back to URL identity.
+   */
+  documentToken: z.string().length(16).optional(),
 });
 export type CapturedPage = z.infer<typeof CapturedPageSchema>;
 

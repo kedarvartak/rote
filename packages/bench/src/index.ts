@@ -33,3 +33,4 @@ export * from './magnitude-qualification.js';
 export * from './enterprise-contract.js';
 export * from './enterprise-oracle.js';
 export * from './enterprise-evidence.js';
+export * from './enterprise-endurance.js';

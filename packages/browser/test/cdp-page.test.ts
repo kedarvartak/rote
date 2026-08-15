@@ -27,6 +27,16 @@ describe('CdpPage', () => {
     pages.push(page);
 
     await page.navigate(server.url('b2-vendor-form.html'));
+    // Document epoch (#132): a same-document route push keeps the token; a
+    // real navigation replaces it.
+    const initial = await page.capture();
+    expect(initial.documentToken).toMatch(/^[0-9a-f]{16}$/);
+    await page.evaluate<void>(`history.pushState({}, '', '/b2-vendor-form.html?route=next')`);
+    const routed = await page.capture();
+    expect(routed.url).not.toBe(initial.url);
+    expect(routed.documentToken).toBe(initial.documentToken);
+    await page.navigate(server.url('b2-vendor-form.html'));
+    expect((await page.capture()).documentToken).not.toBe(initial.documentToken);
     const initialActivity = await page.sampleActivity();
     await page.evaluate<void>('document.body.append(document.createElement("aside"))');
     const changedActivity = await page.sampleActivity();

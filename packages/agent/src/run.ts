@@ -1,10 +1,10 @@
-import { assertBrowserExpect, assertPostActionEvidence, BrowserCapabilityUnsupportedError, BrowserExpectationError, classifyBrowserActionSafety, derivePostActionEvidence, DragContextMismatchError, ElementResolutionConflictError, ElementResolutionError, normalizeKeyChord, PostActionEvidenceError, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
+import { assertBrowserExpect, assertPostActionEvidence, BrowserCapabilityUnsupportedError, BrowserExpectationError, classifyBrowserActionSafety, derivePostActionEvidence, DragContextMismatchError, ElementResolutionConflictError, ElementResolutionError, ElementResolutionStaleIdentityError, normalizeKeyChord, PostActionEvidenceError, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
 import type { BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, stableNodeRef, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext, assertCacheStablePrefix } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
-import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
+import { BrowserActionGuardError, normalizeBrowserAction, type BrowserAction, type BrowserActionClassification, type BrowserAgentResult, type BrowserAgentStep, type BrowserExpectFailure, type BrowserPageTransition, type BrowserPlannerResponse, type BrowserPlannerSource, type RunBrowserAgentOptions } from './types.js';
 
 /** Runs the compact-observation browser-agent loop until the planner returns `done`. */
 export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<BrowserAgentResult> {
@@ -17,6 +17,11 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
   const steps: BrowserAgentStep[] = [];
   let previousNodes: DistilledNode[] | undefined;
   let previousPageUrl: string | undefined;
+  let previousDocumentToken: string | undefined;
+  // Stable identities this run has already dispatched to. On a remounting SPA
+  // the same identity re-issued after its element is gone must not be healed
+  // onto a look-alike successor (#132).
+  const dispatchedStableIds = new Set<string>();
   let finished = false;
   let repairsUsed = 0;
   let pendingRepair: BrowserExpectFailure | undefined;
@@ -46,19 +51,24 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       const page = pendingPage ?? await options.page.capture();
       pendingPage = undefined;
       const nodes = distillPage(page);
-      // INVARIANT: a diff base belongs to one page identity. Reusing old-page
-      // nodes after navigation leaves the planner acting on controls that no longer exist.
-      const pageChanged = previousPageUrl !== undefined && previousPageUrl !== page.url;
+      // INVARIANT: a diff base belongs to one document. Reusing old-document
+      // nodes after navigation leaves the planner acting on controls that no
+      // longer exist. A same-document SPA route change (pushState) is not a
+      // navigation: the document token is unchanged, so the base is retained and
+      // the transition is rendered as a diff (#132). Backends without a token
+      // fall back to URL identity.
+      const pageTransition = classifyPageTransition(previousPageUrl, previousDocumentToken, page);
       const observation = renderAdaptiveObservation(nodes, {
         maxChars: options.observationMaxChars,
         maxBootstrapChars: options.observationBootstrapMaxChars,
-        previousNodes: previousPageUrl === page.url ? previousNodes : undefined,
+        previousNodes: pageTransition?.documentChanged ? undefined : previousNodes,
       });
       // see docs/02-architecture.md "The policy" — once any prior observation is
       // omitted, later stateless planner calls must know that absence is not evidence.
-      observationHistoryEvicted ||= pageChanged || observation.mode === 'diff';
+      observationHistoryEvicted ||= Boolean(pageTransition?.documentChanged) || observation.mode === 'diff';
       previousNodes = nodes;
       previousPageUrl = page.url;
+      previousDocumentToken = page.documentToken;
       const pageState = { url: page.url, title: page.title };
       // A step that follows a failed postcondition is a scoped repair, and is billed
       // as one: docs/02 makes cheap recovery an efficiency claim, so repair spend has
@@ -110,7 +120,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       if (action.kind !== 'done') {
         try {
           try {
-            dispatch = prepareDispatch(action, nodes, options.uploadFiles);
+            dispatch = prepareDispatch(action, nodes, options.uploadFiles, dispatchedStableIds);
             resolution = dispatch.resolution;
             options.beforeAction?.({ action, nodes, resolvedSelector: resolution?.selector });
           } catch (error) {
@@ -146,12 +156,13 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
               ...(planned.classifications ?? []),
               ...normalized.classifications,
             ]);
-            dispatch = prepareDispatch(action, nodes, options.uploadFiles);
+            dispatch = prepareDispatch(action, nodes, options.uploadFiles, dispatchedStableIds);
             resolution = dispatch.resolution;
             options.beforeAction?.({ action, nodes, resolvedSelector: resolution?.selector });
           }
           if (action.kind !== 'done') {
             await applyAction(options.page, action, dispatch);
+            if ('stableId' in action && action.stableId) dispatchedStableIds.add(action.stableId);
             const postActionPage = await options.page.capture();
             // Reuse the settled post-action capture as the next planner observation;
             // derived evidence adds no browser capture or LLM call to the loop.
@@ -197,6 +208,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(resolution ? { resolution } : {}),
         ...(dispatch?.targetResolution ? { targetResolution: dispatch.targetResolution } : {}),
         ...(action.kind !== 'done' ? { actionSafety: classifyBrowserActionSafety(action.kind) } : {}),
+        ...(pageTransition ? { pageTransition } : {}),
       };
       steps.push(recordedStep);
       await options.recorder?.recordStep(recordedStep);
@@ -325,9 +337,19 @@ function prepareDispatch(
   action: BrowserAction,
   nodes: readonly DistilledNode[],
   uploadFiles: readonly AllowedUploadFile[] | undefined,
+  dispatchedStableIds: ReadonlySet<string>,
 ): PreparedDispatch {
   if (action.kind === 'navigate' || action.kind === 'done') return {};
   const resolution = resolveAction(action, nodes);
+  // INVARIANT: an already-dispatched stable identity that is gone from the live
+  // capture may only rebind through an exact identity match (stable id, or
+  // role+name for a remount that moved the same control). Fuzzy text/selector
+  // rebinding would click "the next one" on behalf of a planner that asked for
+  // "the one I already clicked" (#132 remount/virtualization).
+  if (resolution && action.stableId && dispatchedStableIds.has(action.stableId)
+    && (resolution.strategy === 'text-proximity' || resolution.strategy === 'selector')) {
+    throw new ElementResolutionStaleIdentityError(action, resolution.selector, resolution.stableId);
+  }
   if (action.kind === 'upload') {
     const file = uploadFiles?.find((candidate) => candidate.file_id === action.fileId);
     // INVARIANT: an upload outside the injected allowlist never reaches a
@@ -449,6 +471,20 @@ function renderGroundedCandidates(nodes: readonly DistilledNode[], role?: string
     role: node.role,
     name: node.name,
   })).join('\n');
+}
+
+function classifyPageTransition(
+  previousUrl: string | undefined,
+  previousDocumentToken: string | undefined,
+  page: CapturedPage,
+): BrowserPageTransition | undefined {
+  if (previousUrl === undefined) return undefined;
+  const routeChanged = previousUrl !== page.url;
+  const documentChanged = previousDocumentToken !== undefined && page.documentToken !== undefined
+    ? previousDocumentToken !== page.documentToken
+    : routeChanged;
+  if (!routeChanged && !documentChanged) return undefined;
+  return { routeChanged, documentChanged };
 }
 
 function asError(error: unknown): Error {
