@@ -1,6 +1,6 @@
 import { ActionContractUnavailableError, assertBrowserExpect, assertPostActionEvidence, BrowserCapabilityUnsupportedError, deriveActionContract, BrowserExpectationError, classifyBrowserActionSafety, derivePostActionEvidence, DragContextMismatchError, ElementResolutionConflictError, ElementResolutionError, ElementResolutionStaleIdentityError, normalizeKeyChord, PostActionEvidenceError, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionResult, type PostActionEvidence } from '@rote/action';
 import type { CapturedPage } from '@rote/browser';
-import type { ActionContract, BrowserExpect } from '@rote/core';
+import { pageKey, type ActionContract, type BrowserExpect } from '@rote/core';
 import { distillPage, renderAdaptiveObservation, stableNodeRef, type DistilledNode } from '@rote/perception';
 import { assemblePlannerContext, assertCacheStablePrefix } from './context.js';
 import { BrowserPlannerOutputError } from './tagged-llm-planner.js';
@@ -50,6 +50,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       const startedAt = clock();
       const page = pendingPage ?? await options.page.capture();
       pendingPage = undefined;
+      const currentPageKey = pageKey(page.url);
       const nodes = distillPage(page);
       // INVARIANT: a diff base belongs to one document. Reusing old-document
       // nodes after navigation leaves the planner acting on controls that no
@@ -116,6 +117,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       let actionError: Error | undefined;
       let resolution: ElementResolutionResult | undefined;
       let dispatch: PreparedDispatch | undefined;
+      let nextPageKey: string | undefined;
       let postActionEvidence: PostActionEvidence | undefined;
       if (action.kind !== 'done') {
         try {
@@ -167,6 +169,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
             // Reuse the settled post-action capture as the next planner observation;
             // derived evidence adds no browser capture or LLM call to the loop.
             pendingPage = postActionPage;
+            nextPageKey = pageKey(postActionPage.url);
             postActionEvidence = derivePostActionEvidence({
               action,
               ...(action.kind === 'navigate' ? {} : {
@@ -224,6 +227,10 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         ...(dispatch?.actionContract ? { actionContract: dispatch.actionContract } : {}),
         ...(pageTransition ? { pageTransition } : {}),
         ...(verification ? { verification: recordedVerification(verification) } : {}),
+        // Value-free page identity before/after the action: site memory's page graph
+        // and selector maps key on these, never on raw URLs.
+        ...(currentPageKey ? { pageKey: currentPageKey } : {}),
+        ...(nextPageKey ? { nextPageKey } : {}),
       };
       steps.push(recordedStep);
       await options.recorder?.recordStep(recordedStep);

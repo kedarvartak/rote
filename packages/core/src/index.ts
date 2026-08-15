@@ -11,5 +11,6 @@ export * from './schemas/browser-replay-candidate.js';
 export * from './schemas/verification-evidence.js';
 export * from './schemas/action-contract.js';
 export * from './schemas/task-checkpoint.js';
+export * from './schemas/site-memory.js';
 export * from './serialize/trajectory-jsonl.js';
 export * from './serialize/playbook-yaml.js';

@@ -70,7 +70,8 @@ confuse in an architecture doc; this is the boundary.
 | **Multi-session continuation** (E7.7) | 1 | **built** ([T37](testing/T37-multi-session-continuation.md)) — append-only `TaskCheckpoint` log bound by environment/principal/procedure/bindings digests plus authoritative-evidence references; resume gate runs before any action; executor skips completed steps and checkpoints after each one; verified across real Chrome process restarts |
 | **Playbook distiller** (trajectory → playbook) | 1 | **built (v1, deterministic)** — [T36](testing/T36-distiller-v1.md): keeps dispatched actions (evidence present), prunes with reasons (done, pre-dispatch failures, superseded writes), carries resolved identity + context + recorded action contract, synthesizes `expect` from strong evidence only, learns `verify` from the declarative checks the verifier proved on the recorded success (refusing runs that cannot teach one), templates every declared value and refuses undeclared typed values; B1/B2 record → distill → replay in real Chrome with zero LLM calls and zero edits |
 | **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
-| **Site memory, model routing, speculation** | 2 | **not built** — designed below |
+| **Site memory** (store + derivation) | 2 | **built as a store** (`@rote/site-memory`) — strict value-free `SiteMemoryRecord` v1 (selector maps, form semantics, page edges, settle priors, coded quirks) partitioned by fingerprint hash, append-only with crash-tolerant reads, derived deterministically from recorded runs (page-key digests recorded per step), consolidated on read with confidence × freshness; the token-budgeted *brief* is not yet rendered into context |
+| **Model routing, speculation** | 2 | **not built** — designed below |
 
 Packages that exist: `core recorder executor bench cli browser perception action agent llm`.
 Designed but absent: `decision predictor memory mcp-server`.
@@ -529,7 +530,7 @@ the numbering below is the *store*, not the tier — see §The memory spine.
 |---|---|---|---|
 | **Playbook** | 1 | whole-task DAG, exact repeats | replay (contract: verified, zero-model) |
 | **Subflow** | 1 | shared prefixes (login → dashboard) reused across tasks | replay with hand-off |
-| **Site memory** | 2 | selector maps, form semantics, page graph, settle times, quirks | **advisory** — the agent stays in control |
+| **Site memory** | 2 | selector maps, form semantics, page graph, settle times, quirks | **advisory** — the agent stays in control (store built: `@rote/site-memory`) |
 
 The distinction matters: the tier-1 stores *execute*; tier 2 only *informs* (a ≤1K-token
 brief, resolution hints, calibrated settle times). **Advisory memory can be wrong without

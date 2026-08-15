@@ -270,9 +270,13 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
     provider-billed run that produces that data is the remaining half.
 11. **Site memory** (tier 2) — per-fingerprint selector maps, form semantics, page graph,
     settle-time priors, quirks. Append-only, confidence + freshness. Advisory only: it
-    *informs*, never *executes*, so it can be wrong without being dangerous. Its brief is
+    *informs*, never *executes*, so it can be wrong without being dangerous. **Store built
+    (#156)**: `@rote/site-memory` — strict value-free records partitioned by fingerprint
+    hash, derived deterministically from recorded runs (the agent now records page-key
+    digests per step), consolidated on read with confidence × freshness. Its brief is
     tier-0 content and must live inside the token budget — a 2K brief at 5% utility is
-    overhead, not memory.
+    overhead, not memory; rendering that brief into the context assembler is the
+    remaining half.
 12. **Model routing** — `grounded-routine` on a small model, escalation contract, per-site
     calibration. New `route`/`predict` tags (invariant 5; CLAUDE.md updated same PR).
 

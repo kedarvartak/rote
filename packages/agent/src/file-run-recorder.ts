@@ -54,6 +54,9 @@ export class FileBrowserAgentRunRecorder implements BrowserAgentRunRecorder {
         // What decided the terminal `done` (declarative checks + consumed evidence
         // classes); the distiller learns `verify` from a recorded success.
         verification: step.verification,
+        // Value-free page identity (site memory keys on digests, never URLs).
+        page_key: step.pageKey,
+        next_page_key: step.nextPageKey,
       },
       duration_ms: step.durationMs,
       error: step.error ? { message: step.error } : undefined,
