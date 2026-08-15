@@ -60,6 +60,9 @@ export class FileBrowserAgentRunRecorder implements BrowserAgentRunRecorder {
         // Shadow prediction vs the planner's choice (value-free keys); the real-page
         // predictor hit rate is read from here.
         prediction: step.prediction,
+        // Which planner took the step (routing) and any escalated routine spend.
+        route: step.route,
+        escalation_usage: step.escalationUsage,
       },
       duration_ms: step.durationMs,
       error: step.error ? { message: step.error } : undefined,

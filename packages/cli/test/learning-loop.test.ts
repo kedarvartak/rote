@@ -103,6 +103,26 @@ describe('CLI learning loop', () => {
     // first successful run agrees with the scripted planner on every step, dispatching nothing itself.
     const again = await runBrowserTask({ task: 'Register Acme Tools as a vendor', url: START, baseDir, verifyText: 'Vendor registration complete', siteBriefChars: 0 }, { backend: new FakeBackend(new VendorPage()), planner: scripted('Acme Tools') });
     expect(again.prediction).toEqual({ priorRuns: 1, predicted: 3, hits: 3 });
+    // With a routine planner and confident predictions from that prior run, routing takes the steps off the frontier.
+    // Both planners answer by step index so either can take any step of the same procedure.
+    const byStep = (label: string, calls: number[]): BrowserPlannerClient => ({ async plan(source, request) {
+      calls.push(request.step);
+      const actions = [
+        { kind: 'fill' as const, selector: '#company-name', role: 'textbox', name: 'Company name', value: 'Acme Tools' },
+        { kind: 'click' as const, selector: '#registration-submit', role: 'button', name: 'Submit registration' },
+        { kind: 'done' as const, success: true, summary: label },
+      ];
+      return { action: actions[Math.min(request.step, 2)]!, usage: { source, input_tokens: 10, output_tokens: 2 } };
+    } });
+    const routineCalls: number[] = [];
+    const frontierCalls: number[] = [];
+    const routed = await runBrowserTask({ task: 'Register Acme Tools as a vendor', url: START, baseDir, verifyText: 'Vendor registration complete', siteBriefChars: 0, routineModel: 'small-model', routeMinConfidence: 0.3 }, { backend: new FakeBackend(new VendorPage()), planner: byStep('frontier', frontierCalls), routinePlanner: byStep('routine', routineCalls) });
+    expect(routed.success).toBe(true);
+    expect(routed.routing).toBeDefined();
+    expect(routed.routing!.routine + routed.routing!.frontier).toBe(3);
+    expect(routed.routing!.routine).toBeGreaterThan(0);
+    expect(routineCalls.length).toBe(routed.routing!.routine);
+    expect(frontierCalls.length).toBe(routed.routing!.frontier);
     // Brief disabled: cold path pays nothing.
     const off = await runBrowserTask({ task: 'Register Blue Fern Supply as a customer', url: START, baseDir, verifyText: 'Vendor registration complete', siteBriefChars: 0 }, { backend: new FakeBackend(new VendorPage()), planner: scripted('Blue Fern Supply') });
     expect(off.siteBrief).toBeUndefined();
@@ -122,6 +142,9 @@ describe('CLI learning loop', () => {
     const runBrowserTaskFake = vi.fn(async (options) => ({ runId: 'r', success: true, summary: 'ok', steps: 2, inputTokens: 0, outputTokens: 0, phase: 'warm' as const, selection: { source: 'library' as const, matched: true as const, playbook: 'vendor-registration', version: 1, score: 1, considered: 1 }, ...(options.params ? {} : {}) }));
     const printed = await main(['run', 'Register Blue Fern Supply as a vendor', '--url', START, '--verify-text', 'x', '--params', '{"company_name":"Blue Fern Supply"}', '--site-brief-chars', '800'], baseDir, { runBrowserTask: runBrowserTaskFake });
     expect(runBrowserTaskFake).toHaveBeenCalledWith(expect.objectContaining({ params: { company_name: 'Blue Fern Supply' }, siteBriefChars: 800 }));
+    await main(['run', 't', '--url', START, '--verify-text', 'x', '--routine-model', 'gpt-4.1-nano', '--route-min-confidence', '0.85'], baseDir, { runBrowserTask: runBrowserTaskFake });
+    expect(runBrowserTaskFake).toHaveBeenLastCalledWith(expect.objectContaining({ routineModel: 'gpt-4.1-nano', routeMinConfidence: 0.85 }));
+    await expect(main(['run', 't', '--url', START, '--verify-text', 'x', '--route-min-confidence', '1.5'], baseDir, { runBrowserTask: runBrowserTaskFake })).rejects.toThrow('--route-min-confidence must be a number between 0 and 1');
     expect(printed).toContain('selection: library match vendor-registration v1 (score 1.00, 1 considered)');
     await expect(main(['run', 't', '--url', START, '--verify-text', 'x', '--site-brief-chars', '-1'], baseDir, { runBrowserTask: runBrowserTaskFake })).rejects.toThrow('--site-brief-chars must be a non-negative integer');
   });

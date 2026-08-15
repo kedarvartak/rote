@@ -245,6 +245,24 @@ export interface BrowserActionPredictor {
   predict(history: readonly ActionKey[]): NextActionPrediction;
 }
 
+export interface BrowserModelRouting {
+  /** The small/cheap planner for grounded routine steps; must be a fully tagged planner like any other. */
+  routine: BrowserPlannerClient;
+  /** Route to `routine` only when the shadow prediction's confidence is at least this (default 0.9). */
+  minConfidence?: number;
+}
+
+/**
+ * Escalation contract: a routine step that fails *before dispatch* — malformed
+ * planner output or an unresolvable/guarded target — is re-planned by the frontier
+ * model, so a cheap model can only cost a call, never a wrong action.
+ */
+export interface BrowserStepRoute {
+  planner: 'routine' | 'frontier';
+  reason: 'prediction_confident' | 'no_confident_prediction' | 'repair' | 'no_routing';
+  escalated?: 'planner_output' | 'target_repair';
+}
+
 /** Recorded per step: what the shadow predictor said and whether the planner agreed. */
 export interface BrowserStepPrediction {
   predicted?: ActionKey;
@@ -262,6 +280,13 @@ export interface RunBrowserAgentOptions {
   siteBrief?: SiteBriefInput;
   /** Shadow predictor; predictions are recorded against the planner's choice and never dispatched. */
   predictor?: BrowserActionPredictor;
+  /**
+   * Model routing (P2 item 12): a cheaper `routine` planner takes a step when the
+   * shadow predictor is confident the step is a warm, known move; the frontier
+   * `planner` takes every other step, every repair, and every escalation. The
+   * routing decision itself is deterministic (no `route` model call in v1).
+   */
+  routing?: BrowserModelRouting;
   /** Optional deterministic pre-dispatch policy; thrown guard errors get one repair. */
   beforeAction?: (input: BrowserActionGuardInput) => void;
   recorder?: BrowserAgentRunRecorder;
@@ -327,6 +352,10 @@ export interface BrowserAgentStep {
   verification?: BrowserAgentStepVerification;
   /** Shadow prediction made before this step's planner call, scored against the planner's action. */
   prediction?: BrowserStepPrediction;
+  /** Which planner took this step and why; present whenever routing is configured. */
+  route?: BrowserStepRoute;
+  /** Usage spent by a routine planner whose output failed closed before the frontier re-planned the step. */
+  escalationUsage?: readonly TokenUsage[];
   /** 16-hex digest of origin+pathname of the page the step acted on (site memory keys on it; never a raw URL). */
   pageKey?: string;
   /** Same digest for the settled page after dispatch; differs from `pageKey` on a page edge. */
@@ -369,4 +398,6 @@ export interface BrowserAgentResult {
   siteBriefUtility?: SiteBriefUtility;
   /** Present when a shadow predictor was supplied: steps predicted and how many the planner agreed with. */
   predictionSummary?: { predicted: number; hits: number };
+  /** Present when routing was configured: steps taken by each planner and escalations (the "≥50% of warm steps off the frontier" gate reads this). */
+  routingSummary?: { routine: number; frontier: number; escalations: number };
 }

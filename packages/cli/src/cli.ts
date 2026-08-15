@@ -91,6 +91,7 @@ export async function main(
       ...(fallback ? [fallback] : []),
       ...(result.siteBrief ? [`site brief: ${result.siteBrief.chars} chars, ${result.siteBrief.used}/${result.siteBrief.hinted} hints used`] : []),
       ...(result.prediction ? [`shadow predictor: ${result.prediction.hits}/${result.prediction.predicted} steps agreed (${result.prediction.priorRuns} prior runs)`] : []),
+      ...(result.routing ? [`routing: ${result.routing.routine} routine / ${result.routing.frontier} frontier steps, ${result.routing.escalations} escalations`] : []),
       `steps: ${result.steps}`,
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,
     ].join('\n');
@@ -162,7 +163,7 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     throw new Error('--viewport-width and --viewport-height must be provided together');
   }
   const knownFlags = new Set([
-    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--settle-timeout-ms', '--replay-candidate', '--viewport-width', '--viewport-height', '--params', '--site-brief-chars',
+    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--settle-timeout-ms', '--replay-candidate', '--viewport-width', '--viewport-height', '--params', '--site-brief-chars', '--routine-model', '--route-min-confidence',
   ]);
   for (const flag of values.keys()) if (!knownFlags.has(flag)) throw new Error(`unknown option: ${flag}`);
   if (!values.has('--verify-text') && !values.has('--verify-url-contains')) throw new Error(runUsage());
@@ -182,7 +183,15 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     replayCandidatePath: values.get('--replay-candidate'),
     ...(values.has('--params') ? { params: parseJsonObject(values.get('--params')!, '--params') } : {}),
     ...(values.has('--site-brief-chars') ? { siteBriefChars: nonNegativeIntegerOption(values, '--site-brief-chars') } : {}),
+    ...(values.has('--routine-model') ? { routineModel: values.get('--routine-model')! } : {}),
+    ...(values.has('--route-min-confidence') ? { routeMinConfidence: unitIntervalOption(values, '--route-min-confidence') } : {}),
   };
+}
+
+function unitIntervalOption(values: ReadonlyMap<string, string>, flag: string): number {
+  const value = Number.parseFloat(values.get(flag) ?? '');
+  if (!Number.isFinite(value) || value < 0 || value > 1) throw new Error(`${flag} must be a number between 0 and 1`);
+  return value;
 }
 
 function parseDistillOptions(runId: string, args: string[], baseDir: string): DistillRunOptions {
@@ -271,5 +280,5 @@ function candidateUsage(): string {
 }
 
 function runUsage(): string {
-  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--params <json-object>] [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>] [--viewport-width <px> --viewport-height <px>] [--replay-candidate <candidate.json>] [--site-brief-chars <n>]';
+  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--params <json-object>] [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>] [--viewport-width <px> --viewport-height <px>] [--replay-candidate <candidate.json>] [--site-brief-chars <n>] [--routine-model <model> [--route-min-confidence <0-1>]]';
 }

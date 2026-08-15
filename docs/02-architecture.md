@@ -72,7 +72,8 @@ confuse in an architecture doc; this is the boundary.
 | **Matcher** (select + bind) | 1 | **built (v1, deterministic)** — `@rote/matcher`: fingerprint hard gate before any comparison, task text with param values slotted out scored against the templated intent, every declared param must bind, conservative threshold (0.8) with an ambiguity margin, append-only playbook library; T0 same-shape/new-params selects and replays with zero model calls, T4 near-misses miss; no model call yet (a semantic stage would be tagged `matcher`) |
 | **Site memory** (store + derivation) | 2 | **built as a store** (`@rote/site-memory`) — strict value-free `SiteMemoryRecord` v1 (selector maps, form semantics, page edges, settle priors, coded quirks) partitioned by fingerprint hash, append-only with crash-tolerant reads, derived deterministically from recorded runs (page-key digests recorded per step), consolidated on read with confidence × freshness, and rendered as a hard-budgeted advisory *brief* into the planner's cache-stable prefix with hint-utility telemetry on the run; whether the brief earns its tokens (T2) is unmeasured until a provider-billed learning-curve run |
 | **Predictor** (shadow) | — | **built (v1)** — `@rote/predictor` ensemble + offline simulation ([T39](testing/T39-predictor-systems.md)); records per-step agreement with the planner in the agent and `rote run`, never dispatches |
-| **Model routing, speculation** | 2 | **not built** — designed below |
+| **Model routing** (`grounded-routine`) | 2 | **built (v1, deterministic)** — a `routine` planner takes a step when the shadow prediction is confident (default ≥ 0.9); the frontier takes every other step, every repair, and every escalation; a routine step whose output fails closed or whose target cannot be resolved is re-planned by the frontier (its spend kept as `escalationUsage`), so a cheap model can cost a call, never a wrong action; `BrowserStepRoute` per step and `routingSummary` per run feed the "≥50% of warm steps off the frontier at parity" gate; `rote run --routine-model` exposes it; `route`/`predict` tags exist for future model-based stages (invariant 5) |
+| **Speculation** | 2 | **not built** — designed below |
 
 Packages that exist: `core recorder executor bench cli browser perception action agent llm`.
 Designed but absent: `decision predictor memory mcp-server`.
@@ -88,7 +89,7 @@ The planes are *where code lives*; the memory tiers are *what it is for*. They c
 | Plane | Baseline cost | Rote's answer | Serves tier | Status |
 |---|---|---|---|---|
 | **Perception** | 5–40K tokens/step, re-sent every step | distill → grounded bootstrap → diff → budget | 0 | built and deterministically exercised; not yet measured live |
-| **Decision** | frontier model, every step, full context | cache-local layout; route down or skip the model | 0, 1 | **layout not built** — its accounting prerequisite is (#57); routing designed |
+| **Decision** | frontier model, every step, full context | cache-local layout; route down or skip the model | 0, 1 | layout built (B3); routing v1 built — routine planner on confident predicted steps with frontier escalation; per-site calibration of the threshold awaits live runs |
 | **Action** | act → wait → observe, serialized | settledness, self-healing resolution, speculation | — | first two built |
 | **Learning** | every run starts cold | recorded trajectories → playbooks → site memory | 1, 2 | recording + replay built |
 
@@ -585,7 +586,7 @@ you ship wrong answers.
 3. **Never cross environments** — structural fingerprint is a hard gate. A playbook
    learned on staging cannot fire on prod.
 4. **Everything versioned** — playbooks and patches are append-only, with rollback.
-5. **Every model call is tagged** — `planner|matcher|slot|repair|verify|distill`, through
+5. **Every model call is tagged** — `planner|matcher|slot|judgment|repair|verify|distill|route|predict`, through
    one client wrapper. Untagged calls fail lint.
 
 These bind the agent loop exactly as they bound the middleware design. They are not

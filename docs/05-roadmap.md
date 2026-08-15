@@ -290,8 +290,16 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
     renders it into the cache-stable prefix as a hint, and every run reports hint
     utility (hinted vs dispatched identities). Whether it earns its tokens is the T2
     measurement (≥30% at parity; retreat below 15%) — provider-billed, not yet run.
-12. **Model routing** — `grounded-routine` on a small model, escalation contract, per-site
-    calibration. New `route`/`predict` tags (invariant 5; CLAUDE.md updated same PR).
+12. **Model routing — v1 built (#161)** — `grounded-routine` on a small model: a
+    confident shadow prediction (default ≥ 0.9) routes the step to the `routine`
+    planner; the frontier takes every other step, every repair, and every escalation.
+    Escalation contract: routine output that fails closed or a target that cannot be
+    resolved is re-planned by the frontier before dispatch, spend kept, so the cheap
+    model can cost a call, never a wrong action. Per-step `route` and per-run
+    `routingSummary` measure "warm steps off the frontier"; `rote run --routine-model
+    <model> [--route-min-confidence]` exposes it. `route`/`predict` tags added (invariant
+    5; CLAUDE.md updated). Per-site calibration of the threshold — and whether parity
+    holds — is the provider-billed measurement, not yet run.
 
 **Exit gates:** T0 ≥80% reduction at parity *with automated distillation*; **T2 ≥30%**
 (the generalization bet — retreat rule if <15%); ≥50% of warm steps off the frontier
