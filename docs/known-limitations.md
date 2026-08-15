@@ -8,7 +8,7 @@ page before spending a token.
 
 | Area | Current limit | Practical consequence |
 |---|---|---|
-| Memory tiers | Only tier-0 working-memory controls are integrated. There is no playbook distiller, matcher, episodic learning, or site memory. | Rote does **not learn** from ordinary runs. Replay candidates are created or supplied explicitly. |
+| Memory tiers | Tier-0 working-memory controls are integrated; distiller v1 ([T36](testing/T36-distiller-v1.md)) can turn a recorded successful run into a contract-gated playbook, but there is no matcher, automatic learning loop, or site memory. | Rote does **not learn** from ordinary runs on its own. Distillation and replay candidates are invoked or supplied explicitly. |
 | History growth | Deterministic action-history compaction is built on `main`: after 24 exact actions it compacts on 16-action boundaries, retaining an exact tail and only actual older representatives. | Planner-visible action count is structurally bounded, but no 50+ step provider/SPA certification exists; do not generalize the frozen P1 curve into a production linear-scaling or cost claim. |
 | Decision plane | Model routing and speculative execution are not built. | Every frontier step uses the configured planner model; there is no automatic cheap-model routing. |
 | Replay selection | Candidate selection is explicit and the environment gate is exact, not fuzzy. | A fingerprint mismatch goes cold. There is no semantic task matching or automatic reuse. |

@@ -67,7 +67,7 @@ confuse in an architecture doc; this is the boundary.
 | **Cache-layout discipline** (B3) | 0 | **built and economically qualified on OpenAI** — exact immutable prefixes receive deterministic cache-routing keys; WP-N25 cost falls 20.5% and clears Browser Use by 16.0% with both 95% intervals above zero ([T11](testing/T11-cache-key-economics.md)) |
 | **History compaction** (B4) | 0 | **built; 60-step SPA endurance certified deterministically** — action history compacts after 24 actions on 16-action boundaries, retaining an exact tail plus provenance-preserving representatives; [T34](testing/T34-spa-endurance-certification.md) certifies ≤31 visible actions and 3 reported boundaries over 60 transitions in 15 fresh real-Chrome runs; provider-billed economics remain unmeasured |
 | Structural action-contract drift gate | 1 | **built for replay** ([T35](testing/T35-action-contract-gate.md)) — versioned value-free `ActionContract` (verb, identity/context, affordance, safety, preconditions, effect reference) is derived from the live capture and compared with the recorded one before dispatch; incompatible affordance/destination/safety/precondition changes return typed `contract_mismatch` with clean classified fallback, cosmetic/selector/wrapper drift continues, and the live loop records contracts for the distiller to persist |
-| **Playbook distiller** (trajectory → playbook) | 1 | **not built** — V1 playbooks are hand-written |
+| **Playbook distiller** (trajectory → playbook) | 1 | **built (v1, deterministic)** — [T36](testing/T36-distiller-v1.md): keeps dispatched actions (evidence present), prunes with reasons (done, pre-dispatch failures, superseded writes), carries resolved identity + context + recorded action contract, synthesizes `expect` from strong evidence only, templates every declared value and refuses undeclared typed values; B1/B2 record → distill → replay in real Chrome with zero LLM calls and zero edits |
 | **Matcher** (semantic match + bind) | 1 | **not built** — fingerprint gate only |
 | **Site memory, model routing, speculation** | 2 | **not built** — designed below |
 
@@ -138,7 +138,7 @@ it fails honestly.
 | **Diff the current observation** (A4) | −~90% on the constant, on real pages | **built and measured** — 849 WordPress certification diffs have a 24-character median and 99.6% median reduction against their preceding grounded bases ([T10](testing/T10-g1-cumulative-token-curve.md)) |
 | **Prefix-cache `[stable][history]`** (B3) | discounted billing on the surviving prefix | **built and OpenAI-economics qualified** — exact-prefix routing cuts WP-N25 Rote cost 20.5% and clears Browser Use by 16.0% ([T11](testing/T11-cache-key-economics.md)) |
 | **Scheduled compaction** (B4) | action history → O(1) in steps; cumulative action-history input → O(n) | **built deterministically; not yet provider/SPA-qualified** |
-| **Replay** (B2) | 0 steps, 0 tokens | needs the distiller (P2) |
+| **Replay** (B2) | 0 steps, 0 tokens | distiller v1 built ([T36](testing/T36-distiller-v1.md)); matcher/selection still explicit |
 
 ### Caching: exact-prefix routing, measured economics
 
@@ -371,8 +371,10 @@ one before it ([07 §E7](07-execution-plan.md)):
    by fuzzy text (`ElementResolutionStaleIdentityError`); settledness counts unanswered
    requests only and treats every network edge as activity, so long-lived background
    channels are bounded by policy rather than waited on forever.
-7. **Next:** distiller v1 persists these contracts; append-only, fingerprint-gated
-   multi-session continuation follows (#133).
+7. **Done:** distiller v1 persists these contracts ([T36](testing/T36-distiller-v1.md)) —
+   distilled steps carry identity v2, browsing context, and the recorded action contract,
+   so replay of a learned playbook is contract-gated exactly like a hand-written one.
+8. **Next:** append-only, fingerprint-gated multi-session continuation (#133).
 
 This sequence intentionally puts contracts before learning. Otherwise the distiller would
 turn target collisions, top-level-only traversal, UI-only assertions, and an incomplete

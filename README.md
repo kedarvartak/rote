@@ -252,8 +252,9 @@ passes 11/11 after [#49](https://github.com/kedarvartak/rote/issues/49).
 | Cache layout | **built and economically qualified** — immutable-prefix routing cuts WP-N25 mean cost 20.5% and clears Browser Use by 16.0%, both with 95% intervals above zero ([T11](docs/testing/T11-cache-key-economics.md)) |
 | History compaction | **built deterministically on `main`; long-run qualification pending** — planner-visible action history is bounded on cache-amortized boundaries, but the frozen P1 curve and published 0.1.0 predate it |
 
-Not built: the playbook distiller (V1 replays hand-written playbooks), the matcher, site
-memory, model routing, speculation. **Tier 1 is table stakes and we are late to it** —
+Built since launch on `main`: distiller v1 ([T36](docs/testing/T36-distiller-v1.md)) turns a
+recorded run into a contract-gated playbook that replays with zero edits. Not built: the
+matcher (playbook selection is still explicit), site memory, model routing, speculation. **Tier 1 is table stakes and we are late to it** —
 Skyvern ships record → generated code → code replay with automatic AI fallback today; its documented zero-reasoning path must not be assumed for every generated artifact ([docs/04](docs/04-competition.md)). `docs/02-architecture.md` §Status is authoritative.
 
 **No number, no launch was enforced.** G1 passes its public 30% slope-reduction floor: 37.2%

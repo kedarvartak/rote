@@ -85,6 +85,9 @@ jobs:
       - name: Enterprise SPA endurance Chrome certification
         if: steps.detect.outputs.present == 'true'
         run: npm run test:enterprise-endurance-chrome --workspace @rote/bench
+      - name: Distiller v1 Chrome gate
+        if: steps.detect.outputs.present == 'true'
+        run: npm run test:distill-chrome --workspace @rote/distiller
 
   # Design docs are the constitution — broken internal links are bugs.
   docs:
