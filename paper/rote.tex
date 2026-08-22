@@ -33,14 +33,61 @@ Browser agents built on large language models spend most of their budget re-read
 \end{abstract}
 
 \section{Introduction}
-% 1 page. Problem: agents re-pay for what they already know; memory is unmanaged.
-% Contribution list (keep to 4):
-%  C1 Context window as managed resource: budget, eviction, layout contract, trust gate (docs/02).
-%  C2 Learn-across-runs loop with hard safety: distill -> match -> replay, value-free, append-only,
-%     fingerprint hard gate, action-contract gate (#143 / T35, T36, T40).
-%  C3 Predictor as a shadow system with monotone confidence; kill gate + calibration (T38, T39).
-%  C4 Evidence: frozen benchmark B1--B6, exact external oracles, invariant suite; billed campaign.
-\textbf{[TODO]}
+\label{sec:intro}
+
+A browser agent that files the same expense report every week pays for it every week as
+if it were the first time: it re-reads pages it has seen hundreds of times, re-derives
+actions it has taken hundreds of times, and re-spends the tokens both cost. The waste
+compounds inside a single run, too --- the standard harness is a chat transcript in
+which every observation stays resident, so an agent's prompt grows with everything it
+has ever seen rather than with anything it still needs. Every agent harness \emph{has}
+memory in this weak sense. Almost none \emph{manages} it: nothing decides what deserves
+to stay in the window, nothing turns a successful run into a cheaper next run, and ---
+most dangerously --- nothing gates what remembered material is trusted enough to act on.
+
+The last gap is the one that makes the first two hard. Reusing memory on the web is
+unsafe by default: a control that looks identical to last week's can have changed its
+behavior (the same button now purges instead of saves), a page that looks like the
+target can be its destructive twin, and a procedure learned on staging must never fire
+on production. A memory system that ignores these failure modes converts each of them
+into a mistake repeated at volume. We contend this is why harnesses append and hope:
+without trust machinery, managed memory is a liability.
+
+We present \textbf{Rote}, a memory manager for browser agents that treats the context
+window as a managed resource --- with a budget, an eviction policy, a layout contract,
+and a trust gate on everything re-admitted --- across three timescales: \emph{working}
+memory within a run, \emph{episodic} memory across runs of one task, and
+\emph{semantic} memory across tasks on one site. Rote is a complete harness, not
+middleware: eviction, diffing, cache-stable layout, compaction, distillation, matching,
+replay, prediction, and model routing all live inside the loop, because a layer at the
+tool boundary can advise but cannot restructure what the model sees.
+
+Our contributions:
+\begin{itemize}
+\item \textbf{The context window as a managed resource} (\S\ref{sec:tier0}): an
+  eviction policy that keeps what the agent \emph{did} rather than what it \emph{saw}
+  (with a typed, honest failure when an evicted observation is needed), observation
+  diffing, a cache-stable layout, and scheduled compaction --- together cutting logical
+  tokens 83.1\% and billed cost 68.2\% at exact-oracle parity with a strong baseline.
+\item \textbf{A gated learning loop} (\S\ref{sec:tier1}--\ref{sec:gates}): record
+  $\rightarrow$ distill $\rightarrow$ match $\rightarrow$ replay, where playbooks are
+  value-free and parameterized, replay costs zero model calls, and four fail-closed
+  gates --- environment fingerprint, matcher, per-step action contract, authoritative
+  outcome evidence --- bound the cost of being wrong. Under 90 adversarial drift
+  attempts, zero ended silently wrong.
+\item \textbf{Judgment stays out of memory}: a distiller that \emph{refuses} --- a
+  value matching no declared parameter, or a run that cannot teach a declarative
+  verification, aborts distillation --- so a memorized procedure can never freeze a
+  per-instance decision (a triage category, a credential) into a replay.
+\item \textbf{Measurement discipline} (\S\ref{sec:setup}): exact external oracles,
+  contemporaneously paired pinned baselines, a token metric that provider caching
+  cannot inflate, and a benchmark containing its own trap --- a lookalike task that a
+  correct system must \emph{refuse} to replay.
+\end{itemize}
+
+Everything reported in \S\ref{sec:results} is deterministic or paired-and-billed on
+frozen protocols; the remaining end-to-end learning-curve numbers are marked as pending
+throughout. \textbf{[TODO: fold in billed campaign results.]}
 
 \section{Related work}
 \label{sec:related}
@@ -400,29 +447,119 @@ diffs against a stable document token, zero document changes across 60 route pus
 stale remounted identities rejected before dispatch.
 
 \section{Limitations}
-% Synthetic enterprise fixtures for most safety results; one real page family (WordPress); baselines
-% partly stopped at qualification; predictor calibration only on fixtures; billed campaign scope.
-\textbf{[TODO]}
+\label{sec:limitations}
+
+\textbf{Fixture-weighted evidence.} Most safety results (drift, contracts, false-match,
+judgment gate) are certified on frozen synthetic fixtures in real Chrome; the real-page
+evidence covers one site family (a digest-pinned WordPress instance). The fixtures were
+built adversarially --- the benchmark contains its own traps --- but breadth across
+production sites is unproven. \textbf{Partial baseline coverage.} One baseline survived
+our qualification protocol; three others were stopped before certification spend rather
+than reported from unreliable cells, so our comparative claims are against a single
+(strong, pinned) harness. \textbf{The learning-loop economics are mechanism-complete
+but not yet campaign-measured}: cold-to-warm reduction with automated distillation,
+site-brief generalization, and routine-model routing all have built mechanisms and
+per-run telemetry, but their end-to-end numbers await the billed campaign and are
+marked TODO. \textbf{The predictor never acts}: its confidence is under-calibrated on
+fixtures, so it ships in shadow mode by design; speculation is future work gated on
+live calibration. \textbf{Scope}: Rote stores procedures and site behavior, not user
+knowledge; multi-user permissioning and credential lifecycles are outside this paper.
 
 \section{Conclusion}
-\textbf{[TODO]}
+\label{sec:conclusion}
+
+Rote reframes the browser-agent efficiency problem as a memory-management problem: the
+context window is the scarce resource, and budget, eviction, layout, compaction,
+distillation, and trust gates are its manager. The reframing pays twice. Economically,
+managing the window cuts logical tokens by 83.1\% at exact-oracle parity, and the gap
+\emph{widens} with task length because the policy attacks the growth term, not the
+constant. Behaviorally, the trust gates turn memory's failure mode from silent
+repetition into priced fallback: across every adversarial suite we built --- behavioral
+drift behind an identical-looking control, a destructive lookalike page, a
+judgment-dependent decision a playbook must not freeze --- the system's worst observed
+outcome is paying the cold price it would have paid anyway. Memory that cannot be
+trusted is declined, not deployed. We believe this manager-plus-gates shape, not any
+single mechanism in it, is the transferable result.
 
 \subsubsection*{Reproducibility statement}
-% Point to anonymized code + fixtures + T-reports (docs/testing/T*.md, raw data under
-% docs/testing/data/), one-command reproduction (T17), pinned baseline versions.
-\textbf{[TODO]}
+
+All mechanisms are exercised by deterministic suites that run in CI without a model or
+provider key, including the sacred invariant suites for every fail-closed gate claimed
+in this paper. Every measured number cites a frozen, numbered test record; each record
+states its protocol (fixture versions, model, pinned baseline source and wheel digests,
+pairing, bootstrap procedure) precisely enough to be re-run and disagreed with, and the
+raw per-run data (trajectories, provider receipts, summary JSON) ships alongside.
+Figures are regenerated deterministically from those frozen data files by a committed
+script. An anonymized artifact containing the code, fixtures, test records, and raw
+data will accompany the submission.
 
 \subsubsection*{AI use statement}
-% Required by ICLR 2027 policy. Describe use of LLM coding assistants in implementation/writing.
-\textbf{[TODO]}
+
+Large language models were used as coding assistants in the implementation of the
+system and its test suites, and to assist in drafting and editing this paper's prose.
+All design decisions, experimental protocols, and claims were authored and verified by
+the authors; all reported numbers come from the frozen test records described above,
+not from model output.
 
 \bibliography{rote}
 \bibliographystyle{iclr2027_conference}
 
 \appendix
-\section{Benchmark tasks B1--B6 and oracles}
-\section{Action-contract schema and drift taxonomy}
-\section{Full test log index}
-% Table mapping T1..T40 -> claim used in the paper.
+
+\section{Benchmark tasks and oracles}
+\label{app:benchmark}
+
+\begin{table}[h]
+\caption{The task suite. Every task binds an exact external oracle; success is never
+the harness's own report.}
+\begin{center}
+\small
+\begin{tabular}{llp{0.45\linewidth}}
+\toprule
+\textbf{Task} & \textbf{Shape} & \textbf{Why it is in the suite / oracle} \\
+\midrule
+B1 & log in, download report & pure-deterministic best case; exact artifact \\
+B2 & eight-field vendor form & slot binding under parameter variation; all eight values checked exactly \\
+B3 & search, extract top-$N$ & parameterized extraction; exact result set \\
+B4 & triage: read, categorize, route & judgment gate: the item body decides the category; exact routed confirmation \\
+B5 & B2 with the DOM mutated between runs & drift/repair; per-mutation boundary (recover vs.\ fail closed) \\
+B6 & lookalike of B2 posting to an offboarding endpoint & false-match trap: a correct system must refuse to replay \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+The real-page family is a digest-pinned WordPress administration instance (exactly 120
+benchmark posts; measured page weight stable to zero range across 15 fresh sessions),
+with matched task cells at 9, 13, 17, 21, and 25 steps verified by an independent
+database check.
+
+\section{Action-contract fields and drift boundary}
+\label{app:contract}
+
+A step's recorded contract carries: verb; target role, accessible name, stable
+identity, and context hash; affordance (control class from a closed enum, input type,
+enter behavior, destination hash, form method, draggability); a safety class; observable
+preconditions; and optionally the authoritative evidence class the step must produce.
+The schema is strict --- unknown fields, and therefore captured values, fail to parse.
+Compatibility is an explicit matrix, not similarity: cosmetic drift, selector renames,
+and wrapper insertion are compatible; a changed control class (input $\rightarrow$
+textarea), a changed destination hash, or a safety escalation (navigation $\rightarrow$
+mutating) are mismatches that stop replay before dispatch with a typed error naming the
+field family, never the values.
+
+\section{Test-record index}
+\label{app:records}
+
+Every number in this paper cites one of the frozen, numbered test records shipped with
+the artifact. The records used here: the real-page curve and diff economics
+(\S\ref{sec:results-econ}) come from records T10/T11; the paired baseline
+certification from T20/T25 (with T19 recording the withdrawal and correction of an
+earlier flawed B2 oracle --- kept, not erased); baseline qualification stops from
+T22/T23/T27 and the qualified refresh from T24; the drift certification from T21; the
+eviction/recall trade from T18; endurance from T34; the action-contract gate and its
+public demonstration from T35; distillation from T36; continuation from T37; the
+predictor kill gate, systems, and calibration from T38/T39; the false-match trap from
+T40; and the judgment gate from T41.
 
 \end{document}
