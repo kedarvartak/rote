@@ -37,10 +37,22 @@ export interface SettleableBrowserPage extends BrowserActivityProbe {
 
 /** Decorates browser actions with a deterministic post-action settledness gate. */
 export class SettledBrowserPageSession {
+  // Most recent settle, kept so a caller that owns the loop (the agent) can
+  // attribute the measured settle to the step it just dispatched without a
+  // shared mutable sink; see docs/02 "Tiers 1 and 2" — settle priors are
+  // tier-2 site memory and must come from measured settles, never wall-clock
+  // guesses around dispatch+capture.
+  private last?: SettleRecord;
+
   constructor(
     private readonly page: SettleableBrowserPage,
     private readonly options: SettledBrowserPageSessionOptions = {},
   ) {}
+
+  /** The settle measured by the most recent action on this session, if any. */
+  lastSettle(): SettleRecord | undefined {
+    return this.last;
+  }
 
   async navigate(url: string): Promise<void> {
     await this.page.navigate(url);
@@ -97,6 +109,8 @@ export class SettledBrowserPageSession {
     const clock = this.options.clock ?? Date.now;
     const startedAt = clock();
     const sample = await waitForSettled(this.page, this.options);
-    this.options.onSettle?.({ verb, elapsedMs: Math.max(0, clock() - startedAt), sample });
+    const record: SettleRecord = { verb, elapsedMs: Math.max(0, clock() - startedAt), sample };
+    this.last = record;
+    this.options.onSettle?.(record);
   }
 }

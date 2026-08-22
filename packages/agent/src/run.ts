@@ -139,6 +139,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
       let actionError: Error | undefined;
       let resolution: ElementResolutionResult | undefined;
       let dispatch: PreparedDispatch | undefined;
+      let settleMs: number | undefined;
       let nextPageKey: string | undefined;
       let postActionEvidence: PostActionEvidence | undefined;
       if (action.kind !== 'done') {
@@ -189,6 +190,10 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
           if (action.kind !== 'done') {
             await applyAction(options.page, action, dispatch);
             if ('stableId' in action && action.stableId) dispatchedStableIds.add(action.stableId);
+            // A settle-gated session measured how long this dispatch took to
+            // settle; keep it only when it belongs to the verb just dispatched.
+            const settle = options.page.lastSettle?.();
+            if (settle && settle.verb === action.kind) settleMs = settle.elapsedMs;
             const postActionPage = await options.page.capture();
             // Reuse the settled post-action capture as the next planner observation;
             // derived evidence adds no browser capture or LLM call to the loop.
@@ -258,6 +263,7 @@ export async function runBrowserAgent(options: RunBrowserAgentOptions): Promise<
         // and selector maps key on these, never on raw URLs.
         ...(currentPageKey ? { pageKey: currentPageKey } : {}),
         ...(nextPageKey ? { nextPageKey } : {}),
+        ...(settleMs !== undefined ? { settleMs } : {}),
       };
       steps.push(recordedStep);
       await options.recorder?.recordStep(recordedStep);

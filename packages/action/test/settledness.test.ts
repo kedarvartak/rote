@@ -124,6 +124,9 @@ describe('SettledBrowserPageSession', () => {
 
     await settled.click('#go');
     expect(records).toEqual([{ verb: 'click', elapsedMs: 100 }]);
+    // The most recent settle is retrievable by a loop owner (the agent records
+    // it per step for tier-2 settle priors).
+    expect(settled.lastSettle()).toMatchObject({ verb: 'click', elapsedMs: 100 });
 
     // A settle that times out throws and is not reported as a cost sample.
     const stuck = new SettledBrowserPageSession({ ...page, async sampleActivity() { return { pendingRequests: 1, mutationVersion: 0 }; } }, {

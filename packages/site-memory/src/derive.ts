@@ -28,6 +28,8 @@ export const SiteMemoryStepResultSchema = z.object({
   action_contract: ActionContractSchema.optional(),
   page_key: z.string().regex(Hex16).optional(),
   next_page_key: z.string().regex(Hex16).optional(),
+  /** Measured post-dispatch settle (ms) from the agent's settledness gate. */
+  settle_ms: z.number().nonnegative().optional(),
 }).passthrough();
 
 export const SiteMemoryEventSchema = z.object({ event: TrajectoryEventSchema, result: z.unknown() });
@@ -46,6 +48,9 @@ export interface DeriveSiteMemoryReport {
   /** Events that contributed nothing and why — derivation is visible, never silent. */
   skipped: Array<{ seq: number; reason: 'not_dispatched' | 'no_page_key' | 'no_identity' | 'terminal_done' | 'unsupported_tool' }>;
 }
+
+/** p90 settle (ms) at which a page earns the coded `long_settle` quirk. */
+export const LONG_SETTLE_P90_MS = 3000;
 
 const ELEMENT_TOOLS = new Set(['browser.fill', 'browser.select', 'browser.click', 'browser.hover', 'browser.press', 'browser.upload', 'browser.dragAndDrop']);
 type EdgeKind = PageEdgeRecord['action_kind'];
@@ -67,6 +72,9 @@ export function deriveSiteMemory(events: readonly SiteMemoryEvent[], options: De
   const records: SiteMemoryRecord[] = [];
   const skipped: DeriveSiteMemoryReport['skipped'] = [];
   const forms = new Map<string, { fields: FormSemanticsRecord['fields']; submit?: { destination_hash?: string; method?: FormSemanticsRecord['method']; safety?: FormSemanticsRecord['safety'] } }>();
+  // Measured settles per (page, action kind); emitted as settle_prior records after
+  // the pass so one record aggregates every sample the run produced.
+  const settles = new Map<string, { pageKey: string; kind: string; lastSeq: number; samples: number[] }>();
   const common = (seq: number, kind: string) => ({
     version: 1 as const,
     record_id: `${options.runId}:${seq}:${kind}`,
@@ -96,6 +104,13 @@ export function deriveSiteMemory(events: readonly SiteMemoryEvent[], options: De
         ...(kind !== 'navigate' && role ? { role } : {}),
         ...(kind !== 'navigate' && name ? { name } : {}),
       });
+    }
+    if (typeof step.data.settle_ms === 'number') {
+      const key = `${pageKey}|${kind}`;
+      const bucket = settles.get(key) ?? { pageKey, kind, lastSeq: event.seq, samples: [] };
+      bucket.lastSeq = event.seq;
+      bucket.samples.push(step.data.settle_ms);
+      settles.set(key, bucket);
     }
     if (kind === 'navigate') continue;
     if (!stableId || !role) { skipped.push({ seq: event.seq, reason: 'no_identity' }); continue; }
@@ -141,6 +156,23 @@ export function deriveSiteMemory(events: readonly SiteMemoryEvent[], options: De
     };
     records.push(record);
     formSeq += 1;
+  }
+
+  // settle_prior per (page, action kind): nearest-rank percentiles over the run's
+  // measured settles. Deterministic — no clock, no interpolation. A page whose
+  // p90 settle reaches LONG_SETTLE_P90_MS also earns the coded `long_settle`
+  // quirk so the brief can warn without carrying numbers as free text.
+  for (const bucket of [...settles.values()].sort((a, b) => a.lastSeq - b.lastSeq)) {
+    const sorted = [...bucket.samples].sort((a, b) => a - b);
+    const rank = (q: number) => sorted[Math.max(0, Math.ceil(q * sorted.length) - 1)]!;
+    records.push({
+      ...common(bucket.lastSeq, 'settle_prior'), kind: 'settle_prior', page_key: bucket.pageKey,
+      action_kind: bucket.kind, samples: sorted.length, p50_ms: rank(0.5), p90_ms: rank(0.9), max_ms: sorted[sorted.length - 1]!,
+    });
+    if (rank(0.9) >= LONG_SETTLE_P90_MS) {
+      // distinct record_id component: the same event may already have emitted a quirk
+      records.push({ ...common(bucket.lastSeq, 'quirk_long_settle'), kind: 'quirk', page_key: bucket.pageKey, code: 'long_settle' });
+    }
   }
   return { records, skipped };
 }

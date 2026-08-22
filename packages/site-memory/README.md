@@ -15,8 +15,11 @@ query string.
   a `skipped` list with reasons. Emits `selector_map` for every dispatched element step
   with a stable identity, `page_edge` when the settled page differs from the acted page,
   one `form_semantics` per page from fill/select contracts + the submit's
-  destination/method/safety, and coded `quirk`s (`enter_inserts_newline`,
-  `submit_is_mutating`). Deterministic ids; no clock, no I/O.
+  destination/method/safety, one `settle_prior` per (page, action kind) from the agent's
+  measured `settle_ms` samples (nearest-rank p50/p90/max; a p90 at or past
+  `LONG_SETTLE_P90_MS` = 3000 ms also earns the coded `long_settle` quirk), and coded
+  `quirk`s (`enter_inserts_newline`, `submit_is_mutating`). Deterministic ids; no clock,
+  no I/O.
 - `consolidateSiteMemory(records, { now, halfLifeMs? })` — pure: collapses successive
   observations of one fact (`siteMemoryRecordKey`) to the newest with `observations`,
   `freshness` (half-life decay, default 30 days), `score = confidence × freshness`, and
@@ -38,9 +41,8 @@ query string.
   cache-stable prefix and the run reports `siteBriefUtility` (hinted vs used identities —
   docs/03 "hint utility").
 
-Not here yet: settle-prior derivation (the schema kind exists; the settledness telemetry
-that feeds it is not yet recorded per step), and the provider-billed T2 measurement that
-decides whether the brief earns its tokens (docs/03 T2 ≥30%, retreat below 15%).
+Not here yet: the provider-billed T2 measurement that decides whether the brief earns
+its tokens (docs/03 T2 ≥30%, retreat below 15%).
 
 ## Tests
 
