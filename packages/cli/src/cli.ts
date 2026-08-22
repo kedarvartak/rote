@@ -245,7 +245,7 @@ function parseDistillOptions(runId: string, args: string[], baseDir: string): Di
 
 function parseContinueOptions(taskId: string, args: string[], baseDir: string): ContinueBrowserTaskOptions {
   const values = pairs(args, continueUsage());
-  for (const flag of values.keys()) if (!['--playbook', '--url', '--params', '--principal', '--stop-after', '--chrome-path', '--settle-timeout-ms'].includes(flag)) throw new Error(`unknown option: ${flag}`);
+  for (const flag of values.keys()) if (!['--playbook', '--url', '--params', '--principal', '--stop-after', '--chrome-path', '--settle-timeout-ms', '--evidence-oracle', '--evidence-run-id'].includes(flag)) throw new Error(`unknown option: ${flag}`);
   const playbookPath = values.get('--playbook');
   const url = values.get('--url');
   if (!playbookPath || !url) throw new Error(continueUsage());
@@ -261,6 +261,8 @@ function parseContinueOptions(taskId: string, args: string[], baseDir: string): 
     ...(values.has('--stop-after') ? { stopAfterStepId: values.get('--stop-after')! } : {}),
     ...(values.has('--chrome-path') ? { chromePath: values.get('--chrome-path')! } : {}),
     ...(values.has('--settle-timeout-ms') ? { settleTimeoutMs: positiveIntegerOption(values, '--settle-timeout-ms') } : {}),
+    ...(values.has('--evidence-oracle') ? { evidenceOracleUrl: values.get('--evidence-oracle')! } : {}),
+    ...(values.has('--evidence-run-id') ? { evidenceRunId: values.get('--evidence-run-id')! } : {}),
   };
 }
 
@@ -297,7 +299,7 @@ function distillUsage(): string {
 }
 
 function continueUsage(): string {
-  return 'rote continue <task_id> --playbook <playbook.yaml> --url <url> [--params <json-object>] [--principal <id>] [--stop-after <step_id>] [--chrome-path <path>] [--settle-timeout-ms <ms>]';
+  return 'rote continue <task_id> --playbook <playbook.yaml> --url <url> [--params <json-object>] [--principal <id>] [--stop-after <step_id>] [--chrome-path <path>] [--settle-timeout-ms <ms>] [--evidence-oracle <url-template>] [--evidence-run-id <id>]';
 }
 
 function positiveIntegerOption(values: ReadonlyMap<string, string>, flag: string): number | undefined {

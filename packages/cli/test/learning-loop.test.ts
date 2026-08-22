@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { BrowserPageSession, BrowserPlannerClient } from '@rote/agent';
 import { FilePlaybookLibrary } from '@rote/matcher';
 import { FileSiteMemoryStore } from '@rote/site-memory';
+import { FileCheckpointStore } from '@rote/continuation';
 import { continueBrowserTask, distillRun, main, runBrowserTask, type BrowserTaskBackend } from '../src/index.js';
 
 // see docs/02-architecture.md "Learning" — the CLI closes the loop end to end:
@@ -147,6 +148,38 @@ describe('CLI learning loop', () => {
     await expect(main(['run', 't', '--url', START, '--verify-text', 'x', '--route-min-confidence', '1.5'], baseDir, { runBrowserTask: runBrowserTaskFake })).rejects.toThrow('--route-min-confidence must be a number between 0 and 1');
     expect(printed).toContain('selection: library match vendor-registration v1 (score 1.00, 1 considered)');
     await expect(main(['run', 't', '--url', START, '--verify-text', 'x', '--site-brief-chars', '-1'], baseDir, { runBrowserTask: runBrowserTaskFake })).rejects.toThrow('--site-brief-chars must be a non-negative integer');
+  });
+
+
+  it('binds oracle evidence into checkpoints and refuses to resume across a fixture reset', async () => {
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-cli-continue-evidence-'));
+    await recordCold('Acme Tools', 'cold-4');
+    const distilled = await distillRun({ baseDir, runId: 'cold-4', playbookName: 'vendor-registration-evidence', params: { company_name: 'Acme Tools' } });
+    // Injected oracle transport: value-free snapshot with a mutable generation.
+    let generation = 1;
+    const requested: string[] = [];
+    const fetchJson = async (url: string) => {
+      requested.push(url);
+      return { generation, task_id: 'vendor-77', events: [{ event_id: 'evt-1', task_id: 'vendor-77', kind: 'continuation_checkpoint', target_key: 'vendor-form', payload_sha256: 'a'.repeat(64) }], spa_transition_count: 0 };
+    };
+    const session1 = await continueBrowserTask(
+      { baseDir, taskId: 'vendor-77', playbookPath: distilled.playbookPath, url: START, params: { company_name: 'Blue Fern Supply' }, stopAfterStepId: 'fill_company_name', evidenceOracleUrl: 'http://oracle.test/api/oracle?task_id={task_id}' },
+      { backend: new FakeBackend(new VendorPage()), fetchJson, clock: () => 1_000 },
+    );
+    expect(session1).toMatchObject({ mode: 'fresh', outcome: 'interrupted', checkpointsWritten: 1 });
+    expect(requested[0]).toBe('http://oracle.test/api/oracle?task_id=vendor-77');
+    const checkpoint = await new FileCheckpointStore(baseDir).latest('vendor-77');
+    expect(checkpoint?.evidence_refs).toHaveLength(1);
+    expect(checkpoint?.evidence_refs?.[0]).toMatchObject({ evidence_class: 'fixture_oracle', freshness_generation: 1 });
+    // Fixture reset (generation bump): the resume gate refuses before any action.
+    generation = 2;
+    const stalePage = new VendorPage();
+    await expect(continueBrowserTask(
+      { baseDir, taskId: 'vendor-77', playbookPath: distilled.playbookPath, url: START, params: { company_name: 'Blue Fern Supply' }, evidenceOracleUrl: 'http://oracle.test/api/oracle?task_id={task_id}' },
+      { backend: new FakeBackend(stalePage), fetchJson, clock: () => 2_000 },
+    )).rejects.toMatchObject({ kind: 'evidence_stale' });
+    expect(stalePage.clicks).toBe(0);
+    expect(stalePage.fills).toEqual([]);
   });
 
   it('continues a playbook across two sessions through the CLI without repeating a completed step', async () => {
