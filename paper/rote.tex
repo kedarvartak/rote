@@ -1,0 +1,280 @@
+\documentclass{article} % ICLR 2027 submission format (variant of NeurIPS)
+\usepackage{iclr2027_conference,times}
+\input{math_commands.tex}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+% ---------------------------------------------------------------------------
+% ICLR 2027 rules (https://iclr.cc/Conferences/2027/AuthorGuidelines):
+%   * abstract deadline Sep 18 2026 AoE, paper deadline Sep 25 2026 AoE
+%   * main text <= 9 pages at submission (10 at camera-ready); references and
+%     appendices unlimited
+%   * double blind: no author names, no identifying URLs, cite own work in
+%     third person; leave \iclrfinalcopy commented out for submission
+%   * AI-use statement required; Reproducibility Statement strongly encouraged
+% ---------------------------------------------------------------------------
+
+\title{Rote: Managing the Context Window as a Resource \\ for Browser Agents that Learn Across Runs}
+
+% Anonymous for submission. Uncomment \iclrfinalcopy for camera-ready only.
+\author{Anonymous authors \\ Paper under double-blind review}
+
+%\iclrfinalcopy
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+% ~150--200 words. Claim, mechanism, evidence, caveat.
+Browser agents built on large language models spend most of their budget re-reading pages they have already seen and re-deriving actions they have already taken. Every agent harness \emph{has} memory; almost none \emph{manages} it. We present Rote, a memory manager that treats the context window as a managed resource---with an explicit budget, an eviction policy, a layout contract that keeps a cache-stable prefix, and a trust gate on everything re-admitted---across three tiers: working memory within a run, episodic memory across runs of the same task, and semantic memory across tasks on the same site. Rote distills recorded trajectories into value-free, contract-gated playbooks; matches new tasks against them with a fail-closed matcher; and replays with zero model calls until a versioned \emph{action contract} detects that a same-looking control changed its behavior, at which point it falls back to the plain agent before any dispatch. On a frozen enterprise-style benchmark, Rote reduces logical input tokens by 83.1\% (95\% CI 82.1--83.9\%) and billed cost by 68.2\% at exact-oracle parity with a strong open-source baseline, and its offline next-action predictor reaches 99.4\% kind+target accuracy over 1{,}520 warm steps. All mechanisms fail closed: 0/90 silent failures were observed under selector drift, destructive decoys, and ambiguity. \textbf{[TODO: replace with numbers from the billed learning-curve campaign once run.]}
+\end{abstract}
+
+\section{Introduction}
+% 1 page. Problem: agents re-pay for what they already know; memory is unmanaged.
+% Contribution list (keep to 4):
+%  C1 Context window as managed resource: budget, eviction, layout contract, trust gate (docs/02).
+%  C2 Learn-across-runs loop with hard safety: distill -> match -> replay, value-free, append-only,
+%     fingerprint hard gate, action-contract gate (#143 / T35, T36, T40).
+%  C3 Predictor as a shadow system with monotone confidence; kill gate + calibration (T38, T39).
+%  C4 Evidence: frozen benchmark B1--B6, exact external oracles, invariant suite; billed campaign.
+\textbf{[TODO]}
+
+\section{Related work}
+% Web/browser agents (WebArena, Mind2Web, Browser Use, Stagehand, Skyvern, Magnitude -- we qualified
+% three of these as baselines, T22/T23/T24/T27); agent memory (MemGPT-style paging, reflexion/
+% experience replay, skill libraries e.g. Voyager); prompt caching / KV-cache reuse; program synthesis
+% from demonstrations (macro recording, PbD). Position: prior work adds memory; Rote manages it with
+% invariants. Cite own arXiv (if any) in third person.
+\textbf{[TODO]}
+
+\section{Rote: the memory spine}
+\label{sec:design}
+
+Rote is organized around a single reading of the agent loop: the context window is
+memory, and memory needs a manager --- a budget, an eviction policy, a write path, and a
+trust gate on everything re-admitted. The operating-system analogy is exact and we treat
+it as a design discipline rather than a metaphor: the context window is RAM, observations
+are pages, dropping them is eviction, diffing is delta encoding, the provider prompt
+cache is a cache level, compaction is garbage collection, a distilled playbook is a
+cached compiled program, and site memory is the persistent store. Each of these has a
+manager in an operating system; none has one in a shipping browser agent, which appends
+to a transcript and hopes. Rote supplies the manager at three timescales: \emph{working}
+memory within a run (\S\ref{sec:tier0}), \emph{episodic} memory across runs of one task
+(\S\ref{sec:tier1}), and \emph{semantic} memory across tasks on one site
+(\S\ref{sec:tier2}). The trust gates (\S\ref{sec:gates}) are not a fourth tier but the
+precondition for all three: memory that might be wrong is worse than no memory, because
+reuse without verification is a machine for repeating a mistake at volume.
+
+A second commitment follows from the first: control flow should be deterministic. A
+successful run tangles together \emph{what to do} (the procedure) and \emph{what to
+decide} (the content). Rote untangles them --- the procedure becomes a deterministic,
+replayable artifact, and the model is invoked only where genuine judgment lives: binding
+parameters, filling slots, and repairing broken steps.
+
+\subsection{Tier 0: working memory as a budgeted resource}
+\label{sec:tier0}
+
+The dominant cost in a transcript-style agent is quadratic. With per-step action records
+of $\sim$35--40 tokens, step $n$ costs $c + 40n + \mathit{obs}$, so an $n$-step run
+carries a $40\cdot n(n+1)/2$ term; if every observation also stays resident at 5--40K
+tokens each, step 20 is a 100--800K-token prompt. Rote's context assembler enforces a
+layout contract with four segments --- a constant instruction prefix, a constant page
+header, a linearly growing action history, and the \emph{current} observation only ---
+and applies four levers against the curve. (1)~\textbf{Observation eviction}: prior
+observations are dropped; the model recalls what it \emph{did}, not what it \emph{saw}.
+This is a real trade: a task whose answer lives in an evicted observation cannot be
+completed, so after first omission the context marks the recall boundary and instructs
+the planner to return a typed \texttt{recall\_unavailable} failure instead of guessing;
+independent verification separately rejects fabricated answers. The task still fails ---
+the protection is that it fails honestly. (2)~\textbf{Observation diffing}: the current
+observation is served as a delta against a grounded base; across 849 real-page
+certification diffs the median delta is 24 characters, a 99.6\% median reduction.
+(3)~\textbf{Cache-stable layout}: the prompt is ordered $[\text{stable
+prefix}][\text{append-only history}]$ and routed by a deterministic immutable-prefix
+cache key, so the surviving prefix is billed at the provider's cached rate; measured on a
+25-step cell this cuts billed cost by 20.5\%. (4)~\textbf{Scheduled compaction}: past a
+budget threshold the action history is folded into a versioned summary with the recent
+suffix kept verbatim, holding visible history $O(1)$ in steps; a 60-transition
+single-page-application session sustains this with at most 31 visible actions and three
+compaction boundaries.
+
+\subsection{Tier 1: episodic memory --- record, distill, replay}
+\label{sec:tier1}
+
+Every run is recorded to an append-only, crash-safe event log (one fsync per event, large
+results spilled to content-addressed blobs). The \emph{distiller} converts one successful
+recorded trajectory into a playbook: a parameterized, value-free procedure in which
+concrete user inputs are lifted to named parameters, and every step carries the target's
+structural identity, its \emph{action contract} (\S\ref{sec:gates}), and a learned
+verification derived from the recorded evidence class of the original success. Values
+never survive distillation --- credentials and form contents are replaced by parameter
+references at distill time, so a playbook can be shared or inspected without leaking a
+recorded secret. Replay executes the playbook deterministically with zero model calls,
+asserting each step's expectations before and after dispatch; on our benchmark tasks a
+recorded run distills and replays end-to-end with zero edits and zero tokens. A failed
+assertion never degrades into a guess: the run stops, the failure is classified, and the
+system falls back to the plain agent with the classification attached.
+
+\subsection{Tier 2: semantic memory --- site memory and the brief}
+\label{sec:tier2}
+
+Across tasks on one site, Rote accumulates \emph{value-free} records keyed by a stable
+page digest: selector maps, form field semantics, page-transition edges, settle-time
+priors, and a closed vocabulary of site quirks. Value-freedom is enforced structurally
+--- record schemas have no field that can hold page content, and an invariant test
+derives site memory from a live run and asserts no user value appears anywhere in the
+store. At run time the relevant records are rendered into a \emph{site brief}: a
+hard-capped, deterministic block placed in the cache-stable prefix and framed as
+advisory hints, never as instructions the planner must obey. Every run records the
+brief's size and how many of its hinted identities were actually used, so the brief's
+utility is measured rather than assumed.
+
+\subsection{Trust gates}
+\label{sec:gates}
+
+Four gates stand between stored memory and a dispatched action, ordered from cheapest to
+most specific. (1)~\textbf{Environment fingerprint} (hard gate): a structural fingerprint
+of the environment must match exactly before any fuzzy matching is attempted; a playbook
+learned on a staging host can never fire on production. (2)~\textbf{Matcher} (fail
+closed): a new task selects a playbook only if intent similarity clears a threshold
+($\tau = 0.8$) with a minimum margin over the runner-up (0.05), every required parameter
+binds, and every content-bearing token of the task's intent is covered --- the coverage
+requirement was added after a near-miss in which a destructive lookalike task scored
+0.82 against a benign playbook. On any ambiguity the matcher declines and the plain
+agent runs. (3)~\textbf{Action contract}: each step stores a versioned, value-free
+contract of the control it dispatches --- element role, input modality, and the
+observed effect class of activation. Before dispatch, the live control's derived
+contract must equal the stored one; a same-looking button whose behavior changed (a
+destination change, a method change, a purge action behind a familiar label) stops the
+replay with a typed mismatch and zero dispatches, while cosmetic drift, selector
+renames, and wrapper insertion replay normally. (4)~\textbf{Outcome evidence}: task
+success is asserted only against authoritative, freshness-bound evidence tied to the
+task subject --- a harness's own conclusion, stale evidence, or evidence about a
+different subject all fail typed.
+
+\subsection{Predictor and model routing}
+\label{sec:routing}
+
+With memory managed, two further systems spend the remaining model budget deliberately.
+The \emph{predictor} is an ensemble of trace matching against prior runs and a learned
+transition model, emitting a next-action prediction with a monotone confidence score. It
+runs in \emph{shadow mode}: predictions are recorded and scored on every run but never
+dispatched, because offline confidence is not yet calibrated on live pages
+(\S\ref{sec:results-predictor}). The \emph{router} sends confident steps to a routine
+(smaller) planner model and escalates to the frontier model on planner output errors or
+target repair, preserving the never-worse-than-baseline invariant; escalation spend is
+accounted separately so routing economics are measurable. Every model call in the system
+carries a source tag through a single client wrapper (\S\ref{sec:invariants}), so all
+reported token numbers decompose exactly by subsystem.
+
+\section{Invariants}
+\label{sec:invariants}
+
+Five invariants bind every mechanism in \S\ref{sec:design}. They are encoded in a
+dedicated invariant test suite that must touch every executor exit path, and they are
+not negotiable under schedule pressure; several results in \S\ref{sec:results} are best
+read as these invariants holding under adversarial pressure.
+
+\begin{table}[h]
+\caption{Project invariants, their enforcement points, and the evidence that exercises
+them under pressure.}
+\label{tab:invariants}
+\begin{center}
+\small
+\begin{tabular}{p{0.30\linewidth}p{0.34\linewidth}p{0.26\linewidth}}
+\toprule
+\textbf{Invariant} & \textbf{Enforcement} & \textbf{Exercised by} \\
+\midrule
+1. Never silently wrong --- no path reports success when a verification failed &
+every replayed step assertion-gated; outcome gated on authoritative evidence &
+0/90 silent failures under drift, decoys, and ambiguity (\S\ref{sec:results-safety}) \\
+\addlinespace
+2. Never worse than baseline --- plain-agent fallback always reachable and clean &
+typed failure classification on every gate; fallback logs \emph{why} it fired &
+failed replays fall back and complete cold (\S\ref{sec:results-safety}) \\
+\addlinespace
+3. Never cross environments &
+structural fingerprint mismatch short-circuits before any fuzzy matching &
+matcher and continuation cross-environment cases fail with zero dispatches \\
+\addlinespace
+4. Everything versioned --- store mutations append-only, no in-place edits &
+event log, playbook library, site memory, and checkpoints are append-only with rollback &
+interrupted writes recover without in-place edits (\S\ref{sec:results-learning}) \\
+\addlinespace
+5. Every model call tagged &
+single client wrapper with a closed source vocabulary; untagged calls fail lint &
+all token accounting in \S\ref{sec:results} decomposes exactly by source \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+Two consequences are worth stating. First, invariants 1--3 mean Rote's failure mode is
+economic, not behavioral: when memory cannot be trusted, the system pays the cold price
+it would have paid anyway, plus a cheap gate check. Second, invariants 4--5 make every
+claim in this paper auditable --- each reported number decomposes into tagged calls over
+append-only records that can be replayed.
+
+\section{Experimental setup}
+\label{sec:setup}
+% Benchmark B1--B6 (docs/03), exact external oracles, frozen fixtures + digest-pinned WordPress page
+% (T2: 22,279 tokens, zero range over 15 sessions). Baselines: Browser Use 0.13.7 (qualified, T24);
+% Stagehand/Skyvern/Magnitude stopped at qualification (T22/T23/T27) -- report why, no ranking.
+% Metrics: logical input tokens, billed cost, latency, exact success, silent-failure rate.
+\textbf{[TODO]}
+
+\section{Results}
+\label{sec:results}
+\subsection{Warm-run economics}
+% T25: 18/18 exact per harness; tokens -83.1% [82.1, 83.9], cost -68.2% [66.3, 69.9],
+% latency -43.6% [39.0, 48.1]. T10: 37.2% slower logical-input growth on the curve.
+\subsection{Drift and safety}
+\label{sec:results-safety}
+% T21: 72/72 repaired exact successes, 0/90 silent failures, 18/18 ambiguity fallbacks, zero repair
+% tokens. T35: contract drift stops with BROWSER_CONTRACT_MISMATCH and zero dispatches while cosmetic,
+% rename, and wrapper drift keep replaying. T40: B6 lookalike never selected; forced replay dispatches
+% nothing.
+\subsection{Learning across runs}
+\label{sec:results-learning}
+% T36: record -> distill -> replay 0 LLM calls on B1/B2. T37: continuation across 2 process restarts,
+% no repeated dispatch. [TODO billed: T0 >=80% reduction at parity with automated distillation;
+% T2 >=30% generalization from the site brief; >=50% warm steps off the frontier at parity.]
+\subsection{Predictor}
+\label{sec:results-predictor}
+% T38/T39: 99.4% kind+target over 1,520 warm steps (Wilson 98.9-99.7); >=0.9 confidence covers 62.4%
+% at 99.8% precision; under-calibrated on fixtures (0.33 -> 99%) -> shadow only. Fig: reliability
+% diagram + coverage curve from docs/testing/data/T39-predictor-simulation.json.
+\subsection{Long sessions}
+% T34: 60-transition SPA, visible history <=31 actions, 3 compaction boundaries, 15/15 pass.
+\textbf{[TODO]}
+
+\section{Limitations}
+% Synthetic enterprise fixtures for most safety results; one real page family (WordPress); baselines
+% partly stopped at qualification; predictor calibration only on fixtures; billed campaign scope.
+\textbf{[TODO]}
+
+\section{Conclusion}
+\textbf{[TODO]}
+
+\subsubsection*{Reproducibility statement}
+% Point to anonymized code + fixtures + T-reports (docs/testing/T*.md, raw data under
+% docs/testing/data/), one-command reproduction (T17), pinned baseline versions.
+\textbf{[TODO]}
+
+\subsubsection*{AI use statement}
+% Required by ICLR 2027 policy. Describe use of LLM coding assistants in implementation/writing.
+\textbf{[TODO]}
+
+\bibliography{rote}
+\bibliographystyle{iclr2027_conference}
+
+\appendix
+\section{Benchmark tasks B1--B6 and oracles}
+\section{Action-contract schema and drift taxonomy}
+\section{Full test log index}
+% Table mapping T1..T40 -> claim used in the paper.
+
+\end{document}
