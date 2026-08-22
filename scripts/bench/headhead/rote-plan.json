@@ -72,5 +72,30 @@
       ],
       "repetitions": 18
     }
+,
+    {
+      "task": {
+        "id": "B4",
+        "name": "support triage judgment"
+      },
+      "phase": "cold",
+      "command": "node",
+      "args": [
+        "packages/cli/bin/rote.js",
+        "run",
+        "Open support triage item TKT-1041, read the item, choose the correct category for it, and route it.",
+        "--url",
+        "http://127.0.0.1:8080/b4-triage.html?item=TKT-1041",
+        "--verify-text",
+        "Item routed | item=TKT-1041 | category=billing",
+        "--model",
+        "gpt-4.1-mini",
+        "--viewport-width",
+        "1920",
+        "--viewport-height",
+        "1080"
+      ],
+      "repetitions": 18
+    }
   ]
 }

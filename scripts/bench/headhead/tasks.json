@@ -27,6 +27,13 @@
       "path": "b3-catalog.html",
       "prompt": "Search the catalog for \"alpha\" and open the Alpha result.",
       "verify_text": "Alpha product opened"
+    },
+    {
+      "id": "B4",
+      "name": "support triage judgment",
+      "path": "b4-triage.html?item=TKT-1041",
+      "prompt": "Open support triage item TKT-1041, read the item, choose the correct category for it, and route it.",
+      "verify_text": "Item routed | item=TKT-1041 | category=billing"
     }
   ]
 }
