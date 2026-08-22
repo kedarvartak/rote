@@ -16,6 +16,18 @@ export interface LaunchingCdpBrowserBackendOptions {
   headless?: boolean;
   /** Deterministic outer window size in CSS pixels. */
   windowSize?: { width: number; height: number };
+  /**
+   * How long to wait for Chrome's DevTools endpoint per launch attempt (ms).
+   * Default 30000: a cold CI runner's first Chrome start regularly exceeds the
+   * old 10 s bound, which made the whole job flake.
+   */
+  startTimeoutMs?: number;
+  /**
+   * Launch attempts before giving up (default 2). A launch that times out or
+   * exits early is killed and retried once with a fresh profile dir — bounded,
+   * so a genuinely broken Chrome still fails fast and loudly.
+   */
+  launchAttempts?: number;
 }
 
 /** Captures live pages from an existing Chrome DevTools Protocol endpoint. */
@@ -73,21 +85,35 @@ export class LaunchingCdpBrowserBackend implements BrowserCaptureBackend {
     if (this.endpoint) return;
     const chromePath = this.options.chromePath ?? findChromeExecutable();
     if (!chromePath) throw new Error('Chrome/Chromium executable not found; pass chromePath');
-    this.userDataDir = await mkdtemp(join(tmpdir(), 'rote-chrome-'));
     const windowSize = this.options.windowSize;
     if (windowSize && (!Number.isInteger(windowSize.width) || !Number.isInteger(windowSize.height) || windowSize.width < 1 || windowSize.height < 1)) {
       throw new Error('windowSize width and height must be positive integers');
     }
-    this.child = spawn(chromePath, [
-      '--remote-debugging-port=0',
-      `--user-data-dir=${this.userDataDir}`,
-      '--no-first-run',
-      '--no-default-browser-check',
-      ...(windowSize ? [`--window-size=${windowSize.width},${windowSize.height}`] : []),
-      ...(this.options.headless === false ? [] : ['--headless=new']),
-      'about:blank',
-    ], { stdio: ['ignore', 'ignore', 'pipe'] });
-    this.endpoint = await waitForDevtoolsEndpoint(this.child);
+    const attempts = this.options.launchAttempts ?? 2;
+    let lastError: Error | undefined;
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+      // fresh profile per attempt: a half-initialized profile from a timed-out
+      // launch must not poison the retry
+      this.userDataDir = await mkdtemp(join(tmpdir(), 'rote-chrome-'));
+      this.child = spawn(chromePath, [
+        '--remote-debugging-port=0',
+        `--user-data-dir=${this.userDataDir}`,
+        '--no-first-run',
+        '--no-default-browser-check',
+        ...(windowSize ? [`--window-size=${windowSize.width},${windowSize.height}`] : []),
+        ...(this.options.headless === false ? [] : ['--headless=new']),
+        'about:blank',
+      ], { stdio: ['ignore', 'ignore', 'pipe'] });
+      try {
+        this.endpoint = await waitForDevtoolsEndpoint(this.child, this.options.startTimeoutMs ?? 30_000);
+        return;
+      } catch (error) {
+        lastError = error as Error;
+        await stopChrome(this.child);
+        this.child = undefined;
+      }
+    }
+    throw new Error(`Chrome failed to expose a DevTools endpoint after ${attempts} attempts: ${lastError?.message ?? 'unknown error'}`);
   }
 }
 
@@ -102,17 +128,25 @@ export function findChromeExecutable(): string | undefined {
     ]);
 }
 
-function waitForDevtoolsEndpoint(child: ChildProcess): Promise<string> {
+export function waitForDevtoolsEndpoint(child: ChildProcess, timeoutMs = 30_000): Promise<string> {
   return new Promise((resolve, reject) => {
     const stderr = child.stderr;
     if (!stderr) {
       reject(new Error('Chrome stderr is not available'));
       return;
     }
-    const timeout = setTimeout(() => reject(new Error('timed out waiting for Chrome DevTools endpoint')), 10000);
+    // Accumulate across chunks: the "DevTools listening" line can be split at
+    // any byte boundary, and a per-chunk regex would then never match. The
+    // buffer also gives the timeout error something diagnosable to carry.
+    let buffered = '';
+    const timeout = setTimeout(() => {
+      const tail = buffered.slice(-400).trim();
+      reject(new Error(`timed out waiting for Chrome DevTools endpoint after ${timeoutMs} ms${tail ? `; stderr tail: ${tail}` : ''}`));
+    }, timeoutMs);
     stderr.setEncoding('utf8');
     stderr.on('data', (chunk) => {
-      const match = /DevTools listening on ws:\/\/([^/]+)\//.exec(String(chunk));
+      buffered += String(chunk);
+      const match = /DevTools listening on ws:\/\/([^/]+)\//.exec(buffered);
       if (!match?.[1]) return;
       clearTimeout(timeout);
       resolve(`http://${match[1]}`);
