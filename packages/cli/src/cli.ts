@@ -1,5 +1,6 @@
 import { formatRunDetail, formatRunsList } from './format.js';
 import { formatRunReport, reportRun } from './report-run.js';
+import { FilePlaybookLibrary } from '@rote/matcher';
 import { listRuns, showRun } from './runs.js';
 import { runBrowserTask, type BrowserTaskResult, type RunBrowserTaskOptions } from './run-browser-task.js';
 import { createReplayCandidate } from './create-replay-candidate.js';
@@ -28,6 +29,16 @@ export async function main(
     const runId = rest[0];
     if (!runId) throw new Error('usage: rote runs show <run_id>');
     return formatRunDetail(await showRun(baseDir, runId));
+  }
+  if (group === 'playbooks') {
+    // The learned library is the product's memory; listing it must stay value-free —
+    // names, versions, fingerprints, params, step counts, never recorded values.
+    const entries = await new FilePlaybookLibrary(baseDir).list();
+    if (entries.length === 0) return 'playbook library is empty — record a run, then rote distill <run_id>';
+    return entries.map((entry) => {
+      const params = entry.playbook.params.map((param) => param.name).join(', ') || '(none)';
+      return `${entry.playbook.playbook} v${entry.playbook.version} — ${entry.playbook.steps.length} steps, params: ${params}, fingerprint ${entry.fingerprint_hash.slice(0, 12)}…${entry.source_run_id ? `, from run ${entry.source_run_id}` : ''}`;
+    }).join('\n');
   }
   if (group === 'report') {
     if (!subcommand) throw new Error('usage: rote report <run_id>');
@@ -101,7 +112,7 @@ export async function main(
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,
     ].join('\n');
   }
-  throw new Error(`usage: rote runs ls | rote runs show <run_id> | rote report <run_id> | ${runUsage()} | ${candidateUsage()} | ${distillUsage()} | ${continueUsage()}`);
+  throw new Error(`usage: rote runs ls | rote runs show <run_id> | rote report <run_id> | rote playbooks | ${runUsage()} | ${candidateUsage()} | ${distillUsage()} | ${continueUsage()}`);
 }
 
 function formatSelection(selection: NonNullable<BrowserTaskResult['selection']>): string {
