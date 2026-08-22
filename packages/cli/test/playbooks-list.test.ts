@@ -17,8 +17,8 @@ const playbook = (name: string, version: number) => ({
   },
   params: [{ name: 'company_name', type: 'string' as const }],
   steps: [
-    { id: 's1', tool: 'browser.navigate', args: { url: 'https://fixture.test/register' }, depends_on: [] },
-    { id: 's2', tool: 'browser.fill', args: { selector: '#company-name', value: '{{company_name}}' }, depends_on: ['s1'] },
+    { id: 's1', kind: 'deterministic' as const, tool: 'browser.navigate', args: { url: 'https://fixture.test/register' }, depends_on: [] },
+    { id: 's2', kind: 'deterministic' as const, tool: 'browser.fill', args: { selector: '#company-name', value: '{{company_name}}' }, depends_on: ['s1'] },
   ],
   verify: [{ text_visible: 'Vendor registration complete' }],
   confidence: 1,
