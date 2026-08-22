@@ -43,12 +43,52 @@ Browser agents built on large language models spend most of their budget re-read
 \textbf{[TODO]}
 
 \section{Related work}
-% Web/browser agents (WebArena, Mind2Web, Browser Use, Stagehand, Skyvern, Magnitude -- we qualified
-% three of these as baselines, T22/T23/T24/T27); agent memory (MemGPT-style paging, reflexion/
-% experience replay, skill libraries e.g. Voyager); prompt caching / KV-cache reuse; program synthesis
-% from demonstrations (macro recording, PbD). Position: prior work adds memory; Rote manages it with
-% invariants. Cite own arXiv (if any) in third person.
-\textbf{[TODO]}
+\label{sec:related}
+
+\paragraph{Web and browser agents.} Benchmarks such as WebArena
+\citep{zhou2023webarena}, Mind2Web \citep{deng2023mind2web}, and OSWorld
+\citep{xie2024osworld} established realistic web-task evaluation, and agents like SeeAct
+\citep{zheng2024seeact} and WebVoyager \citep{he2024webvoyager} established the
+observe--decide--act loop over accessibility trees and screenshots. Open-source harnesses
+--- Browser Use \citep{browseruse2024}, Stagehand \citep{stagehand2024}, and Skyvern
+\citep{skyvern2024} --- ship this loop as a product, typically as a chat transcript in
+which every observation stays resident. Our work is complementary to all of these: Rote
+is not a new policy or a new benchmark but a management layer for the resource every such
+agent already spends.
+
+\paragraph{Agent memory.} MemGPT \citep{packer2023memgpt} introduced OS-style paging
+between context and external storage for dialogue; CoALA \citep{sumers2023coala}
+organizes agent memory conceptually into working, episodic, semantic, and procedural
+stores. Experience-reuse systems learn from prior trajectories: Reflexion
+\citep{shinn2023reflexion} stores verbal self-feedback, Voyager \citep{wang2023voyager}
+grows a code skill library in Minecraft, Synapse \citep{zheng2023synapse} retrieves
+exemplar trajectories as few-shot prompts, and Agent Workflow Memory
+\citep{wang2024awm} induces reusable workflows from successful runs and injects them
+into the prompt. Rote differs on two axes. First, reuse is \emph{executable and gated},
+not advisory: a matched playbook replays deterministically with zero model calls, but
+only behind an environment fingerprint, a fail-closed matcher, a per-step action
+contract, and authoritative outcome evidence --- prior systems inject remembered
+guidance and let the model decide, which cannot bound the cost of being wrong. Second,
+stored memory is \emph{value-free by construction}, so credentials and form contents
+recorded in one run cannot leak into another. Knowledge-memory services such as Mem0
+\citep{mem0:2024} and Zep \citep{zep2025} store facts about users and domains; Rote
+stores procedures and site behavior, and the two compose.
+
+\paragraph{Managing the window itself.} Provider-side prompt caching
+\citep{anthropic2024caching, openaicaching2024} discounts a repeated prefix but leaves
+deciding \emph{what} stays in the window to the harness; context-compression methods
+\citep{jiang2023llmlingua} shrink a prompt lossily. Rote treats these as levers inside a
+policy: an eviction rule chooses what survives, a layout contract keeps the surviving
+prefix cache-stable, and compaction folds history under a budget --- compression shrinks
+a step, while Rote declines to run it.
+
+\paragraph{Learning from demonstration.} Distilling a recorded trajectory into a
+parameterized program echoes programming-by-demonstration for the web
+\citep{leshed2008coscripter} and trace-based macro induction \citep{li2010sikuli}. Rote's
+distiller differs in what it refuses: a value that matches no declared parameter aborts
+distillation, and a run whose verifier cannot state declarative checks cannot teach a
+\texttt{verify} --- refusals that exist so a memorized procedure can never be more
+confident than the evidence that produced it.
 
 \section{Rote: the memory spine}
 \label{sec:design}
