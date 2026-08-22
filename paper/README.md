@@ -26,3 +26,10 @@ reproducibility statement strongly encouraged; figures go through `graphicx`
 Fallback if the billed exit-gate campaign is not done by Sep 20: submit the same
 draft to the non-archival NeurIPS 2026 TTCL workshop (deadline Aug 30 2026) and
 retarget the main paper to MLSys 2027 (deadline Oct 30 2026, CFP not yet posted).
+
+## Pre-submission checklist
+
+- Verify every `rote.bib` entry's venue/year/authors against DBLP before submission.
+- Replace the abstract's and §6.3's `[TODO billed]` blocks with the billed campaign numbers.
+- Write §1, §7 Limitations, §8 Conclusion, reproducibility + AI-use statements.
+- Re-run `node figures/build-figures.mjs` if any frozen data set changed.
