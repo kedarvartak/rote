@@ -2,6 +2,7 @@ import { formatRunDetail, formatRunsList } from './format.js';
 import { formatRunReport, reportRun } from './report-run.js';
 import { FilePlaybookLibrary } from '@rote/matcher';
 import { formatMemoryInspection, formatMemoryList, inspectMemory, listMemoryPartitions } from './memory-inspect.js';
+import { formatPredictReport, predictReport } from './predict-report.js';
 import { listRuns, showRun } from './runs.js';
 import { runBrowserTask, type BrowserTaskResult, type RunBrowserTaskOptions } from './run-browser-task.js';
 import { createReplayCandidate } from './create-replay-candidate.js';
@@ -40,6 +41,9 @@ export async function main(
       const params = entry.playbook.params.map((param) => param.name).join(', ') || '(none)';
       return `${entry.playbook.playbook} v${entry.playbook.version} — ${entry.playbook.steps.length} steps, params: ${params}, fingerprint ${entry.fingerprint_hash.slice(0, 12)}…${entry.source_run_id ? `, from run ${entry.source_run_id}` : ''}`;
     }).join('\n');
+  }
+  if (group === 'predict-report') {
+    return formatPredictReport(await predictReport(baseDir));
   }
   if (group === 'memory') {
     // Consolidation needs a "now" for freshness; the CLI edge supplies the real
@@ -125,7 +129,7 @@ export async function main(
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,
     ].join('\n');
   }
-  throw new Error(`usage: rote runs ls | rote runs show <run_id> | rote report <run_id> | rote playbooks | rote memory [fingerprint_hash] [--brief-chars <n>] | ${runUsage()} | ${candidateUsage()} | ${distillUsage()} | ${continueUsage()}`);
+  throw new Error(`usage: rote runs ls | rote runs show <run_id> | rote report <run_id> | rote playbooks | rote memory [fingerprint_hash] [--brief-chars <n>] | rote predict-report | ${runUsage()} | ${candidateUsage()} | ${distillUsage()} | ${continueUsage()}`);
 }
 
 function formatSelection(selection: NonNullable<BrowserTaskResult['selection']>): string {

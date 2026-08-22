@@ -7,3 +7,4 @@ export * from './distill-run.js';
 export * from './continue-browser-task.js';
 export * from './report-run.js';
 export * from './memory-inspect.js';
+export * from './predict-report.js';
