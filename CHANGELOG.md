@@ -46,6 +46,7 @@ labeled `skip-changelog`.
 - **P1**: Rework the website's `/docs/cosmetic-drift` deep-dive for scanability: lead with the demo recording and a three-step token strip (65 → 6 → 11 tokens), explain the fix as a kept/dropped distiller split with a pipeline flow line, compress the drift gradient into a table with cost chips, and crop the dead space out of the terminal GIF (#140).
 
 ### Docs
+- Start the ICLR 2027 paper draft in `paper/`: official style files plus `rote.tex` with the memory-spine design section (tiers 0–2, trust gates, predictor/routing) and the invariants section written; remaining sections stubbed with the T-report each must cite (#163).
 - **P2**: Publish T31's composed-context boundary and advance the enterprise sequence to authoritative outcome evidence without claiming production-site or structural-contract coverage (#145).
 - **P2**: Make structural action-contract drift the cross-cutting P2 trust-gate priority while stating that identity v2 alone does not establish semantic compatibility (#144).
 - **P1/P2**: Order enterprise browser readiness behind registry launch: freeze adversarial oracles, version target identity, add iframe/open-shadow contexts, require authoritative outcome evidence, expand grounded actions, certify long SPAs, then add multi-session continuation (#134).

@@ -1,0 +1,8 @@
+# LaTeX build artifacts — the PDF is built, not versioned
+*.pdf
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
