@@ -94,6 +94,9 @@ jobs:
       - name: Action-contract gate + B6 false-match Chrome contract
         if: steps.detect.outputs.present == 'true'
         run: npm run test:contract-gate-chrome --workspace @rote/executor
+      - name: Settle-prior end-to-end Chrome control
+        if: steps.detect.outputs.present == 'true'
+        run: npm run test:settle-chrome --workspace @rote/site-memory
       - name: B4 triage fixture Chrome control
         if: steps.detect.outputs.present == 'true'
         run: npm run test:b4-triage-chrome --workspace @rote/executor
