@@ -39,6 +39,9 @@ repository with `scripts/demo/run-launch-demo.sh`; see [T16](https://github.com/
   with outcome and task spec. A run with no `manifest.json` yet (still in
   progress, or abandoned by a kill) is listed as `in-progress` rather than
   silently omitted.
+- **`rote playbooks`** — lists the learned playbook library value-free: name, version,
+  step count, params, truncated fingerprint, and source run. Empty until a run is
+  distilled.
 - **`rote report <run_id>`** — aggregates one recorded run into per-source token
   accounting (logical input = uncached + cache reads + cache writes, so caching cannot
   masquerade as savings), plus routing, shadow-predictor, and settle summaries. Pure
