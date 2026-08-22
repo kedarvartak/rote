@@ -253,7 +253,10 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
    `rote distill <run_id>` learns playbook + site memory from a recorded run, `rote run`
    consults the library and renders the site brief, `rote continue` resumes under a
    task id. B6 (docs/03's false-match test) is built and T4 near-miss discipline
-   certified with defence in depth ([T40](testing/T40-b6-false-match.md), #162). Gate:
+   certified with defence in depth ([T40](testing/T40-b6-false-match.md), #162), and B4
+   — the suite's judgment-gate row and its last unbuilt task — is built and certified
+   deterministically ([T41](testing/T41-b4-judgment-gate.md), #167): a judgment-chosen
+   triage category never survives distillation, so the task suite is now complete. Gate:
    distilled playbooks replay the fixture suite with zero human edits. **Reaches parity
    with Skyvern's 2026 baseline; the differentiator is the verification contract.**
 9. **Multi-session task continuation — built** ([#133](https://github.com/kedarvartak/rote/issues/133),
@@ -289,7 +292,10 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
     overhead, not memory. **Brief built (#158)**: `renderSiteBrief` ranks facts by page
     and confidence × freshness under a hard character cap with fixed wording, the agent
     renders it into the cache-stable prefix as a hint, and every run reports hint
-    utility (hinted vs dispatched identities). Whether it earns its tokens is the T2
+    utility (hinted vs dispatched identities). **Settle priors fed (#168)**: the
+    settledness gate's measured settle is recorded per step (`settle_ms`) and derivation
+    aggregates nearest-rank p50/p90/max per page and action kind, with the coded
+    `long_settle` quirk at p90 ≥ 3,000 ms — the schema-without-telemetry gap is closed. Whether it earns its tokens is the T2
     measurement (≥30% at parity; retreat below 15%) — provider-billed, not yet run.
 12. **Model routing — v1 built (#161)** — `grounded-routine` on a small model: a
     confident shadow prediction (default ≥ 0.9) routes the step to the `routine`
@@ -305,6 +311,14 @@ would have done ([T35 §Public demonstration](testing/T35-action-contract-gate.m
 **Exit gates:** T0 ≥80% reduction at parity *with automated distillation*; **T2 ≥30%**
 (the generalization bet — retreat rule if <15%); ≥50% of warm steps off the frontier
 model at parity. Gates defined in [03](03-benchmark.md).
+
+*Status 2026-08-22:* every P2 item has a built, deterministically certified v1; what
+remains for the exit gates is one provider-billed campaign through `rote run`
+(T0 with automated distillation, T2 brief utility, routing parity, predictor
+calibration on real pages, B4 economics) — the mechanisms and their per-run telemetry
+already exist in the product output. The certified evidence is packaged for external
+review as the ICLR 2027 draft in `paper/` (deadlines: abstract 2026-09-18, paper
+2026-09-25 AoE); its only unfilled numbers are the campaign's.
 
 ## P3 — V3: faster than the model thinks (~8–10 weeks)
 
