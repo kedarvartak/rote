@@ -3,9 +3,9 @@ import { resolve } from 'node:path';
 import { SettledBrowserPageSession, type SettleableBrowserPage } from '@rote/action';
 import type { BrowserPageSession } from '@rote/agent';
 import { LaunchingCdpBrowserBackend } from '@rote/browser';
-import { createEnterpriseOracleEvidenceAdapter, EnterpriseOracleSnapshotSchema } from '@rote/bench';
 import { ContinuationMismatchError, continueTask, FileCheckpointStore, type ContinuationResult } from '@rote/continuation';
-import { parsePlaybookYaml } from '@rote/core';
+import { buildEvidenceEnvelope, parsePlaybookYaml, type AuthoritativeEvidenceAdapter } from '@rote/core';
+import { z } from 'zod';
 import { BrowserToolCaller, type BrowserReplayPage } from '@rote/executor';
 import { browserEnvironmentFingerprint, type BrowserTaskBackend } from './run-browser-task.js';
 
@@ -99,6 +99,24 @@ export async function continueBrowserTask(options: ContinueBrowserTaskOptions, d
 
 export { ContinuationMismatchError };
 
+/**
+ * Wire shape of the E7.1 fixture oracle's `/api/oracle` response — the same
+ * contract `@rote/bench`'s certification adapter speaks (T37). Declared here
+ * rather than imported so the published CLI bundle does not carry the bench
+ * package; the shapes are pinned against each other by the CLI test suite.
+ */
+const OracleSnapshotSchema = z.object({
+  generation: z.number().int().nonnegative(),
+  task_id: z.string().min(1),
+  events: z.array(z.object({
+    event_id: z.string().min(1),
+    task_id: z.string().min(1),
+    kind: z.string().min(1),
+    target_key: z.string().min(1),
+    payload_sha256: z.string().regex(/^[a-f0-9]{64}$/),
+  })),
+}).passthrough();
+
 /** Binds the E7.1/E7.4 oracle contract into continuation exactly as the bench certification does (T37). */
 function buildOracleEvidence(
   options: ContinueBrowserTaskOptions,
@@ -109,12 +127,33 @@ function buildOracleEvidence(
   const clock = dependencies.clock ?? Date.now;
   const urlFor = (taskId: string) => template.replaceAll('{task_id}', encodeURIComponent(taskId));
   const subject = { task_id: options.taskId, run_id: options.evidenceRunId ?? options.taskId };
+  const adapter: AuthoritativeEvidenceAdapter = {
+    id: 'oracle',
+    async collect(evidenceSubject) {
+      const url = urlFor(evidenceSubject.task_id);
+      const snapshot = OracleSnapshotSchema.parse(await fetchJson(url));
+      // "attests to no effect" must evaluate as evidence-missing, not as an
+      // empty pass — mirror the certification adapter: zero events, zero envelopes.
+      if (snapshot.events.length === 0) return [];
+      return [buildEvidenceEnvelope({
+        evidence_class: 'fixture_oracle',
+        adapter_id: 'oracle',
+        source: url,
+        // the snapshot's own task_id, so an oracle answering for another task
+        // surfaces as a task mismatch instead of silently satisfying the policy
+        subject: { task_id: snapshot.task_id, run_id: evidenceSubject.run_id },
+        collected_at_ms: clock(),
+        freshness_generation: snapshot.generation,
+        payload: snapshot.events,
+      })];
+    },
+  };
   return {
-    adapters: [createEnterpriseOracleEvidenceAdapter({ id: 'oracle', oracleUrl: (evidenceSubject) => urlFor(evidenceSubject.task_id), fetchJson, clock })],
+    adapters: [adapter],
     subject,
     // The oracle's generation is its freshness epoch (fixture reset, deploy);
     // stale checkpoint evidence then refuses the resume rather than replaying.
-    currentGeneration: async () => EnterpriseOracleSnapshotSchema.parse(await fetchJson(urlFor(options.taskId))).generation,
+    currentGeneration: async () => OracleSnapshotSchema.parse(await fetchJson(urlFor(options.taskId))).generation,
   };
 }
 
