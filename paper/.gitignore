@@ -1,4 +1,4 @@
-# LaTeX build artifacts — the PDF is built, not versioned
+# LaTeX build artifacts — the paper PDF is built, not versioned
 *.pdf
 *.aux
 *.bbl
@@ -6,3 +6,6 @@
 *.log
 *.out
 *.toc
+# figure PDFs are build outputs of figures/build-figures.mjs, regenerated on demand
+!figures/*.pdf
+figures/*.html
