@@ -1,4 +1,5 @@
 import { formatRunDetail, formatRunsList } from './format.js';
+import { formatRunReport, reportRun } from './report-run.js';
 import { listRuns, showRun } from './runs.js';
 import { runBrowserTask, type BrowserTaskResult, type RunBrowserTaskOptions } from './run-browser-task.js';
 import { createReplayCandidate } from './create-replay-candidate.js';
@@ -27,6 +28,10 @@ export async function main(
     const runId = rest[0];
     if (!runId) throw new Error('usage: rote runs show <run_id>');
     return formatRunDetail(await showRun(baseDir, runId));
+  }
+  if (group === 'report') {
+    if (!subcommand) throw new Error('usage: rote report <run_id>');
+    return formatRunReport(await reportRun(baseDir, subcommand));
   }
   if (group === 'candidate' && subcommand === 'create') {
     const playbookPath = rest[0];
@@ -96,7 +101,7 @@ export async function main(
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,
     ].join('\n');
   }
-  throw new Error(`usage: rote runs ls | rote runs show <run_id> | ${runUsage()} | ${candidateUsage()} | ${distillUsage()} | ${continueUsage()}`);
+  throw new Error(`usage: rote runs ls | rote runs show <run_id> | rote report <run_id> | ${runUsage()} | ${candidateUsage()} | ${distillUsage()} | ${continueUsage()}`);
 }
 
 function formatSelection(selection: NonNullable<BrowserTaskResult['selection']>): string {
