@@ -42,6 +42,11 @@ repository with `scripts/demo/run-launch-demo.sh`; see [T16](https://github.com/
 - **`rote playbooks`** — lists the learned playbook library value-free: name, version,
   step count, params, truncated fingerprint, and source run. Empty until a run is
   distilled.
+- **`rote memory [fingerprint_hash] [--brief-chars <n>]`** — inspect tier-2 site
+  memory. Without args: every partition with consolidated fact counts by kind. With a
+  fingerprint: the consolidated facts (value-free — identities, digests, coded quirks,
+  settle percentiles) and, with `--brief-chars`, the advisory brief exactly as a run
+  would render it.
 - **`rote report <run_id>`** — aggregates one recorded run into per-source token
   accounting (logical input = uncached + cache reads + cache writes, so caching cannot
   masquerade as savings), plus routing, shadow-predictor, and settle summaries. Pure
