@@ -220,36 +220,108 @@ append-only records that can be replayed.
 
 \section{Experimental setup}
 \label{sec:setup}
-% Benchmark B1--B6 (docs/03), exact external oracles, frozen fixtures + digest-pinned WordPress page
-% (T2: 22,279 tokens, zero range over 15 sessions). Baselines: Browser Use 0.13.7 (qualified, T24);
-% Stagehand/Skyvern/Magnitude stopped at qualification (T22/T23/T27) -- report why, no ranking.
-% Metrics: logical input tokens, billed cost, latency, exact success, silent-failure rate.
-\textbf{[TODO]}
+
+\paragraph{Benchmark.} We evaluate on a frozen benchmark of enterprise-style browser
+tasks. B1--B3 are deterministic fixture tasks (navigation, an eight-field vendor
+registration form with an exact external completion oracle, and a search/extract task);
+B4 is a long-session budget task; B5 is a deterministic drift suite over the B2 form
+(selector renames, wrapper insertion, destructive decoys behind stale selectors, and an
+adversarial ambiguity class); B6 is a false-match trap --- a page that \emph{looks} like
+the B2 form but posts to a vendor-offboarding endpoint, testing whether learned
+procedures fire on lookalikes. A separate real-page family uses a digest-pinned WordPress
+administration instance whose measured page weight is stable to zero range across 15
+fresh sessions, with task cells from 9 to 25 steps. Success is never self-reported: every
+task binds an exact external oracle (database row, server-side counter, or exact field
+set), and harness-success/oracle-failure cases are counted against the harness.
+
+\paragraph{Baseline.} The primary baseline is Browser Use, an open-source browser agent
+harness, version-pinned by source commit and wheel digest, run unmodified and
+contemporaneously paired with Rote (alternating attempts, same provider, model, viewport,
+and fixture generation) on the same oracles. We additionally attempted to qualify three
+other harnesses; per our pre-registered qualification protocol we \emph{stopped} each
+before certification spend rather than report a ranking from unreliable cells: one
+achieved 1/6 exact cold successes with incomplete receipts, one produced 24/24 fallback
+executions with 0/28 complete provider receipt sets, and one (vision-driven) timed out in
+6/6 frozen attempts. We report these stops as scope limits, not comparative results.
+
+\paragraph{Metrics.} \emph{Logical input tokens} are uncached input plus cache reads plus
+cache writes, so provider-side caching cannot masquerade as token reduction; billed cost
+uses published provider rates and measured cache buckets; latency is wall-clock per task.
+Intervals are matched-pair bootstrap (10{,}000 resamples, 95\%); failed and abandoned
+attempts stay in the success denominator. All protocols are frozen before collection and
+before totals are inspected.
 
 \section{Results}
 \label{sec:results}
+
 \subsection{Warm-run economics}
-% T25: 18/18 exact per harness; tokens -83.1% [82.1, 83.9], cost -68.2% [66.3, 69.9],
-% latency -43.6% [39.0, 48.1]. T10: 37.2% slower logical-input growth on the curve.
+\label{sec:results-econ}
+
+On the exact-oracle B2 cell, paired contemporaneously against pinned Browser Use with
+18/18 successes on both sides and zero harness-success/oracle-failure cases, Rote uses
+8{,}353 mean logical tokens per task against the baseline's 49{,}324 --- a reduction of
+\textbf{83.1\%} [82.1--83.9\%]; billed cost falls \textbf{68.2\%} [66.3--69.9\%]
+(\$0.0038 vs.\ \$0.0120 per task) and latency \textbf{43.6\%} [39.0--48.1\%]. On the
+real-page WordPress curve (15 matched repetitions per cell, all 150 runs passing the
+independent database verifier), Rote's cumulative logical-input growth is 37.2\%
+[35.6--38.8\%] slower than the baseline's, with per-cell reductions rising from 14.3\% at
+9 steps to 26--28\% at 17--25 steps --- the gap widens with depth, which is the signature
+of managing the history term rather than the constant. Exact-prefix cache routing
+contributes a measured 20.5\% billed-cost cut on the 25-step cell over the same layout
+without deterministic routing.
+
 \subsection{Drift and safety}
 \label{sec:results-safety}
-% T21: 72/72 repaired exact successes, 0/90 silent failures, 18/18 ambiguity fallbacks, zero repair
-% tokens. T35: contract drift stops with BROWSER_CONTRACT_MISMATCH and zero dispatches while cosmetic,
-% rename, and wrapper drift keep replaying. T40: B6 lookalike never selected; forced replay dispatches
-% nothing.
+
+The B5 drift certification runs 90 deterministic real-Chrome attempts across four
+recoverable mutation classes and one adversarial ambiguity class: 72/72 recoverable
+attempts finish with exact oracle success after deterministic semantic repair (zero
+repair tokens --- repair here is structural target re-resolution, not a model call), the
+18 ambiguity attempts all decline into clean fallback, and \textbf{0/90} attempts end
+silently wrong (95\% upper bound 4.1\%). Stale selectors pointing at destructive decoys
+never touch the decoys. The action-contract gate extends this to \emph{behavioral} drift:
+against six versions of the same page, cosmetic redesign, id renames, and wrapper
+insertion replay normally, while an input-to-textarea change, a changed destination, and
+a POST-purge control behind a familiar label each stop with a typed contract mismatch and
+\emph{zero dispatches} --- an ungated contrast run demonstrates the purge counter moving,
+so the gate is load-bearing. On the B6 lookalike, the matcher never selects the benign
+playbook for offboarding-shaped tasks, and even a forced replay dispatches no submit.
+
 \subsection{Learning across runs}
 \label{sec:results-learning}
-% T36: record -> distill -> replay 0 LLM calls on B1/B2. T37: continuation across 2 process restarts,
-% no repeated dispatch. [TODO billed: T0 >=80% reduction at parity with automated distillation;
-% T2 >=30% generalization from the site brief; >=50% warm steps off the frontier at parity.]
-\subsection{Predictor}
+
+Recording one successful run of B1 or B2 and distilling it yields a parameterized
+playbook that replays end-to-end in real Chrome with zero model calls and zero human
+edits; recorded values and credentials do not survive into the playbook. The distilled
+playbook survives selector renames and stops before a contract change. Multi-session
+continuation resumes an interrupted controlled workflow across two real browser/process
+restarts to the exact three-event oracle with no repeated dispatch, while fingerprint,
+principal, procedure, binding, stale-evidence, and diverged-state mismatches each stop
+with zero dispatches; interrupted checkpoint writes recover without in-place edits.
+\textbf{[TODO billed: end-to-end learning-curve numbers through the product CLI ---
+cold-to-warm reduction with automated distillation, site-brief generalization to a novel
+task, and fraction of warm steps served by the routine model at parity.]}
+
+\subsection{Predictor (shadow mode)}
 \label{sec:results-predictor}
-% T38/T39: 99.4% kind+target over 1,520 warm steps (Wilson 98.9-99.7); >=0.9 confidence covers 62.4%
-% at 99.8% precision; under-calibrated on fixtures (0.33 -> 99%) -> shadow only. Fig: reliability
-% diagram + coverage curve from docs/testing/data/T39-predictor-simulation.json.
+
+Offline, over 1{,}520 warm steps from 189 recorded fixture runs under leave-one-run-out
+evaluation, the trace+transition ensemble predicts the next action at \textbf{99.4\%}
+kind+target accuracy (Wilson 98.9--99.7\%); on 2{,}805 live WordPress steps the
+kind-only rate is 96.5\%. Thresholding at confidence $\geq 0.9$ covers 62.4\% of steps at
+99.8\% precision. However, confidence is \emph{under-calibrated} on the fixture corpus
+(scores near 0.33 realize $\approx$99\% accuracy), so predictions are never dispatched:
+the predictor runs in shadow mode on every product run, accumulating the live calibration
+that acting on a prediction would require.
+
 \subsection{Long sessions}
-% T34: 60-transition SPA, visible history <=31 actions, 3 compaction boundaries, 15/15 pass.
-\textbf{[TODO]}
+\label{sec:results-sessions}
+
+Under the frozen compaction policy, 15/15 fresh real-Chrome runs complete a
+60-transition single-page-application session with planner-visible history bounded at 31
+actions (three compaction boundaries), 100\% of post-bootstrap observations served as
+diffs against a stable document token, zero document changes across 60 route pushes, and
+stale remounted identities rejected before dispatch.
 
 \section{Limitations}
 % Synthetic enterprise fixtures for most safety results; one real page family (WordPress); baselines

@@ -47,6 +47,7 @@ labeled `skip-changelog`.
 
 ### Docs
 - Start the ICLR 2027 paper draft in `paper/`: official style files plus `rote.tex` with the memory-spine design section (tiers 0–2, trust gates, predictor/routing) and the invariants section written; remaining sections stubbed with the T-report each must cite (#163).
+- Write the paper's experimental-setup and results sections: frozen benchmark/baseline/metrics description and the certified warm-run economics, drift-safety, learning-loop, shadow-predictor, and long-session results from T10/T11/T20/T21/T25/T34-T40, with the billed learning-curve numbers left as an explicit TODO (#164).
 - **P2**: Publish T31's composed-context boundary and advance the enterprise sequence to authoritative outcome evidence without claiming production-site or structural-contract coverage (#145).
 - **P2**: Make structural action-contract drift the cross-cutting P2 trust-gate priority while stating that identity v2 alone does not establish semantic compatibility (#144).
 - **P1/P2**: Order enterprise browser readiness behind registry launch: freeze adversarial oracles, version target identity, add iframe/open-shadow contexts, require authoritative outcome evidence, expand grounded actions, certify long SPAs, then add multi-session continuation (#134).
