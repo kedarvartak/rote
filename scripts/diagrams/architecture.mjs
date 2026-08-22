@@ -3,7 +3,7 @@
 // Update the STATUS lines when docs/02 §Status changes — a stale diagram is a bug
 // (CLAUDE.md, Docs practices).
 import { writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const INK = '#1a1a1a', MUTED = '#5b5955', BLUE = '#2a78d6', GREEN = '#1baf7a', RED = '#e34948';
