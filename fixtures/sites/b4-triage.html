@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head><title>Support Triage</title></head>
+  <body>
+    <main>
+      <h1>Support Triage</h1>
+      <section id="triage-item">
+        <h2 id="triage-item-id"></h2>
+        <p id="triage-item-subject"></p>
+        <p id="triage-item-body"></p>
+      </section>
+      <form id="triage-form">
+        <label for="triage-category">Category</label>
+        <select id="triage-category" name="category" required>
+          <option value="">Choose category</option>
+          <option value="billing">Billing</option>
+          <option value="security">Security</option>
+          <option value="bug_report">Bug report</option>
+        </select>
+        <button id="triage-route" type="submit">Route item</button>
+      </form>
+      <section id="triage-confirmation" role="status" hidden>
+        <h2 id="triage-complete-heading" hidden>Item routed</h2>
+        <p id="triage-summary" hidden></p>
+      </section>
+    </main>
+    <script>
+      // The item content decides the correct category. That decision is a judgment
+      // the agent makes per item — it must never be frozen into a playbook
+      // (docs/03 B4 "includes a judgment gate").
+      const items = {
+        'TKT-1041': { subject: 'Invoice charged twice this month', body: 'Our June invoice was charged twice and we need a refund of the duplicate payment.' },
+        'TKT-1042': { subject: 'Suspicious login from unknown device', body: 'An unrecognized device signed into our admin account from a new country; please investigate the compromise.' },
+        'TKT-1043': { subject: 'Export button throws an error', body: 'Clicking Export on the reports page crashes with a stack trace; the feature worked last week.' },
+      };
+      const requested = new URLSearchParams(location.search).get('item');
+      const item = items[requested];
+      document.querySelector('#triage-item-id').textContent = item ? requested : 'Unknown item';
+      document.querySelector('#triage-item-subject').textContent = item ? `Subject: ${item.subject}` : '';
+      document.querySelector('#triage-item-body').textContent = item ? item.body : '';
+      document.querySelector('#triage-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const category = document.querySelector('#triage-category').value;
+        if (!item || !category) return;
+        document.querySelector('#triage-summary').textContent = `Item routed | item=${requested} | category=${category}`;
+        document.querySelector('#triage-form').hidden = true;
+        document.querySelector('#triage-confirmation').hidden = false;
+        document.querySelector('#triage-complete-heading').hidden = false;
+        document.querySelector('#triage-summary').hidden = false;
+        history.replaceState({}, '', `#routed-${requested}`);
+      });
+    </script>
+  </body>
+</html>

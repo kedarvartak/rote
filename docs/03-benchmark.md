@@ -13,7 +13,8 @@ The first is V1's claim. The second is V2's, and needs the learning plane
 ## Task suite
 
 Six browser tasks spanning the memoization difficulty spectrum. B1–B3 and B6 are built as
-frozen fixtures (`fixtures/sites/`); B4 is specified, not yet built; B5 is B2's drift
+frozen fixtures (`fixtures/sites/`); B4's triage fixture and judgment gate are built
+([T41](testing/T41-b4-judgment-gate.md)); B5 is B2's drift
 variants (`fixtures/sites/drift/`, T21).
 
 | # | Task | Params | Why it's in the suite |
@@ -21,7 +22,7 @@ variants (`fixtures/sites/drift/`, T21).
 | **B1** | Log in, download latest report | — | pure-deterministic best case |
 | **B2** | Fill multi-page vendor form | 8 fields | slot binding under param variation |
 | **B3** | Search catalog, extract top-N | query, N | parameterized extraction |
-| B4 | Triage: read, categorize, route | item id | includes a judgment gate |
+| **B4** | Triage: read, categorize, route (`b4-triage.html`: the item body decides the category; the distiller refuses to freeze a judgment-chosen category — certified in [T41](testing/T41-b4-judgment-gate.md)) | item id | **includes a judgment gate** |
 | B5 | B2 with the DOM mutated between runs | 8 fields | **drift / repair test** |
 | **B6** | Superficially like B2, genuinely different (`b6-vendor-offboarding.html`: same title, same eight fields, same ids — posts to an offboarding endpoint) | 8 fields | **false-match test (must miss)** — certified in [T40](testing/T40-b6-false-match.md) |
 
