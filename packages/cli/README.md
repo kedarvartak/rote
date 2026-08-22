@@ -39,6 +39,11 @@ repository with `scripts/demo/run-launch-demo.sh`; see [T16](https://github.com/
   with outcome and task spec. A run with no `manifest.json` yet (still in
   progress, or abandoned by a kill) is listed as `in-progress` rather than
   silently omitted.
+- **`rote report <run_id>`** — aggregates one recorded run into per-source token
+  accounting (logical input = uncached + cache reads + cache writes, so caching cannot
+  masquerade as savings), plus routing, shadow-predictor, and settle summaries. Pure
+  read: any outcome, manifest-less runs included; a run that recorded nothing reports
+  nothing.
 - **`rote runs show <run_id>`** — prints the manifest plus every recorded
   `TrajectoryEvent` in order: tool, args, status, duration.
 - `listRuns` / `showRun` (`src/runs.ts`) and `formatRunsList` /
