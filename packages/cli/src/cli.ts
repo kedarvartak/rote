@@ -1,6 +1,7 @@
 import { formatRunDetail, formatRunsList } from './format.js';
 import { formatRunReport, reportRun } from './report-run.js';
 import { FilePlaybookLibrary } from '@rote/matcher';
+import { formatMemoryInspection, formatMemoryList, inspectMemory, listMemoryPartitions } from './memory-inspect.js';
 import { listRuns, showRun } from './runs.js';
 import { runBrowserTask, type BrowserTaskResult, type RunBrowserTaskOptions } from './run-browser-task.js';
 import { createReplayCandidate } from './create-replay-candidate.js';
@@ -39,6 +40,18 @@ export async function main(
       const params = entry.playbook.params.map((param) => param.name).join(', ') || '(none)';
       return `${entry.playbook.playbook} v${entry.playbook.version} — ${entry.playbook.steps.length} steps, params: ${params}, fingerprint ${entry.fingerprint_hash.slice(0, 12)}…${entry.source_run_id ? `, from run ${entry.source_run_id}` : ''}`;
     }).join('\n');
+  }
+  if (group === 'memory') {
+    // Consolidation needs a "now" for freshness; the CLI edge supplies the real
+    // clock, keeping the library functions pure (CLAUDE.md "inject dependencies").
+    const now = new Date();
+    if (!subcommand) return formatMemoryList(await listMemoryPartitions(baseDir, now));
+    const briefIndex = rest.indexOf('--brief-chars');
+    const briefChars = briefIndex >= 0 ? Number(rest[briefIndex + 1]) : undefined;
+    if (briefChars !== undefined && (!Number.isInteger(briefChars) || briefChars <= 0)) {
+      throw new Error('usage: rote memory [fingerprint_hash] [--brief-chars <n>]');
+    }
+    return formatMemoryInspection(await inspectMemory(baseDir, subcommand, now, briefChars));
   }
   if (group === 'report') {
     if (!subcommand) throw new Error('usage: rote report <run_id>');
@@ -112,7 +125,7 @@ export async function main(
       `tokens: ${result.inputTokens} input + ${result.outputTokens} output`,
     ].join('\n');
   }
-  throw new Error(`usage: rote runs ls | rote runs show <run_id> | rote report <run_id> | rote playbooks | ${runUsage()} | ${candidateUsage()} | ${distillUsage()} | ${continueUsage()}`);
+  throw new Error(`usage: rote runs ls | rote runs show <run_id> | rote report <run_id> | rote playbooks | rote memory [fingerprint_hash] [--brief-chars <n>] | ${runUsage()} | ${candidateUsage()} | ${distillUsage()} | ${continueUsage()}`);
 }
 
 function formatSelection(selection: NonNullable<BrowserTaskResult['selection']>): string {
