@@ -9,6 +9,7 @@ submission; references/appendix unlimited. Official style files unpacked here fr
 |---|---|
 | `rote.tex` | The Rote draft — section skeleton with each section mapped to the `docs/testing/T*.md` evidence it should cite |
 | `rote.bib` | References (empty; fill) |
+| `figures/build-figures.mjs` | Regenerates every figure (SVG + PDF) deterministically from `docs/testing/data/*.json`; needs Chromium (`node figures/build-figures.mjs`) |
 | `iclr2027_conference.{sty,bst,tex,bib}`, `math_commands.tex`, `fancyhdr.sty`, `natbib.sty` | Untouched official template; `iclr2027_conference.tex` is the formatting-instructions sample |
 
 Build (needs TeX Live; or upload the folder to Overleaf):

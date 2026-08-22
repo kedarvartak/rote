@@ -65,7 +65,7 @@ to a transcript and hopes. Rote supplies the manager at three timescales: \emph{
 memory within a run (\S\ref{sec:tier0}), \emph{episodic} memory across runs of one task
 (\S\ref{sec:tier1}), and \emph{semantic} memory across tasks on one site
 (\S\ref{sec:tier2}). The trust gates (\S\ref{sec:gates}) are not a fourth tier but the
-precondition for all three: memory that might be wrong is worse than no memory, because
+precondition for all three (Figure~\ref{fig:architecture}): memory that might be wrong is worse than no memory, because
 reuse without verification is a machine for repeating a mistake at volume.
 
 A second commitment follows from the first: control flow should be deterministic. A
@@ -73,6 +73,16 @@ successful run tangles together \emph{what to do} (the procedure) and \emph{what
 decide} (the content). Rote untangles them --- the procedure becomes a deterministic,
 replayable artifact, and the model is invoked only where genuine judgment lives: binding
 parameters, filling slots, and repairing broken steps.
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=\linewidth]{figures/fig-architecture.pdf}
+\end{center}
+\caption{Rote's memory spine. The run loop (left) consults three memory tiers (right);
+nothing stored re-enters the loop except through the trust gates (bottom), and a failed
+gate falls back to the plain agent with a typed classification.}
+\label{fig:architecture}
+\end{figure}
 
 \subsection{Tier 0: working memory as a budgeted resource}
 \label{sec:tier0}
@@ -254,6 +264,18 @@ before totals are inspected.
 \section{Results}
 \label{sec:results}
 
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=0.72\linewidth]{figures/fig-token-curve.pdf}
+\end{center}
+\caption{Cumulative logical input tokens against task length on the digest-pinned
+real-page family (15 matched repetitions per cell; shaded bands are 95\% bootstrap
+intervals, mostly narrower than the line). Rote's growth per interaction is 37.2\%
+[35.6--38.8\%] slower than the baseline's.}
+\label{fig:curve}
+\end{figure}
+
 \subsection{Warm-run economics}
 \label{sec:results-econ}
 
@@ -266,7 +288,7 @@ real-page WordPress curve (15 matched repetitions per cell, all 150 runs passing
 independent database verifier), Rote's cumulative logical-input growth is 37.2\%
 [35.6--38.8\%] slower than the baseline's, with per-cell reductions rising from 14.3\% at
 9 steps to 26--28\% at 17--25 steps --- the gap widens with depth, which is the signature
-of managing the history term rather than the constant. Exact-prefix cache routing
+of managing the history term rather than the constant (Figure~\ref{fig:curve}). Exact-prefix cache routing
 contributes a measured 20.5\% billed-cost cut on the 25-step cell over the same layout
 without deterministic routing.
 
@@ -302,6 +324,20 @@ with zero dispatches; interrupted checkpoint writes recover without in-place edi
 cold-to-warm reduction with automated distillation, site-brief generalization to a novel
 task, and fraction of warm steps served by the routine model at parity.]}
 
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=0.9\linewidth]{figures/fig-predictor.pdf}
+\end{center}
+\caption{The shadow predictor, offline (1{,}520 warm steps, leave-one-run-out).
+(a)~Confidence is under-calibrated: even the lowest-scoring bucket realizes a 98.7\%
+hit rate, far above the dashed calibrated reference. (b)~Raising the acting threshold
+trades coverage for precision; at $\geq 0.95$, 62.2\% of steps are covered at 100\%
+observed precision. Under-calibration is why predictions are recorded but never
+dispatched until live calibration exists.}
+\label{fig:predictor}
+\end{figure}
+
 \subsection{Predictor (shadow mode)}
 \label{sec:results-predictor}
 
@@ -310,7 +346,7 @@ evaluation, the trace+transition ensemble predicts the next action at \textbf{99
 kind+target accuracy (Wilson 98.9--99.7\%); on 2{,}805 live WordPress steps the
 kind-only rate is 96.5\%. Thresholding at confidence $\geq 0.9$ covers 62.4\% of steps at
 99.8\% precision. However, confidence is \emph{under-calibrated} on the fixture corpus
-(scores near 0.33 realize $\approx$99\% accuracy), so predictions are never dispatched:
+(scores near 0.33 realize $\approx$99\% accuracy), so predictions are never dispatched (Figure~\ref{fig:predictor}):
 the predictor runs in shadow mode on every product run, accumulating the live calibration
 that acting on a prediction would require.
 
