@@ -8,9 +8,22 @@ class FakePage implements BrowserPageSession {
   values = new Map<string, string>();
   clicks: string[] = [];
   captures = 0;
+  // Scripted settles: shift one per dispatched action, like a settle-gated session.
+  settles: Array<{ verb: string; elapsedMs: number }> = [];
+  private lastSettleRecord?: { verb: string; elapsedMs: number };
+
+  lastSettle(): { verb: string; elapsedMs: number } | undefined {
+    return this.lastSettleRecord;
+  }
+
+  private recordSettle(verb: string): void {
+    const next = this.settles.shift();
+    if (next) this.lastSettleRecord = { ...next, verb };
+  }
 
   async navigate(url: string): Promise<void> {
     this.url = url;
+    this.recordSettle('navigate');
   }
 
   async capture(): Promise<CapturedPage> {
@@ -29,14 +42,17 @@ class FakePage implements BrowserPageSession {
 
   async fill(selector: string, value: string): Promise<void> {
     this.values.set(selector, value);
+    this.recordSettle('fill');
   }
 
   async select(selector: string, value: string): Promise<void> {
     this.values.set(selector, value);
+    this.recordSettle('select');
   }
 
   async click(selector: string): Promise<void> {
     this.clicks.push(selector);
+    this.recordSettle('click');
   }
 }
 
@@ -96,6 +112,37 @@ describe('runBrowserAgent', () => {
       undefined,
     ]);
     expect(result.steps[3]?.postActionEvidence).toMatchObject({ strength: 'reaction', enforced: false });
+  });
+
+
+  it('records the measured settle per dispatched step and nothing when the session has no gate', async () => {
+    const page = new FakePage();
+    page.settles = [
+      { verb: 'navigate', elapsedMs: 120 },
+      { verb: 'fill', elapsedMs: 45 },
+      { verb: 'select', elapsedMs: 30 },
+      { verb: 'click', elapsedMs: 480 },
+    ];
+    const planner = new ScriptedPlanner([
+      { kind: 'navigate', url: 'mem://vendor', expect: { url_contains: 'mem://vendor' } },
+      { kind: 'fill', selector: '#company-name', value: 'Acme Tools', expect: { input_value: '#company-name', equals: 'Acme Tools' } },
+      { kind: 'select', selector: '#country', value: 'US', expect: { input_value: '#country', equals: 'US' } },
+      { kind: 'click', selector: '#registration-submit', expect: { selector_visible: '#registration-submit' } },
+      { kind: 'done', success: true, summary: 'submitted registration' },
+    ]);
+    const result = await runBrowserAgent({ task: 'Register Acme Tools as a vendor', page, planner, verifier: passVerifier, maxSteps: 8 });
+    expect(result.success).toBe(true);
+    // Each step carries the settle its own dispatch measured; the terminal done
+    // dispatches nothing and records none.
+    expect(result.steps.map((step) => step.settleMs)).toEqual([120, 45, 30, 480, undefined]);
+
+    const ungated = new FakePage();
+    const ungatedPlanner = new ScriptedPlanner([
+      { kind: 'navigate', url: 'mem://vendor', expect: { url_contains: 'mem://vendor' } },
+      { kind: 'done', success: true, summary: 'done' },
+    ]);
+    const ungatedResult = await runBrowserAgent({ task: 'Visit the vendor page', page: ungated, planner: ungatedPlanner, verifier: passVerifier, maxSteps: 4 });
+    expect(ungatedResult.steps.every((step) => step.settleMs === undefined)).toBe(true);
   });
 
   it('bounds planner-visible action history and records B4 telemetry after the first boundary', async () => {

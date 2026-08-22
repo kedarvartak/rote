@@ -117,6 +117,14 @@ export interface BrowserPageSession {
   press?(selector: string, chord: NormalizedKeyChord, context?: BrowserContextCoordinate): Promise<void>;
   upload?(selector: string, file: { name: string; mimeType: string; contentBase64: string }, context?: BrowserContextCoordinate): Promise<void>;
   dragAndDrop?(sourceSelector: string, targetSelector: string, context?: BrowserContextCoordinate): Promise<void>;
+  /**
+   * The settle measured by the most recent action, when the session gates
+   * actions on settledness (`SettledBrowserPageSession` does). The agent
+   * records it per step so tier-2 site memory can derive settle priors from
+   * measured settles rather than wall-clock guesses. Optional: a session
+   * without a settledness gate simply records no settle.
+   */
+  lastSettle?(): { verb: string; elapsedMs: number } | undefined;
 }
 
 export interface PlannerContext {
@@ -360,6 +368,8 @@ export interface BrowserAgentStep {
   pageKey?: string;
   /** Same digest for the settled page after dispatch; differs from `pageKey` on a page edge. */
   nextPageKey?: string;
+  /** Milliseconds the post-action settledness gate waited after this step's dispatch. */
+  settleMs?: number;
   /**
    * Value-free action contract derived from the resolved live target before dispatch
    * (#143): what the distiller may later persist so replay can detect a same-looking

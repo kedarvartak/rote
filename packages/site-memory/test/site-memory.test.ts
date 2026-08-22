@@ -78,6 +78,42 @@ describe('site memory derivation', () => {
   });
 });
 
+describe('site memory settle priors', () => {
+  it('aggregates measured settles into per-page, per-kind settle priors with nearest-rank percentiles', () => {
+    const settled: SiteMemoryEvent[] = [
+      event(0, 'browser.fill', { kind: 'fill', selector: '#a', role: 'textbox', name: 'A', value: 'x' }, {
+        post_action_evidence: dispatched, page_key: FORM, settle_ms: 40,
+        resolution: { selector: '#a', strategy: 'stable-id', stableId: 'v2:aaaaaaaaaaaaaaaa' },
+      }),
+      event(1, 'browser.fill', { kind: 'fill', selector: '#b', role: 'textbox', name: 'B', value: 'y' }, {
+        post_action_evidence: dispatched, page_key: FORM, settle_ms: 120,
+        resolution: { selector: '#b', strategy: 'stable-id', stableId: 'v2:bbbbbbbbbbbbbbbb' },
+      }),
+      event(2, 'browser.fill', { kind: 'fill', selector: '#c', role: 'textbox', name: 'C', value: 'z' }, {
+        post_action_evidence: dispatched, page_key: FORM, settle_ms: 80,
+        resolution: { selector: '#c', strategy: 'stable-id', stableId: 'v2:cccccccccccccccc' },
+      }),
+      event(3, 'browser.click', { kind: 'click', selector: '#go', role: 'button', name: 'Go' }, {
+        post_action_evidence: dispatched, page_key: FORM, next_page_key: DONE, settle_ms: 3500,
+        resolution: { selector: '#go', strategy: 'stable-id', stableId: 'v2:dddddddddddddddd' },
+      }),
+    ];
+    const report = deriveSiteMemory(settled, options);
+    const priors = report.records.filter((record) => record.kind === 'settle_prior');
+    expect(priors).toEqual([
+      expect.objectContaining({ page_key: FORM, action_kind: 'fill', samples: 3, p50_ms: 80, p90_ms: 120, max_ms: 120 }),
+      expect.objectContaining({ page_key: FORM, action_kind: 'click', samples: 1, p50_ms: 3500, p90_ms: 3500, max_ms: 3500 }),
+    ]);
+    // A p90 at or past the documented threshold earns the coded long_settle quirk — never free text.
+    const quirks = report.records.filter((record) => record.kind === 'quirk' && record.code === 'long_settle');
+    expect(quirks).toEqual([expect.objectContaining({ page_key: FORM })]);
+    // Every emitted record still validates and consolidates.
+    for (const record of [...priors, ...quirks]) SiteMemoryRecordSchema.parse(record);
+    // A run without measured settles derives none.
+    expect(deriveSiteMemory(run, options).records.some((record) => record.kind === 'settle_prior')).toBe(false);
+  });
+});
+
 describe('site memory consolidation', () => {
   const at = (iso: string, record: SiteMemoryRecord, overrides: Partial<SiteMemoryRecord> = {}) => ({ ...record, ...overrides, observed_at: iso, record_id: `${record.record_id}@${iso}` } as SiteMemoryRecord);
 
