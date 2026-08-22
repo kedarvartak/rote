@@ -47,6 +47,10 @@ repository with `scripts/demo/run-launch-demo.sh`; see [T16](https://github.com/
   fingerprint: the consolidated facts (value-free — identities, digests, coded quirks,
   settle percentiles) and, with `--brief-chars`, the advisory brief exactly as a run
   would render it.
+- **`rote predict-report`** — accumulates every recorded run's shadow predictions into
+  the live calibration T39 requires before the predictor may act: overall and per-source
+  hit rates, T39-shaped confidence buckets, and coverage/precision at the T39 acting
+  thresholds. Pure read; an empty accumulator says so.
 - **`rote report <run_id>`** — aggregates one recorded run into per-source token
   accounting (logical input = uncached + cache reads + cache writes, so caching cannot
   masquerade as savings), plus routing, shadow-predictor, and settle summaries. Pure
