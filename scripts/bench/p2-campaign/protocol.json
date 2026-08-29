@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "protocol_id": "p2-provider-exit-campaign-v1",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "repetitions_per_cell": 15,
+  "seed_policy": "Record provider/model settings and repetition order; do not exclude non-success outcomes.",
+  "pricing_table": "default:2026-07-15",
+  "artifacts": {
+    "raw_jsonl": "bench-out/p2-provider-exit-campaign/raw.jsonl",
+    "manifests_directory": "bench-out/p2-provider-exit-campaign/manifests",
+    "receipts_directory": "bench-out/p2-provider-exit-campaign/receipts",
+    "report_directory": "bench-out/p2-provider-exit-campaign/evidence"
+  },
+  "gates": {
+    "t0_min_reduction": 0.8,
+    "t2_min_reduction": 0.3,
+    "t2_retreat_below": 0.15,
+    "routing_min_warm_steps_off_frontier": 0.5
+  },
+  "cells": [
+    {
+      "id": "t0-distillation-repeat",
+      "gate": "t0",
+      "task_description": "Same task and site with new parameters through record, distill, match, and contract-gated replay.",
+      "baseline_description": "Pinned cold planner run with the same task, parameters, reset, model, and independent oracle.",
+      "reset_command": "scripts/bench/p2-campaign/reset-t0.sh",
+      "oracle": { "kind": "fixture_oracle", "command": "scripts/bench/p2-campaign/verify-t0.sh", "task_bound": true },
+      "required_source_tags": ["planner", "distill", "matcher", "verify"]
+    },
+    {
+      "id": "t2-novel-known-site",
+      "gate": "t2",
+      "task_description": "Novel task on a known site, with the advisory value-free site brief enabled versus disabled.",
+      "baseline_description": "Pinned cold planner run with the same task, reset, model, and independent oracle.",
+      "reset_command": "scripts/bench/p2-campaign/reset-t2.sh",
+      "oracle": { "kind": "fixture_oracle", "command": "scripts/bench/p2-campaign/verify-t2.sh", "task_bound": true },
+      "required_source_tags": ["planner", "verify"]
+    },
+    {
+      "id": "routing-predictor-real-page",
+      "gate": "routing",
+      "task_description": "Warm real-page routing-on versus routing-off runs with shadow predictor telemetry.",
+      "baseline_description": "Pinned frontier-only run with the same task, reset, model, and independent oracle.",
+      "reset_command": "scripts/bench/p2-campaign/reset-routing.sh",
+      "oracle": { "kind": "database_state", "command": "scripts/bench/p2-campaign/verify-routing.sh", "task_bound": true },
+      "required_source_tags": ["planner", "route", "predict", "verify"]
+    },
+    {
+      "id": "b4-long-run-economics",
+      "gate": "b4",
+      "task_description": "Provider-billed 50+ step warm flow with deterministic history compaction.",
+      "baseline_description": "Pinned compaction-off baseline with the same task, reset, model, and authoritative oracle.",
+      "reset_command": "scripts/bench/p2-campaign/reset-b4.sh",
+      "oracle": { "kind": "fixture_oracle", "command": "scripts/bench/p2-campaign/verify-b4.sh", "task_bound": true },
+      "required_source_tags": ["planner", "verify"],
+      "minimum_transitions": 50
+    }
+  ]
+}
