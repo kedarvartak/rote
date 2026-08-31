@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Audit retained T0 cold/warm campaign pairs before publication: require all 15 exact-authoritative-verification pairs and planner/distill/matcher/verify usage provenance; incomplete or duplicate evidence fails closed (#186).
 - **P2**: Freeze the provider-billed exit campaign's four required measurement rows and add a zero-provider preflight that rejects incomplete usage, provenance, pricing, reset, or authoritative-oracle evidence before collection (#185).
 - **P2**: Build the B4 triage fixture and certify its judgment gate (T41): `b4-triage.html` routes an item to an exact confirmation, the distiller refuses to freeze a judgment-chosen category (`UnparameterizedValueError`, value never leaked), the literal opt-in is demonstrated as exactly what the default forbids, and static/CDP contracts agree in real Chrome with zero LLM calls (#167).
 - **P2**: Derive tier-2 settle priors from measured settles: `SettledBrowserPageSession` exposes its most recent measured settle, the agent records `settleMs` per dispatched step (`settle_ms` in the trajectory), and `deriveSiteMemory` aggregates one `settle_prior` per page and action kind (nearest-rank p50/p90/max) with the coded `long_settle` quirk at p90 ≥ 3000 ms — closing the schema-without-telemetry gap (#168).
