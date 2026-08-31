@@ -1,0 +1,34 @@
+[
+  {
+    "cell_id": "t0-distillation-repeat",
+    "usage_buckets": ["input_tokens", "cache_read_tokens", "cache_write_tokens", "output_tokens"],
+    "source_tags": ["planner", "distill", "matcher", "verify"],
+    "pricing_table_loaded": true,
+    "reset_evidence": { "command": "scripts/bench/p2-campaign/reset-t0.sh", "digest": "0000000000000000000000000000000000000000000000000000000000000000" },
+    "oracle_evidence": { "kind": "fixture_oracle", "command": "scripts/bench/p2-campaign/verify-t0.sh", "task_bound": true }
+  },
+  {
+    "cell_id": "t2-novel-known-site",
+    "usage_buckets": ["input_tokens", "cache_read_tokens", "cache_write_tokens", "output_tokens"],
+    "source_tags": ["planner", "verify"],
+    "pricing_table_loaded": true,
+    "reset_evidence": { "command": "scripts/bench/p2-campaign/reset-t2.sh", "digest": "1111111111111111111111111111111111111111111111111111111111111111" },
+    "oracle_evidence": { "kind": "fixture_oracle", "command": "scripts/bench/p2-campaign/verify-t2.sh", "task_bound": true }
+  },
+  {
+    "cell_id": "routing-predictor-real-page",
+    "usage_buckets": ["input_tokens", "cache_read_tokens", "cache_write_tokens", "output_tokens"],
+    "source_tags": ["planner", "route", "predict", "verify"],
+    "pricing_table_loaded": true,
+    "reset_evidence": { "command": "scripts/bench/p2-campaign/reset-routing.sh", "digest": "2222222222222222222222222222222222222222222222222222222222222222" },
+    "oracle_evidence": { "kind": "database_state", "command": "scripts/bench/p2-campaign/verify-routing.sh", "task_bound": true }
+  },
+  {
+    "cell_id": "b4-long-run-economics",
+    "usage_buckets": ["input_tokens", "cache_read_tokens", "cache_write_tokens", "output_tokens"],
+    "source_tags": ["planner", "verify"],
+    "pricing_table_loaded": true,
+    "reset_evidence": { "command": "scripts/bench/p2-campaign/reset-b4.sh", "digest": "3333333333333333333333333333333333333333333333333333333333333333" },
+    "oracle_evidence": { "kind": "fixture_oracle", "command": "scripts/bench/p2-campaign/verify-b4.sh", "task_bound": true }
+  }
+]

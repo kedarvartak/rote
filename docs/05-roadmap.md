@@ -315,8 +315,9 @@ model at parity. Gates defined in [03](03-benchmark.md).
 *Status 2026-08-22:* every P2 item has a built, deterministically certified v1; what
 remains for the exit gates is one provider-billed campaign through `rote run`
 (T0 with automated distillation, T2 brief utility, routing parity, predictor
-calibration on real pages, B4 economics) — the mechanisms and their per-run telemetry
-already exist in the product output. The certified evidence is packaged for external
+calibration on real pages, B4 economics). Its immutable four-row contract and no-provider
+preflight are frozen in [T43](testing/T43-p2-exit-campaign-preflight.md); the mechanisms
+and their per-run telemetry already exist in the product output. The certified evidence is packaged for external
 review as the ICLR 2027 draft in `paper/` (deadlines: abstract 2026-09-18, paper
 2026-09-25 AoE); its only unfilled numbers are the campaign's.
 

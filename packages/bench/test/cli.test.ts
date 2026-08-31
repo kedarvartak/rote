@@ -34,6 +34,27 @@ describe('rote-bench CLI', () => {
     expect(JSON.parse(lines[0]!)).toEqual(expect.objectContaining({ record_kind: 'dry_run', task_id: 'WP-N09' }));
   });
 
+  it('resolves P2 campaign paths from an npm workspace caller and makes zero provider calls', async () => {
+    const root = await tempDir();
+    const outPath = join(root, 'p2-campaign-preflight.json');
+    const previousInitCwd = process.env.INIT_CWD;
+    process.env.INIT_CWD = resolve('../..');
+    try {
+      await expect(main([
+        'p2-campaign-preflight',
+        'scripts/bench/p2-campaign/protocol.json',
+        '--dry-run',
+        'scripts/bench/p2-campaign/dry-run.json',
+        '--out',
+        outPath,
+      ])).resolves.toBe(`wrote ${outPath} (4 cells; 0 provider calls)`);
+    } finally {
+      if (previousInitCwd === undefined) delete process.env.INIT_CWD;
+      else process.env.INIT_CWD = previousInitCwd;
+    }
+    await expect(readFile(outPath, 'utf8')).resolves.toContain('"provider_calls": 0');
+  });
+
   it('writes a reproducible cache preflight from curve measurement rows', async () => {
     const root = await tempDir();
     const outPath = join(root, 'cache-preflight.json');
