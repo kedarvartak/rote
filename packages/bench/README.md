@@ -57,6 +57,28 @@ See `src/index.ts`. Highlights:
 - **`certifyEndurance` / `ENDURANCE_SETTLEDNESS_POLICY` / `visibleActionBound` / `expectedCompactionBoundaries`** — pure E7.6 accounting (#132): per-step samples from fresh real-Chrome runs are checked for exact authoritative success, route-vs-document epochs, B4 visibility bound and reported boundaries, non-growing context peaks, exercised eviction, bounded settledness, and linear recorder growth; every failed check names its reason.
 - **`createEnterpriseOracleEvidenceAdapter`** — bind the E7.1 `/api/oracle` snapshot into the E7.4 evidence contract (#130): the snapshot's own task id and reset generation enter the envelope, an empty snapshot emits nothing (→ `authoritative_effect_missing`), and an unreachable oracle throws.
 
+## P2 campaign plan
+
+`p2-campaign-preflight.ts` freezes *what* the provider-billed exit campaign measures;
+`planP2Campaign(protocol, options)` turns that contract into the ordered invocations
+that collect it. Gates, repetitions, provider and model are read from the protocol —
+never redeclared — and each binding supplies only the executable detail the contract
+deliberately omits (prompt, path, oracle text, params).
+
+- Ordering encodes real dependencies: `cold → distill → warm` inside T0, T2's brief
+  halves after T0 has populated site memory, and the routing cell's routing-on half
+  against its own routing-off baseline.
+- `preflightP2CampaignPlan` returns **every** blocker at once (an unbound protocol
+  cell, a binding for a cell the protocol lacks, a routing gate with no routine model,
+  a B4 phase below its `minimum_transitions`, a forward dependency).
+- `toCommandPlan(phase, baseDir)` hands a recording phase to the existing command
+  driver; it throws for `distill`, which writes no run manifest.
+- `rehearseP2Campaign(plan, runner)` replays the whole sequence through an injected
+  runner — no provider, no key — and stops at the first failed phase.
+
+The site brief is pinned off in every phase except T2's brief-on half, so the
+generalization variable cannot leak into gates reported separately.
+
 ## Spec format
 
 ```json
