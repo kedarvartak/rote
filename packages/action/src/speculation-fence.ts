@@ -43,6 +43,7 @@ export const SpeculationReasonSchema = z.enum([
   'precondition_unmet',
   'stale_document',
   'ambiguous_target',
+  'contract_mismatch',
 ]);
 export type SpeculationReason = z.infer<typeof SpeculationReasonSchema>;
 
@@ -67,6 +68,13 @@ export const SpeculationInputSchema = z.object({
   currentDocumentGeneration: z.number().int().nonnegative().optional(),
   /** True when target resolution left more than one candidate (identity v2 residual ambiguity). */
   targetAmbiguous: z.boolean().default(false),
+  /**
+   * True when the live control's derived contract no longer equals the recorded
+   * one. Comparing them is the action-contract gate's job (#143); the fence only
+   * needs to know that they disagree, because speculating on a control whose
+   * behaviour has changed is the exact failure the gate exists to prevent.
+   */
+  contractMismatch: z.boolean().default(false),
 }).strict();
 export type SpeculationInput = z.input<typeof SpeculationInputSchema>;
 
@@ -94,6 +102,7 @@ export function classifySpeculation(input: SpeculationInput): SpeculationVerdict
   ) {
     return EXTERNAL('stale_document');
   }
+  if (parsed.contractMismatch) return EXTERNAL('contract_mismatch');
   if (parsed.targetAmbiguous) return EXTERNAL('ambiguous_target');
   if (!contract.preconditions.enabled) return EXTERNAL('precondition_unmet');
 
