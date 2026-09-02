@@ -17,8 +17,20 @@ alone (P3.2 prefetches observations); `local_nav` becomes eligible in P3.3 behin
 discardable shadow context. `external_effect` is never permitted, and a policy that names
 it throws rather than being silently ignored.
 
+It also refuses on `contractMismatch` — comparing a live contract against a recorded one
+is the action-contract gate's job (#143); the fence only needs to know they disagree.
+
 Nothing here dispatches, predicts, or opens a context — the fence is built before the
 mechanism it will fence, and it is inert until a speculation mechanism consults it.
+
+`test/invariants/speculation-never-crosses-effect-boundary.test.ts` is the sacred
+invariant for P3's "zero speculated server-mutating calls — ever" gate: an adversarial
+corpus covering all nine categories #192 names (forms, downloads, uploads, drag/drop,
+redirects, cross-origin navigation, stale contexts, contract mismatch, ambiguous
+targets), refused under *every* legal policy rather than only the default. Four cases
+derive their contracts from frozen fixture HTML through the real capture → distill →
+derive path, so they describe controls that exist; the rest are constructed and say so.
+A positive control keeps the suite from passing vacuously.
 
 ## Public API
 

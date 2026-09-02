@@ -116,6 +116,10 @@ describe('speculation fence', () => {
     expect(stale).toMatchObject({ class: 'external_effect', reason: 'stale_document' });
     expect(classify({ contract: contract({ verb: 'hover', safety: 'read' }), targetAmbiguous: true }))
       .toMatchObject({ reason: 'ambiguous_target' });
+    // Comparing contracts is the action-contract gate's job; the fence only
+    // needs to know they disagree.
+    expect(classify({ contract: contract({ verb: 'hover', safety: 'read' }), contractMismatch: true }))
+      .toMatchObject({ class: 'external_effect', reason: 'contract_mismatch' });
     expect(classify({ contract: contract({ verb: 'hover', safety: 'read', preconditions: { visible: true, enabled: false } }) }))
       .toMatchObject({ reason: 'precondition_unmet' });
     // The same generation is not stale.
