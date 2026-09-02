@@ -18,6 +18,8 @@ export default tseslint.config(
         console: 'readonly',
         setTimeout: 'readonly',
         URL: 'readonly',
+        // Node 20 ships fetch as a global; paper/scripts/verify-bib.mjs queries DBLP with it.
+        fetch: 'readonly',
       },
     },
   },
