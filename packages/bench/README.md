@@ -79,6 +79,26 @@ deliberately omits (prompt, path, oracle text, params).
 The site brief is pinned off in every phase except T2's brief-on half, so the
 generalization variable cannot leak into gates reported separately.
 
+## P2 campaign cost projection
+
+`projectP2CampaignCost(plan, options)` budgets the campaign **before** it is approved.
+It is a projection from measured evidence, never a measurement, and it refuses to
+flatter itself three ways:
+
+- **Bounded, not point-estimated.** Warm-class phases cost what T0 is going to measure,
+  so the low bound assumes the gate passes exactly at its ≥80% target and the high
+  bound assumes warm saves nothing. Approving the high bound is always safe.
+- **Missing inputs stay visible.** A phase with no measured profile is `unpriced` and
+  contributes nothing; the render says the total is partial rather than looking small.
+  A price table that is not the one the protocol declares unprices everything.
+- **Depth is respected.** A cell that must run deeper than its profile was measured
+  (B4's ≥50 transitions against a 25-step profile) is reported as a floor, because
+  per-run cost grows with depth.
+
+Profiles are derived from frozen certification records (T25, T10) and the test suite
+recomputes them from those data files, so the constants cannot outlive their evidence.
+Distillation is priced at exactly zero — a fact about distillation, not an assumption.
+
 ## Spec format
 
 ```json
