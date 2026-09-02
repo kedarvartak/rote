@@ -18,10 +18,15 @@ export default tseslint.config(
         console: 'readonly',
         setTimeout: 'readonly',
         URL: 'readonly',
-        // Node 20 ships fetch as a global; paper/scripts/verify-bib.mjs queries DBLP with it.
-        fetch: 'readonly',
       },
     },
+  },
+  {
+    // Paper tooling runs under Node 20, which ships `fetch` as a global. Scoped
+    // here rather than to all .mjs: `fixtures/enterprise/fixture-runtime.js`
+    // declares its own `fetch`, and a global binding would make that a redeclare.
+    files: ['paper/scripts/**/*.mjs'],
+    languageOptions: { globals: { fetch: 'readonly' } },
   },
   {
     rules: {
