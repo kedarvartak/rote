@@ -5,7 +5,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ['**/dist/**', '**/node_modules/**', 'scripts/bench/skyvern/state/**'],
+    ignores: ['**/dist/**', '**/node_modules/**', 'scripts/bench/skyvern/state/**', 'paper/artifact/**'],
   },
   {
     // Plain JS/MJS files (CLI bin shims, test fixture scripts spawned as
