@@ -9,3 +9,5 @@
 # figure PDFs are build outputs of figures/build-figures.mjs, regenerated on demand
 !figures/*.pdf
 figures/*.html
+# anonymized artifact bundle — rebuilt by scripts/build-artifact.mjs, never versioned
+artifact/
