@@ -99,6 +99,36 @@ Profiles are derived from frozen certification records (T25, T10) and the test s
 recomputes them from those data files, so the constants cannot outlive their evidence.
 Distillation is priced at exactly zero — a fact about distillation, not an assumption.
 
+## P2 campaign exit verdict
+
+`evaluateP2CampaignGates(protocol, records, options)` reads the campaign back: one
+`P2CampaignRunRecord` per billed run in, one verdict per frozen exit gate out. It closes
+the loop the preflight opens — contract → plan → cost projection → **verdict** — so the
+question "did P2 exit?" is answered by the frozen thresholds rather than by reading a
+report.
+
+- **Four verdicts, not two.** `not_certifiable` (the evidence cannot support a judgement)
+  is deliberately distinct from `fail` (it can, and the gate lost). Collapsing them would
+  let a broken collection publish as a design result. `reported_only` is B4, which
+  docs/05 requires to be *measured* but freezes no floor for — inventing one here would
+  publish a threshold no design document agreed to, so B4 reports without gating.
+- **Floors come from the protocol.** T0's ≥80%, T2's ≥30% and the retreat rule's 15%, and
+  routing's ≥50% are read from the frozen `P2CampaignProtocol`, never restated, so a
+  protocol amendment cannot leave a stale number in the evaluator.
+- **Only matched successful pairs count.** A repetition is paired only when both sides
+  succeeded, and a gate whose subject succeeded less often than its baseline fails on
+  parity regardless of tokens — a reduction that counts a failed run's short transcript
+  as a saving is a fabricated win. Fewer matched pairs than `repetitions_per_cell`
+  (≥15 by contract) is `not_certifiable`.
+- **Routing reuses the token bootstrap.** "Share of warm steps off the frontier" is
+  `1 - frontier/warm`, i.e. the same matched seeded bootstrap as the token gates, so one
+  interval implementation serves every gate and stays byte-stable.
+- **The T2 retreat rule needs a sound interval.** An absent or uncertifiable T2 never
+  reports the generalization bet as killed.
+
+`packages/bench/test/invariants/p2-gate-never-passes-without-evidence.test.ts` enumerates
+eleven ways real collection goes wrong and asserts none of them can reach `pass`.
+
 ## Spec format
 
 ```json
