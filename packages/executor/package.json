@@ -17,6 +17,7 @@
     "test:b4-triage-chrome": "ROTE_RUN_CDP_TESTS=1 vitest run test/cdp-b4-triage-control.test.ts"
   },
   "dependencies": {
+    "@rote/action": "*",
     "@rote/browser": "*",
     "@rote/core": "*",
     "@rote/llm": "*",
