@@ -30,6 +30,13 @@ See `src/index.ts` for the full export list. Highlights:
 - **Digests** — `computeResultDigest`, `decideStorage`, `verifyInlineResultRef`.
 - **Templating** — `extractParamRefs`, `renderTemplate` (throws
   `UnboundParamError` on a referenced-but-unbound param).
+- **Fingerprinting** — `canonicalStringify` (key-sorted, array order preserved) and
+  `sha256Hex`. Fails closed with `NonCanonicalValueError` on any value JSON cannot carry
+  faithfully — a `Date`, `Map`, `Set` or class instance (all of which would hash as `{}`),
+  a non-finite number or an `undefined` array element (all of which would hash as `null`) —
+  because the hash gates environment matching and two different environments must never
+  share one. An `undefined` object property is still dropped: in JSON that is the same
+  statement as an absent key.
 - **Patching** — `applyPatch` (throws `UnknownStepError` /
   `PlaybookMismatchError`).
 - **Serialization** — `writeTrajectoryJsonl` / `parseTrajectoryJsonl`,
