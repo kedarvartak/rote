@@ -1,6 +1,6 @@
 import { appendFile, mkdir, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { TaskCheckpointSchema, type TaskCheckpoint } from '@rote/core';
+import { TaskCheckpointSchema, parseJsonl, type TaskCheckpoint } from '@rote/core';
 
 // see docs/05-roadmap.md P2 item 9 (#133) — checkpoints are append-only JSONL per
 // task. Recovery after an interrupted write uses the last *complete* line; nothing
@@ -45,19 +45,12 @@ export class FileCheckpointStore implements CheckpointStore {
       throw error;
     }
     const checkpoints: TaskCheckpoint[] = [];
-    for (const line of text.split('\n')) {
-      if (line.trim() === '') continue;
-      let parsed: unknown;
-      try {
-        parsed = JSON.parse(line);
-      } catch (error) {
-        // A write cut short leaves a truncated fragment (no closing brace); that
-        // is recoverable — the previous complete record stays authoritative. A
-        // syntactically complete line that is not valid JSON is corruption and
-        // must surface rather than be skipped.
-        if (!line.trimEnd().endsWith('}')) continue;
-        throw error;
-      }
+    // A write cut short leaves a syntactically incomplete final line; that is
+    // recoverable and the previous complete checkpoint stays authoritative. Any
+    // other unparsable line is corruption and must surface rather than be
+    // skipped — the rule, and the reason the last byte is not the test, is in
+    // `parseJsonl`.
+    for (const parsed of parseJsonl(text, { tornFragments: 'anywhere' }).values) {
       checkpoints.push(TaskCheckpointSchema.parse(parsed));
     }
     return checkpoints;
