@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { OutcomeSchema } from '@rote/core';
 import { average } from './accounting.js';
 import { DEFAULT_PRICE_TABLE, priceForModel, runCostUsd, type PriceTable } from './pricing.js';
-import { percentileOf } from './stats.js';
+import { percentileOf, reduction } from './stats.js';
 import type { BenchCell, BenchPhase } from './types.js';
 
 const PHASES: readonly BenchPhase[] = ['cold', 'warm', 'drift'];
@@ -265,12 +265,12 @@ export function buildHeadToHead(
         task,
         subject,
         baseline,
-        token_reduction_ratio: reductionRatio(baseline.avg_total_tokens, subject.avg_total_tokens),
-        latency_reduction_ratio: reductionRatio(baseline.avg_duration_ms, subject.avg_duration_ms),
+        token_reduction_ratio: reduction(subject.avg_total_tokens, baseline.avg_total_tokens),
+        latency_reduction_ratio: reduction(subject.avg_duration_ms, baseline.avg_duration_ms),
         // Omitted unless both sides are priced — a reduction against an unpriced
         // (hence unknown) baseline is not a number we can stand behind.
         ...(subject.avg_cost_usd !== undefined && baseline.avg_cost_usd !== undefined
-          ? { cost_reduction_ratio: reductionRatio(baseline.avg_cost_usd, subject.avg_cost_usd) }
+          ? { cost_reduction_ratio: reduction(subject.avg_cost_usd, baseline.avg_cost_usd) }
           : {}),
         success_parity: subject.success_rate >= baseline.success_rate,
       });
@@ -352,10 +352,6 @@ function manifestDurationMs(startedAt: string, endedAt?: string): number {
   return Math.max(0, Date.parse(endedAt) - Date.parse(startedAt));
 }
 
-function reductionRatio(baseline: number, subject: number): number {
-  if (baseline <= 0) return 0;
-  return Math.max(0, 1 - subject / baseline);
-}
 
 function cell(value: string): string {
   return value.replaceAll('|', '\\|');
