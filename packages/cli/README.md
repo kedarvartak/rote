@@ -106,6 +106,11 @@ In particular:
   `@rotehq/cli`; the immutable 0.1.0 tarball predates B4 and its bundled README retains
   candidate-era publication wording corrected by T28 and this tracked source.
 - Chrome/Chromium must already be installed or supplied with `--chrome-path`.
+- Every fallback is classified: the run line reports `fallback: <reason> [<code>] (<detail>)`,
+  where the code is the executor's terminal exit code (`VERIFY_FAILED`, `STEP_FAILED`,
+  `CHECKPOINT_WRITE_FAILED`, `INTERRUPTED`) or this layer's own `FINGERPRINT_MISMATCH` /
+  `REPLAY_THREW`. A failed verification and a failed checkpoint write are different
+  problems and no longer read the same.
 - Cold fallback re-navigates the initial URL, but cannot generically undo server-side side
   effects made before a replay failure. Only use replay for workflows whose authored
   assertions and site reset semantics make retry safe.
