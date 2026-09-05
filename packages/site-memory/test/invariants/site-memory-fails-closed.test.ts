@@ -126,4 +126,18 @@ describe('site memory fails closed', () => {
     await writeFile(path, lines.join('\n'), 'utf8');
     await expect(store.read(fingerprint.fingerprint_hash)).rejects.toThrow();
   });
+
+  it('survives an interrupted write that was cut at a closing brace', async () => {
+    // A crash can truncate anywhere, including just after a nested object's
+    // `}`. The recovery rule used to test the last byte for a brace, so this
+    // fragment read as corruption and the partition raised on every later
+    // read — tier-2 memory for that environment, lost to one badly timed crash.
+    const report = await recordRun();
+    const store = new FileSiteMemoryStore(baseDir!);
+    await store.append(fingerprint.fingerprint_hash, report.records.slice(0, 1));
+    const path = siteMemoryLogPath(baseDir!, fingerprint.fingerprint_hash);
+    await appendFile(path, '{"version":1,"record_id":"cut","evidence":{"a":1}', 'utf8');
+    await store.append(fingerprint.fingerprint_hash, report.records.slice(1));
+    expect(await store.read(fingerprint.fingerprint_hash)).toEqual(report.records);
+  });
 });

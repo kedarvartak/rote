@@ -1,4 +1,5 @@
 import { TrajectoryEventSchema, type TrajectoryEvent } from '../schemas/trajectory-event.js';
+import { JsonlLineError, parseJsonl } from './jsonl.js';
 
 /**
  * A JSON object key that cannot survive being read back into a record.
@@ -103,29 +104,24 @@ export function parseTrajectoryJsonl(
   options: ParseTrajectoryJsonlOptions = {},
 ): TrajectoryEvent[] {
   const { tolerateTrailingPartialLine = true } = options;
-  const lines = text.split('\n').filter((line) => line.length > 0);
-  const events: TrajectoryEvent[] = [];
-
-  lines.forEach((line, index) => {
-    const isLastLine = index === lines.length - 1;
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(line);
-    } catch (cause) {
-      // INVARIANT: only an incomplete write is recoverable.
-      if (isLastLine && tolerateTrailingPartialLine) return;
-      throw new TrajectoryParseError(index + 1, cause);
-    }
+  // The torn-write rule is shared with the other three append-only logs; its
+  // error is re-raised as this module's own so callers keep one type to catch.
+  let values: unknown[];
+  try {
+    ({ values } = parseJsonl(text, { tornFragments: tolerateTrailingPartialLine ? 'final-only' : 'none' }));
+  } catch (error) {
+    if (error instanceof JsonlLineError) throw new TrajectoryParseError(error.lineNumber, error.cause);
+    throw error;
+  }
+  return values.map((value, index) => {
     // Checked before the schema, which would drop the key and then report a
     // perfectly valid event — the silent half of the failure.
-    const lost = findUnrepresentableKey(parsed);
+    const lost = findUnrepresentableKey(value);
     if (lost) throw new TrajectoryParseError(index + 1, new TrajectoryKeyError(lost));
     try {
-      events.push(TrajectoryEventSchema.parse(parsed));
+      return TrajectoryEventSchema.parse(value);
     } catch (cause) {
       throw new TrajectoryParseError(index + 1, cause);
     }
   });
-
-  return events;
 }

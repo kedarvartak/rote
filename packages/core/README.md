@@ -41,6 +41,12 @@ See `src/index.ts` for the full export list. Highlights:
   statement as an absent key.
 - **Patching** — `applyPatch` (throws `UnknownStepError` /
   `PlaybookMismatchError`).
+- **Append-only log recovery** — `parseJsonl` and `isTruncatedJson`, the rule all four
+  logs share (trajectory, playbook index, site-memory partitions, checkpoints). An
+  interrupted write leaves a *prefix of a valid record* and is dropped; anything else
+  raises `JsonlLineError`. The test is whether the line is a prefix of some valid JSON,
+  not whether it is last or ends in a brace — an append after a crash buries the
+  fragment mid-file, and `{"a":{"b":1}` ends in a brace while being incomplete.
 - **Serialization** — `writeTrajectoryJsonl` / `parseTrajectoryJsonl`,
   `writePlaybookYaml` / `parsePlaybookYaml`. Trajectory reads tolerate exactly one
   thing: a final line that is *syntactically* incomplete, which is what a process
