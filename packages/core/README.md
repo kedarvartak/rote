@@ -45,7 +45,9 @@ See `src/index.ts` for the full export list. Highlights:
   `writePlaybookYaml` / `parsePlaybookYaml`. Trajectory reads tolerate exactly one
   thing: a final line that is *syntactically* incomplete, which is what a process
   killed mid-append leaves. A final line that is complete JSON but not a valid event
-  is corruption and raises `TrajectoryParseError` like any other line.
+  is corruption and raises `TrajectoryParseError` like any other line. A `__proto__`
+  key, which no record rebuilt by assignment can carry, is refused on both write and
+  read (`TrajectoryKeyError`) rather than silently dropped.
 - **Verification evidence (E7.4)** — `VerificationEvidenceEnvelopeSchema` (versioned,
   strict, digest-only — a raw payload or credential field fails parse),
   `EvidencePolicySchema` (only authoritative classes are requirable),

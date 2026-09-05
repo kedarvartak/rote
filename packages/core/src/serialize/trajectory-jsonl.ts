@@ -1,5 +1,48 @@
 import { TrajectoryEventSchema, type TrajectoryEvent } from '../schemas/trajectory-event.js';
 
+/**
+ * A JSON object key that cannot survive being read back into a record.
+ *
+ * `JSON.parse` gives `__proto__` an own property, but every schema library that
+ * rebuilds a record by assignment — Zod included — loses it: `result[key] = v`
+ * with that key sets the prototype instead of defining a property. The value is
+ * discarded, not applied, so this is data loss rather than prototype pollution
+ * (verified in #208). Either way an event that does not read back as it was
+ * written must not pass quietly.
+ */
+const UNREPRESENTABLE_KEY = '__proto__';
+
+/**
+ * The path of the first key that would be lost on parse, or `undefined`.
+ *
+ * Exported because the property test needs to state the invariant as "either it
+ * round-trips exactly, or it raises" — never silently in between.
+ */
+export function findUnrepresentableKey(value: unknown, path = '$'): string | undefined {
+  if (Array.isArray(value)) {
+    for (const [index, item] of value.entries()) {
+      const found = findUnrepresentableKey(item, `${path}[${index}]`);
+      if (found) return found;
+    }
+    return undefined;
+  }
+  if (value === null || typeof value !== 'object') return undefined;
+  for (const key of Object.keys(value)) {
+    if (key === UNREPRESENTABLE_KEY) return `${path}.${key}`;
+    const found = findUnrepresentableKey((value as Record<string, unknown>)[key], `${path}.${key}`);
+    if (found) return found;
+  }
+  return undefined;
+}
+
+/** Raised when an event carries a key that could not be written and read back faithfully. */
+export class TrajectoryKeyError extends Error {
+  constructor(public readonly path: string) {
+    super(`Key at ${path} cannot be recorded faithfully: "${UNREPRESENTABLE_KEY}" is lost when the event is read back (#208)`);
+    this.name = 'TrajectoryKeyError';
+  }
+}
+
 export class TrajectoryParseError extends Error {
   constructor(
     public readonly lineNumber: number,
@@ -10,9 +53,20 @@ export class TrajectoryParseError extends Error {
   }
 }
 
-/** Serializes trajectory events as JSON Lines, one event per line. */
+/**
+ * Serializes trajectory events as JSON Lines, one event per line.
+ *
+ * Refuses an event carrying a key the reader would lose, so this pair can never
+ * produce a file it cannot read back. The live recorder appends with
+ * `JSON.stringify` directly (`packages/recorder/src/trajectory-writer.ts`), so
+ * this refusal cannot end a run in flight — sacred invariant 2 is untouched.
+ */
 export function writeTrajectoryJsonl(events: readonly TrajectoryEvent[]): string {
   if (events.length === 0) return '';
+  for (const event of events) {
+    const lost = findUnrepresentableKey(event);
+    if (lost) throw new TrajectoryKeyError(lost);
+  }
   return `${events.map((event) => JSON.stringify(event)).join('\n')}\n`;
 }
 
@@ -62,6 +116,10 @@ export function parseTrajectoryJsonl(
       if (isLastLine && tolerateTrailingPartialLine) return;
       throw new TrajectoryParseError(index + 1, cause);
     }
+    // Checked before the schema, which would drop the key and then report a
+    // perfectly valid event — the silent half of the failure.
+    const lost = findUnrepresentableKey(parsed);
+    if (lost) throw new TrajectoryParseError(index + 1, new TrajectoryKeyError(lost));
     try {
       events.push(TrajectoryEventSchema.parse(parsed));
     } catch (cause) {
