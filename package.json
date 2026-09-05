@@ -13,9 +13,10 @@
   "scripts": {
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
-    "test": "npm run test --workspaces --if-present && python3 -m unittest scripts/bench/curve/browser-use/run_curve_test.py scripts/bench/headhead/browser-use/run_browser_use_test.py scripts/bench/skyvern/run_qualification_test.py scripts/bench/browser-use-refresh/run_qualification_test.py && npm run test:package && npm run reproduce:g2 && npm run reproduce:b5 && npm run reproduce:stagehand && npm run reproduce:skyvern && npm run reproduce:browser-use-refresh && npm run reproduce:browser-use-0137-certification && npm run reproduce:post-action-evidence && npm run reproduce:magnitude && npm run reproduce:t28 && npm run test:scripts && npm run paper:verify-claims",
+    "test": "npm run test --workspaces --if-present && python3 -m unittest scripts/bench/curve/browser-use/run_curve_test.py scripts/bench/headhead/browser-use/run_browser_use_test.py scripts/bench/skyvern/run_qualification_test.py scripts/bench/browser-use-refresh/run_qualification_test.py && npm run test:package && npm run reproduce:g2 && npm run reproduce:b5 && npm run reproduce:stagehand && npm run reproduce:skyvern && npm run reproduce:browser-use-refresh && npm run reproduce:browser-use-0137-certification && npm run reproduce:post-action-evidence && npm run reproduce:magnitude && npm run reproduce:t28 && npm run test:scripts && npm run paper:verify-claims && npm run check:package-graph",
     "test:package": "node scripts/release/smoke-cli-package.mjs",
     "paper:verify-claims": "node paper/scripts/verify-claims.mjs",
+    "check:package-graph": "node scripts/ci/check-package-graph.mjs",
     "demo:action-contract": "tsx scripts/demo/action-contract-drift-demo.ts",
     "reproduce:b5": "node scripts/release/reproduce-b5.mjs",
     "reproduce:g2": "node scripts/release/reproduce-g2.mjs",
@@ -26,7 +27,7 @@
     "reproduce:post-action-evidence": "node scripts/release/reproduce-post-action-evidence.mjs",
     "reproduce:magnitude": "node scripts/release/reproduce-magnitude.mjs",
     "reproduce:t28": "node scripts/release/reproduce-t28.mjs",
-    "test:scripts": "node --test scripts/demo/prepare-drift.test.mjs scripts/bench/headhead/assemble-certification-evidence.test.mjs scripts/bench/browser-use-refresh/audit-certification-evidence.test.mjs scripts/bench/post-action-evidence/summarize-qualification.test.mjs scripts/bench/magnitude/run-qualification.test.mjs paper/scripts/verify-claims.test.mjs",
+    "test:scripts": "node --test scripts/demo/prepare-drift.test.mjs scripts/bench/headhead/assemble-certification-evidence.test.mjs scripts/bench/browser-use-refresh/audit-certification-evidence.test.mjs scripts/bench/post-action-evidence/summarize-qualification.test.mjs scripts/bench/magnitude/run-qualification.test.mjs paper/scripts/verify-claims.test.mjs scripts/ci/check-package-graph.test.mjs",
     "build": "npm run build --workspaces --if-present"
   },
   "devDependencies": {
