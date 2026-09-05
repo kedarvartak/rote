@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { z } from 'zod';
 import { CompetitorRunRecordSchema, type CompetitorRunRecord } from './competitor.js';
+import { wilsonInterval } from './stats.js';
 
 const PACKAGE_INTEGRITY = 'sha512-kfwfc8D4qo1JMcROhXRgPS1FTXPbtQnI8tHGJ2AXMDdUZWiD8+VHgHHBJcss0s/PqSkDmaaj4XOKzK0+iSwx0w==';
 const PACKAGE_SHASUM = 'c21a57a282a27058e146923b2b9a46bdbaa79779';
@@ -196,11 +197,3 @@ function normalizeRawProviderReceipts(
   }, { input_tokens: 0, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 0 });
 }
 
-function wilsonInterval(successes: number, attempts: number): [number, number] {
-  const z = 1.959963984540054;
-  const p = successes / attempts;
-  const denominator = 1 + (z * z) / attempts;
-  const center = (p + (z * z) / (2 * attempts)) / denominator;
-  const margin = z * Math.sqrt((p * (1 - p) / attempts) + (z * z) / (4 * attempts * attempts)) / denominator;
-  return [Math.max(0, center - margin), Math.min(1, center + margin)];
-}
