@@ -63,10 +63,13 @@ strong/weak-fit split.
 
 ## Verification and safety
 
-- The public CLI requires visible-text and/or URL-substring verification. These checks are
-  only as independent as the signal the caller chooses; ambiguous text can be a weak
-  oracle. Richer Expect checks exist in replay, but are not fully exposed as CLI flags.
-  E7.4 adds provenance/freshness-bound evidence envelopes and injected authoritative
+- The public CLI requires at least one check from the browser-observable Expect DSL subset:
+  `--verify-text`, `--verify-url-contains`, `--verify-selector`, `--verify-selector-absent`,
+  `--verify-input-value`, repeatable and combinable. These checks are only as independent as
+  the signal the caller chooses; ambiguous visible text remains the weakest of them, which is
+  why the stronger primitives are exposed. The DSL's non-browser primitives (`exit_code`,
+  `json_path_*`, `output_matches`, `nonempty`) are reachable in replay only, having no live
+  page meaning. E7.4 adds provenance/freshness-bound evidence envelopes and injected authoritative
   API/database/download-event adapters; UI evidence remains supporting evidence where it
   is genuinely task-specific.
 - Ordinary live-agent fill/select/navigation actions enforce zero-LLM exact effect checks
