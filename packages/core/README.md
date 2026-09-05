@@ -33,7 +33,10 @@ See `src/index.ts` for the full export list. Highlights:
 - **Patching** — `applyPatch` (throws `UnknownStepError` /
   `PlaybookMismatchError`).
 - **Serialization** — `writeTrajectoryJsonl` / `parseTrajectoryJsonl`,
-  `writePlaybookYaml` / `parsePlaybookYaml`.
+  `writePlaybookYaml` / `parsePlaybookYaml`. Trajectory reads tolerate exactly one
+  thing: a final line that is *syntactically* incomplete, which is what a process
+  killed mid-append leaves. A final line that is complete JSON but not a valid event
+  is corruption and raises `TrajectoryParseError` like any other line.
 - **Verification evidence (E7.4)** — `VerificationEvidenceEnvelopeSchema` (versioned,
   strict, digest-only — a raw payload or credential field fails parse),
   `EvidencePolicySchema` (only authoritative classes are requirable),
