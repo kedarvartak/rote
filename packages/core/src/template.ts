@@ -17,6 +17,21 @@ function capturedName(match: RegExpMatchArray): string {
 
 export type ParamBindings = Record<string, string | number | boolean>;
 
+/**
+ * Whether a param is genuinely bound.
+ *
+ * INVARIANT: `name in bindings` is not this test — it walks the prototype
+ * chain, so `{{toString}}`, `{{constructor}}`, `{{valueOf}}` and friends read
+ * as bound on *every* object and render as `Object.prototype`'s member: a
+ * function value for a sole reference, or the text
+ * `function toString() { [native code] }` spliced into a longer string and then
+ * dispatched into the page. An unbound param must fail loudly instead
+ * (CLAUDE.md sacred invariant 1).
+ */
+function isBound(bindings: ParamBindings, name: string): boolean {
+  return Object.hasOwn(bindings, name);
+}
+
 export class UnboundParamError extends Error {
   constructor(public readonly paramName: string) {
     super(`Parameter "${paramName}" is referenced but has no bound value`);
@@ -80,7 +95,7 @@ function renderString(str: string, bindings: ParamBindings): unknown {
   const soleMatch = str.match(SOLE_PARAM_REF_PATTERN);
   if (soleMatch) {
     const paramName = capturedName(soleMatch);
-    if (!(paramName in bindings)) throw new UnboundParamError(paramName);
+    if (!isBound(bindings, paramName)) throw new UnboundParamError(paramName);
     return bindings[paramName];
   }
 
@@ -94,7 +109,7 @@ function renderString(str: string, bindings: ParamBindings): unknown {
     if (escaped) {
       result += `{{${paramName}}}`;
     } else {
-      if (!(paramName in bindings)) throw new UnboundParamError(paramName);
+      if (!isBound(bindings, paramName)) throw new UnboundParamError(paramName);
       result += String(bindings[paramName]);
     }
     lastIndex = start + match[0].length;

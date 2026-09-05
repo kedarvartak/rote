@@ -26,12 +26,14 @@ See `src/index.ts` for the full export list. Highlights:
 - **Schemas & types** — `TrajectoryEventSchema`, `RunManifestSchema`,
   `EnvFingerprintSchema`, `EnvFingerprintPatternSchema`, `PlaybookSchema`,
   `PatchSchema`, `ExpectSchema`, `BrowserExpectSchema`, `BrowserReplayCandidateSchema` — and their inferred TS types.
-- **Fingerprinting** — `buildEnvFingerprint`, `canonicalStringify`, `sha256Hex`.
 - **Digests** — `computeResultDigest`, `decideStorage`, `verifyInlineResultRef`.
-- **Templating** — `extractParamRefs`, `renderTemplate` (throws
-  `UnboundParamError` on a referenced-but-unbound param).
-- **Fingerprinting** — `canonicalStringify` (key-sorted, array order preserved) and
-  `sha256Hex`. Fails closed with `NonCanonicalValueError` on any value JSON cannot carry
+- **Templating** — `extractParamRefs` / `renderTemplate` over the `{{param}}` grammar.
+  A reference with no *own* binding raises `UnboundParamError`, including names
+  inherited from `Object.prototype` (`{{toString}}` is unbound, not a function).
+  `\{{param}}` renders as the literal text `{{param}}`; a literal backslash cannot
+  precede a live reference (#211).
+- **Fingerprinting** — `buildEnvFingerprint`, `canonicalStringify` (key-sorted, array
+  order preserved) and `sha256Hex`. Fails closed with `NonCanonicalValueError` on any value JSON cannot carry
   faithfully — a `Date`, `Map`, `Set` or class instance (all of which would hash as `{}`),
   a non-finite number or an `undefined` array element (all of which would hash as `null`) —
   because the hash gates environment matching and two different environments must never
