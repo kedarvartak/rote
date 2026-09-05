@@ -1,7 +1,9 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import {
+  findUnrepresentableKey,
   parseTrajectoryJsonl,
+  TrajectoryKeyError,
   TrajectoryParseError,
   writeTrajectoryJsonl,
 } from '../src/serialize/trajectory-jsonl.js';
@@ -33,9 +35,6 @@ const trajectoryEvent = (seq: number): fc.Arbitrary<TrajectoryEvent> => fc.recor
   seq: fc.constant(seq),
   ts: fc.date({ min: new Date(0), max: new Date(4102444800000), noInvalidDate: true }).map((d) => d.toISOString()),
   tool: hostileString,
-  // `__proto__` is excluded: Zod rebuilds a record by assignment, so that one
-  // key is silently dropped on parse — a real round-trip violation, filed
-  // separately as #208 rather than folded into this suite's concern.
   args: fc.dictionary(
     hostileString.filter((key) => key !== '__proto__'),
     fc.oneof(hostileString, fc.integer(), fc.boolean()),
@@ -52,15 +51,48 @@ const trajectoryEvent = (seq: number): fc.Arbitrary<TrajectoryEvent> => fc.recor
   duration_ms: fc.nat(),
 });
 
+/**
+ * The same event, but free to carry a key that cannot be read back. Kept
+ * separate so the structural properties (one line per event, crash recovery)
+ * generate only events that can legally be written, while the fidelity
+ * property below gets to see both kinds (#208).
+ */
+const eventWithAnyKey = (seq: number): fc.Arbitrary<TrajectoryEvent> =>
+  fc.tuple(trajectoryEvent(seq), fc.oneof(hostileString, fc.integer(), fc.boolean()), fc.boolean())
+    .map(([event, value, unrepresentable]) => (unrepresentable
+      ? { ...event, args: { ...event.args, ['__proto__']: value } }
+      : event));
+
 describe('trajectory JSONL serializer properties', () => {
-  it('parses back exactly what was written, for any event sequence', () => {
+  it('either round-trips an event sequence exactly, or refuses it — never silently in between', () => {
+    // The whole invariant, including the keys that cannot be represented: a
+    // record read back must equal the record written, and where that is
+    // impossible the pair says so rather than returning a quietly different
+    // event (#208).
     fc.assert(fc.property(
       fc.array(fc.nat({ max: 40 }), { minLength: 1, maxLength: 8 }).chain((seqs) =>
-        fc.tuple(...seqs.map((seq) => trajectoryEvent(seq)))),
+        fc.tuple(...seqs.map((seq) => eventWithAnyKey(seq)))),
       (events) => {
+        const lost = events.some((event) => findUnrepresentableKey(event) !== undefined);
+        if (lost) {
+          expect(() => writeTrajectoryJsonl(events)).toThrow(TrajectoryKeyError);
+          return;
+        }
         expect(parseTrajectoryJsonl(writeTrajectoryJsonl(events))).toEqual(events);
       },
     ));
+  });
+
+  it('refuses on read too, so a file written by anything else cannot lose a key quietly', () => {
+    fc.assert(fc.property(hostileString, (value) => {
+      const line = JSON.stringify({
+        run_id: 'r', seq: 0, ts: '2026-01-01T00:00:00.000Z', tool: 't',
+        args: { ['__proto__']: value },
+        result_digest: { sha256: 'a'.repeat(64), byte_length: 0, preview: '' },
+        result_ref: { kind: 'inline', value: null }, duration_ms: 0,
+      });
+      expect(() => parseTrajectoryJsonl(`${line}\n`)).toThrow(TrajectoryParseError);
+    }));
   });
 
   it('writes exactly one line per event, so a torn write can only ever lose the last one', () => {
