@@ -58,6 +58,12 @@ repository with `scripts/demo/run-launch-demo.sh`; see [T16](https://github.com/
   nothing.
 - **`rote runs show <run_id>`** — prints the manifest plus every recorded
   `TrajectoryEvent` in order: tool, args, status, duration.
+- A damaged artifact is never shown as an absent one. A trajectory or manifest that
+  exists and cannot be read is reported as `UNREADABLE` with the reason, rather than as
+  an in-progress run with zero events; `rote report` refuses a run whose manifest is
+  present and unparsable instead of taking the manifest-less fallback; and
+  `rote predict-report` lists every run it had to exclude, because a hit rate over a
+  quietly reduced sample is the wrong number reported with confidence.
 - `listRuns` / `showRun` (`src/runs.ts`) and `formatRunsList` /
   `formatRunDetail` (`src/format.ts`) are exported separately so formatting
   is unit-testable without spawning the CLI.

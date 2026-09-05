@@ -1,6 +1,7 @@
 import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { consolidateSiteMemory, FileSiteMemoryStore, renderSiteBrief, type SiteMemoryView } from '@rote/site-memory';
+import { isMissing } from './artifact-status.js';
 
 // see docs/02 "Tiers 1 and 2" — site memory is advisory and value-free by
 // construction, so inspecting it is safe to print verbatim: identities,
@@ -25,8 +26,11 @@ export async function listMemoryPartitions(baseDir: string, now: Date): Promise<
   let hashes: string[];
   try {
     hashes = await readdir(join(baseDir, 'site-memory'));
-  } catch {
-    return [];
+  } catch (error) {
+    // No site-memory directory means no partitions; anything else is a real
+    // read failure and saying "no memory" would be a lie.
+    if (isMissing(error)) return [];
+    throw error;
   }
   const store = new FileSiteMemoryStore(baseDir);
   const summaries: MemoryPartitionSummary[] = [];
