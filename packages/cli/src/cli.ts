@@ -140,7 +140,8 @@ function formatSelection(selection: NonNullable<BrowserTaskResult['selection']>)
 
 function formatFallback(result: BrowserTaskResult): string | undefined {
   if (!result.fallbackReason) return undefined;
-  return `fallback: ${result.fallbackReason}${result.fallbackDetail ? ` (${result.fallbackDetail})` : ''}`;
+  const code = result.fallbackCode ? ` [${result.fallbackCode}]` : '';
+  return `fallback: ${result.fallbackReason}${code}${result.fallbackDetail ? ` (${result.fallbackDetail})` : ''}`;
 }
 
 function parseCandidateOptions(args: string[]): { url: string; params: Record<string, unknown>; outPath: string } {

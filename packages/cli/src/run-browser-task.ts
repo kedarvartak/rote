@@ -11,7 +11,7 @@ import {
 } from '@rote/core';
 import { FileBrowserAgentRunRecorder, runBrowserAgent, TaggedLlmBrowserPlanner, type BrowserAgentFailureClassification, type BrowserPageSession, type BrowserPlannerClient } from '@rote/agent';
 import { LaunchingCdpBrowserBackend } from '@rote/browser';
-import { BrowserToolCaller, runPlaybook } from '@rote/executor';
+import { BrowserToolCaller, runPlaybook, type ExecutorExitCode } from '@rote/executor';
 import { createTaggedLlmClientFromEnv } from '@rote/llm';
 import { FilePlaybookLibrary, matchPlaybook, type NoMatchReason } from '@rote/matcher';
 import { NextActionPredictor, runsFromEvents } from '@rote/predictor';
@@ -62,8 +62,22 @@ export interface BrowserTaskResult {
   inputTokens: number;
   outputTokens: number;
   phase: 'cold' | 'warm';
-  fallbackReason?: 'fingerprint_mismatch' | 'replay_failed' | 'replay_error';
+  fallbackReason?: BrowserTaskFallbackReason;
   fallbackDetail?: string;
+  /**
+   * Why the cheap path was abandoned, as a code rather than prose.
+   *
+   * CLAUDE.md "Errors": a fallback path logs *why* (classification), not just
+   * *that*. `fallbackReason` says which stage gave up; this says what the
+   * executor concluded — a failed `verify` (the playbook is wrong for this
+   * state) reads differently from a failed checkpoint write (the machine is),
+   * and both previously arrived as the same `replay_failed` plus a sentence.
+   *
+   * INVARIANT: set on every fallback, never on a run that did not fall back.
+   */
+  fallbackCode?: BrowserTaskFallbackCode;
+  /** Warm path only: the executor's terminal exit code, verbatim (see `EXECUTOR_EXIT_CODES`). */
+  failureCode?: ExecutorExitCode | (string & {});
   failureClassification?: BrowserAgentFailureClassification;
   /** Stale replay steps recovered by deterministic semantic target resolution. */
   replayRepairs?: number;
@@ -76,6 +90,25 @@ export interface BrowserTaskResult {
   /** Cold path only, when `--routine-model` was given: which planner took the steps. */
   routing?: { routine: number; frontier: number; escalations: number };
 }
+
+export type BrowserTaskFallbackReason = 'fingerprint_mismatch' | 'replay_failed' | 'replay_error';
+
+/**
+ * Classifications this layer contributes when the executor cannot supply one:
+ * the environment gate refused before any replay ran, the replay threw instead
+ * of returning, or it returned a failure with no code (which the executor's
+ * `finish` overloads make unreachable — kept so an unclassified failure is
+ * *visible* rather than silently indistinguishable from a clean stop).
+ */
+export const BROWSER_TASK_FALLBACK_CODES = [
+  'FINGERPRINT_MISMATCH',
+  'REPLAY_THREW',
+  'REPLAY_UNCLASSIFIED',
+] as const;
+export type BrowserTaskFallbackCode =
+  | ExecutorExitCode
+  | (typeof BROWSER_TASK_FALLBACK_CODES)[number]
+  | (string & {});
 
 export type BrowserTaskSelection =
   | { source: 'candidate' }
@@ -168,15 +201,25 @@ export async function runBrowserTask(
       ? new SettledBrowserPageSession(rawPage, { timeoutMs: options.settleTimeoutMs })
       : rawPage;
 
-    let replayFallback: Pick<BrowserTaskResult, 'fallbackReason' | 'fallbackDetail'> | undefined;
+    let replayFallback: Pick<BrowserTaskResult, 'fallbackReason' | 'fallbackDetail' | 'fallbackCode'> | undefined;
     if (selection.phase === 'warm' && candidate) {
       const replay = dependencies.runReplay ?? runVerifiedBrowserReplay;
       try {
         const result = await replay({ candidate, page, fingerprint, options, target });
         if (result.success) return { ...result, selection: taskSelection };
-        replayFallback = { fallbackReason: 'replay_failed', fallbackDetail: result.summary };
+        replayFallback = {
+          fallbackReason: 'replay_failed',
+          fallbackDetail: result.summary,
+          // A replay that reported failure without a code would otherwise be
+          // indistinguishable from one whose verify failed; name the gap.
+          fallbackCode: result.failureCode ?? 'REPLAY_UNCLASSIFIED',
+        };
       } catch (error) {
-        replayFallback = { fallbackReason: 'replay_error', fallbackDetail: asError(error).message };
+        replayFallback = {
+          fallbackReason: 'replay_error',
+          fallbackDetail: asError(error).message,
+          fallbackCode: 'REPLAY_THREW',
+        };
       }
       // INVARIANT: a selected cheap path may fail, but it cannot strand the task
       // (see docs/02-architecture.md "Invariants"). Cold execution navigates from the pinned initial URL before planning.
@@ -184,7 +227,7 @@ export async function runBrowserTask(
 
     const cold = await runColdBrowserTask(options, target, page, fingerprint, dependencies.planner, dependencies.routinePlanner);
     const fingerprintFallback = 'fallbackReason' in selection
-      ? { fallbackReason: selection.fallbackReason }
+      ? { fallbackReason: selection.fallbackReason, fallbackCode: 'FINGERPRINT_MISMATCH' as const }
       : undefined;
     return { ...cold, ...(replayFallback ?? fingerprintFallback), selection: taskSelection };
   } finally {
@@ -325,6 +368,9 @@ async function runVerifiedBrowserReplay(input: BrowserReplayRunInput): Promise<B
     outputTokens: 0,
     phase: 'warm',
     replayRepairs: result.repairedStepIds.length,
+    // The executor classifies every terminal exit (#203); carrying the code
+    // rather than only `result.reason` is what lets the fallback say why.
+    ...(result.failureCode ? { failureCode: result.failureCode } : {}),
   };
 }
 
