@@ -1,11 +1,12 @@
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { SettledBrowserPageSession, type SettleableBrowserPage } from '@rote/action';
+import { evaluateBrowserExpect, SettledBrowserPageSession, type SettleableBrowserPage } from '@rote/action';
 import {
   BrowserReplayCandidateSchema,
   buildEnvFingerprint,
   parsePlaybookYaml,
   sha256Hex,
+  type BrowserExpect,
   type BrowserReplayCandidate,
   type EnvFingerprint,
 } from '@rote/core';
@@ -28,6 +29,18 @@ export interface RunBrowserTaskOptions {
   viewport?: { width: number; height: number };
   verifyText?: string;
   verifyUrlContains?: string;
+  /**
+   * Additional final-verification checks from the browser-observable Expect DSL
+   * subset (`selector_visible`, `selector_absent`, `input_value`, and the two
+   * above spelled out). `verifyText`/`verifyUrlContains` remain for programmatic
+   * callers; both feed the same list.
+   *
+   * see docs/known-limitations.md "Verification and safety" — these checks are
+   * only as independent as the signal the caller chooses, and visible text is
+   * the weakest of them. Exposing the selector and input-value primitives lets a
+   * caller pick a stronger oracle than prose on the page.
+   */
+  verifyChecks?: readonly BrowserExpect[];
   settleTimeoutMs?: number;
   /** Explicit candidate (bypasses the library); when absent the playbook library is consulted. */
   replayCandidatePath?: string;
@@ -150,13 +163,30 @@ export function selectBrowserExecution(
 }
 
 /** Launches one recorded browser task, preferring exact-environment verified replay. */
+/**
+ * The final-verification checks a run will apply, in flag order.
+ *
+ * One list, used three ways: to refuse a run with no oracle at all, to decide
+ * success, and — when it passes — to teach a distilled playbook its `verify`.
+ * Keeping them the same list is what stops a run from being certified by one
+ * check and replayed against another.
+ */
+export function browserVerificationChecks(options: RunBrowserTaskOptions): BrowserExpect[] {
+  return [
+    ...(options.verifyText ? [{ text_visible: options.verifyText }] : []),
+    ...(options.verifyUrlContains ? [{ url_contains: options.verifyUrlContains }] : []),
+    ...(options.verifyChecks ?? []),
+  ];
+}
+
 export async function runBrowserTask(
   options: RunBrowserTaskOptions,
   dependencies: RunBrowserTaskDependencies = {},
 ): Promise<BrowserTaskResult> {
   const target = new URL(options.url);
-  if (!options.verifyText && !options.verifyUrlContains) {
-    throw new Error('browser tasks require --verify-text or --verify-url-contains for clean cold fallback');
+  const verification = browserVerificationChecks(options);
+  if (verification.length === 0) {
+    throw new Error('browser tasks require at least one verification check for clean cold fallback');
   }
   const fingerprint = browserEnvironmentFingerprint(target);
   let candidate: BrowserReplayCandidate | undefined;
@@ -254,6 +284,7 @@ async function runColdBrowserTask(
   injectedPlanner?: BrowserPlannerClient,
   injectedRoutinePlanner?: BrowserPlannerClient,
 ): Promise<BrowserTaskResult> {
+  const checks = browserVerificationChecks(options);
   const planner = injectedPlanner ?? new TaggedLlmBrowserPlanner(
     createTaggedLlmClientFromEnv({ model: options.model }),
   );
@@ -288,20 +319,18 @@ async function runColdBrowserTask(
     ...(routine ? { routing: { routine, ...(options.routeMinConfidence !== undefined ? { minConfidence: options.routeMinConfidence } : {}) } } : {}),
     verifier: {
       async verify(captured) {
-        const failures: string[] = [];
-        const visibleText = [captured.title, ...captured.elements.map((element) => element.text)].join(' ');
-        if (options.verifyText && !visibleText.includes(options.verifyText)) failures.push(`text "${options.verifyText}" not visible`);
-        if (options.verifyUrlContains && !captured.url.includes(options.verifyUrlContains)) failures.push(`URL does not contain "${options.verifyUrlContains}"`);
+        // INVARIANT: the same evaluator that decides live action postconditions
+        // decides final verification (see docs/02-architecture.md "Expect DSL
+        // v1"). A second implementation here drifted from it: it matched text in
+        // hidden elements, so a `display:none` success banner satisfied the
+        // oracle — sacred invariant 1's failure mode exactly.
+        const failures = checks
+          .map((check) => evaluateBrowserExpect(check, captured))
+          .filter((evaluated) => !evaluated.pass)
+          .map((evaluated) => evaluated.reason);
         return failures.length === 0
-          ? {
-              success: true,
-              summary: 'task verification passed',
-              // The checks that decided success, so a distilled playbook can learn its `verify`.
-              checks: [
-                ...(options.verifyText ? [{ text_visible: options.verifyText }] : []),
-                ...(options.verifyUrlContains ? [{ url_contains: options.verifyUrlContains }] : []),
-              ],
-            }
+          // The checks that decided success, so a distilled playbook can learn its `verify`.
+          ? { success: true, summary: 'task verification passed', checks: [...checks] }
           : { success: false, summary: failures.join('; ') };
       },
     },

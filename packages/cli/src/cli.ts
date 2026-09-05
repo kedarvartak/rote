@@ -1,3 +1,4 @@
+import { BrowserExpectSchema, type BrowserExpect } from '@rote/core';
 import { formatRunDetail, formatRunsList } from './format.js';
 import { formatRunReport, reportRun } from './report-run.js';
 import { FilePlaybookLibrary } from '@rote/matcher';
@@ -173,12 +174,18 @@ function parseCandidateOptions(args: string[]): { url: string; params: Record<st
 
 function parseRunOptions(task: string, args: string[], baseDir: string): RunBrowserTaskOptions {
   const values = new Map<string, string>();
+  // Verification flags are order-preserving and repeatable — two selectors are
+  // two checks, not the second overwriting the first — so they are collected as
+  // pairs before the single-valued flags collapse into the map.
+  const given: Array<[string, string]> = [];
   for (let index = 0; index < args.length; index += 2) {
     const flag = args[index];
     const value = args[index + 1];
     if (!flag?.startsWith('--') || value === undefined) throw new Error(runUsage());
+    given.push([flag, value]);
     values.set(flag, value);
   }
+  const verifyChecks = parseVerifyChecks(given);
   const url = values.get('--url');
   if (!url) throw new Error(runUsage());
   const maxStepsText = values.get('--max-steps');
@@ -197,10 +204,10 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     throw new Error('--viewport-width and --viewport-height must be provided together');
   }
   const knownFlags = new Set([
-    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--settle-timeout-ms', '--replay-candidate', '--viewport-width', '--viewport-height', '--params', '--site-brief-chars', '--routine-model', '--route-min-confidence',
+    '--url', '--model', '--max-steps', '--chrome-path', '--verify-text', '--verify-url-contains', '--verify-selector', '--verify-selector-absent', '--verify-input-value', '--settle-timeout-ms', '--replay-candidate', '--viewport-width', '--viewport-height', '--params', '--site-brief-chars', '--routine-model', '--route-min-confidence',
   ]);
   for (const flag of values.keys()) if (!knownFlags.has(flag)) throw new Error(`unknown option: ${flag}`);
-  if (!values.has('--verify-text') && !values.has('--verify-url-contains')) throw new Error(runUsage());
+  if (verifyChecks.length === 0) throw new Error(runUsage());
   return {
     task,
     url,
@@ -211,8 +218,9 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     viewport: viewportWidth !== undefined && viewportHeight !== undefined
       ? { width: viewportWidth, height: viewportHeight }
       : undefined,
-    verifyText: values.get('--verify-text'),
-    verifyUrlContains: values.get('--verify-url-contains'),
+    // Every check, including --verify-text and --verify-url-contains, arrives as
+    // one ordered list; the legacy fields stay empty so nothing is checked twice.
+    verifyChecks,
     settleTimeoutMs,
     replayCandidatePath: values.get('--replay-candidate'),
     ...(values.has('--params') ? { params: parseJsonObject(values.get('--params')!, '--params') } : {}),
@@ -220,6 +228,42 @@ function parseRunOptions(task: string, args: string[], baseDir: string): RunBrow
     ...(values.has('--routine-model') ? { routineModel: values.get('--routine-model')! } : {}),
     ...(values.has('--route-min-confidence') ? { routeMinConfidence: unitIntervalOption(values, '--route-min-confidence') } : {}),
   };
+}
+
+/**
+ * Builds the final-verification checks from the repeatable `--verify-*` flags,
+ * in the order the caller gave them.
+ *
+ * Each flag maps to one primitive of the browser-observable Expect DSL subset
+ * (`packages/core/src/schemas/expect.ts`), parsed through its schema rather than
+ * hand-validated — a check the DSL would reject must never reach the verifier.
+ */
+function parseVerifyChecks(given: ReadonlyArray<readonly [string, string]>): BrowserExpect[] {
+  const checks: BrowserExpect[] = [];
+  for (const [flag, value] of given) {
+    const check = verifyCheckFor(flag, value);
+    if (!check) continue;
+    const parsed = BrowserExpectSchema.safeParse(check);
+    if (!parsed.success) throw new Error(`${flag} is not a valid check: ${parsed.error.issues[0]?.message ?? 'invalid'}`);
+    checks.push(parsed.data);
+  }
+  return checks;
+}
+
+function verifyCheckFor(flag: string, value: string): BrowserExpect | undefined {
+  switch (flag) {
+    case '--verify-text': return { text_visible: value };
+    case '--verify-url-contains': return { url_contains: value };
+    case '--verify-selector': return { selector_visible: value };
+    case '--verify-selector-absent': return { selector_absent: value };
+    case '--verify-input-value': {
+      // `<selector>=<expected>`; the expected value may itself contain "=".
+      const split = value.indexOf('=');
+      if (split <= 0) throw new Error('--verify-input-value must be <selector>=<expected value>');
+      return { input_value: value.slice(0, split), equals: value.slice(split + 1) };
+    }
+    default: return undefined;
+  }
 }
 
 function unitIntervalOption(values: ReadonlyMap<string, string>, flag: string): number {
@@ -316,5 +360,5 @@ function candidateUsage(): string {
 }
 
 function runUsage(): string {
-  return 'rote run <task> --url <url> (--verify-text <text> | --verify-url-contains <part>) [--params <json-object>] [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>] [--viewport-width <px> --viewport-height <px>] [--replay-candidate <candidate.json>] [--site-brief-chars <n>] [--routine-model <model> [--route-min-confidence <0-1>]]';
+  return 'rote run <task> --url <url> (at least one of --verify-text <text> | --verify-url-contains <part> | --verify-selector <sel> | --verify-selector-absent <sel> | --verify-input-value <sel>=<value>; repeatable) [--params <json-object>] [--model <model>] [--max-steps <n>] [--chrome-path <path>] [--settle-timeout-ms <ms>] [--viewport-width <px> --viewport-height <px>] [--replay-candidate <candidate.json>] [--site-brief-chars <n>] [--routine-model <model> [--route-min-confidence <0-1>]]';
 }
