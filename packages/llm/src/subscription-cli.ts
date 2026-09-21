@@ -55,7 +55,7 @@ export class SubscriptionCliTaggedLlmClient implements TaggedLlmClient {
       : parseClaudeCodeResult(request.source, result.stdout, this.options.model ?? 'default');
   }
 
-  private args(prompt: string, maxTokens: number | undefined): string[] {
+  private args(prompt: string, _maxTokens: number | undefined): string[] {
     if (this.options.provider === 'codex') {
       return [
         'exec', '--json', '--ephemeral', '--skip-git-repo-check', '--sandbox', 'read-only',
