@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **CLI**: Add `ROTE_LLM_PROVIDER=codex` and `ROTE_LLM_PROVIDER=claude-code` adapters that use the user's existing signed-in CLI sessions, parse their machine-readable responses, and preserve reported token usage (#219).
 - Property-test the torn-write rule: every byte-cut of any generated JSON record reads as an interrupted write, while structural garbage (a missing comma, an unquoted key, two records on one line, trailing junk) never does (#216).
 - Property-test the benchmark statistics kernel with fast-check: Wilson intervals are real, ordered, inside [0,1], contain the observed rate, narrow as evidence accumulates, and never collapse to a point at 0% or 100% — the boundary where a normal approximation would publish false certainty; the seeded RNG is deterministic, in range, and vector-pinned; `reduction` is the fraction saved and reports regressions negative (#215).
 - Property-test templating with fast-check (CLAUDE.md Testing), completing the trio it names: `extractParamRefs` and `renderTemplate` demand *exactly* the same parameters — the agreement `PlaybookSchema` relies on, since one decides whether a playbook is valid and the other what gets dispatched — plus shape preservation, sole-reference type preservation, inertness of a substituted value that itself looks like a reference, and the escape rules. The agreement property found the `Object.prototype` binding leak fixed above (#212).
