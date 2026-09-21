@@ -270,8 +270,13 @@ stays token-based; latency and $ are reported, not gated, in V1 (docs/05 P3).
   economics: token/latency/$ reductions, latency percentiles, and success parity.
 - **`DEFAULT_PRICE_TABLE` / `priceForModel` / `runCostUsd` / `readPriceTable`** —
   the dated price table (captured 2026-07-15) and pure cost arithmetic.
-- **`mean` / `percentile` / `reduction`** (`stats.ts`) — pure, shared by the
-  aggregation and the gate's bootstrap.
+- **`mean` / `percentile` / `reduction` / `wilsonInterval` / `mulberry32`** (`stats.ts`) —
+  the one statistics kernel, pure and shared by every report, qualification and gate.
+  `reduction` is signed: a cell that spent more than its baseline reports a negative
+  reduction rather than zero. `wilsonInterval` refuses zero attempts instead of
+  returning `[NaN, NaN]`. `mulberry32` is pinned by a test vector, because the published
+  claim is a seeded bootstrap's lower bound and the stream is therefore part of the
+  result.
 - **`bootstrapReductionInterval` / `bootstrapMatchedReductionInterval`** — pure,
   deterministic reduction intervals for independent samples or exact repetition pairs.
 - **`buildG2Report` / `writeG2Report`** — fail-closed raw-evidence identity, protocol-pinned Browser Use version, live-verification and provider-receipt reconciliation audits, matched token/cost/latency intervals, absolute levels, and source accounting.

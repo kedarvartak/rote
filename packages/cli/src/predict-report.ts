@@ -3,6 +3,7 @@ import { isAbsolute, join } from 'node:path';
 import { z } from 'zod';
 import { parseTrajectoryJsonl } from '@rote/core';
 import { runPaths, runsRootDir } from '@rote/recorder';
+import { isMissing, readOptional } from './artifact-status.js';
 
 // see docs/testing/T39-predictor-systems.md — confidence is under-calibrated on
 // the fixture corpus, so the predictor ships shadow-only until live calibration
@@ -35,6 +36,8 @@ export interface ThresholdRow {
 
 export interface PredictReport {
   runs: number;
+  /** Runs excluded because their trajectory could not be read, and why. */
+  unreadableRuns: Array<{ runId: string; reason: string }>;
   runsWithPredictions: number;
   shadowed: number;
   hits: number;
@@ -57,19 +60,24 @@ export async function predictReport(baseDir: string): Promise<PredictReport> {
   let runIds: string[] = [];
   try {
     runIds = await readdir(runsRootDir(baseDir));
-  } catch {
+  } catch (error) {
+    if (!isMissing(error)) throw error;
     runIds = [];
   }
   const samples: Array<{ confidence: number; source: string; hit: boolean }> = [];
+  const unreadable: Array<{ runId: string; reason: string }> = [];
   let runsWithPredictions = 0;
   for (const runId of runIds.sort()) {
     const paths = runPaths(baseDir, runId);
-    let events;
-    try {
-      events = parseTrajectoryJsonl(await readFile(paths.trajectoryPath, 'utf8'));
-    } catch {
+    // INVARIANT: a run that cannot be read is *counted*, never dropped in
+    // silence. Calibration is a measurement, and a measurement computed over a
+    // quietly reduced sample is the wrong number reported with confidence.
+    const read = await readOptional(async () => parseTrajectoryJsonl(await readFile(paths.trajectoryPath, 'utf8')));
+    if (read.status.kind === 'unreadable') {
+      unreadable.push({ runId, reason: read.status.reason });
       continue;
     }
+    const events = read.value ?? [];
     let found = false;
     for (const event of events) {
       const ref = event.result_ref;
@@ -118,7 +126,7 @@ export async function predictReport(baseDir: string): Promise<PredictReport> {
     };
   });
   return {
-    runs: runIds.length, runsWithPredictions,
+    runs: runIds.length, runsWithPredictions, unreadableRuns: unreadable,
     shadowed: samples.length, hits,
     hitRate: samples.length ? hits / samples.length : 0,
     bySource, calibration, thresholds,
@@ -128,6 +136,11 @@ export async function predictReport(baseDir: string): Promise<PredictReport> {
 /** Renders the live calibration report for the terminal. */
 export function formatPredictReport(report: PredictReport): string {
   const lines = [`shadow predictions across ${report.runsWithPredictions}/${report.runs} recorded runs`];
+  // Said before the numbers, not after: a calibration figure computed over a
+  // reduced sample has to arrive with that fact attached.
+  for (const excluded of report.unreadableRuns) {
+    lines.push(`excluded ${excluded.runId}: trajectory unreadable — ${excluded.reason}`);
+  }
   if (report.shadowed === 0) {
     lines.push('no predictions recorded yet — run tasks with prior runs of the same task to accumulate calibration');
     return lines.join('\n');

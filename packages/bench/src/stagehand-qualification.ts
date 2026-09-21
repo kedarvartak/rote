@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { z } from 'zod';
 import { CompetitorRunRecordSchema, type CompetitorRunRecord } from './competitor.js';
+import { wilsonInterval } from './stats.js';
 
 const STAGEHAND_INTEGRITY = 'sha512-vAuYSZWIhh3d76BxwppNVE3dB0ztEBLBi85G6TWulZNiebdWptNoANOMuprOB/cw5dE+80b/ZZQo4G33Pc9i6w==';
 const VERIFY_TEXT = 'Vendor registration complete | company_name=Northwind Supply | contact_email=ap@northwind.test | tax_id=84-1129930 | address_line1=18 Harbor Way | city=Portland | postal_code=97209 | country=US | phone=503-555-0148';
@@ -157,12 +158,3 @@ function toCompetitorRecord(receipt: StagehandQualificationReceipt): CompetitorR
   });
 }
 
-function wilsonInterval(successes: number, attempts: number): [number, number] {
-  if (attempts < 1) throw new Error('Wilson interval requires at least one attempt');
-  const z = 1.959963984540054;
-  const p = successes / attempts;
-  const denominator = 1 + (z * z) / attempts;
-  const center = (p + (z * z) / (2 * attempts)) / denominator;
-  const margin = z * Math.sqrt((p * (1 - p) / attempts) + (z * z) / (4 * attempts * attempts)) / denominator;
-  return [Math.max(0, center - margin), Math.min(1, center + margin)];
-}

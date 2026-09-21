@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { z } from 'zod';
 import { CompetitorRunRecordSchema } from './competitor.js';
+import { mean, wilsonInterval } from './stats.js';
 
 export const B5MutationRecordSchema = z.object({
   protocol_id: z.literal('p1-b5-b2-drift-v1'),
@@ -125,17 +126,4 @@ function percentInterval(point: number, interval: readonly [number, number]): st
   return `${(point * 100).toFixed(1)}% [${(interval[0] * 100).toFixed(1)}–${(interval[1] * 100).toFixed(1)}%]`;
 }
 
-function wilsonInterval(successes: number, attempts: number): [number, number] {
-  if (attempts < 1) throw new Error('Wilson interval requires at least one attempt');
-  const z = 1.959963984540054;
-  const p = successes / attempts;
-  const denominator = 1 + (z * z) / attempts;
-  const center = (p + (z * z) / (2 * attempts)) / denominator;
-  const margin = z * Math.sqrt((p * (1 - p) / attempts) + (z * z) / (4 * attempts * attempts)) / denominator;
-  return [Math.max(0, center - margin), Math.min(1, center + margin)];
-}
 
-function mean(values: readonly number[]): number {
-  if (values.length === 0) return 0;
-  return values.reduce((sum, value) => sum + value, 0) / values.length;
-}

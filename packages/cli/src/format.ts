@@ -6,8 +6,10 @@ import type { RunDetail, RunSummary } from './runs.js';
 export function formatRunsList(runs: RunSummary[]): string {
   if (runs.length === 0) return 'No runs found.';
   const rows = runs.map((run) => {
-    const outcome = run.manifest?.outcome ?? 'in-progress';
-    const taskSpec = run.manifest?.task_spec ?? '(no manifest yet)';
+    const status = run.manifestStatus;
+    const outcome = run.manifest?.outcome ?? (status.kind === 'unreadable' ? 'UNREADABLE' : 'in-progress');
+    const taskSpec = run.manifest?.task_spec
+      ?? (status.kind === 'unreadable' ? `(manifest unreadable: ${status.reason})` : '(no manifest yet)');
     return `${run.run_id}\t${outcome}\t${taskSpec}`;
   });
   return ['RUN_ID\tOUTCOME\tTASK_SPEC', ...rows].join('\n');
@@ -25,8 +27,16 @@ export function formatRunDetail(detail: RunDetail): string {
     lines.push(`outcome: ${detail.manifest.outcome}`);
     lines.push(`started_at: ${detail.manifest.started_at}`);
     if (detail.manifest.ended_at) lines.push(`ended_at: ${detail.manifest.ended_at}`);
+  } else if (detail.manifestStatus.kind === 'unreadable') {
+    lines.push(`manifest: UNREADABLE — ${detail.manifestStatus.reason}`);
   } else {
     lines.push('manifest: (none yet — run may still be in progress)');
+  }
+  // INVARIANT: an unreadable trajectory must not render as "events (0)", which
+  // is what a run that recorded nothing looks like.
+  if (detail.trajectoryStatus.kind === 'unreadable') {
+    lines.push(`events: UNREADABLE — ${detail.trajectoryStatus.reason}`);
+    return lines.join('\n');
   }
   lines.push(`events (${detail.events.length}):`);
   lines.push(...detail.events.map(formatEvent));

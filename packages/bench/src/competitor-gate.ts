@@ -1,5 +1,5 @@
 import type { HeadToHeadComparison, HeadToHeadResult } from './competitor.js';
-import { mean, percentile, reduction } from './stats.js';
+import { mean, mulberry32, percentile, reduction } from './stats.js';
 
 /** Default number of bootstrap resamples; fixed so gate output is deterministic. */
 export const DEFAULT_RESAMPLES = 10000;
@@ -256,16 +256,6 @@ function resampleMean(values: readonly number[], random: () => number): number {
 }
 
 /** Small deterministic PRNG (mulberry32) so bootstrap output is reproducible. */
-function mulberry32(seed: number): () => number {
-  let state = seed >>> 0;
-  return () => {
-    state = (state + 0x6d2b79f5) >>> 0;
-    let t = state;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 function cell(value: string): string {
   return value.replaceAll('|', '\\|');

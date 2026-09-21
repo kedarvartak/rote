@@ -3,6 +3,7 @@ import { isAbsolute, join } from 'node:path';
 import { z } from 'zod';
 import { parseTrajectoryJsonl, RunManifestSchema, TokenUsageSchema, totalInputTokens, type RunManifest, type TokenUsage } from '@rote/core';
 import { runPaths } from '@rote/recorder';
+import { readOptional } from './artifact-status.js';
 
 // see docs/02 "Run economics" and invariant 5 (CLAUDE.md) — every model call is
 // tagged, so a recorded run decomposes exactly by source. `rote report` is the
@@ -51,12 +52,13 @@ export interface RunReport {
  */
 export async function reportRun(baseDir: string, runId: string): Promise<RunReport> {
   const paths = runPaths(baseDir, runId);
-  let manifest: RunManifest | undefined;
-  try {
-    manifest = RunManifestSchema.parse(JSON.parse(await readFile(paths.manifestPath, 'utf8')));
-  } catch {
-    manifest = undefined;
+  // A manifest-less run is a documented case (below); a manifest that exists and
+  // will not parse is not, and must not be reported as though it were absent.
+  const read = await readOptional(async () => RunManifestSchema.parse(JSON.parse(await readFile(paths.manifestPath, 'utf8'))));
+  if (read.status.kind === 'unreadable') {
+    throw new Error(`run ${runId}: manifest is unreadable — ${read.status.reason}`);
   }
+  const manifest: RunManifest | undefined = read.value;
   const events = parseTrajectoryJsonl(await readFile(paths.trajectoryPath, 'utf8'));
 
   const stepUsage: TokenUsage[] = [];

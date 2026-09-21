@@ -1,7 +1,7 @@
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve } from 'node:path';
 import { z } from 'zod';
-import { parsePlaybookYaml, writePlaybookYaml, type Playbook } from '@rote/core';
+import { parseJsonl, parsePlaybookYaml, type Playbook, writePlaybookYaml } from '@rote/core';
 import { PlaybookLibraryEntrySchema, type PlaybookLibraryEntry } from './match.js';
 
 // CLAUDE.md invariant 4 — the library is append-only: each playbook version is
@@ -81,15 +81,8 @@ export class FilePlaybookLibrary {
       throw error;
     }
     const entries: PlaybookLibraryEntry[] = [];
-    for (const line of text.split('\n')) {
-      if (line.trim() === '') continue;
-      let parsed: unknown;
-      try {
-        parsed = JSON.parse(line);
-      } catch (error) {
-        if (!line.trimEnd().endsWith('}')) continue; // truncated append: recoverable, never edited
-        throw error;
-      }
+    // Torn final append recoverable, anything else corruption (`parseJsonl`).
+    for (const parsed of parseJsonl(text, { tornFragments: 'anywhere' }).values) {
       const record = PlaybookLibraryIndexRecordSchema.parse(parsed);
       const path = resolve(this.baseDir, record.playbook_path);
       const playbook = parsePlaybookYaml(await readFile(path, 'utf8'));

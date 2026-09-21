@@ -33,7 +33,9 @@ much of the design is not, and some of what the docs marked built was not.
 - **Monorepo layout**: `packages/core` (schemas/types, zero runtime deps beyond zod),
   `recorder`, `executor`, `bench`, `cli`. Dependency direction: everything may depend on
   `core`; `core` depends on nothing internal; `cli` may depend on all. No cycles — CI
-  enforces.
+  enforces (`npm run check:package-graph`, which also fails an import that no
+  package.json declares; `scripts/ci/check-package-graph.mjs` holds the one exemption
+  and its reason).
 - **Modularity rules**:
   - One module = one responsibility; if a file needs "and" to describe it, split it.
   - Public surface per package goes through `index.ts` exports only; deep imports across

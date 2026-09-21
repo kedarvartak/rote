@@ -1,6 +1,6 @@
 import { appendFile, mkdir, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { SiteMemoryRecordSchema, type SiteMemoryRecord } from '@rote/core';
+import { SiteMemoryRecordSchema, parseJsonl, type SiteMemoryRecord } from '@rote/core';
 
 // see docs/02-architecture.md "Tiers 1 and 2 — the learning plane" — site memory
 // is append-only JSONL partitioned by environment fingerprint hash. Reads never
@@ -42,17 +42,9 @@ export class FileSiteMemoryStore implements SiteMemoryStore {
       throw error;
     }
     const records: SiteMemoryRecord[] = [];
-    for (const line of text.split('\n')) {
-      if (line.trim() === '') continue;
-      let parsed: unknown;
-      try {
-        parsed = JSON.parse(line);
-      } catch (error) {
-        // A truncated fragment (crash mid-append) is recoverable; a complete but
-        // unparsable line is corruption and must surface.
-        if (!line.trimEnd().endsWith('}')) continue;
-        throw error;
-      }
+    // A crash mid-append leaves an incomplete final line, which is dropped;
+    // anything else unparsable is corruption and raises (see `parseJsonl`).
+    for (const parsed of parseJsonl(text, { tornFragments: 'anywhere' }).values) {
       const record = SiteMemoryRecordSchema.parse(parsed);
       // INVARIANT: a partition holds only its own environment's records.
       if (record.fingerprint_hash !== fingerprintHash) throw new SiteMemoryPartitionError(fingerprintHash, record.fingerprint_hash);
