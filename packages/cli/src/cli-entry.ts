@@ -1,10 +1,13 @@
 import { main } from './cli.js';
 import { stdin, stdout } from 'node:process';
 import { startTui } from './tui.js';
+import { startGui } from './gui-server.js';
 
 const startsTui = process.argv.length === 2 || (process.argv.length === 3 && process.argv[2] === 'tui');
 
-if (startsTui && stdin.isTTY && stdout.isTTY) {
+if (process.argv[2] === 'gui') {
+  await startGui((argv) => main(argv), process.argv.slice(3));
+} else if (startsTui && stdin.isTTY && stdout.isTTY) {
   await startTui((argv) => main(argv));
 } else {
   main(process.argv.slice(2))

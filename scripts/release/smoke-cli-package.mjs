@@ -42,6 +42,8 @@ try {
   }
   const bundle = await readFile(join(temporary, 'node_modules/@rotehq/cli/dist/cli-entry.js'), 'utf8');
   if (bundle.includes('@rote/')) throw new Error('published bundle retained an internal workspace import');
+  const gui = await readFile(join(temporary, 'node_modules/@rotehq/cli/dist/gui/index.html'), 'utf8');
+  if (!gui.includes('What can I help you do?')) throw new Error('published CLI is missing the GUI assets');
   console.log(`packaged CLI smoke passed (${metadata[0].size} bytes)`);
 } finally {
   await rm(temporary, { recursive: true, force: true });
