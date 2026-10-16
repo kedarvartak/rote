@@ -52,12 +52,12 @@ function addMessage(role, text, state = '') {
   article.className = `message ${role} ${state}`.trim();
   const avatar = document.createElement('div');
   avatar.className = 'message-avatar';
-  avatar.textContent = role === 'user' ? 'YOU' : 'R';
+  avatar.textContent = role === 'user' ? 'YOU' : 'AI';
   const content = document.createElement('div');
   const head = document.createElement('div');
   head.className = 'message-head';
   const name = document.createElement('span');
-  name.textContent = role === 'user' ? 'You' : state === 'failed' ? 'Rote · failed' : 'Rote';
+  name.textContent = role === 'user' ? 'You' : state === 'failed' ? 'Agent · failed' : 'Agent';
   const time = document.createElement('time');
   time.textContent = timeLabel();
   head.append(name, time);
@@ -97,7 +97,7 @@ function toast(text) {
 function validate(value) {
   if (!value.url) return 'Add a starting URL in run settings.';
   try { new URL(value.url); } catch { return 'Enter a complete starting URL.'; }
-  if (!value.verify) return 'Add text Rote can use to confirm success.';
+  if (!value.verify) return 'Add text that can confirm success.';
   if (!Number.isSafeInteger(value.steps) || value.steps < 1 || value.steps > 500) return 'Max steps must be between 1 and 500.';
   return '';
 }
@@ -165,7 +165,7 @@ async function runTask(task) {
   } catch {
     progress.stop();
     progress.article.remove();
-    addMessage('assistant', 'The local Rote service stopped responding. Restart `rote gui` and try again.', 'failed');
+    addMessage('assistant', 'The local service stopped responding. Restart the GUI and try again.', 'failed');
   } finally {
     remember(task, ok);
     setRunning(false);

@@ -4,17 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="dark">
-    <title>Rote</title>
+    <title>Browser tasks</title>
     <link rel="stylesheet" href="/app.css">
   </head>
   <body>
     <div class="app-shell">
       <aside class="sidebar" id="sidebar" aria-label="Task history">
         <div class="sidebar-head">
-          <a class="brand" href="#" aria-label="Rote home">
-            <span class="brand-mark" aria-hidden="true">R</span>
-            <span>Rote</span>
-          </a>
           <button class="icon-button mobile-only" data-close="sidebar" aria-label="Close task history">×</button>
         </div>
         <button class="new-task" id="new-task"><span aria-hidden="true">＋</span> New task <kbd>⌘N</kbd></button>
@@ -22,10 +18,6 @@
           <p class="section-label">Recent</p>
           <div id="history-list" class="history-list"></div>
         </nav>
-        <div class="sidebar-foot">
-          <div class="connection"><span class="status-dot"></span><span>Local workspace</span></div>
-          <p>Runs stay on this machine</p>
-        </div>
       </aside>
 
       <div class="mobile-scrim" id="scrim"></div>
@@ -45,9 +37,8 @@
 
         <section class="conversation" id="conversation" aria-live="polite">
           <div class="empty-state" id="empty-state">
-            <div class="hero-mark" aria-hidden="true">R</div>
             <h1>What can I help you do?</h1>
-            <p>Describe a browser task. Rote will run it and verify the result.</p>
+            <p>Describe a browser task. The agent will run it and verify the result.</p>
             <div class="suggestion-grid">
               <button class="suggestion" data-prompt="Open the documentation and find the installation command">
                 <strong>Find information</strong><span aria-hidden="true">↗</span>
@@ -66,7 +57,7 @@
         <div class="composer-wrap">
           <form class="composer" id="composer">
             <label class="sr-only" for="task-input">Browser task</label>
-            <textarea id="task-input" rows="1" placeholder="Ask Rote to do something in the browser…" maxlength="8000"></textarea>
+            <textarea id="task-input" rows="1" placeholder="Describe a browser task…" maxlength="8000"></textarea>
             <div class="composer-bar">
               <div class="run-context">
                 <button type="button" class="context-pill" id="provider-shortcut"><span id="provider-label">Codex</span><span class="chevron">⌄</span></button>
@@ -79,7 +70,7 @@
               </div>
             </div>
           </form>
-          <p class="composer-note">Rote verifies page state before reporting success.</p>
+          <p class="composer-note">Page state is verified before success is reported.</p>
         </div>
       </main>
 
@@ -92,12 +83,12 @@
           <section class="setting-section">
             <label for="start-url">Starting URL</label>
             <input id="start-url" type="url" placeholder="https://example.com" autocomplete="url">
-            <p>The first page Rote opens.</p>
+            <p>The first page the browser opens.</p>
           </section>
           <section class="setting-section">
             <label for="verify-text">Success check <span>required</span></label>
             <input id="verify-text" type="text" placeholder="Text visible after success" maxlength="2000">
-            <p>Rote only succeeds when this text is visible.</p>
+            <p>The run only succeeds when this text is visible.</p>
           </section>
           <section class="setting-section two-column">
             <div><label for="provider">Provider</label><select id="provider"><option value="codex">Codex subscription</option><option value="claude-code">Claude Code subscription</option><option value="openai">OpenAI API</option><option value="anthropic">Anthropic API</option></select></div>
@@ -109,7 +100,7 @@
           </section>
           <section class="trust-card">
             <div class="trust-icon">✓</div>
-            <div><strong>Verified execution</strong><p>A run cannot report success when its final page check fails.</p></div>
+            <div><strong>Verified execution</strong><p>Success requires the final page check to pass.</p></div>
           </section>
           <section class="details">
             <p class="section-label">This session</p>

@@ -11,7 +11,9 @@ describe('local GUI server', () => {
     const response = await fetch(gui.url);
     expect(response.status).toBe(200);
     expect(response.headers.get('content-security-policy')).toContain("default-src 'self'");
-    expect(await response.text()).toContain('What can I help you do?');
+    const html = await response.text();
+    expect(html).toContain('What can I help you do?');
+    expect(html).not.toContain('Local workspace');
   });
 
   it('runs through the existing CLI path and restores the provider', async () => {
