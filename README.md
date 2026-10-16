@@ -25,10 +25,11 @@ a trust gate on the way back in.
 
 Prerequisites: Node 20+, Chrome/Chromium, and either an API key or a signed-in Codex / Claude Code CLI.
 
-For an interactive terminal session, run `npx --yes @rotehq/cli@0.1.0` with no
-arguments. Enter the page URL, describe the task, then provide visible text that should
-confirm completion. Leave the URL blank to quit. The session lets you submit another task
-after each run.
+For the chat terminal in this source checkout, run `npm run build --workspace @rotehq/cli`
+then `node packages/cli/dist/cli-entry.js tui`. Type a task in the bottom composer;
+Rote asks for the starting URL and success text when needed. `/help` lists settings,
+`/demo` configures a local practice page, and `/quit` exits. This interface is not
+included in the published 0.1.0 package.
 
 ```bash
 export OPENAI_API_KEY=...
