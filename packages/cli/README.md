@@ -32,6 +32,11 @@ repository with `scripts/demo/run-launch-demo.sh`; see [T16](https://github.com/
 
 ## Public API
 
+- **`rote gui [--no-open] [--port <number>]`** — opens a local graphical workspace with
+  task history, responsive run settings, signed-in or API-key provider selection, and
+  verified results. The server listens on `127.0.0.1`; task history and settings remain
+  in browser local storage. Only one browser task runs at a time.
+
 - **`rote` / `rote tui`** — chat terminal with a centered conversation, fixed bottom
   composer, session settings, and scrollable results. Requires an interactive terminal.
   Use `/provider`, `/model`, `/url`, `/verify`, and `/steps` to configure runs;

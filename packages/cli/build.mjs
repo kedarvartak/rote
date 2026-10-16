@@ -1,4 +1,4 @@
-import { copyFile, mkdir, rm } from 'node:fs/promises';
+import { copyFile, cp, mkdir, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 
@@ -20,3 +20,4 @@ await build({
 });
 
 await copyFile(new URL('../../LICENSE', packageRoot), new URL('dist/LICENSE', packageRoot));
+await cp(new URL('src/gui/', packageRoot), new URL('dist/gui/', packageRoot), { recursive: true });

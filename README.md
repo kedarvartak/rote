@@ -31,6 +31,11 @@ Rote asks for the starting URL and success text when needed. `/help` lists setti
 `/demo` configures a local practice page, and `/quit` exits. This interface is not
 included in the published 0.1.0 package.
 
+For the local graphical workspace, build the CLI and run
+`node packages/cli/dist/cli-entry.js gui`. Rote opens a browser-based task composer on
+`127.0.0.1`, using the same provider and verified execution path as `rote run`. Use
+`--no-open` to print the URL without opening it, or `--port <number>` to choose a port.
+
 ```bash
 export OPENAI_API_KEY=...
 npx --yes @rotehq/cli@0.1.0 run \

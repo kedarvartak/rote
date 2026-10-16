@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **CLI**: Add `rote gui`, a responsive local browser workspace with a Codex-style task composer, run settings, local history, provider selection, and verified task results.
 - **CLI**: Replace sequential terminal questions with a centered chat workspace, anchored composer, scrollable history, provider commands, responsive sizing, and retained verified task execution.
 - **CLI**: Add `ROTE_LLM_PROVIDER=codex` and `ROTE_LLM_PROVIDER=claude-code` adapters that use the user's existing signed-in CLI sessions, parse their machine-readable responses, and preserve reported token usage (#219).
 - Property-test the torn-write rule: every byte-cut of any generated JSON record reads as an interrupted write, while structural garbage (a missing comma, an unquoted key, two records on one line, trailing junk) never does (#216).

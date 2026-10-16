@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Rote</title>
+    <link rel="stylesheet" href="/app.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar" aria-label="Task history">
+        <div class="sidebar-head">
+          <a class="brand" href="#" aria-label="Rote home">
+            <span class="brand-mark" aria-hidden="true">R</span>
+            <span>Rote</span>
+          </a>
+          <button class="icon-button mobile-only" data-close="sidebar" aria-label="Close task history">×</button>
+        </div>
+        <button class="new-task" id="new-task"><span aria-hidden="true">＋</span> New task <kbd>⌘N</kbd></button>
+        <nav class="history" aria-label="Recent tasks">
+          <p class="section-label">Recent</p>
+          <div id="history-list" class="history-list"></div>
+        </nav>
+        <div class="sidebar-foot">
+          <div class="connection"><span class="status-dot"></span><span>Local workspace</span></div>
+          <p>Runs stay on this machine</p>
+        </div>
+      </aside>
+
+      <div class="mobile-scrim" id="scrim"></div>
+
+      <main class="workspace">
+        <header class="topbar">
+          <button class="icon-button mobile-only" id="history-toggle" aria-label="Open task history">☰</button>
+          <div class="title-block">
+            <strong id="task-title">New browser task</strong>
+            <span><span class="status-dot"></span> Ready</span>
+          </div>
+          <div class="top-actions">
+            <button class="quiet-button" id="clear-chat">Clear</button>
+            <button class="icon-button settings-button" id="settings-toggle" aria-label="Open run settings">⌘</button>
+          </div>
+        </header>
+
+        <section class="conversation" id="conversation" aria-live="polite">
+          <div class="empty-state" id="empty-state">
+            <div class="hero-mark" aria-hidden="true">R</div>
+            <h1>What can I help you do?</h1>
+            <p>Describe a browser task. Rote will run it and verify the result.</p>
+            <div class="suggestion-grid">
+              <button class="suggestion" data-prompt="Open the documentation and find the installation command">
+                <strong>Find information</strong><span aria-hidden="true">↗</span>
+              </button>
+              <button class="suggestion" data-prompt="Complete the form using the details I provide">
+                <strong>Complete a workflow</strong><span aria-hidden="true">↗</span>
+              </button>
+              <button class="suggestion" data-prompt="Check whether this page contains the expected status">
+                <strong>Verify a page</strong><span aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </div>
+          <div class="messages" id="messages"></div>
+        </section>
+
+        <div class="composer-wrap">
+          <form class="composer" id="composer">
+            <label class="sr-only" for="task-input">Browser task</label>
+            <textarea id="task-input" rows="1" placeholder="Ask Rote to do something in the browser…" maxlength="8000"></textarea>
+            <div class="composer-bar">
+              <div class="run-context">
+                <button type="button" class="context-pill" id="provider-shortcut"><span id="provider-label">Codex</span><span class="chevron">⌄</span></button>
+                <span class="context-separator"></span>
+                <span class="verify-hint" id="verify-hint">Add a success check in settings</span>
+              </div>
+              <div class="send-cluster">
+                <span class="shortcut">↵ send</span>
+                <button class="send-button" id="send-button" type="submit" aria-label="Run task">↑</button>
+              </div>
+            </div>
+          </form>
+          <p class="composer-note">Rote verifies page state before reporting success.</p>
+        </div>
+      </main>
+
+      <aside class="inspector" id="inspector" aria-label="Run settings">
+        <div class="inspector-head">
+          <div><p class="section-label">Environment</p><h2>Run settings</h2></div>
+          <button class="icon-button" data-close="inspector" aria-label="Close run settings">×</button>
+        </div>
+        <div class="settings-scroll">
+          <section class="setting-section">
+            <label for="start-url">Starting URL</label>
+            <input id="start-url" type="url" placeholder="https://example.com" autocomplete="url">
+            <p>The first page Rote opens.</p>
+          </section>
+          <section class="setting-section">
+            <label for="verify-text">Success check <span>required</span></label>
+            <input id="verify-text" type="text" placeholder="Text visible after success" maxlength="2000">
+            <p>Rote only succeeds when this text is visible.</p>
+          </section>
+          <section class="setting-section two-column">
+            <div><label for="provider">Provider</label><select id="provider"><option value="codex">Codex subscription</option><option value="claude-code">Claude Code subscription</option><option value="openai">OpenAI API</option><option value="anthropic">Anthropic API</option></select></div>
+            <div><label for="max-steps">Max steps</label><input id="max-steps" type="number" min="1" max="500" value="20"></div>
+          </section>
+          <section class="setting-section">
+            <label for="model">Model override <span>optional</span></label>
+            <input id="model" type="text" placeholder="Use provider default" maxlength="200">
+          </section>
+          <section class="trust-card">
+            <div class="trust-icon">✓</div>
+            <div><strong>Verified execution</strong><p>A run cannot report success when its final page check fails.</p></div>
+          </section>
+          <section class="details">
+            <p class="section-label">This session</p>
+            <dl><div><dt>Browser</dt><dd>Fresh Chrome run</dd></div><div><dt>Storage</dt><dd>Local only</dd></div><div><dt>Concurrency</dt><dd>One task</dd></div></dl>
+          </section>
+        </div>
+      </aside>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="/app.js"></script>
+  </body>
+</html>
