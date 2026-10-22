@@ -1,17 +1,18 @@
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { SettledBrowserPageSession, type SettleableBrowserPage } from '@rote/action';
+import { evaluateBrowserExpect, SettledBrowserPageSession, type SettleableBrowserPage } from '@rote/action';
 import {
   BrowserReplayCandidateSchema,
   buildEnvFingerprint,
   parsePlaybookYaml,
   sha256Hex,
+  type BrowserExpect,
   type BrowserReplayCandidate,
   type EnvFingerprint,
 } from '@rote/core';
 import { FileBrowserAgentRunRecorder, runBrowserAgent, TaggedLlmBrowserPlanner, type BrowserAgentFailureClassification, type BrowserPageSession, type BrowserPlannerClient } from '@rote/agent';
 import { LaunchingCdpBrowserBackend } from '@rote/browser';
-import { BrowserToolCaller, runPlaybook } from '@rote/executor';
+import { BrowserToolCaller, runPlaybook, type ExecutorExitCode } from '@rote/executor';
 import { createTaggedLlmClientFromEnv } from '@rote/llm';
 import { FilePlaybookLibrary, matchPlaybook, type NoMatchReason } from '@rote/matcher';
 import { NextActionPredictor, runsFromEvents } from '@rote/predictor';
@@ -28,6 +29,18 @@ export interface RunBrowserTaskOptions {
   viewport?: { width: number; height: number };
   verifyText?: string;
   verifyUrlContains?: string;
+  /**
+   * Additional final-verification checks from the browser-observable Expect DSL
+   * subset (`selector_visible`, `selector_absent`, `input_value`, and the two
+   * above spelled out). `verifyText`/`verifyUrlContains` remain for programmatic
+   * callers; both feed the same list.
+   *
+   * see docs/known-limitations.md "Verification and safety" — these checks are
+   * only as independent as the signal the caller chooses, and visible text is
+   * the weakest of them. Exposing the selector and input-value primitives lets a
+   * caller pick a stronger oracle than prose on the page.
+   */
+  verifyChecks?: readonly BrowserExpect[];
   settleTimeoutMs?: number;
   /** Explicit candidate (bypasses the library); when absent the playbook library is consulted. */
   replayCandidatePath?: string;
@@ -62,8 +75,22 @@ export interface BrowserTaskResult {
   inputTokens: number;
   outputTokens: number;
   phase: 'cold' | 'warm';
-  fallbackReason?: 'fingerprint_mismatch' | 'replay_failed' | 'replay_error';
+  fallbackReason?: BrowserTaskFallbackReason;
   fallbackDetail?: string;
+  /**
+   * Why the cheap path was abandoned, as a code rather than prose.
+   *
+   * CLAUDE.md "Errors": a fallback path logs *why* (classification), not just
+   * *that*. `fallbackReason` says which stage gave up; this says what the
+   * executor concluded — a failed `verify` (the playbook is wrong for this
+   * state) reads differently from a failed checkpoint write (the machine is),
+   * and both previously arrived as the same `replay_failed` plus a sentence.
+   *
+   * INVARIANT: set on every fallback, never on a run that did not fall back.
+   */
+  fallbackCode?: BrowserTaskFallbackCode;
+  /** Warm path only: the executor's terminal exit code, verbatim (see `EXECUTOR_EXIT_CODES`). */
+  failureCode?: ExecutorExitCode | (string & {});
   failureClassification?: BrowserAgentFailureClassification;
   /** Stale replay steps recovered by deterministic semantic target resolution. */
   replayRepairs?: number;
@@ -76,6 +103,25 @@ export interface BrowserTaskResult {
   /** Cold path only, when `--routine-model` was given: which planner took the steps. */
   routing?: { routine: number; frontier: number; escalations: number };
 }
+
+export type BrowserTaskFallbackReason = 'fingerprint_mismatch' | 'replay_failed' | 'replay_error';
+
+/**
+ * Classifications this layer contributes when the executor cannot supply one:
+ * the environment gate refused before any replay ran, the replay threw instead
+ * of returning, or it returned a failure with no code (which the executor's
+ * `finish` overloads make unreachable — kept so an unclassified failure is
+ * *visible* rather than silently indistinguishable from a clean stop).
+ */
+export const BROWSER_TASK_FALLBACK_CODES = [
+  'FINGERPRINT_MISMATCH',
+  'REPLAY_THREW',
+  'REPLAY_UNCLASSIFIED',
+] as const;
+export type BrowserTaskFallbackCode =
+  | ExecutorExitCode
+  | (typeof BROWSER_TASK_FALLBACK_CODES)[number]
+  | (string & {});
 
 export type BrowserTaskSelection =
   | { source: 'candidate' }
@@ -117,13 +163,30 @@ export function selectBrowserExecution(
 }
 
 /** Launches one recorded browser task, preferring exact-environment verified replay. */
+/**
+ * The final-verification checks a run will apply, in flag order.
+ *
+ * One list, used three ways: to refuse a run with no oracle at all, to decide
+ * success, and — when it passes — to teach a distilled playbook its `verify`.
+ * Keeping them the same list is what stops a run from being certified by one
+ * check and replayed against another.
+ */
+export function browserVerificationChecks(options: RunBrowserTaskOptions): BrowserExpect[] {
+  return [
+    ...(options.verifyText ? [{ text_visible: options.verifyText }] : []),
+    ...(options.verifyUrlContains ? [{ url_contains: options.verifyUrlContains }] : []),
+    ...(options.verifyChecks ?? []),
+  ];
+}
+
 export async function runBrowserTask(
   options: RunBrowserTaskOptions,
   dependencies: RunBrowserTaskDependencies = {},
 ): Promise<BrowserTaskResult> {
   const target = new URL(options.url);
-  if (!options.verifyText && !options.verifyUrlContains) {
-    throw new Error('browser tasks require --verify-text or --verify-url-contains for clean cold fallback');
+  const verification = browserVerificationChecks(options);
+  if (verification.length === 0) {
+    throw new Error('browser tasks require at least one verification check for clean cold fallback');
   }
   const fingerprint = browserEnvironmentFingerprint(target);
   let candidate: BrowserReplayCandidate | undefined;
@@ -168,15 +231,25 @@ export async function runBrowserTask(
       ? new SettledBrowserPageSession(rawPage, { timeoutMs: options.settleTimeoutMs })
       : rawPage;
 
-    let replayFallback: Pick<BrowserTaskResult, 'fallbackReason' | 'fallbackDetail'> | undefined;
+    let replayFallback: Pick<BrowserTaskResult, 'fallbackReason' | 'fallbackDetail' | 'fallbackCode'> | undefined;
     if (selection.phase === 'warm' && candidate) {
       const replay = dependencies.runReplay ?? runVerifiedBrowserReplay;
       try {
         const result = await replay({ candidate, page, fingerprint, options, target });
         if (result.success) return { ...result, selection: taskSelection };
-        replayFallback = { fallbackReason: 'replay_failed', fallbackDetail: result.summary };
+        replayFallback = {
+          fallbackReason: 'replay_failed',
+          fallbackDetail: result.summary,
+          // A replay that reported failure without a code would otherwise be
+          // indistinguishable from one whose verify failed; name the gap.
+          fallbackCode: result.failureCode ?? 'REPLAY_UNCLASSIFIED',
+        };
       } catch (error) {
-        replayFallback = { fallbackReason: 'replay_error', fallbackDetail: asError(error).message };
+        replayFallback = {
+          fallbackReason: 'replay_error',
+          fallbackDetail: asError(error).message,
+          fallbackCode: 'REPLAY_THREW',
+        };
       }
       // INVARIANT: a selected cheap path may fail, but it cannot strand the task
       // (see docs/02-architecture.md "Invariants"). Cold execution navigates from the pinned initial URL before planning.
@@ -184,7 +257,7 @@ export async function runBrowserTask(
 
     const cold = await runColdBrowserTask(options, target, page, fingerprint, dependencies.planner, dependencies.routinePlanner);
     const fingerprintFallback = 'fallbackReason' in selection
-      ? { fallbackReason: selection.fallbackReason }
+      ? { fallbackReason: selection.fallbackReason, fallbackCode: 'FINGERPRINT_MISMATCH' as const }
       : undefined;
     return { ...cold, ...(replayFallback ?? fingerprintFallback), selection: taskSelection };
   } finally {
@@ -211,6 +284,7 @@ async function runColdBrowserTask(
   injectedPlanner?: BrowserPlannerClient,
   injectedRoutinePlanner?: BrowserPlannerClient,
 ): Promise<BrowserTaskResult> {
+  const checks = browserVerificationChecks(options);
   const planner = injectedPlanner ?? new TaggedLlmBrowserPlanner(
     createTaggedLlmClientFromEnv({ model: options.model }),
   );
@@ -245,20 +319,18 @@ async function runColdBrowserTask(
     ...(routine ? { routing: { routine, ...(options.routeMinConfidence !== undefined ? { minConfidence: options.routeMinConfidence } : {}) } } : {}),
     verifier: {
       async verify(captured) {
-        const failures: string[] = [];
-        const visibleText = [captured.title, ...captured.elements.map((element) => element.text)].join(' ');
-        if (options.verifyText && !visibleText.includes(options.verifyText)) failures.push(`text "${options.verifyText}" not visible`);
-        if (options.verifyUrlContains && !captured.url.includes(options.verifyUrlContains)) failures.push(`URL does not contain "${options.verifyUrlContains}"`);
+        // INVARIANT: the same evaluator that decides live action postconditions
+        // decides final verification (see docs/02-architecture.md "Expect DSL
+        // v1"). A second implementation here drifted from it: it matched text in
+        // hidden elements, so a `display:none` success banner satisfied the
+        // oracle — sacred invariant 1's failure mode exactly.
+        const failures = checks
+          .map((check) => evaluateBrowserExpect(check, captured))
+          .filter((evaluated) => !evaluated.pass)
+          .map((evaluated) => evaluated.reason);
         return failures.length === 0
-          ? {
-              success: true,
-              summary: 'task verification passed',
-              // The checks that decided success, so a distilled playbook can learn its `verify`.
-              checks: [
-                ...(options.verifyText ? [{ text_visible: options.verifyText }] : []),
-                ...(options.verifyUrlContains ? [{ url_contains: options.verifyUrlContains }] : []),
-              ],
-            }
+          // The checks that decided success, so a distilled playbook can learn its `verify`.
+          ? { success: true, summary: 'task verification passed', checks: [...checks] }
           : { success: false, summary: failures.join('; ') };
       },
     },
@@ -325,6 +397,9 @@ async function runVerifiedBrowserReplay(input: BrowserReplayRunInput): Promise<B
     outputTokens: 0,
     phase: 'warm',
     replayRepairs: result.repairedStepIds.length,
+    // The executor classifies every terminal exit (#203); carrying the code
+    // rather than only `result.reason` is what lets the fallback say why.
+    ...(result.failureCode ? { failureCode: result.failureCode } : {}),
   };
 }
 

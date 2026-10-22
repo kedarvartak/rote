@@ -9,7 +9,7 @@ export interface TaggedLlmRequest {
 
 /** Provider identity and unmodified usage payload retained for benchmark audit. */
 export interface ProviderUsageReceipt {
-  provider: 'anthropic' | 'openai';
+  provider: 'anthropic' | 'claude-code' | 'codex' | 'openai';
   model: string;
   usage: Record<string, unknown>;
 }
@@ -36,7 +36,7 @@ export interface TaggedLlmClient {
  */
 export class TokenAccountingError extends Error {
   constructor(
-    readonly provider: 'anthropic' | 'openai',
+    readonly provider: ProviderUsageReceipt['provider'],
     reason: string,
     readonly usage: unknown,
   ) {

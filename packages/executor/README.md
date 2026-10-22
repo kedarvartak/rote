@@ -22,7 +22,17 @@ See `src/index.ts`. Highlights:
   bindings; `deps.onStepCompleted` is awaited after each completed step so a checkpoint
   is durable before the next dispatch (a throwing hook ends the run
   `failure`/`CHECKPOINT_WRITE_FAILED`); `deps.stopAfterStepId` ends the run with the
-  `interrupted` outcome; `ExecutorResult.failureCode` classifies fallbacks.
+  `interrupted` outcome.
+- **Every terminal exit is classified** — `ExecutorResult.failureCode` is present on
+  *every* non-`success` outcome and absent on success. It carries either a tool-layer
+  code forwarded unchanged (`BROWSER_CONTRACT_MISMATCH`, …) or one of the executor's own
+  `EXECUTOR_EXIT_CODES`: `VERIFY_FAILED`, `STEP_FAILED` (a step failed and the tool
+  reported no code), `CHECKPOINT_WRITE_FAILED`, `INTERRUPTED`. The overloads on the
+  internal `finish` make an uncoded non-success exit fail to compile, and
+  `test/invariants/every-exit-path-is-classified.test.ts` drives every one of them —
+  including the assertion that no declared code is unreachable. `failedStepId` is set
+  only when a step is responsible, so a run-level `verify` failure does not accuse a step
+  that passed.
 - **`evaluateExpect`** — pure: the closed Expect DSL against a `WorldState`.
 - **`observationFromResult` / `mergeWorldState`** — pure: the tool-agnostic
   convention this package reads a result through (see "Known v1 limitations").

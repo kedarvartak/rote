@@ -32,6 +32,28 @@ import {
 
 export type ExecutorOutcome = 'success' | 'failure' | 'fallback' | 'interrupted';
 
+/**
+ * Terminal exit codes the executor itself owns, as opposed to the tool-layer
+ * codes (`BROWSER_CONTRACT_MISMATCH`, …) a failing step forwards unchanged.
+ *
+ * A run that ends any way but `success` carries one of these or a tool code —
+ * the overloads on `finish` make an uncoded non-success unrepresentable. Before
+ * this existed the verify gate, the one exit sacred invariant 1 is *about*, was
+ * the only terminal path a caller could not classify programmatically.
+ */
+export const EXECUTOR_EXIT_CODES = [
+  /** A playbook-level `verify` check did not pass; the steps themselves may all have run. */
+  'VERIFY_FAILED',
+  /** A step exhausted its attempts and the tool layer reported no code of its own. */
+  'STEP_FAILED',
+  /** A checkpoint could not be written, so the run cannot be safely resumed. */
+  'CHECKPOINT_WRITE_FAILED',
+  /** The caller asked to stop after a named step; not a failure. */
+  'INTERRUPTED',
+] as const;
+/** One of the executor's own terminal exit codes. */
+export type ExecutorExitCode = (typeof EXECUTOR_EXIT_CODES)[number];
+
 export interface ExecutorResult {
   outcome: ExecutorOutcome;
   runId: string;
@@ -40,12 +62,13 @@ export interface ExecutorResult {
   failedStepId?: string;
   reason?: string;
   /**
-   * Typed code of the failure that ended the run (tool error code such as
-   * `BROWSER_CONTRACT_MISMATCH`), so a fallback is classified, not just described.
-   * A pre-dispatch code means the failed step performed no side effect; completed
-   * steps are never implied rolled back either way.
+   * Typed code of the failure that ended the run — an {@link ExecutorExitCode}
+   * or a tool error code such as `BROWSER_CONTRACT_MISMATCH` — so a fallback is
+   * classified, not just described. Present on **every** non-`success` outcome
+   * and absent on success. A pre-dispatch code means the failed step performed
+   * no side effect; completed steps are never implied rolled back either way.
    */
-  failureCode?: string;
+  failureCode?: ExecutorExitCode | (string & {});
   /** Attempt count per step id that was executed at least once. */
   attempts: Record<string, number>;
   /** Steps whose stale selector was safely replaced by semantic target resolution. */
@@ -91,6 +114,15 @@ export class JudgmentOutOfEnumError extends Error {
     super(`Judgment step "${stepId}" returned "${got}", not one of [${options.join(', ')}]`);
     this.name = 'JudgmentOutOfEnumError';
   }
+}
+
+/** Everything a non-success exit must supply; `code` is what makes it non-optional. */
+interface FinishFailure {
+  reason: string;
+  /** An {@link ExecutorExitCode} or the tool-layer code the failing step reported. */
+  code: ExecutorExitCode | (string & {});
+  /** Absent when the failure is not attributable to one step (a run-level `verify`). */
+  failedStepId?: string;
 }
 
 interface StepAttemptResult {
@@ -164,7 +196,12 @@ export async function runPlaybook(
     });
   }
 
-  async function finish(outcome: ExecutorOutcome, reason?: string, failedStepId?: string, failureCode?: string): Promise<ExecutorResult> {
+  // INVARIANT: a run that did not succeed always carries a code. Expressed as
+  // overloads rather than a runtime check so an uncoded non-success exit fails
+  // to compile — see docs/02-architecture.md "Final verification".
+  async function finish(outcome: 'success'): Promise<ExecutorResult>;
+  async function finish(outcome: Exclude<ExecutorOutcome, 'success'>, failure: FinishFailure): Promise<ExecutorResult>;
+  async function finish(outcome: ExecutorOutcome, failure?: FinishFailure): Promise<ExecutorResult> {
     await queue.drain();
     const manifest: RunManifest = {
       run_id: runId,
@@ -176,7 +213,16 @@ export async function runPlaybook(
       token_usage: tokenUsage,
     };
     await writeRunManifest(paths.manifestPath, manifest);
-    return { outcome, runId, completedStepIds, failedStepId, reason, ...(failureCode ? { failureCode } : {}), attempts, repairedStepIds };
+    return {
+      outcome,
+      runId,
+      completedStepIds,
+      failedStepId: failure?.failedStepId,
+      reason: failure?.reason,
+      ...(failure ? { failureCode: failure.code } : {}),
+      attempts,
+      repairedStepIds,
+    };
   }
 
   async function attemptStep(step: Step): Promise<StepAttemptResult> {
@@ -247,7 +293,9 @@ export async function runPlaybook(
 
     world = result.world;
     if (!result.pass) {
-      return finish('fallback', result.reason, step.id, result.code);
+      // A tool that failed without a code still classifies as a step failure;
+      // an unclassified fallback would be indistinguishable from a clean stop.
+      return finish('fallback', { reason: result.reason, failedStepId: step.id, code: result.code ?? 'STEP_FAILED' });
     }
     completedStepIds.push(step.id);
     if (result.repaired) repairedStepIds.push(step.id);
@@ -257,18 +305,23 @@ export async function runPlaybook(
       try {
         await deps.onStepCompleted({ stepId: step.id, completedStepIds: [...completedStepIds], stepBindings: { ...stepBindings } });
       } catch (error) {
-        return finish('failure', `checkpoint after step ${step.id} failed: ${error instanceof Error ? error.message : String(error)}`, step.id, 'CHECKPOINT_WRITE_FAILED');
+        return finish('failure', {
+          reason: `checkpoint after step ${step.id} failed: ${error instanceof Error ? error.message : String(error)}`,
+          failedStepId: step.id,
+          code: 'CHECKPOINT_WRITE_FAILED',
+        });
       }
     }
     if (deps.stopAfterStepId === step.id) {
-      return finish('interrupted', `interrupted after step ${step.id}`, undefined, 'INTERRUPTED');
+      return finish('interrupted', { reason: `interrupted after step ${step.id}`, code: 'INTERRUPTED' });
     }
   }
 
   for (const v of playbook.verify) {
     const result = checkExpect(v, bindings, world);
     if (!result.pass) {
-      return finish('failure', result.reason);
+      // No failedStepId: a verify check is a property of the run, not of a step.
+      return finish('failure', { reason: result.reason, code: 'VERIFY_FAILED' });
     }
   }
 

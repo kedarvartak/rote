@@ -57,6 +57,78 @@ See `src/index.ts`. Highlights:
 - **`certifyEndurance` / `ENDURANCE_SETTLEDNESS_POLICY` / `visibleActionBound` / `expectedCompactionBoundaries`** — pure E7.6 accounting (#132): per-step samples from fresh real-Chrome runs are checked for exact authoritative success, route-vs-document epochs, B4 visibility bound and reported boundaries, non-growing context peaks, exercised eviction, bounded settledness, and linear recorder growth; every failed check names its reason.
 - **`createEnterpriseOracleEvidenceAdapter`** — bind the E7.1 `/api/oracle` snapshot into the E7.4 evidence contract (#130): the snapshot's own task id and reset generation enter the envelope, an empty snapshot emits nothing (→ `authoritative_effect_missing`), and an unreachable oracle throws.
 
+## P2 campaign plan
+
+`p2-campaign-preflight.ts` freezes *what* the provider-billed exit campaign measures;
+`planP2Campaign(protocol, options)` turns that contract into the ordered invocations
+that collect it. Gates, repetitions, provider and model are read from the protocol —
+never redeclared — and each binding supplies only the executable detail the contract
+deliberately omits (prompt, path, oracle text, params).
+
+- Ordering encodes real dependencies: `cold → distill → warm` inside T0, T2's brief
+  halves after T0 has populated site memory, and the routing cell's routing-on half
+  against its own routing-off baseline.
+- `preflightP2CampaignPlan` returns **every** blocker at once (an unbound protocol
+  cell, a binding for a cell the protocol lacks, a routing gate with no routine model,
+  a B4 phase below its `minimum_transitions`, a forward dependency).
+- `toCommandPlan(phase, baseDir)` hands a recording phase to the existing command
+  driver; it throws for `distill`, which writes no run manifest.
+- `rehearseP2Campaign(plan, runner)` replays the whole sequence through an injected
+  runner — no provider, no key — and stops at the first failed phase.
+
+The site brief is pinned off in every phase except T2's brief-on half, so the
+generalization variable cannot leak into gates reported separately.
+
+## P2 campaign cost projection
+
+`projectP2CampaignCost(plan, options)` budgets the campaign **before** it is approved.
+It is a projection from measured evidence, never a measurement, and it refuses to
+flatter itself three ways:
+
+- **Bounded, not point-estimated.** Warm-class phases cost what T0 is going to measure,
+  so the low bound assumes the gate passes exactly at its ≥80% target and the high
+  bound assumes warm saves nothing. Approving the high bound is always safe.
+- **Missing inputs stay visible.** A phase with no measured profile is `unpriced` and
+  contributes nothing; the render says the total is partial rather than looking small.
+  A price table that is not the one the protocol declares unprices everything.
+- **Depth is respected.** A cell that must run deeper than its profile was measured
+  (B4's ≥50 transitions against a 25-step profile) is reported as a floor, because
+  per-run cost grows with depth.
+
+Profiles are derived from frozen certification records (T25, T10) and the test suite
+recomputes them from those data files, so the constants cannot outlive their evidence.
+Distillation is priced at exactly zero — a fact about distillation, not an assumption.
+
+## P2 campaign exit verdict
+
+`evaluateP2CampaignGates(protocol, records, options)` reads the campaign back: one
+`P2CampaignRunRecord` per billed run in, one verdict per frozen exit gate out. It closes
+the loop the preflight opens — contract → plan → cost projection → **verdict** — so the
+question "did P2 exit?" is answered by the frozen thresholds rather than by reading a
+report.
+
+- **Four verdicts, not two.** `not_certifiable` (the evidence cannot support a judgement)
+  is deliberately distinct from `fail` (it can, and the gate lost). Collapsing them would
+  let a broken collection publish as a design result. `reported_only` is B4, which
+  docs/05 requires to be *measured* but freezes no floor for — inventing one here would
+  publish a threshold no design document agreed to, so B4 reports without gating.
+- **Floors come from the protocol.** T0's ≥80%, T2's ≥30% and the retreat rule's 15%, and
+  routing's ≥50% are read from the frozen `P2CampaignProtocol`, never restated, so a
+  protocol amendment cannot leave a stale number in the evaluator.
+- **Only matched successful pairs count.** A repetition is paired only when both sides
+  succeeded, and a gate whose subject succeeded less often than its baseline fails on
+  parity regardless of tokens — a reduction that counts a failed run's short transcript
+  as a saving is a fabricated win. Fewer matched pairs than `repetitions_per_cell`
+  (≥15 by contract) is `not_certifiable`.
+- **Routing reuses the token bootstrap.** "Share of warm steps off the frontier" is
+  `1 - frontier/warm`, i.e. the same matched seeded bootstrap as the token gates, so one
+  interval implementation serves every gate and stays byte-stable.
+- **The T2 retreat rule needs a sound interval.** An absent or uncertifiable T2 never
+  reports the generalization bet as killed.
+
+`packages/bench/test/invariants/p2-gate-never-passes-without-evidence.test.ts` enumerates
+eleven ways real collection goes wrong and asserts none of them can reach `pass`.
+
 ## Spec format
 
 ```json
@@ -198,8 +270,13 @@ stays token-based; latency and $ are reported, not gated, in V1 (docs/05 P3).
   economics: token/latency/$ reductions, latency percentiles, and success parity.
 - **`DEFAULT_PRICE_TABLE` / `priceForModel` / `runCostUsd` / `readPriceTable`** —
   the dated price table (captured 2026-07-15) and pure cost arithmetic.
-- **`mean` / `percentile` / `reduction`** (`stats.ts`) — pure, shared by the
-  aggregation and the gate's bootstrap.
+- **`mean` / `percentile` / `reduction` / `wilsonInterval` / `mulberry32`** (`stats.ts`) —
+  the one statistics kernel, pure and shared by every report, qualification and gate.
+  `reduction` is signed: a cell that spent more than its baseline reports a negative
+  reduction rather than zero. `wilsonInterval` refuses zero attempts instead of
+  returning `[NaN, NaN]`. `mulberry32` is pinned by a test vector, because the published
+  claim is a seeded bootstrap's lower bound and the stream is therefore part of the
+  result.
 - **`bootstrapReductionInterval` / `bootstrapMatchedReductionInterval`** — pure,
   deterministic reduction intervals for independent samples or exact repetition pairs.
 - **`buildG2Report` / `writeG2Report`** — fail-closed raw-evidence identity, protocol-pinned Browser Use version, live-verification and provider-receipt reconciliation audits, matched token/cost/latency intervals, absolute levels, and source accounting.

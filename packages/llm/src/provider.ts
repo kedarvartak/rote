@@ -1,8 +1,9 @@
 import { AnthropicTaggedLlmClient } from './anthropic.js';
 import { OpenAiTaggedLlmClient } from './openai.js';
+import { SubscriptionCliTaggedLlmClient } from './subscription-cli.js';
 import type { TaggedLlmClient } from './types.js';
 
-export type LlmProvider = 'anthropic' | 'openai';
+export type LlmProvider = 'anthropic' | 'claude-code' | 'codex' | 'openai';
 
 export interface TaggedLlmProviderOptions {
   /** Defaults to `ROTE_LLM_PROVIDER`, then OpenAI for the executable P1 path. */
@@ -24,5 +25,8 @@ export function createTaggedLlmClientFromEnv(
   if (provider === 'anthropic') {
     return new AnthropicTaggedLlmClient({ apiKey: env['ANTHROPIC_API_KEY'], model: options.model });
   }
-  throw new Error(`ROTE_LLM_PROVIDER must be "openai" or "anthropic", got ${JSON.stringify(provider)}`);
+  if (provider === 'codex' || provider === 'claude-code') {
+    return new SubscriptionCliTaggedLlmClient({ provider, model: options.model });
+  }
+  throw new Error(`ROTE_LLM_PROVIDER must be "openai", "anthropic", "codex", or "claude-code", got ${JSON.stringify(provider)}`);
 }

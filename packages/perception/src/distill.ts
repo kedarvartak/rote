@@ -1,5 +1,6 @@
 import type { CapturedElement, CapturedPage } from '@rote/browser';
 import { sha256Hex } from '@rote/core';
+import { isElementVisible } from './element-predicates.js';
 import type { DistilledNode, NodeAffordance, StableNodeId } from './types.js';
 
 const INTERACTIVE_TAGS = new Set(['a', 'button', 'input', 'select', 'textarea']);
@@ -10,7 +11,7 @@ export function distillPage(page: CapturedPage): DistilledNode[] {
   const seenContent = new Set<string>();
   const nodes: DistilledNode[] = [];
   for (const element of page.elements) {
-    if (!isVisible(element)) continue;
+    if (!isElementVisible(element)) continue;
     // Associated label text is copied onto its control at capture time; keeping both
     // repeats the same semantics and spends tokens without adding an action target.
     if (element.tag === 'label' && element.attributes['for']) continue;
@@ -104,19 +105,6 @@ function destinationHash(target: string, pageUrl: string): string | undefined {
   } catch {
     return undefined;
   }
-}
-
-function isVisible(element: CapturedElement): boolean {
-  if (element.attributes['data-rote-visible'] === 'false') return false;
-  if ('hidden' in element.attributes || element.attributes['aria-hidden'] === 'true') return false;
-  if (element.tag === 'input' && element.attributes['type'] === 'hidden') return false;
-  const style = element.attributes['style']?.replaceAll(' ', '').toLowerCase() ?? '';
-  if (style.includes('display:none') || style.includes('visibility:hidden')) return false;
-  // Opacity must be parsed, not substring-matched: "opacity:0.5" contains "opacity:0",
-  // so a merely translucent control (mid-fade, cosmetic restyle) would silently vanish
-  // from the observation and surface as a spurious removal in the diff.
-  const opacity = /(?:^|;)opacity:([^;]+)/.exec(style);
-  return opacity === null || Number.parseFloat(opacity[1]!) !== 0;
 }
 
 function isInteractive(element: CapturedElement): boolean {

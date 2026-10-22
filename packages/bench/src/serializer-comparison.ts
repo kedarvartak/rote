@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { estimateTokens } from '@rote/perception';
+import { reduction } from './stats.js';
 
 export const SerializerObservationSampleSchema = z.object({
   id: z.string().min(1),
@@ -50,7 +51,7 @@ export function compareSerializerObservations(
       browser_use_chars: sample.browser_use_observation.length,
       rote_approx_tokens: roteTokens,
       browser_use_approx_tokens: browserUseTokens,
-      reduction_ratio: reductionRatio(roteTokens, browserUseTokens),
+      reduction_ratio: reduction(roteTokens, browserUseTokens),
       // Character parity is stricter than the shared coarse token estimate and avoids
       // hiding small regressions inside the same four-character bucket.
       passed: sample.rote_observation.length <= sample.browser_use_observation.length,
@@ -62,7 +63,7 @@ export function compareSerializerObservations(
     rows,
     total_rote_approx_tokens: totalRote,
     total_browser_use_approx_tokens: totalBrowserUse,
-    reduction_ratio: reductionRatio(totalRote, totalBrowserUse),
+    reduction_ratio: reduction(totalRote, totalBrowserUse),
     passed: rows.every((row) => row.passed),
   });
 }
@@ -85,7 +86,3 @@ export function renderSerializerComparison(result: SerializerComparisonResult): 
   return `${lines.join('\n')}\n`;
 }
 
-function reductionRatio(rote: number, baseline: number): number {
-  if (baseline === 0) return rote === 0 ? 0 : -1;
-  return (baseline - rote) / baseline;
-}

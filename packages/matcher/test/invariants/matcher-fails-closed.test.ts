@@ -153,4 +153,14 @@ describe('matcher fails closed', () => {
     // With both versions present the newest wins the match.
     expect(matchPlaybook({ task: 'Register Blue Fern Supply as a vendor', params: NEW_VALUES, envFingerprint: fixtureEnv, candidates: listed })).toMatchObject({ kind: 'match', entry: { playbook: { version: 2 } } });
   });
+
+  it('recovers when the interrupted index append was cut at a closing brace', async () => {
+    // A crash can truncate anywhere. The old rule tested the last byte for a
+    // brace, so a fragment ending in `}` read as corruption and the whole
+    // library became unlistable — every warm replay lost to one crash.
+    const { library, report } = await learn();
+    await appendFile(playbookLibraryIndexPath(baseDir!), '{"version":1,"fingerprint_hash":{"a":1}', 'utf8');
+    await library.add({ playbook: { ...report.playbook, version: 2 }, fingerprintHash: fixtureEnv.fingerprint_hash, addedAt: new Date('2026-08-16T02:00:00.000Z') });
+    expect((await library.list()).map((entry) => entry.playbook.version)).toEqual([1, 2]);
+  });
 });

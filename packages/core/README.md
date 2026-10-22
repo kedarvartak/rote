@@ -26,14 +26,34 @@ See `src/index.ts` for the full export list. Highlights:
 - **Schemas & types** — `TrajectoryEventSchema`, `RunManifestSchema`,
   `EnvFingerprintSchema`, `EnvFingerprintPatternSchema`, `PlaybookSchema`,
   `PatchSchema`, `ExpectSchema`, `BrowserExpectSchema`, `BrowserReplayCandidateSchema` — and their inferred TS types.
-- **Fingerprinting** — `buildEnvFingerprint`, `canonicalStringify`, `sha256Hex`.
 - **Digests** — `computeResultDigest`, `decideStorage`, `verifyInlineResultRef`.
-- **Templating** — `extractParamRefs`, `renderTemplate` (throws
-  `UnboundParamError` on a referenced-but-unbound param).
+- **Templating** — `extractParamRefs` / `renderTemplate` over the `{{param}}` grammar.
+  A reference with no *own* binding raises `UnboundParamError`, including names
+  inherited from `Object.prototype` (`{{toString}}` is unbound, not a function).
+  `\{{param}}` renders as the literal text `{{param}}`; a literal backslash cannot
+  precede a live reference (#211).
+- **Fingerprinting** — `buildEnvFingerprint`, `canonicalStringify` (key-sorted, array
+  order preserved) and `sha256Hex`. Fails closed with `NonCanonicalValueError` on any value JSON cannot carry
+  faithfully — a `Date`, `Map`, `Set` or class instance (all of which would hash as `{}`),
+  a non-finite number or an `undefined` array element (all of which would hash as `null`) —
+  because the hash gates environment matching and two different environments must never
+  share one. An `undefined` object property is still dropped: in JSON that is the same
+  statement as an absent key.
 - **Patching** — `applyPatch` (throws `UnknownStepError` /
   `PlaybookMismatchError`).
+- **Append-only log recovery** — `parseJsonl` and `isTruncatedJson`, the rule all four
+  logs share (trajectory, playbook index, site-memory partitions, checkpoints). An
+  interrupted write leaves a *prefix of a valid record* and is dropped; anything else
+  raises `JsonlLineError`. The test is whether the line is a prefix of some valid JSON,
+  not whether it is last or ends in a brace — an append after a crash buries the
+  fragment mid-file, and `{"a":{"b":1}` ends in a brace while being incomplete.
 - **Serialization** — `writeTrajectoryJsonl` / `parseTrajectoryJsonl`,
-  `writePlaybookYaml` / `parsePlaybookYaml`.
+  `writePlaybookYaml` / `parsePlaybookYaml`. Trajectory reads tolerate exactly one
+  thing: a final line that is *syntactically* incomplete, which is what a process
+  killed mid-append leaves. A final line that is complete JSON but not a valid event
+  is corruption and raises `TrajectoryParseError` like any other line. A `__proto__`
+  key, which no record rebuilt by assignment can carry, is refused on both write and
+  read (`TrajectoryKeyError`) rather than silently dropped.
 - **Verification evidence (E7.4)** — `VerificationEvidenceEnvelopeSchema` (versioned,
   strict, digest-only — a raw payload or credential field fails parse),
   `EvidencePolicySchema` (only authoritative classes are requirable),

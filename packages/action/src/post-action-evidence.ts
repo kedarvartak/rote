@@ -1,6 +1,6 @@
-import type { CapturedElement, CapturedPage } from '@rote/browser';
+import type { CapturedPage } from '@rote/browser';
 import { z } from 'zod';
-import { diffObservations, distillPage, ObservationIdentityError } from '@rote/perception';
+import { diffObservations, distillPage, matchesElementSelector, ObservationIdentityError } from '@rote/perception';
 
 /** Action subset whose observable effect can be derived without a model-authored prediction. */
 export const ObservableBrowserActionSchema = z.discriminatedUnion('kind', [
@@ -66,7 +66,7 @@ export function derivePostActionEvidence(input: {
   const action = ObservableBrowserActionSchema.parse(input.action);
   if (action.kind === 'fill' || action.kind === 'select') {
     const selector = requiredTarget(input.resolvedSelector, action.kind);
-    const element = input.after.elements.find((candidate) => matchesSelector(candidate, selector));
+    const element = input.after.elements.find((candidate) => matchesElementSelector(candidate, selector));
     const passed = element?.attributes['value'] === action.value;
     return PostActionEvidenceSchema.parse({
       action_kind: action.kind,
@@ -151,14 +151,3 @@ function canonicalUrl(value: string, base: string): string {
   return new URL(value, base).href;
 }
 
-function matchesSelector(element: CapturedElement, selector: string): boolean {
-  if (element.attributes['data-rote-selector'] === selector) return true;
-  if (selector.startsWith('#')) return element.attributes['id'] === selector.slice(1);
-  if (selector.startsWith('.')) return (element.attributes['class'] ?? '').split(/\s+/).includes(selector.slice(1));
-  const attribute = /^(?:([a-zA-Z][\w-]*))?\[([\w-]+)=["']([^"']+)["']\]$/.exec(selector);
-  if (attribute) {
-    const [, tag, name, value] = attribute;
-    return (!tag || element.tag === tag.toLowerCase()) && element.attributes[name!] === value;
-  }
-  return element.tag === selector.toLowerCase();
-}

@@ -23,7 +23,18 @@ a trust gate on the way back in.
 
 ## Quickstart
 
-Prerequisites: Node 20+, Chrome/Chromium, and an OpenAI key.
+Prerequisites: Node 20+, Chrome/Chromium, and either an API key or a signed-in Codex / Claude Code CLI.
+
+For the chat terminal in this source checkout, run `npm run build --workspace @rotehq/cli`
+then `node packages/cli/dist/cli-entry.js tui`. Type a task in the bottom composer;
+Rote asks for the starting URL and success text when needed. `/help` lists settings,
+`/demo` configures a local practice page, and `/quit` exits. This interface is not
+included in the published 0.1.0 package.
+
+For the local graphical workspace, build the CLI and run
+`node packages/cli/dist/cli-entry.js gui`. Rote opens a browser-based task composer on
+`127.0.0.1`, using the same provider and verified execution path as `rote run`. Use
+`--no-open` to print the URL without opening it, or `--port <number>` to choose a port.
 
 ```bash
 export OPENAI_API_KEY=...
@@ -33,6 +44,11 @@ npx --yes @rotehq/cli@0.1.0 run \
   --verify-text 'Rote quickstart ready' \
   --model gpt-4.1-mini --max-steps 3
 ```
+
+To use your existing subscription instead, sign in once with `codex` or `claude`, then
+start Rote with `ROTE_LLM_PROVIDER=codex rote` or `ROTE_LLM_PROVIDER=claude-code rote`.
+Rote runs the signed-in CLI for planning and retains its reported token usage. The API-key
+providers remain `openai` (default) and `anthropic`.
 
 The data URL is a local smoke. Only automate pages you are authorized to use, and provide
 an independent terminal-state verifier. See [T28](docs/testing/T28-registry-provider-quickstart.md)

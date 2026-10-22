@@ -3,6 +3,7 @@ import {
   AnthropicTaggedLlmClient,
   createTaggedLlmClientFromEnv,
   OpenAiTaggedLlmClient,
+  SubscriptionCliTaggedLlmClient,
 } from '../src/index.js';
 
 describe('createTaggedLlmClientFromEnv', () => {
@@ -23,10 +24,19 @@ describe('createTaggedLlmClientFromEnv', () => {
     })).toBeInstanceOf(AnthropicTaggedLlmClient);
   });
 
+  it('selects signed-in Codex and Claude Code without requiring an API key', () => {
+    expect(createTaggedLlmClientFromEnv({
+      env: { ROTE_LLM_PROVIDER: 'codex' },
+    })).toBeInstanceOf(SubscriptionCliTaggedLlmClient);
+    expect(createTaggedLlmClientFromEnv({
+      env: { ROTE_LLM_PROVIDER: 'claude-code' },
+    })).toBeInstanceOf(SubscriptionCliTaggedLlmClient);
+  });
+
   it('rejects an unsupported provider before any network request', () => {
     expect(() => createTaggedLlmClientFromEnv({
       env: { ROTE_LLM_PROVIDER: 'other' },
-    })).toThrow('ROTE_LLM_PROVIDER must be "openai" or "anthropic"');
+    })).toThrow('ROTE_LLM_PROVIDER must be "openai", "anthropic", "codex", or "claude-code"');
   });
 
   it('requires the key for the selected provider only', () => {

@@ -24,3 +24,21 @@ Do not collect until the preflight passes and each placeholder reset/oracle comm
 implemented against the pinned target. Provider collection must retain all raw JSONL,
 Rote manifests, provider receipts, dated pricing, and non-success outcomes. See
 `docs/03-benchmark.md` and issue #185 for the fixed gates and retreat rules.
+
+## After collection
+
+Turn the recorded runs into one `P2CampaignRunRecord` per billed run and evaluate them
+against this same protocol:
+
+```ts
+import { evaluateP2CampaignGates, renderP2CampaignGateResult } from '@rote/bench';
+
+const result = evaluateP2CampaignGates(protocol, records);
+process.stdout.write(renderP2CampaignGateResult(result));
+```
+
+The verdict reads its floors from `protocol.json`, pairs only repetitions in which both
+sides succeeded, and reports `not_certifiable` — never `pass`, and never `fail` — when
+the evidence is too thin, mixed across pricing tables, or missing the routing step split.
+B4 is `reported_only`: docs/05 requires the long-run economics to be measured but freezes
+no floor for them.

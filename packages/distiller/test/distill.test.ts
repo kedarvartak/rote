@@ -89,10 +89,27 @@ describe('distiller v1', () => {
     expect(() => distillTrajectory([trajectory[1]!, trajectory[5]!], options)).toThrow(EmptyTrajectoryError);
   });
 
+  // Structural text the playbook carries whatever the param values are: its
+  // name, intent, fingerprint, selectors and field labels. A generated value
+  // that collides with any of it is not a leak — the distiller is right to
+  // refuse it — but it is also not what this property is testing, and letting
+  // the generator reach one made the suite fail on roughly one seed in a
+  // hundred.
+  const STRUCTURAL_TEXT = [
+    options.playbookName, options.intentDescription, options.envFingerprint.domain,
+    ...options.envFingerprint.tool_prefixes, '#company-name', '#city', 'Company name', 'City',
+    ...options.verify.map((check) => check.text_visible),
+    ...options.params.map((param) => param.value),
+  ].join(' ').toLowerCase();
+
+  const paramValue = fc.stringMatching(/^[A-Za-z0-9 @.-]{3,20}$/)
+    .filter((value) => value.trim() === value)
+    .filter((value) => !STRUCTURAL_TEXT.includes(value.toLowerCase()));
+
   it('never leaks any declared param value into the playbook (property)', () => {
     fc.assert(fc.property(
-      fc.stringMatching(/^[A-Za-z0-9 @.-]{3,20}$/).filter((value) => value.trim() === value),
-      fc.stringMatching(/^[A-Za-z0-9 @.-]{3,20}$/).filter((value) => value.trim() === value),
+      paramValue,
+      paramValue,
       (company, city) => {
         fc.pre(company !== city && !company.includes(city) && !city.includes(company));
         const events: DistillableEvent[] = [

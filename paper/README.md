@@ -9,6 +9,7 @@ submission; references/appendix unlimited. Official style files unpacked here fr
 |---|---|
 | `rote.tex` | The Rote draft — section skeleton with each section mapped to the `docs/testing/T*.md` evidence it should cite |
 | `rote.bib` | References (empty; fill) |
+| `claims.json` | The claim ledger: every measured number in `rote.tex` bound to the frozen `docs/testing/` record it comes from, plus the two method constants exempted from evidence |
 | `figures/build-figures.mjs` | Regenerates every figure (SVG + PDF) deterministically from `docs/testing/data/*.json`; needs Chromium (`node figures/build-figures.mjs`) |
 | `iclr2027_conference.{sty,bst,tex,bib}`, `math_commands.tex`, `fancyhdr.sty`, `natbib.sty` | Untouched official template; `iclr2027_conference.tex` is the formatting-instructions sample |
 
@@ -27,9 +28,51 @@ Fallback if the billed exit-gate campaign is not done by Sep 20: submit the same
 draft to the non-archival NeurIPS 2026 TTCL workshop (deadline Aug 30 2026) and
 retarget the main paper to MLSys 2027 (deadline Oct 30 2026, CFP not yet posted).
 
+## Scripts
+
+| Command | What |
+|---|---|
+| `node scripts/verify-bib.mjs` | Checks every non-`@misc` bib entry against DBLP (title + year exactly, venue reported for a human) and writes `bib-verification.json`. Exits non-zero on any disagreement. Verified results are cached, so DBLP's aggressive rate limiting cannot turn a transient failure into an apparent mismatch. |
+| `node scripts/build-artifact.mjs` | Stages the anonymized artifact the reproducibility statement promises (packages, fixtures, bench/demo scripts, every frozen test record and its raw data), **redacts identifying strings in the staged copy only**, re-scans, and fails if anything survives. Writes `MANIFEST.json` with a per-file digest and an overall artifact digest. |
+| `node scripts/verify-claims.mjs` | Checks `rote.tex` against `claims.json` in both directions: every ledger claim's anchor and literals must still be in the paper, its excerpt must still be in the cited source, and every measurement literal the paper prints must be evidenced by some claim or exempted. Exits non-zero on any disagreement; `--json <out>` writes the report. Runs in CI as `npm run paper:verify-claims`. |
+| `node figures/build-figures.mjs` | Regenerates every figure from the frozen data (needs Chromium). |
+
+## Campaign-contingent claims
+
+The provider-billed exit campaign has not run. Every sentence whose truth depends on it
+lives inside `\campaignresult{...}`, defined empty at the top of `rote.tex`, and the
+standing caveat is `\campaignpending`. The paper as compiled therefore claims only what
+has been collected — so the **abstract deadline can be met without asserting a result the
+campaign might contradict** — and folding the numbers in later is an edit in one place.
+
+## Claim ledger
+
+`claims.json` is the paper's evidence binding. Each entry names a claim, the short
+`paper_anchor` that must still appear in `rote.tex`, the `literals` that claim is
+responsible for, the frozen `source` document under `docs/testing/`, and a
+`source_excerpt` that must still appear verbatim in it.
+
+The check runs in both directions, which is the point:
+
+- **Paper → evidence.** A number edited in `rote.tex` no longer matches its anchor
+  (`paper_missing`); a number edited in the source document breaks the excerpt
+  (`source_changed`). Either way the number and its record have drifted apart and the
+  build fails.
+- **Evidence → paper.** Every measurement literal the paper prints — percentages,
+  interval bounds, dollar amounts, thousands-separated counts — must be claimed by some
+  ledger entry or listed in `exemptions`. A new unevidenced number fails as
+  `unevidenced_literal`, so the ledger cannot silently fall behind the paper.
+
+LaTeX comments and `\campaignresult{...}` bodies are stripped before scanning: the
+campaign's numbers are pending by construction and the verifier reports how many
+placeholders are still empty rather than demanding evidence for them.
+
 ## Pre-submission checklist
 
-- Verify every `rote.bib` entry's venue/year/authors against DBLP before submission.
-- Replace the abstract's and §6.3's `[TODO billed]` blocks with the billed campaign numbers.
-- Write §1, §7 Limitations, §8 Conclusion, reproducibility + AI-use statements.
-- Re-run `node figures/build-figures.mjs` if any frozen data set changed.
+- [x] Verify every `rote.bib` entry against DBLP — 15/15 agree (`bib-verification.json`).
+- [x] Abstract and body free of unresolved TODOs; campaign-contingent text isolated in a macro.
+- [x] Anonymized artifact builds with a clean anonymity scan.
+- [ ] Fill `\campaignresult` once the billed campaign publishes (§6.3, §1, abstract).
+- [ ] Re-run `node figures/build-figures.mjs` if any frozen data set changed.
+- [x] Every measured number bound to its frozen record — `npm run paper:verify-claims` (17 claims, 2 exemptions).
+- [ ] Final read for double-blind hygiene in any newly added prose.

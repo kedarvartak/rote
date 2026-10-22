@@ -31,8 +31,7 @@ describe('rote run', () => {
       maxSteps: 12,
       chromePath: '/usr/bin/chrome',
       viewport: { width: 1920, height: 1080 },
-      verifyText: 'Download complete',
-      verifyUrlContains: undefined,
+      verifyChecks: [{ text_visible: 'Download complete' }],
       settleTimeoutMs: 7000,
       replayCandidatePath: 'candidate.json',
     });
@@ -75,6 +74,55 @@ describe('rote run', () => {
     await expect(main([
       'run', 'Do the task', '--url', 'https://portal.test', '--verify-text', 'Complete',
     ], '.rote', deps)).resolves.toContain('fallback: replay_failed (verify text absent)');
+  });
+
+  it('builds one ordered check list from every verification flag, repeats included', async () => {
+    const deps = dependencies();
+    await main([
+      'run', 'Register the vendor',
+      '--url', 'https://portal.test/vendors',
+      '--verify-text', 'Registration complete',
+      '--verify-selector', '#receipt',
+      '--verify-selector-absent', '#error',
+      '--verify-input-value', '#vendor=Acme',
+      '--verify-url-contains', '/done',
+      '--verify-selector', '#reference',
+    ], '/tmp/rote-test', deps);
+
+    expect(deps.runBrowserTask).toHaveBeenCalledWith(expect.objectContaining({
+      verifyChecks: [
+        { text_visible: 'Registration complete' },
+        { selector_visible: '#receipt' },
+        { selector_absent: '#error' },
+        { input_value: '#vendor', equals: 'Acme' },
+        { url_contains: '/done' },
+        // a repeated flag is a second check, not a replacement for the first
+        { selector_visible: '#reference' },
+      ],
+    }));
+  });
+
+  it('keeps an "=" inside an expected input value', async () => {
+    const deps = dependencies();
+    await main([
+      'run', 'Check the query', '--url', 'https://portal.test',
+      '--verify-input-value', '#query=a=b',
+    ], '/tmp/rote-test', deps);
+    expect(deps.runBrowserTask).toHaveBeenCalledWith(expect.objectContaining({
+      verifyChecks: [{ input_value: '#query', equals: 'a=b' }],
+    }));
+  });
+
+  it('rejects an input-value check with no expected value rather than guessing one', async () => {
+    await expect(main([
+      'run', 'Check the field', '--url', 'https://portal.test', '--verify-input-value', '#vendor',
+    ], '/tmp/rote-test', dependencies())).rejects.toThrow(/--verify-input-value must be <selector>=<expected value>/);
+  });
+
+  it('requires at least one verification check', async () => {
+    await expect(main([
+      'run', 'Do the task', '--url', 'https://portal.test',
+    ], '/tmp/rote-test', dependencies())).rejects.toThrow(/--verify-text/);
   });
 
   it('requires a starting URL', async () => {

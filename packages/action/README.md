@@ -3,6 +3,35 @@
 Browser action hardening for Rote's V1 harness. It provides deterministic settledness
 resilient semantic element resolution before dispatch, and zero-LLM post-action evidence.
 
+## Speculation fence (P3, refusal only)
+
+`classifySpeculation(input)` answers one question about an already-derived action
+contract: how far could running this action *early* reach? It returns one of docs/02's
+effect classes — `pure_read`, `local_nav`, `local_write`, `external_effect` — with the
+rule that produced it, and it is total: staleness, target ambiguity and unmet
+preconditions are checked before the verb, a posting form outranks its controls, and any
+verb, control or destination without an explicit rule is an `external_effect`.
+
+`maySpeculate(verdict, policy)` applies a policy on top. The default permits `pure_read`
+alone (P3.2 prefetches observations); `local_nav` becomes eligible in P3.3 behind a
+discardable shadow context. `external_effect` is never permitted, and a policy that names
+it throws rather than being silently ignored.
+
+It also refuses on `contractMismatch` — comparing a live contract against a recorded one
+is the action-contract gate's job (#143); the fence only needs to know they disagree.
+
+Nothing here dispatches, predicts, or opens a context — the fence is built before the
+mechanism it will fence, and it is inert until a speculation mechanism consults it.
+
+`test/invariants/speculation-never-crosses-effect-boundary.test.ts` is the sacred
+invariant for P3's "zero speculated server-mutating calls — ever" gate: an adversarial
+corpus covering all nine categories #192 names (forms, downloads, uploads, drag/drop,
+redirects, cross-origin navigation, stale contexts, contract mismatch, ambiguous
+targets), refused under *every* legal policy rather than only the default. Four cases
+derive their contracts from frozen fixture HTML through the real capture → distill →
+derive path, so they describe controls that exist; the rest are constructed and say so.
+A positive control keeps the suite from passing vacuously.
+
 ## Public API
 
 - `waitForSettled(probe, options)` — requires unanswered requests within `maxPendingRequests` (default 0) and unchanged DOM mutation and network-activity versions for the configured quiet window; the wait is bounded by `timeoutMs`. Probes may report `networkVersion` so an actively streaming background body keeps the page unsettled even though it is no longer pending (#132).

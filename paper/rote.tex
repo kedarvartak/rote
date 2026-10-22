@@ -24,12 +24,25 @@
 
 %\iclrfinalcopy
 
+% ---------------------------------------------------------------------------
+% Campaign-contingent text. The provider-billed exit campaign (T0 distillation
+% economics, T2 brief utility, routing parity, B4 economics) has not run. Every
+% sentence whose truth depends on it lives inside \campaignresult, which is
+% empty until those numbers exist — so the paper as compiled today claims only
+% what has been collected, and the ICLR abstract deadline can be met without
+% asserting a result the campaign might contradict. Fill it in one place.
+\newcommand{\campaignresult}[1]{}
+\newcommand{\campaignpending}{The end-to-end learning-loop economics---cold-to-warm
+reduction with automated distillation, site-brief generalization, and the fraction of
+warm steps served by a routine model---have built mechanisms and per-run telemetry but
+are not yet measured, and are reported as pending throughout.}
+
 \begin{document}
 \maketitle
 
 \begin{abstract}
 % ~150--200 words. Claim, mechanism, evidence, caveat.
-Browser agents built on large language models spend most of their budget re-reading pages they have already seen and re-deriving actions they have already taken. Every agent harness \emph{has} memory; almost none \emph{manages} it. We present Rote, a memory manager that treats the context window as a managed resource---with an explicit budget, an eviction policy, a layout contract that keeps a cache-stable prefix, and a trust gate on everything re-admitted---across three tiers: working memory within a run, episodic memory across runs of the same task, and semantic memory across tasks on the same site. Rote distills recorded trajectories into value-free, contract-gated playbooks; matches new tasks against them with a fail-closed matcher; and replays with zero model calls until a versioned \emph{action contract} detects that a same-looking control changed its behavior, at which point it falls back to the plain agent before any dispatch. On a frozen enterprise-style benchmark, Rote reduces logical input tokens by 83.1\% (95\% CI 82.1--83.9\%) and billed cost by 68.2\% at exact-oracle parity with a strong open-source baseline, and its offline next-action predictor reaches 99.4\% kind+target accuracy over 1{,}520 warm steps. All mechanisms fail closed: 0/90 silent failures were observed under selector drift, destructive decoys, and ambiguity. \textbf{[TODO: replace with numbers from the billed learning-curve campaign once run.]}
+Browser agents built on large language models spend most of their budget re-reading pages they have already seen and re-deriving actions they have already taken. Every agent harness \emph{has} memory; almost none \emph{manages} it. We present Rote, a memory manager that treats the context window as a managed resource---with an explicit budget, an eviction policy, a layout contract that keeps a cache-stable prefix, and a trust gate on everything re-admitted---across three tiers: working memory within a run, episodic memory across runs of the same task, and semantic memory across tasks on the same site. Rote distills recorded trajectories into value-free, contract-gated playbooks; matches new tasks against them with a fail-closed matcher; and replays with zero model calls until a versioned \emph{action contract} detects that a same-looking control changed its behavior, at which point it falls back to the plain agent before any dispatch. On a frozen enterprise-style benchmark, Rote reduces logical input tokens by 83.1\% (95\% CI 82.1--83.9\%) and billed cost by 68.2\% at exact-oracle parity with a strong open-source baseline, and its offline next-action predictor reaches 99.4\% kind+target accuracy over 1{,}520 warm steps. All mechanisms fail closed: 0/90 silent failures were observed under selector drift, destructive decoys, and ambiguity. \campaignpending{}\campaignresult{Replace this call with the campaign's headline number once collected.}
 \end{abstract}
 
 \section{Introduction}
@@ -86,8 +99,8 @@ Our contributions:
 \end{itemize}
 
 Everything reported in \S\ref{sec:results} is deterministic or paired-and-billed on
-frozen protocols; the remaining end-to-end learning-curve numbers are marked as pending
-throughout. \textbf{[TODO: fold in billed campaign results.]}
+frozen protocols. \campaignpending{}\campaignresult{Fold the campaign's results into
+\S\ref{sec:results-learning} and the abstract here.}
 
 \section{Related work}
 \label{sec:related}
@@ -131,7 +144,7 @@ a step, while Rote declines to run it.
 
 \paragraph{Learning from demonstration.} Distilling a recorded trajectory into a
 parameterized program echoes programming-by-demonstration for the web
-\citep{leshed2008coscripter} and trace-based macro induction \citep{li2010sikuli}. Rote's
+\citep{leshed2008coscripter} and trace-based macro induction \citep{yeh2009sikuli}. Rote's
 distiller differs in what it refuses: a value that matches no declared parameter aborts
 distillation, and a run whose verifier cannot state declarative checks cannot teach a
 \texttt{verify} --- refusals that exist so a memorized procedure can never be more
@@ -407,9 +420,11 @@ continuation resumes an interrupted controlled workflow across two real browser/
 restarts to the exact three-event oracle with no repeated dispatch, while fingerprint,
 principal, procedure, binding, stale-evidence, and diverged-state mismatches each stop
 with zero dispatches; interrupted checkpoint writes recover without in-place edits.
-\textbf{[TODO billed: end-to-end learning-curve numbers through the product CLI ---
-cold-to-warm reduction with automated distillation, site-brief generalization to a novel
-task, and fraction of warm steps served by the routine model at parity.]}
+\campaignpending{} Their collection is planned and rehearsed rather than improvised:
+the frozen campaign protocol fixes what each gate measures and what evidence a cell must
+produce, a planner turns it into the exact ordered invocations that collect it, and the
+whole sequence has been rehearsed end to end with no provider
+attached.\campaignresult{Report T0, T2, and routing results here.}
 
 
 \begin{figure}[t]
@@ -460,7 +475,7 @@ than reported from unreliable cells, so our comparative claims are against a sin
 but not yet campaign-measured}: cold-to-warm reduction with automated distillation,
 site-brief generalization, and routine-model routing all have built mechanisms and
 per-run telemetry, but their end-to-end numbers await the billed campaign and are
-marked TODO. \textbf{The predictor never acts}: its confidence is under-calibrated on
+reported as pending wherever they would otherwise appear. \textbf{The predictor never acts}: its confidence is under-calibrated on
 fixtures, so it ships in shadow mode by design; speculation is future work gated on
 live calibration. \textbf{Scope}: Rote stores procedures and site behavior, not user
 knowledge; multi-user permissioning and credential lifecycles are outside this paper.

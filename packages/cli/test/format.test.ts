@@ -22,12 +22,12 @@ describe('formatRunsList', () => {
   });
 
   it('shows in-progress for a run with no manifest yet', () => {
-    const output = formatRunsList([{ run_id: 'run-1' }]);
+    const output = formatRunsList([{ run_id: 'run-1', manifestStatus: { kind: 'absent' } }]);
     expect(output).toContain('in-progress');
   });
 
   it('includes outcome and task_spec for a completed run', () => {
-    const output = formatRunsList([{ run_id: 'run-1', manifest }]);
+    const output = formatRunsList([{ run_id: 'run-1', manifest, manifestStatus: { kind: 'ok' } }]);
     expect(output).toContain('success');
     expect(output).toContain('B1: download report');
   });
@@ -45,7 +45,7 @@ describe('formatRunDetail', () => {
       result_ref: { kind: 'inline', value: null },
       duration_ms: 3,
     };
-    const output = formatRunDetail({ run_id: 'run-1', manifest, events: [event] });
+    const output = formatRunDetail({ run_id: 'run-1', manifest, events: [event], manifestStatus: { kind: 'ok' }, trajectoryStatus: { kind: 'ok' } });
     expect(output).toContain('echo({"greeting":"hi"}) -> ok (3ms)');
   });
 
@@ -61,12 +61,12 @@ describe('formatRunDetail', () => {
       duration_ms: 1,
       error: { message: 'boom' },
     };
-    const output = formatRunDetail({ run_id: 'run-1', manifest, events: [event] });
+    const output = formatRunDetail({ run_id: 'run-1', manifest, events: [event], manifestStatus: { kind: 'ok' }, trajectoryStatus: { kind: 'ok' } });
     expect(output).toContain('error: boom');
   });
 
   it('notes a missing manifest instead of crashing', () => {
-    const output = formatRunDetail({ run_id: 'run-1', events: [] });
+    const output = formatRunDetail({ run_id: 'run-1', events: [], manifestStatus: { kind: 'absent' }, trajectoryStatus: { kind: 'absent' } });
     expect(output).toContain('manifest: (none yet');
   });
 });

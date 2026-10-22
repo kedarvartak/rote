@@ -1,7 +1,7 @@
 import { ActionContractMismatchError, ActionContractUnavailableError, assertActionContract, BrowserCapabilityUnsupportedError, deriveActionContract, ElementResolutionAmbiguityError, ElementResolutionContextMismatchError, KeyChordError, normalizeKeyChord, resolveElementTarget, UploadNotAllowlistedError, type AllowedUploadFile, type ElementResolutionTarget, type NormalizedKeyChord } from '@rote/action';
 import { BrowsingContextStaleError, ClosedShadowRootUnsupportedError, type BrowserContextCoordinate, type CapturedElement, type CapturedPage } from '@rote/browser';
 import { ActionContractSchema, type ActionContractVerb } from '@rote/core';
-import { distillPage, stableNodeRef } from '@rote/perception';
+import { distillPage, isElementVisible, stableNodeRef } from '@rote/perception';
 import type { ToolCallOutcome, ToolCaller } from './tool-caller.js';
 
 export interface BrowserReplayPage {
@@ -211,7 +211,7 @@ function browserFailureCode(error: Error): string {
 }
 
 function pageResult(page: CapturedPage, extra: Record<string, unknown>): Record<string, unknown> {
-  const visible = page.elements.filter(isVisible);
+  const visible = page.elements.filter(isElementVisible);
   const visibleSelectors = visible.flatMap(selectorFor);
   const inputValues = Object.fromEntries(
     visible.flatMap((element) => {
@@ -236,13 +236,6 @@ function selectorFor(element: CapturedElement): string[] {
   const name = element.attributes['name'];
   if (name) selectors.push(`${element.tag}[name="${name}"]`);
   return selectors;
-}
-
-function isVisible(element: CapturedElement): boolean {
-  if (element.attributes['data-rote-visible'] === 'false') return false;
-  if ('hidden' in element.attributes || element.attributes['aria-hidden'] === 'true') return false;
-  const style = element.attributes['style']?.replaceAll(' ', '').toLowerCase() ?? '';
-  return !style.includes('display:none') && !style.includes('visibility:hidden') && !style.includes('opacity:0');
 }
 
 function requiredString(tool: string, args: Record<string, unknown>, key: string): string {

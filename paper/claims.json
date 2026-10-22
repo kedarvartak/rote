@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "_comment": "Every measured number in paper/rote.tex, bound to the frozen certification document it was transcribed from. Verified by paper/scripts/verify-claims.mjs; see paper/README.md. `paper_anchor` must appear verbatim in rote.tex; `literals` are the measurement literals this claim evidences; `source_excerpt` must appear verbatim in `source`. Note that the T-documents use en dashes in intervals where the paper uses LaTeX en dashes.",
+  "claims": [
+    {
+      "id": "t25-logical-token-reduction",
+      "statement": "Rote reduces logical input tokens by 83.1% against Browser Use 0.13.7 on corrected B2.",
+      "paper_anchor": "\\textbf{83.1\\%} [82.1--83.9\\%]",
+      "literals": ["83.1\\%", "82.1--", "83.9\\%"],
+      "source": "docs/testing/T25-browser-use-0137-paired-certification.md",
+      "source_excerpt": "**83.1% [82.1–83.9%]**"
+    },
+    {
+      "id": "t25-billed-cost-reduction",
+      "statement": "Billed cost falls 68.2% at exact-oracle parity.",
+      "paper_anchor": "\\textbf{68.2\\%} [66.3--69.9\\%]",
+      "literals": ["68.2\\%", "66.3--", "69.9\\%"],
+      "source": "docs/testing/T25-browser-use-0137-paired-certification.md",
+      "source_excerpt": "**68.2% [66.3–69.9%]**"
+    },
+    {
+      "id": "t25-latency-reduction",
+      "statement": "Latency falls 43.6%.",
+      "paper_anchor": "\\textbf{43.6\\%} [39.0--48.1\\%]",
+      "literals": ["43.6\\%", "39.0--", "48.1\\%"],
+      "source": "docs/testing/T25-browser-use-0137-paired-certification.md",
+      "source_excerpt": "**43.6% [39.0–48.1%]**"
+    },
+    {
+      "id": "t25-mean-cost-per-task",
+      "statement": "Mean billed cost per task: $0.0038 for Rote against $0.0120 for the baseline.",
+      "paper_anchor": "\\$0.0038 vs.\\ \\$0.0120 per task",
+      "literals": ["\\$0.0038", "\\$0.0120"],
+      "source": "docs/testing/T25-browser-use-0137-paired-certification.md",
+      "source_excerpt": "| Mean billed cost/task | $0.0038 | $0.0120 |"
+    },
+    {
+      "id": "t25-mean-logical-tokens",
+      "statement": "Mean logical tokens per task: 8,353 for Rote against 49,324 for the baseline.",
+      "paper_anchor": "8{,}353 mean logical tokens per task",
+      "literals": ["8{,}353", "49{,}324"],
+      "source": "docs/testing/T25-browser-use-0137-paired-certification.md",
+      "source_excerpt": "| Mean logical tokens/task | 8,352.7 | 49,324.1 |",
+      "note": "The paper rounds the frozen 8,352.7 and 49,324.1 to whole tokens."
+    },
+    {
+      "id": "t10-curve-growth-slower",
+      "statement": "Rote's cumulative logical-input growth is 37.2% slower than the baseline's on the real-page WordPress curve.",
+      "paper_anchor": "growth per interaction is 37.2\\%",
+      "literals": ["37.2\\%", "35.6--", "38.8\\%"],
+      "source": "docs/testing/T10-g1-cumulative-token-curve.md",
+      "source_excerpt": "37.2% slower than browser-use (35.6%–38.8%)"
+    },
+    {
+      "id": "t10-shallow-cell-reduction",
+      "statement": "The 9-step WP-N09 cell reduces logical input by 14.3%.",
+      "paper_anchor": "14.3\\% at",
+      "literals": ["14.3\\%"],
+      "source": "docs/testing/T10-g1-cumulative-token-curve.md",
+      "source_excerpt": "| WP-N09 | 9 | 47,204 [47,000–47,316] | 55,104 [55,048–55,140] | 14.3% [14.1%–14.7%] |"
+    },
+    {
+      "id": "t10-deep-cell-reductions",
+      "statement": "The 17-, 21- and 25-step cells reduce logical input by 26–28%.",
+      "paper_anchor": "26--28\\% at 17--25 steps",
+      "literals": ["26--", "28\\%"],
+      "source": "docs/testing/T10-g1-cumulative-token-curve.md",
+      "source_excerpt": "| WP-N21 | 21 | 69,476 [68,591–70,399] | 95,888 [95,798–95,975] | 27.5% [26.6%–28.5%] |",
+      "note": "The three deep cells measure 26.6% (N17), 27.5% (N21) and 26.3% (N25); the paper states the range they span."
+    },
+    {
+      "id": "t10-diff-median-reduction",
+      "statement": "Diff observations are a 99.6% median render-size reduction against their preceding grounded base.",
+      "paper_anchor": "99.6\\% median reduction",
+      "literals": ["99.6\\%"],
+      "source": "docs/testing/T10-g1-cumulative-token-curve.md",
+      "source_excerpt": "the median render-size reduction was 99.6%"
+    },
+    {
+      "id": "t11-cache-cost-cut",
+      "statement": "Cache-stable prefix routing cuts billed cost 20.5% on the 25-step cell.",
+      "paper_anchor": "20.5\\%",
+      "literals": ["20.5\\%"],
+      "source": "docs/testing/T11-cache-key-economics.md",
+      "source_excerpt": "cuts Rote's mean bill by 20.5% (11.3%–30.3%)"
+    },
+    {
+      "id": "t21-silent-failure-upper-bound",
+      "statement": "No silent failure was observed under drift; the 95% upper bound is 4.1%.",
+      "paper_anchor": "95\\% upper bound 4.1\\%",
+      "literals": ["4.1\\%"],
+      "source": "docs/testing/T21-b5-drift-certification.md",
+      "source_excerpt": "| Silent failure | 0.0% [0.0–4.1%] | 0 observed |"
+    },
+    {
+      "id": "t38-predictor-kind-target-accuracy",
+      "statement": "The offline predictor reaches 99.4% kind+target accuracy over 1,520 warm steps (Wilson 98.9–99.7%).",
+      "paper_anchor": "\\textbf{99.4\\%}",
+      "literals": ["99.4\\%", "98.9--", "99.7\\%", "1{,}520"],
+      "source": "docs/testing/T38-predictor-kill-gate.md",
+      "source_excerpt": "| **Aggregate (gate)** | **kind+target** | **189 / —** | **1,520** | **99.4%** | **98.9–99.7%** |"
+    },
+    {
+      "id": "t38-predictor-kind-only-live",
+      "statement": "Kind-only accuracy is 96.5% over 2,805 live WordPress steps.",
+      "paper_anchor": "kind-only rate is 96.5\\%",
+      "literals": ["96.5\\%", "2{,}805"],
+      "source": "docs/testing/README.md",
+      "source_excerpt": "96.5% kind-only over 2,805 live WordPress steps"
+    },
+    {
+      "id": "t39-coverage-at-090",
+      "statement": "At confidence ≥ 0.9 the predictor covers 62.4% of steps at 99.8% precision.",
+      "paper_anchor": "covers 62.4\\% of steps",
+      "literals": ["62.4\\%", "99.8\\%"],
+      "source": "docs/testing/T39-predictor-systems.md",
+      "source_excerpt": "| Coverage @ confidence ≥ 0.9 | 62.4% of steps, precision 99.8% |"
+    },
+    {
+      "id": "t39-coverage-at-095",
+      "statement": "At confidence ≥ 0.95 the predictor covers 62.2% of steps at 100% precision.",
+      "paper_anchor": "62.2\\% of steps are covered at 100\\%",
+      "literals": ["62.2\\%", "100\\%"],
+      "source": "docs/testing/T39-predictor-systems.md",
+      "source_excerpt": "| Coverage @ ≥ 0.95 | 62.2%, precision 100% |"
+    },
+    {
+      "id": "t39-calibration-lowest-bucket",
+      "statement": "The lowest-scoring confidence bucket (mean 0.33) still realizes 98.7% accuracy — the under-calibration the paper reports.",
+      "paper_anchor": "realizes a 98.7\\%",
+      "literals": ["98.7\\%", "99\\%"],
+      "source": "docs/testing/T39-predictor-systems.md",
+      "source_excerpt": "| Calibration 0.2–0.4 bucket | 381 steps, observed 98.7% (mean confidence 0.33) |",
+      "note": "The paper's approximate 99% for scores near 0.33 is this bucket's 98.7%."
+    },
+    {
+      "id": "t34-post-bootstrap-diff-share",
+      "statement": "Under 60-transition SPA endurance, 100% of post-bootstrap observations are served as diffs.",
+      "paper_anchor": "100\\% of post-bootstrap observations",
+      "literals": ["100\\%"],
+      "source": "docs/testing/T34-spa-endurance-certification.md",
+      "source_excerpt": "| Post-base steps served as diffs | 100% (60/60 per run) |"
+    }
+  ],
+  "exempt": [
+    {
+      "literal": "95\\%",
+      "reason": "The confidence level of every reported interval — a property of the method, not a measurement. docs/03-benchmark.md fixes it."
+    },
+    {
+      "literal": "10{,}000",
+      "reason": "The seeded bootstrap's resample count — a property of the method, fixed in docs/03-benchmark.md so output is byte-stable."
+    }
+  ]
+}

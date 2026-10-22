@@ -1,0 +1,157 @@
+{
+  "checked_at_utc_date": "2026-09-02",
+  "source": "https://dblp.org/search/publ/api",
+  "note": "Title and year are compared exactly; venue strings are reported for a human because bib entries spell venues out and DBLP abbreviates. @misc software entries are not indexed by DBLP and are excluded.",
+  "findings": [
+    {
+      "key": "zhou2023webarena",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2024",
+      "dblp_year": "2024",
+      "claimed_venue": "International Conference on Learning Representations (ICLR)",
+      "dblp_venue": "ICLR",
+      "dblp_title": "WebArena: A Realistic Web Environment for Building Autonomous Agents."
+    },
+    {
+      "key": "deng2023mind2web",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2023",
+      "dblp_year": "2023",
+      "claimed_venue": "Advances in Neural Information Processing Systems (NeurIPS)",
+      "dblp_venue": "NeurIPS",
+      "dblp_title": "Mind2Web: Towards a Generalist Agent for the Web."
+    },
+    {
+      "key": "xie2024osworld",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2024",
+      "dblp_year": "2024",
+      "claimed_venue": "Advances in Neural Information Processing Systems (NeurIPS)",
+      "dblp_venue": "NeurIPS",
+      "dblp_title": "OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments."
+    },
+    {
+      "key": "zheng2024seeact",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2024",
+      "dblp_year": "2024",
+      "claimed_venue": "International Conference on Machine Learning (ICML)",
+      "dblp_venue": "ICML",
+      "dblp_title": "GPT-4V(ision) is a Generalist Web Agent, if Grounded."
+    },
+    {
+      "key": "he2024webvoyager",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2024",
+      "dblp_year": "2024",
+      "claimed_venue": "arXiv preprint arXiv:2401.13919",
+      "dblp_venue": "ACL",
+      "dblp_title": "WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models."
+    },
+    {
+      "key": "packer2023memgpt",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2023",
+      "dblp_year": "2023",
+      "claimed_venue": "arXiv preprint arXiv:2310.08560",
+      "dblp_venue": "CoRR",
+      "dblp_title": "MemGPT: Towards LLMs as Operating Systems."
+    },
+    {
+      "key": "sumers2023coala",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2024",
+      "dblp_year": "2024",
+      "claimed_venue": "Transactions on Machine Learning Research (TMLR)",
+      "dblp_venue": "Trans. Mach. Learn. Res.",
+      "dblp_title": "Cognitive Architectures for Language Agents."
+    },
+    {
+      "key": "shinn2023reflexion",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2023",
+      "dblp_year": "2023",
+      "claimed_venue": "Advances in Neural Information Processing Systems (NeurIPS)",
+      "dblp_venue": "NeurIPS",
+      "dblp_title": "Reflexion: language agents with verbal reinforcement learning."
+    },
+    {
+      "key": "wang2023voyager",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2024",
+      "dblp_year": "2024",
+      "claimed_venue": "Transactions on Machine Learning Research (TMLR)",
+      "dblp_venue": "Trans. Mach. Learn. Res.",
+      "dblp_title": "Voyager: An Open-Ended Embodied Agent with Large Language Models."
+    },
+    {
+      "key": "zheng2023synapse",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2024",
+      "dblp_year": "2024",
+      "claimed_venue": "International Conference on Learning Representations (ICLR)",
+      "dblp_venue": "ICLR",
+      "dblp_title": "Synapse: Trajectory-as-Exemplar Prompting with Memory for Computer Control."
+    },
+    {
+      "key": "wang2024awm",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2025",
+      "dblp_year": "2025",
+      "claimed_venue": "International Conference on Machine Learning (ICML)",
+      "dblp_venue": "ICML",
+      "dblp_title": "Agent Workflow Memory."
+    },
+    {
+      "key": "zep2025",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2025",
+      "dblp_year": "2025",
+      "claimed_venue": "arXiv preprint arXiv:2501.13956",
+      "dblp_venue": "CoRR",
+      "dblp_title": "Zep: A Temporal Knowledge Graph Architecture for Agent Memory."
+    },
+    {
+      "key": "jiang2023llmlingua",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2023",
+      "dblp_year": "2023",
+      "claimed_venue": "Empirical Methods in Natural Language Processing (EMNLP)",
+      "dblp_venue": "EMNLP",
+      "dblp_title": "LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models."
+    },
+    {
+      "key": "leshed2008coscripter",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2008",
+      "dblp_year": "2008",
+      "claimed_venue": "CHI Conference on Human Factors in Computing Systems",
+      "dblp_venue": "CHI",
+      "dblp_title": "CoScripter: automating &amp; sharing how-to knowledge in the enterprise."
+    },
+    {
+      "key": "yeh2009sikuli",
+      "status": "ok",
+      "title_matches": true,
+      "claimed_year": "2009",
+      "dblp_year": "2009",
+      "claimed_venue": "ACM Symposium on User Interface Software and Technology (UIST)",
+      "dblp_venue": "UIST",
+      "dblp_title": "Sikuli: using GUI screenshots for search and automation."
+    }
+  ]
+}

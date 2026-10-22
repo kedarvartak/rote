@@ -5,7 +5,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ['**/dist/**', '**/node_modules/**', 'scripts/bench/skyvern/state/**'],
+    ignores: ['**/dist/**', '**/node_modules/**', 'scripts/bench/skyvern/state/**', 'paper/artifact/**'],
   },
   {
     // Plain JS/MJS files (CLI bin shims, test fixture scripts spawned as
@@ -20,6 +20,13 @@ export default tseslint.config(
         URL: 'readonly',
       },
     },
+  },
+  {
+    // Paper tooling runs under Node 20, which ships `fetch` as a global. Scoped
+    // here rather than to all .mjs: `fixtures/enterprise/fixture-runtime.js`
+    // declares its own `fetch`, and a global binding would make that a redeclare.
+    files: ['paper/scripts/**/*.mjs'],
+    languageOptions: { globals: { fetch: 'readonly' } },
   },
   {
     rules: {

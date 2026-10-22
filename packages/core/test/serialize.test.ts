@@ -47,6 +47,30 @@ describe('trajectory JSONL round trip', () => {
     );
   });
 
+  it('raises on a complete final line that is not a valid event, rather than mistaking corruption for a torn write', () => {
+    // A killed process leaves *incomplete* JSON. A final line that parses as
+    // JSON and fails the schema is corruption or a version skew, and the last
+    // event of a run is its terminal one — dropping it silently would turn an
+    // unreadable outcome into a run that merely looks unfinished.
+    const complete = JSON.stringify({ run_id: 'run-1', seq: 2, ts: 'not-a-timestamp', tool: '' });
+    const text = `${writeTrajectoryJsonl([sampleEvent(0), sampleEvent(1)])}${complete}\n`;
+    expect(() => parseTrajectoryJsonl(text)).toThrow(TrajectoryParseError);
+  });
+
+  it('raises on a final line that is complete JSON of the wrong shape entirely', () => {
+    for (const line of ['null', '42', '"text"', '[]', '{}']) {
+      const text = `${writeTrajectoryJsonl([sampleEvent(0)])}${line}\n`;
+      expect(() => parseTrajectoryJsonl(text)).toThrow(TrajectoryParseError);
+    }
+  });
+
+  it('still tolerates a torn write that happens to end in a closing brace', () => {
+    // `{"a":{"b":1}` is incomplete JSON even though it ends with "}" — the
+    // tolerance test is syntactic completeness, not a look at the last byte.
+    const text = `${writeTrajectoryJsonl([sampleEvent(0)])}{"run_id":"run-1","result_ref":{"kind":"inline"}`;
+    expect(parseTrajectoryJsonl(text)).toEqual([sampleEvent(0)]);
+  });
+
   it('throws on a broken line that is not the last line, regardless of tolerance', () => {
     const text = `{"broken\n${writeTrajectoryJsonl([sampleEvent(0)])}`;
     expect(() => parseTrajectoryJsonl(text)).toThrow(TrajectoryParseError);

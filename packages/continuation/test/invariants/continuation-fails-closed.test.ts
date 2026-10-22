@@ -188,4 +188,20 @@ describe('continuation fails closed', () => {
     await writeFile(path, lines.join('\n'), 'utf8');
     await expect(store.readAll('continuation-contract')).rejects.toThrow();
   });
+
+  it('recovers when the interrupted checkpoint write was cut at a closing brace', async () => {
+    // A crash can truncate anywhere, and the next resume appends *after* the
+    // fragment rather than editing it. Testing the last byte for a brace made
+    // such a log raise forever, which strands the very task continuation
+    // exists to rescue (sacred invariant 2).
+    baseDir = await mkdtemp(join(tmpdir(), 'rote-continuation-'));
+    const store = new FileCheckpointStore(baseDir);
+    await session({ store, stopAfterStepId: 'commit_2' });
+    const { appendFile } = await import('node:fs/promises');
+    const { checkpointLogPath } = await import('../../src/index.js');
+    await appendFile(checkpointLogPath(baseDir, 'continuation-contract'), '{"version":1,"evidence":{"a":1}', 'utf8');
+    const resumed = await session({ store, tool: new FakeCommitTool() });
+    expect(resumed.mode).toBe('resumed');
+    expect((await store.readAll('continuation-contract')).map((entry) => entry.seq)).toEqual([0, 1, 2, 3]);
+  });
 });

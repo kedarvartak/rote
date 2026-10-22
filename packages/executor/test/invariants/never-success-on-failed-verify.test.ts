@@ -47,6 +47,9 @@ describe('runPlaybook: never reports success on a failed verify', () => {
     expect(result.outcome).toBe('failure');
     expect(result.outcome).not.toBe('success');
     expect(result.reason).toBe('text "Download complete" not visible');
+    // A caller decides whether to fall back from the classification, not the prose.
+    expect(result.failureCode).toBe('VERIFY_FAILED');
+    expect(result.failedStepId).toBeUndefined(); // verify is a property of the run, not a step
     expect(result.completedStepIds).toEqual(['download']); // every step really did pass
     const manifest = RunManifestSchema.parse(JSON.parse(
       await readFile(join(baseDir, 'runs', result.runId, 'manifest.json'), 'utf8'),

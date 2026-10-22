@@ -1,4 +1,5 @@
 export * from './types.js';
+export * from './element-predicates.js';
 export * from './distill.js';
 export * from './render.js';
 export * from './diff.js';
