@@ -66,6 +66,8 @@ describe('P2 campaign plan', () => {
     expect(distill.records).toBe(false);
     expect(distill.dependsOn).toEqual(['t0-distillation-repeat-cold']);
     expect(distill.runs[0]?.args).toContain('t0-distillation-repeat-cold-r1');
+    expect(distill.runs[0]?.args).toEqual(expect.arrayContaining(['--name', 'campaign-b2']));
+    expect(distill.runs[0]?.args).not.toContain('--playbook');
     expect(plan.phases[2]?.dependsOn).toEqual(['t0-distillation-repeat-distill']);
     // 7 recording phases × 15; the deterministic distill costs nothing.
     expect(plan.billedRuns).toBe(7 * protocol.repetitions_per_cell);

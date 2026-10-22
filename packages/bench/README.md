@@ -44,6 +44,7 @@ See `src/index.ts`. Highlights:
 - **`planCurveResume`** — validates existing curve JSONL, refuses non-empty overwrite, and returns only fully completed run ids for append-safe one-run batching.
 - **`buildCurveCachePreflight` / `rote-bench curve-cache-preflight`** — report prompt-size eligibility and provider-observed cache hits from raw curve calls, separating “layout work can fire” from “layout is qualified.”
 - **`P2CampaignProtocolSchema` / `assertP2CampaignPreflight` / `rote-bench p2-campaign-preflight`** — freeze all four provider-billed P2 exit rows and fail closed before billing when a row lacks complete cache buckets, required source tags, a dated price-table acknowledgement, reset evidence, or a task-bound independent oracle.
+- **`auditT0Campaign` / `rote-bench t0-campaign-audit`** — audit all 15 retained cold/warm T0 pairs, independent verification, stage provenance, pricing, logical-input/cost/latency intervals, and deterministic distill/matcher overhead without allowing failed or incomplete evidence to publish a reduction.
 - **`buildStagehandQualification` / `rote-bench stagehand-qualification`** — validates pinned Stagehand receipts, maps independently graded neutral rows, and blocks certification when exact cold parity, raw receipts, or safety qualification fail.
 - **`buildSkyvernQualification` / `rote-bench skyvern-qualification`** — audits pinned Skyvern cold preparation and generated-code warm/drift evidence, reconciles runtime versus regeneration telemetry, and prohibits rankings without complete raw provider receipts.
 - **`buildBrowserUseRefreshQualification` / `rote-bench browser-use-refresh`** — audits pinned Browser Use 0.13.7 corrected-B2/B5 cold evidence and allows only a separate ≥15-run certification after exactness and raw-receipt gates pass.
@@ -78,6 +79,15 @@ deliberately omits (prompt, path, oracle text, params).
 
 The site brief is pinned off in every phase except T2's brief-on half, so the
 generalization variable cannot leak into gates reported separately.
+
+### T0 retained-evidence audit
+
+`auditT0Campaign(records)` keeps deterministic stage provenance separate from actual
+provider calls: `source_tags` proves that distill, matcher, and verify ran, while `usage`
+contains only provider-reported calls. It requires 15 complete cold/warm pairs under one
+price table, counts every failure in parity, and estimates seeded matched intervals only
+when all pairs succeeded. The frozen ≥80% gate reads the logical-input lower bound;
+output tokens, failed short transcripts, and zero-token synthetic calls cannot affect it.
 
 ## P2 campaign cost projection
 

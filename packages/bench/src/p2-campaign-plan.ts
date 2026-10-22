@@ -165,7 +165,7 @@ export function planP2Campaign(protocol: P2CampaignProtocol, options: P2Campaign
           command: 'node',
           args: [
             ROTE_BIN, 'distill', `${dependsOn[0]}-r1`,
-            '--playbook', `campaign-${binding.taskId.toLowerCase()}`,
+            '--name', `campaign-${binding.taskId.toLowerCase()}`,
             ...(Object.keys(binding.params).length > 0 ? ['--params', JSON.stringify(binding.params)] : []),
           ],
           env: {},

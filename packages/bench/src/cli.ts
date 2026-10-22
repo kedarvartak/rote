@@ -19,6 +19,7 @@ import { writeCurveCachePreflight } from './curve-cache-preflight.js';
 import { writeCurveReport } from './curve-report.js';
 import { writeCurveCacheEconomics } from './curve-cache-economics.js';
 import { writeP2CampaignPreflight } from './p2-campaign-preflight-file.js';
+import { writeT0CampaignAudit } from './t0-campaign-file.js';
 import { writeG2Report } from './g2-report.js';
 import { writeB5Report } from './b5-report.js';
 import { writeStagehandQualification } from './stagehand-qualification.js';
@@ -73,6 +74,14 @@ export async function main(argv: string[]): Promise<string> {
       resolveCallerPath(options.out),
     );
     return `wrote ${options.out} (${result.cells.length} cells; ${result.provider_calls} provider calls)`;
+  }
+  if (command === 't0-campaign-audit' && subject) {
+    const options = parseT0CampaignAuditOptions(rest);
+    const result = await writeT0CampaignAudit(resolveCallerPath(subject), {
+      markdown: resolveCallerPath(options.out),
+      summary: resolveCallerPath(options.summary),
+    });
+    return `wrote ${options.out} and ${options.summary} (T0 ${result.certifiable ? (result.passed ? 'PASS' : 'FAIL') : 'NOT CERTIFIABLE'})`;
   }
   if ((command === 'stagehand-qualification' || command === 'skyvern-qualification' || command === 'browser-use-refresh' || command === 'magnitude-qualification') && subject) {
     const options = parseQualificationOptions(command, rest);
@@ -328,6 +337,20 @@ function parseP2CampaignPreflightOptions(args: string[]): { dryRun: string; out:
   return { dryRun, out };
 }
 
+function parseT0CampaignAuditOptions(args: string[]): { out: string; summary: string } {
+  const values = new Map<string, string>();
+  for (let index = 0; index < args.length; index += 2) {
+    const flag = args[index]; const value = args[index + 1];
+    if (!flag || !value || !['--out', '--summary'].includes(flag)) {
+      throw new Error('t0-campaign-audit requires --out <report.md> --summary <report.json>');
+    }
+    values.set(flag, value);
+  }
+  const out = values.get('--out'); const summary = values.get('--summary');
+  if (!out || !summary) throw new Error('t0-campaign-audit requires --out <report.md> --summary <report.json>');
+  return { out, summary };
+}
+
 function parseCurvePreflightOptions(args: string[]): { out: string; threshold: number } {
   let out: string | undefined;
   let threshold = 1024;
@@ -449,5 +472,5 @@ function parseOptions(args: string[]): ReportOptions {
 }
 
 function usage(): string {
-  return 'usage: rote-bench magnitude-qualification <receipts.jsonl> --records <records.json> --out <report.md> --summary <summary.json> | rote-bench browser-use-refresh <receipts.jsonl> --records <records.json> --out <report.md> --summary <summary.json> | rote-bench skyvern-qualification <receipts.jsonl> --records <records.json> --out <report.md> --summary <summary.json> | rote-bench stagehand-qualification <receipts.jsonl> --records <records.json> --out <report.md> --summary <summary.json> | rote-bench b5-report <records.json> --cold-records <records.json> --out report.md --summary summary.json [--min-runs 15] | rote-bench g2-report <records.json> --rote-manifests <json> --browser-dumps <json> --out report.md --summary summary.json [--min-runs 15] [--protocol-id <id>] | rote-bench p2-campaign-preflight <protocol.json> --dry-run rows.json --out report.json | rote-bench curve-dry-run <protocol.json> --out records.jsonl | rote-bench curve-cache-preflight <records.jsonl> --out report.json [--threshold 1024] | rote-bench curve-cache-report <before-rote.jsonl> --after <after-rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg cost.svg --summary summary.json --subject-protocol-suffix <suffix> | rote-bench curve-report <rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg curve.svg --summary summary.json [--slope-floor 0.30] [--subject-protocol-suffix <suffix>] | rote-bench curve-browser-use-records <raw-calls.jsonl> --out records.jsonl | rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
+  return 'usage: rote-bench magnitude-qualification <receipts.jsonl> --records <records.json> --out <report.md> --summary <summary.json> | rote-bench browser-use-refresh <receipts.jsonl> --records <records.json> --out <report.md> --summary <summary.json> | rote-bench skyvern-qualification <receipts.jsonl> --records <records.json> --out <report.md> --summary <summary.json> | rote-bench stagehand-qualification <receipts.jsonl> --records <records.json> --out <report.md> --summary <summary.json> | rote-bench b5-report <records.json> --cold-records <records.json> --out report.md --summary summary.json [--min-runs 15] | rote-bench g2-report <records.json> --rote-manifests <json> --browser-dumps <json> --out report.md --summary summary.json [--min-runs 15] [--protocol-id <id>] | rote-bench t0-campaign-audit <records.json> --out report.md --summary report.json | rote-bench p2-campaign-preflight <protocol.json> --dry-run rows.json --out report.json | rote-bench curve-dry-run <protocol.json> --out records.jsonl | rote-bench curve-cache-preflight <records.jsonl> --out report.json [--threshold 1024] | rote-bench curve-cache-report <before-rote.jsonl> --after <after-rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg cost.svg --summary summary.json --subject-protocol-suffix <suffix> | rote-bench curve-report <rote.jsonl> --baseline <browser-use.jsonl> --out report.md --svg curve.svg --summary summary.json [--slope-floor 0.30] [--subject-protocol-suffix <suffix>] | rote-bench curve-browser-use-records <raw-calls.jsonl> --out records.jsonl | rote-bench run <plan.json> --out bench-out | rote-bench report <spec.json> [--out report.md] [--export-jsonl dir] | rote-bench gate <spec.json> [--min-token-reduction 0.8] | rote-bench serializer-report <spec.json> [--out report.md] | rote-bench serializer-gate <spec.json> | rote-bench competitor-records <raw-runs.json> --harness <id> --model <model> --cache-adjusted <true|false> [--config-notes <text>] [--out records.json] | rote-bench records <sources.json> [--out records.json] | rote-bench headhead <records.json> [--subject rote] [--prices prices.json] [--out report.md] | rote-bench launch-gate <records.json> [--subject rote] [--min-token-reduction 0.3] [--min-runs 15] | rote-bench synthetic <out-dir>';
 }

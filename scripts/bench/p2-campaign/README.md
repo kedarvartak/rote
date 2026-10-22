@@ -27,8 +27,26 @@ Rote manifests, provider receipts, dated pricing, and non-success outcomes. See
 
 ## After collection
 
-Turn the recorded runs into one `P2CampaignRunRecord` per billed run and evaluate them
-against this same protocol:
+For T0, retain one `T0CampaignRecord` for every cold and warm attempt, including failures.
+The row keeps actual provider calls in `usage`, deterministic stage provenance in
+`source_tags`, exact authoritative verification, the dated price table, cost, latency,
+and separate distill/matcher durations. Audit all 15 pairs into human and machine-readable
+artifacts:
+
+```bash
+npm exec --workspace @rote/bench -- rote-bench t0-campaign-audit \
+  bench-out/p2-provider-exit-campaign/t0-records.json \
+  --out bench-out/p2-provider-exit-campaign/evidence/t0-report.md \
+  --summary bench-out/p2-provider-exit-campaign/evidence/t0-summary.json
+```
+
+The audit counts every retained failure, refuses mixed pricing or missing stage provenance,
+and only estimates seeded matched intervals when all 15 cold/warm pairs succeeded with
+parity. Its gate uses the logical-input lower confidence bound; output tokens cannot enter
+the T0 reduction numerator.
+
+Turn all campaign runs into one `P2CampaignRunRecord` per billed run and evaluate them
+against the same protocol:
 
 ```ts
 import { evaluateP2CampaignGates, renderP2CampaignGateResult } from '@rote/bench';
