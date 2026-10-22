@@ -69,7 +69,6 @@
               </div>
             </div>
           </form>
-          <p class="composer-note">Page state is verified before success is reported.</p>
         </div>
       </main>
 
@@ -90,15 +89,24 @@
             <p>The run only succeeds when this text is visible.</p>
           </section>
           <section class="setting-section two-column">
-            <div><label for="provider">Provider</label><select id="provider"><option value="codex">Codex subscription</option><option value="claude-code">Claude Code subscription</option><option value="openai">OpenAI API</option><option value="anthropic">Anthropic API</option></select></div>
+            <div class="provider-picker" id="provider-picker">
+              <label for="provider-toggle">Provider</label>
+              <input id="provider" type="hidden" value="codex">
+              <button id="provider-toggle" class="provider-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="provider-options">
+                <span id="provider-selected">Codex subscription</span><span class="chevron" aria-hidden="true">⌄</span>
+              </button>
+              <div id="provider-options" class="provider-options" role="listbox" aria-label="Provider" hidden>
+                <button type="button" role="option" aria-selected="true" data-provider="codex"><span>Codex subscription</span><small>Use your signed-in session</small></button>
+                <button type="button" role="option" aria-selected="false" data-provider="claude-code"><span>Claude Code subscription</span><small>Use your signed-in session</small></button>
+                <button type="button" role="option" aria-selected="false" data-provider="openai"><span>OpenAI API</span><small>Use an API key</small></button>
+                <button type="button" role="option" aria-selected="false" data-provider="anthropic"><span>Anthropic API</span><small>Use an API key</small></button>
+              </div>
+            </div>
             <div><label for="max-steps">Max steps</label><input id="max-steps" type="number" min="1" max="500" value="20"></div>
           </section>
           <section class="setting-section">
             <label for="model">Model override <span>optional</span></label>
             <input id="model" type="text" placeholder="Use provider default" maxlength="200">
-          </section>
-          <section class="trust-card">
-            <div><strong>Verified execution</strong><p>Success requires the final page check to pass.</p></div>
           </section>
         </div>
       </aside>

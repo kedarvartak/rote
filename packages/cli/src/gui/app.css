@@ -115,9 +115,15 @@ body.inspector-open .mobile-scrim { display: block; }
 .setting-section p { margin: 7px 0 0; color: var(--text-3); font-size: 11px; line-height: 1.45; }
 .two-column { display: grid; grid-template-columns: minmax(0,1.6fr) minmax(70px,.6fr); gap: 9px; }
 .two-column > div { min-width: 0; }
-.trust-card { border-top: 1px solid var(--line); padding: 15px 0 2px; }
-.trust-card strong { font-size: 13px; font-weight: 600; }
-.trust-card p { margin: 4px 0 0; color: var(--text-3); font-size: 11px; line-height: 1.45; }
+.provider-picker { position: relative; }
+.provider-trigger { width: 100%; height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid var(--line); border-radius: 8px; padding: 0 10px; background: var(--panel-2); color: var(--text); font-size: 14px; text-align: left; }
+.provider-trigger:hover { border-color: rgba(255,255,255,.2); }
+.provider-trigger[aria-expanded="true"] { border-color: rgba(255,255,255,.28); box-shadow: 0 0 0 3px rgba(255,255,255,.035); }
+.provider-options { position: absolute; z-index: 3; bottom: calc(100% + 7px); left: 0; width: max(238px, 100%); overflow: hidden; border: 1px solid var(--line-strong); border-radius: 10px; background: #363636; box-shadow: 0 18px 42px rgba(0,0,0,.48); }
+.provider-options button { width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; border: 0; padding: 10px 11px; background: transparent; color: var(--text); text-align: left; }
+.provider-options button:hover, .provider-options button[aria-selected="true"] { background: #454545; }
+.provider-options button span { font-size: 13px; }
+.provider-options button small { color: var(--text-3); font-size: 11px; }
 .mobile-only, .mobile-scrim { display: none; }
 .mobile-scrim { position: fixed; z-index: 11; inset: 0; background: rgba(0,0,0,.2); }
 .toast { position: fixed; z-index: 20; left: 50%; bottom: 22px; max-width: calc(100% - 32px); transform: translate(-50%, 12px); border: 1px solid var(--line-strong); border-radius: 9px; padding: 9px 12px; background: #272827; color: var(--text); font-size: 11px; opacity: 0; pointer-events: none; transition: .2s ease; }

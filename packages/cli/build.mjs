@@ -1,4 +1,4 @@
-import { copyFile, cp, mkdir, rm } from 'node:fs/promises';
+import { copyFile, mkdir, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 
@@ -20,4 +20,15 @@ await build({
 });
 
 await copyFile(new URL('../../LICENSE', packageRoot), new URL('dist/LICENSE', packageRoot));
-await cp(new URL('src/gui/', packageRoot), new URL('dist/gui/', packageRoot), { recursive: true });
+await mkdir(new URL('dist/gui/', packageRoot), { recursive: true });
+await copyFile(new URL('src/gui/index.html', packageRoot), new URL('dist/gui/index.html', packageRoot));
+await copyFile(new URL('src/gui/app.css', packageRoot), new URL('dist/gui/app.css', packageRoot));
+await build({
+  entryPoints: [fileURLToPath(new URL('src/gui/app.ts', packageRoot))],
+  outfile: fileURLToPath(new URL('dist/gui/app.js', packageRoot)),
+  bundle: true,
+  platform: 'browser',
+  target: 'es2020',
+  format: 'iife',
+  sourcemap: true,
+});
