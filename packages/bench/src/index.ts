@@ -27,6 +27,7 @@ export * from './curve-report.js';
 export * from './curve-cache-economics.js';
 export * from './p2-campaign-preflight.js';
 export * from './t0-campaign.js';
+export * from './t0-campaign-file.js';
 export * from './p2-campaign-preflight-file.js';
 export * from './p2-campaign-plan.js';
 export * from './p2-campaign-cost.js';

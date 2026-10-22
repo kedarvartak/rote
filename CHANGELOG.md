@@ -10,7 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
-- **P2**: Audit retained T0 cold/warm campaign pairs before publication: require all 15 exact-authoritative-verification pairs and planner/distill/matcher/verify usage provenance; incomplete or duplicate evidence fails closed (#186).
+- **P2**: Audit retained T0 cold/warm campaign pairs before publication: require all 15 exact-authoritative-verification pairs, consistent pricing, and planner/distill/matcher/verify provenance; report seeded logical-input, cost, and latency intervals plus deterministic overhead; incomplete, duplicate, failed, or unattributed evidence cannot publish a win. The executable campaign plan now uses the real `rote distill --name` contract, and manifest-accounted Rote runs no longer declare a nonexistent usage sidecar (#186).
 - **CLI**: Add `rote gui`, a responsive local browser workspace with a Codex-style task composer, run settings, local history, provider selection, and verified task results.
 - **CLI**: Replace sequential terminal questions with a centered chat workspace, anchored composer, scrollable history, provider commands, responsive sizing, and retained verified task execution.
 - **CLI**: Add `ROTE_LLM_PROVIDER=codex` and `ROTE_LLM_PROVIDER=claude-code` adapters that use the user's existing signed-in CLI sessions, parse their machine-readable responses, and preserve reported token usage (#219).

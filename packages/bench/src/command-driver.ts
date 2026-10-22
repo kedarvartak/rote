@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { readRecordedRun } from './run-store.js';
 import type { BenchmarkSpec, BenchmarkSpecRun } from './spec.js';
@@ -87,7 +87,14 @@ export async function runCommandBenchmarkPlan(options: CommandBenchmarkOptions):
     if (result.ok) {
       try {
         await readRecordedRun(baseDir, runId);
-        runs.push({ task: run.task, phase: run.phase, repetition: run.repetition, run_id: runId, usage_file: usageFile });
+        const hasUsageSidecar = await fileExists(usagePath);
+        runs.push({
+          task: run.task,
+          phase: run.phase,
+          repetition: run.repetition,
+          run_id: runId,
+          ...(hasUsageSidecar ? { usage_file: usageFile } : {}),
+        });
       } catch (error) {
         runs.push({ task: run.task, phase: run.phase, repetition: run.repetition, error: `missing run artifacts for ${runId}: ${message(error)}` });
       }
@@ -100,6 +107,15 @@ export async function runCommandBenchmarkPlan(options: CommandBenchmarkOptions):
   const specPath = join(outDir, 'bench-spec.json');
   await writeFile(specPath, `${JSON.stringify(spec, null, 2)}\n`, 'utf8');
   return { specPath, spec };
+}
+
+async function fileExists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 interface CommandResult {

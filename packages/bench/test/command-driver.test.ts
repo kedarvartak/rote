@@ -63,6 +63,23 @@ describe('command benchmark driver', () => {
 
     await expect(main(['run', planPath, '--out', outDir])).resolves.toBe(`wrote ${join(outDir, 'bench-spec.json')}`);
   });
+
+  it('uses manifest accounting when a Rote command writes no usage sidecar', async () => {
+    const root = await tempDir();
+    const script = await writeManifestOnlyRunScript(root);
+    const planPath = join(root, 'plan.json');
+    const outDir = join(root, 'out');
+    await writeFile(
+      planPath,
+      JSON.stringify({ runs: [{ task: { id: 'B2', name: 'vendor form' }, phase: 'cold', repetition: 1, command: process.execPath, args: [script] }] }),
+      'utf8',
+    );
+
+    const result = await runCommandBenchmarkPlan({ planPath, outDir });
+    expect(result.spec.runs[0]).toEqual(expect.objectContaining({ run_id: 'b2-cold-1' }));
+    expect(result.spec.runs[0]).not.toHaveProperty('usage_file');
+    await expect(cellsFromSpec(result.spec, { specDir: outDir })).resolves.toHaveLength(1);
+  });
 });
 
 describe('repetition fan-out', () => {
@@ -123,6 +140,16 @@ async function writeFakeRunScript(root: string): Promise<string> {
   await writeFile(
     script,
     `import { createHash } from 'node:crypto';\nimport { mkdirSync, writeFileSync } from 'node:fs';\nimport { dirname, join } from 'node:path';\nif (process.argv[2] === 'fail') { console.error('planned failure'); process.exit(2); }\nconst runId = process.env.ROTE_RUN_ID;\nconst baseDir = process.env.ROTE_BASE_DIR;\nconst usageFile = process.env.ROTE_USAGE_FILE;\nconst runDir = join(baseDir, 'runs', runId);\nmkdirSync(runDir, { recursive: true });\nconst result = { ok: true };\nconst json = JSON.stringify(result);\nconst digest = { sha256: createHash('sha256').update(json).digest('hex'), byte_length: Buffer.byteLength(json), preview: json };\nconst event = { run_id: runId, seq: 0, ts: '2026-01-01T00:00:00.000Z', tool: 'fake.tool', args: {}, result_digest: digest, result_ref: { kind: 'inline', value: result }, duration_ms: 1 };\nconst manifest = { run_id: runId, task_spec: process.env.ROTE_TASK_SPEC, env_fingerprint: { tool_inventory: [], target_identity: 'fake', surface_versions: {}, fingerprint_hash: '0'.repeat(64) }, outcome: 'success', started_at: '2026-01-01T00:00:00.000Z', ended_at: '2026-01-01T00:00:01.000Z', token_usage: [] };\nwriteFileSync(join(runDir, 'trajectory.jsonl'), JSON.stringify(event) + '\\n');\nwriteFileSync(join(runDir, 'manifest.json'), JSON.stringify(manifest) + '\\n');\nmkdirSync(dirname(usageFile), { recursive: true });\nwriteFileSync(usageFile, JSON.stringify([{ source: 'planner', input_tokens: 10, output_tokens: 5 }]) + '\\n');\n`,
+    'utf8',
+  );
+  return script;
+}
+
+async function writeManifestOnlyRunScript(root: string): Promise<string> {
+  const script = join(root, 'manifest-only-run.mjs');
+  await writeFile(
+    script,
+    `import { createHash } from 'node:crypto';\nimport { mkdirSync, writeFileSync } from 'node:fs';\nimport { join } from 'node:path';\nconst runId = process.env.ROTE_RUN_ID;\nconst baseDir = process.env.ROTE_BASE_DIR;\nconst runDir = join(baseDir, 'runs', runId);\nmkdirSync(runDir, { recursive: true });\nconst result = { ok: true };\nconst json = JSON.stringify(result);\nconst digest = { sha256: createHash('sha256').update(json).digest('hex'), byte_length: Buffer.byteLength(json), preview: json };\nconst event = { run_id: runId, seq: 0, ts: '2026-01-01T00:00:00.000Z', tool: 'fake.tool', args: {}, result_digest: digest, result_ref: { kind: 'inline', value: result }, duration_ms: 1 };\nconst manifest = { run_id: runId, task_spec: process.env.ROTE_TASK_SPEC, env_fingerprint: { tool_inventory: [], target_identity: 'fake', surface_versions: {}, fingerprint_hash: '0'.repeat(64) }, outcome: 'success', started_at: '2026-01-01T00:00:00.000Z', ended_at: '2026-01-01T00:00:01.000Z', token_usage: [{ source: 'planner', input_tokens: 10, cache_read_tokens: 0, cache_write_tokens: 0, output_tokens: 5 }] };\nwriteFileSync(join(runDir, 'trajectory.jsonl'), JSON.stringify(event) + '\\n');\nwriteFileSync(join(runDir, 'manifest.json'), JSON.stringify(manifest) + '\\n');\n`,
     'utf8',
   );
   return script;
