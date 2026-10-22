@@ -24,7 +24,7 @@
     "rote": "./bin/rote.js"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.gui.json --noEmit",
     "test": "vitest run",
     "build": "node build.mjs",
     "prepack": "npm run build"
