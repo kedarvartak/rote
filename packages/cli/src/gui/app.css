@@ -98,8 +98,6 @@ kbd { margin-left: auto; color: var(--text-3); font-size: 11px; font-family: inh
 .send-button { width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--text); color: #202020; font-size: 17px; font-weight: 800; transition: .14s ease; }
 .send-button:hover { filter: brightness(1.08); transform: translateY(-1px); }
 .send-button:disabled { background: #3e4139; color: #72766b; cursor: default; transform: none; }
-.composer-note { margin: 7px 0 0; color: var(--text-3); font-size: 11px; text-align: center; }
-
 .inspector { position: fixed; z-index: 12; top: 74px; right: 18px; width: min(var(--inspector), calc(100vw - 32px)); max-height: calc(100dvh - 92px); border: 1px solid var(--line-strong); border-radius: 16px; display: flex; flex-direction: column; background: #292929; box-shadow: 0 20px 70px rgba(0,0,0,.48); opacity: 0; pointer-events: none; transform: translateY(-8px) scale(.98); transform-origin: top right; transition: opacity .16s ease, transform .16s ease; }
 body.inspector-open .inspector { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
 body.inspector-open .mobile-scrim { display: block; }
