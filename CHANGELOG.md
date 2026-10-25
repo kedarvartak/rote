@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Add a provider-backed exit-campaign collector for T0, T2, routing, and B4 that retains raw run evidence, paired fresh-parameter T0 repetitions, token and latency buckets, cost status, and the deterministic B4 judgment negative control; replay now establishes the target URL on a fresh page before resolving distilled actions.
 - **P2**: Audit retained T0 cold/warm campaign pairs before publication: require all 15 exact-authoritative-verification pairs, consistent pricing, and planner/distill/matcher/verify provenance; report seeded logical-input, cost, and latency intervals plus deterministic overhead; incomplete, duplicate, failed, or unattributed evidence cannot publish a win. The executable campaign plan now uses the real `rote distill --name` contract, and manifest-accounted Rote runs no longer declare a nonexistent usage sidecar (#186).
 - **CLI**: Add `rote gui`, a responsive local browser workspace with a Codex-style task composer, run settings, local history, provider selection, and verified task results.
 - **CLI**: Replace sequential terminal questions with a centered chat workspace, anchored composer, scrollable history, provider commands, responsive sizing, and retained verified task execution.

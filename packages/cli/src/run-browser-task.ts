@@ -373,6 +373,11 @@ function bindableParams(params: Record<string, unknown> | undefined): Record<str
 
 async function runVerifiedBrowserReplay(input: BrowserReplayRunInput): Promise<BrowserTaskResult> {
   const playbook = parsePlaybookYaml(await readFile(input.candidate.playbook_path, 'utf8'));
+  // Replay receives a fresh browser page. Distilled playbooks commonly begin
+  // with the first element action because the recording's navigate step is
+  // not persisted as a deterministic action, so establish the pinned target
+  // before resolving any replay identity.
+  await input.page.navigate(input.target.toString());
   const result = await runPlaybook(playbook, {
     ...input.candidate.params,
     base_url: input.target.origin,

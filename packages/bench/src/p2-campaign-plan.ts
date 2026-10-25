@@ -25,6 +25,10 @@ export const P2CampaignBindingSchema = z.object({
   path: z.string().min(1),
   verifyText: z.string().min(1),
   params: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).default({}),
+  /** Optional per-repetition values for paired cells such as T0. */
+  paramsByRepetition: z.record(z.string(), z.record(z.string(), z.union([z.string(), z.number(), z.boolean()]))).optional(),
+  /** Optional per-repetition task text; values must be stated for cold planning. */
+  promptsByRepetition: z.record(z.string(), z.string()).optional(),
 }).strict();
 export type P2CampaignBinding = z.infer<typeof P2CampaignBindingSchema>;
 
@@ -100,15 +104,26 @@ export interface P2CampaignPlanProblem {
 
 const ROTE_BIN = 'packages/cli/bin/rote.js';
 
-function runArgs(protocol: P2CampaignProtocol, baseUrl: string, binding: P2CampaignBinding, extra: string[]): string[] {
+function runArgs(
+  protocol: P2CampaignProtocol,
+  baseUrl: string,
+  binding: P2CampaignBinding,
+  extra: string[],
+  prompt = binding.prompt,
+  params = binding.params,
+): string[] {
   return [
-    ROTE_BIN, 'run', binding.prompt,
+    ROTE_BIN, 'run', prompt,
     '--url', `${baseUrl.replace(/\/$/, '')}/${binding.path.replace(/^\//, '')}`,
     '--verify-text', binding.verifyText,
     '--model', protocol.model,
-    ...(Object.keys(binding.params).length > 0 ? ['--params', JSON.stringify(binding.params)] : []),
+    ...(Object.keys(params).length > 0 ? ['--params', JSON.stringify(params)] : []),
     ...extra,
   ];
+}
+
+function repetitionValue<T>(values: Record<string, T> | undefined, repetition: number, fallback: T): T {
+  return values?.[String(repetition)] ?? fallback;
 }
 
 function phaseRuns(
@@ -123,7 +138,15 @@ function phaseRuns(
     // Pinned so a later phase (distillation) can address the exact run an
     // earlier phase produced; `rote run` honours ROTE_RUN_ID for this.
     const runId = `${phaseId}-r${repetition}`;
-    return { runId, repetition, command: 'node', args: runArgs(protocol, baseUrl, binding, extra), env: { ROTE_RUN_ID: runId } };
+    return {
+      runId, repetition, command: 'node',
+      args: runArgs(
+        protocol, baseUrl, binding, extra,
+        repetitionValue(binding.promptsByRepetition, repetition, binding.prompt),
+        repetitionValue(binding.paramsByRepetition, repetition, binding.params),
+      ),
+      env: { ROTE_RUN_ID: runId },
+    };
   });
 }
 
@@ -197,7 +220,10 @@ export function planP2Campaign(protocol: P2CampaignProtocol, options: P2Campaign
     ]);
   }
   for (const cell of protocol.cells.filter((candidate) => candidate.gate === 'b4')) {
-    add(cell, 'endurance', [], [...briefOff, '--max-steps', String(cell.minimum_transitions)]);
+    // The frozen protocol minimum is 50, while the executable B4 binding
+    // verifies 60 transitions. Leave bounded headroom for that task-specific
+    // target instead of stopping the planner at the protocol floor.
+    add(cell, 'endurance', [], [...briefOff, '--max-steps', String(Math.max(cell.minimum_transitions, 80))]);
   }
 
   const billedRuns = phases.filter((phase) => phase.records).reduce((total, phase) => total + phase.runs.length, 0);

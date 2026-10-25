@@ -56,15 +56,21 @@ export class SubscriptionCliTaggedLlmClient implements TaggedLlmClient {
   }
 
   private args(prompt: string, _maxTokens: number | undefined): string[] {
+    // `default` is the stable sentinel used by subscription-backed campaigns.
+    // The signed-in CLI owns model selection in that case; passing the literal
+    // string through would ask Codex/Claude Code for a model named "default".
+    const modelArg = this.options.model && this.options.model !== 'default'
+      ? ['--model', this.options.model]
+      : [];
     if (this.options.provider === 'codex') {
       return [
         'exec', '--json', '--ephemeral', '--skip-git-repo-check', '--sandbox', 'read-only',
-        ...(this.options.model ? ['--model', this.options.model] : []), prompt,
+        ...modelArg, prompt,
       ];
     }
     return [
       '--print', '--output-format', 'json', '--max-turns', '1', '--permission-mode', 'plan',
-      ...(this.options.model ? ['--model', this.options.model] : []),
+      ...modelArg,
       prompt,
     ];
   }

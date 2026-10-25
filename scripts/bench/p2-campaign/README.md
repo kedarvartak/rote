@@ -2,8 +2,8 @@
 
 This directory freezes the collection contract before any provider-billed P2 claim. It
 covers T0 automated-distillation reduction, T2 advisory site-memory utility, real-page
-routing/predictor telemetry, and B4 50+ transition economics. It is a preflight only: it
-makes **zero provider calls** and cannot establish a performance result.
+routing/predictor telemetry, and B4 50+ transition economics. The protocol and preflight
+remain provider-free; `run-provider-campaign.ts` is the executable collector.
 
 ## No-provider preflight
 
@@ -17,6 +17,25 @@ npm exec --workspace @rote/bench -- rote-bench p2-campaign-preflight \
 The command rejects a missing row, normalized usage bucket, declared source tag, pricing
 acknowledgement, reset command/digest, or task-bound independent oracle. `protocol.json`
 is strict and intentionally has no credentials, raw inputs, or dispatched values.
+
+## Provider collection
+
+After the preflight passes, a signed-in Codex or Claude Code subscription can supply the
+planner without an API key. The collector keeps each manifest, trajectory, receipt, and
+raw JSONL row, and terminates the CLI after its manifest is durable so browser teardown
+cannot stall a campaign:
+
+```bash
+ROTE_LLM_PROVIDER=codex npm exec tsx scripts/bench/p2-campaign/run-provider-campaign.ts \
+  --repetitions 15 \
+  --out /tmp/rote-p2-provider-campaign
+```
+
+Use `--provider openai --model gpt-4.1-mini` for the API-backed protocol model. With a
+subscription provider, the model is recorded as `default` and dollar cost is reported as
+unpriced unless a matching dated price entry is supplied. T0 uses a fresh parameter set
+per paired repetition, while distillation remains deterministic and the B4 judgment
+negative control must refuse to freeze a model-selected category.
 
 ## Before collection
 
