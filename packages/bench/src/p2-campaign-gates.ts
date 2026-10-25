@@ -38,6 +38,13 @@ export const P2CampaignRunRecordSchema = z.object({
   prediction_steps: z.number().int().nonnegative().optional(),
   prediction_hits: z.number().int().nonnegative().optional(),
   prediction_confidence_sum: z.number().nonnegative().optional(),
+  /** B4 redacted history and failure telemetry. */
+  action_steps: z.number().int().nonnegative().optional(),
+  max_action_history_actions: z.number().int().nonnegative().optional(),
+  max_visible_history_actions: z.number().int().nonnegative().optional(),
+  compaction_boundaries: z.number().int().nonnegative().optional(),
+  compacted_action_count: z.number().int().nonnegative().optional(),
+  recall_unavailable_steps: z.number().int().nonnegative().optional(),
   /** SPA transitions completed; required for the B4 endurance report. */
   transitions: z.number().int().nonnegative().optional(),
   /** T2 brief and matcher telemetry retained for the evidence report. */
