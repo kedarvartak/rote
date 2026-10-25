@@ -213,9 +213,12 @@ async function runRecordedCommand(args: string[], env: Record<string, string>, b
       child.kill('SIGTERM');
     }
     const finished = await Promise.race([done, new Promise<undefined>((resolveDelay) => setTimeout(() => resolveDelay(undefined), 250))]);
-    if (finished) return finished.ok || existsSync(join(runRoot, recordedRunId, 'manifest.json'))
-      ? { ...finished, runId: recordedRunId }
-      : { ...finished, runId };
+    if (finished) {
+      const manifestExists = existsSync(join(runRoot, recordedRunId, 'manifest.json'));
+      return manifestExists
+        ? { ok: true, runId: recordedRunId }
+        : { ...finished, runId };
+    }
   }
   child.kill('SIGTERM');
   return { ok: false, runId: recordedRunId, error: `timed out after 20 minutes${stderr ? `: ${stderr.trim()}` : ''}` };
