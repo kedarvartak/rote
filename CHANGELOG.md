@@ -10,6 +10,11 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Instrument the routing calibration campaign: paired routing-on/off
+  records now retain routine/frontier/escalation and prediction counts, and
+  `evidence/routing.json` reports value-free action-target calibration,
+  coverage, and precision by predictor source and site while preserving missing
+  telemetry as non-certifiable (#188).
 - **P2**: Extend provider campaign collection for T2 site-memory utility: selected-gate runs retain the T0 learning prerequisite, capture brief hint utility and matcher duration, and publish paired T2 evidence with a novel-task library-miss check (#187).
 - **P2**: Add a provider-backed exit-campaign collector for T0, T2, routing, and B4 that retains raw run evidence, paired fresh-parameter T0 repetitions, token and latency buckets, cost status, and the deterministic B4 judgment negative control; replay now establishes the target URL on a fresh page before resolving distilled actions.
 - **P2**: Audit retained T0 cold/warm campaign pairs before publication: require all 15 exact-authoritative-verification pairs, consistent pricing, and planner/distill/matcher/verify provenance; report seeded logical-input, cost, and latency intervals plus deterministic overhead; incomplete, duplicate, failed, or unattributed evidence cannot publish a win. The executable campaign plan now uses the real `rote distill --name` contract, and manifest-accounted Rote runs no longer declare a nonexistent usage sidecar (#186).

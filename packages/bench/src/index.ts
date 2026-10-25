@@ -32,6 +32,7 @@ export * from './p2-campaign-preflight-file.js';
 export * from './p2-campaign-plan.js';
 export * from './p2-campaign-cost.js';
 export * from './p2-campaign-gates.js';
+export * from './routing-calibration.js';
 export * from './g2-report.js';
 export * from './b5-report.js';
 export * from './stagehand-qualification.js';
