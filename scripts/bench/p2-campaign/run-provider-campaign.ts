@@ -5,7 +5,7 @@ import { join, resolve } from 'node:path';
 import { EnterpriseFixtureServer } from '../../../packages/bench/src/enterprise-oracle.js';
 import { parseP2CampaignProtocol, type P2CampaignProtocol } from '../../../packages/bench/src/p2-campaign-preflight.js';
 import { evaluateP2CampaignGates, renderP2CampaignGateResult, type P2CampaignRunRecord } from '../../../packages/bench/src/p2-campaign-gates.js';
-import { planP2Campaign, preflightP2CampaignPlan, type P2CampaignBinding, type P2CampaignPhase, type P2CampaignPlan } from '../../../packages/bench/src/p2-campaign-plan.js';
+import { planP2Campaign, preflightP2CampaignPlan, type P2CampaignBinding } from '../../../packages/bench/src/p2-campaign-plan.js';
 import type { P2CampaignGate } from '../../../packages/bench/src/p2-campaign-preflight.js';
 import { readRecordedRun } from '../../../packages/bench/src/run-store.js';
 import { DEFAULT_PRICE_TABLE, priceForModel, runCostUsd } from '../../../packages/bench/src/pricing.js';
@@ -20,7 +20,6 @@ import { distillTrajectory, UnparameterizedValueError, type DistillableEvent } f
 
 const ROOT = resolve(process.cwd());
 const DEFAULT_PROTOCOL = resolve(ROOT, 'scripts/bench/p2-campaign/protocol.json');
-const CLI = resolve(ROOT, 'packages/cli/bin/rote.js');
 
 const values = new Map<string, string>();
 for (let i = 2; i < process.argv.length; i += 2) {
