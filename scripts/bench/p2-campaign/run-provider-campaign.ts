@@ -1,4 +1,4 @@
-import { appendFile, cp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { appendFile, cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import { join, resolve } from 'node:path';
@@ -133,7 +133,7 @@ for (const phase of executionPhases) {
       ROTE_LLM_PROVIDER: provider,
       ROTE_RUN_ID: run.runId,
     }, baseDir, run.runId);
-    const recorded = await readRecordedRun(baseDir, run.runId);
+    const recorded = await readRecordedRun(baseDir, result.runId);
     const metrics = measureManifest(recorded.manifest, model);
     const usages = recorded.manifest.token_usage;
     const logicalInput = usages.reduce((sum, usage) => sum + usage.input_tokens + usage.cache_read_tokens + usage.cache_write_tokens, 0);
@@ -180,19 +180,31 @@ async function runCommand(command: string, args: string[], env: Record<string, s
   if (!result.ok) throw new Error(`${command} ${args.join(' ')} failed: ${result.error}`);
 }
 
-async function runRecordedCommand(args: string[], env: Record<string, string>, base: string, runId: string): Promise<{ ok: boolean; error?: string }> {
+async function runRecordedCommand(args: string[], env: Record<string, string>, base: string, runId: string): Promise<{ ok: boolean; runId: string; error?: string }> {
   const child = spawn('node', args, { cwd: ROOT, env: { ...process.env, ...env }, stdio: ['ignore', 'pipe', 'pipe'] });
   let stderr = '';
   child.stderr.setEncoding('utf8').on('data', (chunk: string) => { stderr += chunk; });
   child.stdout.resume();
   const started = Date.now();
   let killedAfterRecord = false;
+  const runRoot = join(base, 'runs');
+  const runIdsBefore = new Set(await readdir(runRoot).catch(() => []));
+  let recordedRunId = runId;
   const done = new Promise<{ ok: boolean; error?: string }>((resolveDone) => {
     child.on('error', (error) => resolveDone({ ok: false, error: error.message }));
     child.on('close', (code, signal) => resolveDone(code === 0 ? { ok: true } : { ok: false, error: `exit ${signal ?? code}: ${stderr.trim()}` }));
   });
   while (Date.now() - started < 20 * 60_000) {
-    if (existsSync(join(base, 'runs', runId, 'manifest.json')) && !killedAfterRecord) {
+    if (!killedAfterRecord) {
+      if (existsSync(join(runRoot, runId, 'manifest.json'))) recordedRunId = runId;
+      else {
+        const candidates = (await readdir(runRoot).catch(() => []))
+          .filter((candidate) => !runIdsBefore.has(candidate))
+          .find((candidate) => existsSync(join(runRoot, candidate, 'manifest.json')));
+        if (candidates) recordedRunId = candidates;
+      }
+    }
+    if (existsSync(join(runRoot, recordedRunId, 'manifest.json')) && !killedAfterRecord) {
       // The CLI writes the complete manifest before Chromium teardown. A short
       // grace period lets the final trajectory append flush; bounded termination
       // avoids an otherwise unbounded CDP close on long provider campaigns.
@@ -201,12 +213,12 @@ async function runRecordedCommand(args: string[], env: Record<string, string>, b
       child.kill('SIGTERM');
     }
     const finished = await Promise.race([done, new Promise<undefined>((resolveDelay) => setTimeout(() => resolveDelay(undefined), 250))]);
-    if (finished) return finished.ok || !existsSync(join(base, 'runs', runId, 'manifest.json'))
-      ? finished
-      : { ok: true };
+    if (finished) return finished.ok || existsSync(join(runRoot, recordedRunId, 'manifest.json'))
+      ? { ...finished, runId: recordedRunId }
+      : { ...finished, runId };
   }
   child.kill('SIGTERM');
-  return { ok: false, error: `timed out after 20 minutes${stderr ? `: ${stderr.trim()}` : ''}` };
+  return { ok: false, runId: recordedRunId, error: `timed out after 20 minutes${stderr ? `: ${stderr.trim()}` : ''}` };
 }
 
 function spawnAndCollect(command: string, args: string[], env: Record<string, string>): Promise<{ ok: boolean; error?: string }> {
