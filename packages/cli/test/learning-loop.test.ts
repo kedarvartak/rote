@@ -75,7 +75,13 @@ describe('CLI learning loop', () => {
     expect(cold.selection).toEqual({ source: 'library', matched: false, reason: 'no_candidates', considered: 0 });
     expect(cold.siteBrief).toBeUndefined(); // empty memory renders nothing
 
-    const distilled = await distillRun({ baseDir, runId: 'cold-1', playbookName: 'vendor-registration', params: { company_name: 'Acme Tools' }, clock: () => new Date('2026-08-16T00:00:00.000Z') });
+    // Keep the fixture observation fresh relative to the test clock so the
+    // default site-memory freshness floor does not turn this learning-loop
+    // check into a calendar-dependent failure.
+    const distilled = await distillRun({
+      baseDir, runId: 'cold-1', playbookName: 'vendor-registration',
+      params: { company_name: 'Acme Tools' }, clock: () => new Date(),
+    });
     expect(distilled).toMatchObject({ playbook: 'vendor-registration', version: 1, kept: 2, contractedSteps: 2, verifySource: 'learned', usedParams: ['company_name'] });
     expect(distilled.siteMemoryRecords).toBeGreaterThan(0);
     const yaml = await readFile(distilled.playbookPath, 'utf8');
