@@ -32,6 +32,12 @@ export const P2CampaignRunRecordSchema = z.object({
   frontier_steps: z.number().int().nonnegative().optional(),
   /** SPA transitions completed; required for the B4 endurance report. */
   transitions: z.number().int().nonnegative().optional(),
+  /** T2 brief and matcher telemetry retained for the evidence report. */
+  brief_chars: z.number().int().nonnegative().optional(),
+  brief_hinted: z.number().int().nonnegative().optional(),
+  brief_used: z.number().int().nonnegative().optional(),
+  matcher_duration_ms: z.number().nonnegative().optional(),
+  selection_matched: z.boolean().optional(),
   /** Dated pricing table the run was accounted against. */
   pricing_table: z.string().min(1),
 }).strict();

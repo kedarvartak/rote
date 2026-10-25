@@ -105,7 +105,11 @@ const plan = planP2Campaign(protocol, { baseUrl, bindings, routineModel, routeMi
 const problems = preflightP2CampaignPlan(plan, { baseUrl, bindings, routineModel, routeMinConfidence: 0.9, siteBriefChars: 1200 });
 if (problems.length > 0) throw new Error(problems.map((problem) => `${problem.code}: ${problem.detail}`).join('\n'));
 const judgmentGate = verifyJudgmentDistillationGuard();
-const executionPhases = selectedGate ? plan.phases.filter((phase) => phase.gate === selectedGate) : plan.phases;
+// Selected gates still receive prerequisite T0 learning phases. Otherwise T2
+// and routing would measure an empty-memory site instead of a known site.
+const executionPhases = selectedGate
+  ? plan.phases.filter((phase) => phase.gate === selectedGate || (selectedGate !== 'b4' && phase.gate === 't0'))
+  : plan.phases;
 
 const baseDir = join(outDir, '.rote');
 await mkdir(join(outDir, 'manifests'), { recursive: true });
@@ -134,6 +138,7 @@ for (const phase of executionPhases) {
       ROTE_RUN_ID: run.runId,
     }, baseDir, run.runId);
     const recorded = await readRecordedRun(baseDir, result.runId);
+    const cliTelemetry = parseCliTelemetry(result.stdout);
     const metrics = measureManifest(recorded.manifest, model);
     const usages = recorded.manifest.token_usage;
     const logicalInput = usages.reduce((sum, usage) => sum + usage.input_tokens + usage.cache_read_tokens + usage.cache_write_tokens, 0);
@@ -148,8 +153,17 @@ for (const phase of executionPhases) {
       success: recorded.manifest.outcome === 'success', logical_input_tokens: logicalInput,
       ...(phase.kind === 'routing_on' ? { warm_steps: routeEvents.length, frontier_steps: routeEvents.filter((route) => route.planner === 'frontier').length } : {}),
       ...(transitions !== undefined ? { transitions } : {}), pricing_table: sourceProtocol.pricing_table,
+      ...(cliTelemetry.brief ? { brief_chars: cliTelemetry.brief.chars, brief_hinted: cliTelemetry.brief.hinted, brief_used: cliTelemetry.brief.used } : {}),
+      ...(cliTelemetry.matcherDurationMs !== undefined ? { matcher_duration_ms: cliTelemetry.matcherDurationMs } : {}),
+      ...(cliTelemetry.selectionMatched !== undefined ? { selection_matched: cliTelemetry.selectionMatched } : {}),
     });
-    const phaseResult = { phase: phase.id, run: run.runId, success: result.ok && recorded.manifest.outcome === 'success', outcome: recorded.manifest.outcome, ...metrics, logical_input_tokens: logicalInput, ...(transitions !== undefined ? { transitions } : {}) };
+    const phaseResult = {
+      phase: phase.id, run: run.runId, success: result.ok && recorded.manifest.outcome === 'success', outcome: recorded.manifest.outcome,
+      ...metrics, logical_input_tokens: logicalInput, ...(transitions !== undefined ? { transitions } : {}),
+      ...(cliTelemetry.brief ? { brief: cliTelemetry.brief } : {}),
+      ...(cliTelemetry.matcherDurationMs !== undefined ? { matcher_duration_ms: cliTelemetry.matcherDurationMs } : {}),
+      ...(cliTelemetry.selectionMatched !== undefined ? { selection_matched: cliTelemetry.selectionMatched } : {}),
+    };
     phaseResults.push(phaseResult);
     await appendFile(rawJsonl, `${JSON.stringify({ protocol_id: sourceProtocol.protocol_id, provider, model, ...phaseResult })}\n`, 'utf8');
     await writeFile(join(outDir, 'manifests', `${run.runId}.json`), `${JSON.stringify(recorded.manifest, null, 2)}\n`, 'utf8');
@@ -170,6 +184,16 @@ await writeFile(join(evidenceDir, 't0.json'), `${JSON.stringify({
   paired_repetitions: phaseResults.filter((phase) => typeof phase.phase === 'string' && (phase.phase as string).startsWith('t0-distillation-repeat-')),
   distillation: { deterministic: true, billed_provider_calls: 0 },
 }, null, 2)}\n`, 'utf8');
+const t2Gate = gateResult.gates.find((gate) => gate.gate === 't2');
+await writeFile(join(evidenceDir, 't2.json'), `${JSON.stringify({
+  protocol_id: sourceProtocol.protocol_id,
+  selected_gate: selectedGate ?? 'all',
+  provider,
+  model,
+  gate: t2Gate,
+  paired_repetitions: phaseResults.filter((phase) => typeof phase.phase === 'string' && (phase.phase as string).startsWith('t2-novel-known-site-')),
+  brief_telemetry: phaseResults.filter((phase) => typeof phase.phase === 'string' && (phase.phase as string).startsWith('t2-novel-known-site-')).map((phase) => ({ phase: phase.phase, run: phase.run, brief: phase.brief, matcher_duration_ms: phase.matcher_duration_ms, selection_matched: phase.selection_matched })),
+}, null, 2)}\n`, 'utf8');
 await writeFile(join(outDir, 'summary.json'), `${JSON.stringify({ protocol: sourceProtocol, provider, model, repetitions, selected_gate: selectedGate ?? 'all', plan: executionPhases.map((phase) => ({ id: phase.id, kind: phase.kind, runs: phase.runs.length })), phaseResults, gateResult }, null, 2)}\n`, 'utf8');
 console.log(renderP2CampaignGateResult(gateResult));
 console.log(`artifacts: ${outDir}`);
@@ -180,11 +204,12 @@ async function runCommand(command: string, args: string[], env: Record<string, s
   if (!result.ok) throw new Error(`${command} ${args.join(' ')} failed: ${result.error}`);
 }
 
-async function runRecordedCommand(args: string[], env: Record<string, string>, base: string, runId: string): Promise<{ ok: boolean; runId: string; error?: string }> {
+async function runRecordedCommand(args: string[], env: Record<string, string>, base: string, runId: string): Promise<{ ok: boolean; runId: string; stdout: string; error?: string }> {
   const child = spawn('node', args, { cwd: ROOT, env: { ...process.env, ...env }, stdio: ['ignore', 'pipe', 'pipe'] });
   let stderr = '';
+  let stdout = '';
   child.stderr.setEncoding('utf8').on('data', (chunk: string) => { stderr += chunk; });
-  child.stdout.resume();
+  child.stdout.setEncoding('utf8').on('data', (chunk: string) => { stdout += chunk; });
   const started = Date.now();
   let killedAfterRecord = false;
   const runRoot = join(base, 'runs');
@@ -216,12 +241,27 @@ async function runRecordedCommand(args: string[], env: Record<string, string>, b
     if (finished) {
       const manifestExists = existsSync(join(runRoot, recordedRunId, 'manifest.json'));
       return manifestExists
-        ? { ok: true, runId: recordedRunId }
-        : { ...finished, runId };
+        ? { ok: true, runId: recordedRunId, stdout }
+        : { ...finished, runId, stdout };
     }
   }
   child.kill('SIGTERM');
-  return { ok: false, runId: recordedRunId, error: `timed out after 20 minutes${stderr ? `: ${stderr.trim()}` : ''}` };
+  return { ok: false, runId: recordedRunId, stdout, error: `timed out after 20 minutes${stderr ? `: ${stderr.trim()}` : ''}` };
+}
+
+function parseCliTelemetry(stdout: string): {
+  matcherDurationMs?: number;
+  selectionMatched?: boolean;
+  brief?: { chars: number; hinted: number; used: number };
+} {
+  const matcher = stdout.match(/^matcher:\s+(\d+)\s+ms$/m);
+  const selection = stdout.match(/^selection:\s+(.+)$/m)?.[1] ?? '';
+  const brief = stdout.match(/^site brief:\s+(\d+) chars, (\d+)\/(\d+) hints used$/m);
+  return {
+    ...(matcher ? { matcherDurationMs: Number(matcher[1]) } : {}),
+    ...(selection ? { selectionMatched: selection.startsWith('library match ') } : {}),
+    ...(brief ? { brief: { chars: Number(brief[1]), used: Number(brief[2]), hinted: Number(brief[3]) } } : {}),
+  };
 }
 
 function spawnAndCollect(command: string, args: string[], env: Record<string, string>): Promise<{ ok: boolean; error?: string }> {
