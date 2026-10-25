@@ -1,7 +1,7 @@
 import { appendFile, cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { spawn } from 'node:child_process';
-import { join, resolve } from 'node:path';
+import { isAbsolute, join, resolve } from 'node:path';
 import { EnterpriseFixtureServer } from '../../../packages/bench/src/enterprise-oracle.js';
 import { parseP2CampaignProtocol, type P2CampaignProtocol } from '../../../packages/bench/src/p2-campaign-preflight.js';
 import { evaluateP2CampaignGates, renderP2CampaignGateResult, type P2CampaignRunRecord } from '../../../packages/bench/src/p2-campaign-gates.js';
@@ -9,7 +9,10 @@ import { planP2Campaign, preflightP2CampaignPlan, type P2CampaignBinding } from 
 import type { P2CampaignGate } from '../../../packages/bench/src/p2-campaign-preflight.js';
 import { readRecordedRun } from '../../../packages/bench/src/run-store.js';
 import { DEFAULT_PRICE_TABLE, priceForModel, runCostUsd } from '../../../packages/bench/src/pricing.js';
-import type { RunManifest } from '@rote/core';
+import { summarizeRoutingCalibration, type RoutingCalibrationSample } from '../../../packages/bench/src/routing-calibration.js';
+import type { RunManifest, TrajectoryEvent } from '@rote/core';
+import { actionKeyFromEvent, sameAction, type ActionKey } from '@rote/predictor';
+import { runPaths } from '@rote/recorder';
 import { distillTrajectory, UnparameterizedValueError, type DistillableEvent } from '../../../packages/distiller/src/index.js';
 
 /**
@@ -119,6 +122,9 @@ await mkdir(evidenceDir, { recursive: true });
 const rawJsonl = join(outDir, 'raw.jsonl');
 const records: P2CampaignRunRecord[] = [];
 const phaseResults: Array<Record<string, unknown>> = [];
+const routingSamples: RoutingCalibrationSample[] = [];
+const routingSiteSteps = new Map<string, number>();
+let routingTotalSteps = 0;
 
 for (const phase of executionPhases) {
   for (const run of phase.runs) {
@@ -143,15 +149,33 @@ for (const phase of executionPhases) {
     const usages = recorded.manifest.token_usage;
     const logicalInput = usages.reduce((sum, usage) => sum + usage.input_tokens + usage.cache_read_tokens + usage.cache_write_tokens, 0);
     const events = recorded.trajectory;
-    const routeEvents = events
-      .map((event) => event.result_ref?.kind === 'inline' ? event.result_ref.value : undefined)
-      .map((value) => value && typeof value === 'object' && 'route' in value ? value.route : undefined)
-      .filter((route) => Boolean(route && typeof route === 'object' && 'planner' in route)) as Array<{ planner: string }>;
+    const agentEvents = events.filter((event) => event.tool.startsWith('browser.'));
+    const eventResults = await Promise.all(agentEvents.map((event) => readEventResult(baseDir, result.runId, event)));
+    const routeEvents = eventResults
+      .map((value) => routeFromResult(value))
+      .filter((route): route is { planner: 'routine' | 'frontier'; reason: string; escalated?: string } => route !== undefined);
+    const routeTelemetryComplete = phase.kind !== 'routing_on' || routeEvents.length === agentEvents.length;
+    const routingRun = phase.gate === 'routing' ? await collectRoutingTelemetry(run.runId, run.repetition, phase.kind, agentEvents, eventResults, routingSamples, routingSiteSteps) : undefined;
+    if (phase.gate === 'routing') routingTotalSteps += agentEvents.length;
+    const warmSteps = phase.kind === 'routing_on'
+      ? (routeTelemetryComplete ? routeEvents.length : undefined)
+      : phase.kind === 'routing_off' ? agentEvents.length : undefined;
+    const frontierSteps = phase.kind === 'routing_on'
+      ? (routeTelemetryComplete ? routeEvents.filter((route) => route.planner === 'frontier').length : undefined)
+      : phase.kind === 'routing_off' ? agentEvents.length : undefined;
     const transitions = phase.kind === 'endurance' ? events.filter((event) => event.tool === 'browser.click').length : undefined;
     records.push({
       cell_id: phase.cellId, gate: phase.gate, phase_kind: phase.kind, repetition: run.repetition,
       success: recorded.manifest.outcome === 'success', logical_input_tokens: logicalInput,
-      ...(phase.kind === 'routing_on' ? { warm_steps: routeEvents.length, frontier_steps: routeEvents.filter((route) => route.planner === 'frontier').length } : {}),
+      ...(warmSteps !== undefined ? { warm_steps: warmSteps } : {}),
+      ...(frontierSteps !== undefined ? { frontier_steps: frontierSteps } : {}),
+      ...(routingRun ? {
+        routine_steps: routingRun.routine_steps,
+        escalations: routingRun.escalations,
+        prediction_steps: routingRun.prediction_steps,
+        prediction_hits: routingRun.prediction_hits,
+        prediction_confidence_sum: routingRun.prediction_confidence_sum,
+      } : {}),
       ...(transitions !== undefined ? { transitions } : {}), pricing_table: sourceProtocol.pricing_table,
       ...(cliTelemetry.brief ? { brief_chars: cliTelemetry.brief.chars, brief_hinted: cliTelemetry.brief.hinted, brief_used: cliTelemetry.brief.used } : {}),
       ...(cliTelemetry.matcherDurationMs !== undefined ? { matcher_duration_ms: cliTelemetry.matcherDurationMs } : {}),
@@ -159,7 +183,11 @@ for (const phase of executionPhases) {
     });
     const phaseResult = {
       phase: phase.id, run: run.runId, success: result.ok && recorded.manifest.outcome === 'success', outcome: recorded.manifest.outcome,
-      ...metrics, logical_input_tokens: logicalInput, ...(transitions !== undefined ? { transitions } : {}),
+      ...metrics, logical_input_tokens: logicalInput,
+      ...(warmSteps !== undefined ? { warm_steps: warmSteps } : {}),
+      ...(frontierSteps !== undefined ? { frontier_steps: frontierSteps } : {}),
+      ...(routingRun ? { routing: routingRun } : {}),
+      ...(transitions !== undefined ? { transitions } : {}),
       ...(cliTelemetry.brief ? { brief: cliTelemetry.brief } : {}),
       ...(cliTelemetry.matcherDurationMs !== undefined ? { matcher_duration_ms: cliTelemetry.matcherDurationMs } : {}),
       ...(cliTelemetry.selectionMatched !== undefined ? { selection_matched: cliTelemetry.selectionMatched } : {}),
@@ -194,6 +222,19 @@ await writeFile(join(evidenceDir, 't2.json'), `${JSON.stringify({
   paired_repetitions: phaseResults.filter((phase) => typeof phase.phase === 'string' && (phase.phase as string).startsWith('t2-novel-known-site-')),
   brief_telemetry: phaseResults.filter((phase) => typeof phase.phase === 'string' && (phase.phase as string).startsWith('t2-novel-known-site-')).map((phase) => ({ phase: phase.phase, run: phase.run, brief: phase.brief, matcher_duration_ms: phase.matcher_duration_ms, selection_matched: phase.selection_matched })),
 }, null, 2)}\n`, 'utf8');
+const routingGate = gateResult.gates.find((gate) => gate.gate === 'routing');
+const routingEvidence = summarizeRoutingCalibration(routingSamples, routingTotalSteps, Object.fromEntries(routingSiteSteps));
+await writeFile(join(evidenceDir, 'routing.json'), `${JSON.stringify({
+  protocol_id: sourceProtocol.protocol_id,
+  selected_gate: selectedGate ?? 'all',
+  provider,
+  model,
+  gate: routingGate,
+  paired_repetitions: phaseResults.filter((phase) => typeof phase.phase === 'string' && ((phase.phase as string).startsWith('routing-predictor-real-page-routing-off-') || (phase.phase as string).startsWith('routing-predictor-real-page-routing-on-'))),
+  samples: routingSamples,
+  calibration: routingEvidence,
+  value_free_contract: { action_target: 'kind plus stable identity, selector, or URL path; no typed values', site_key: 'page identity digest' },
+}, null, 2)}\n`, 'utf8');
 await writeFile(join(outDir, 'summary.json'), `${JSON.stringify({ protocol: sourceProtocol, provider, model, repetitions, selected_gate: selectedGate ?? 'all', plan: executionPhases.map((phase) => ({ id: phase.id, kind: phase.kind, runs: phase.runs.length })), phaseResults, gateResult }, null, 2)}\n`, 'utf8');
 console.log(renderP2CampaignGateResult(gateResult));
 console.log(`artifacts: ${outDir}`);
@@ -202,6 +243,72 @@ await server.close();
 async function runCommand(command: string, args: string[], env: Record<string, string>): Promise<void> {
   const result = await spawnAndCollect(command, args, env);
   if (!result.ok) throw new Error(`${command} ${args.join(' ')} failed: ${result.error}`);
+}
+
+async function readEventResult(baseDir: string, runId: string, event: TrajectoryEvent): Promise<unknown> {
+  if (event.result_ref.kind === 'inline') return event.result_ref.value;
+  const blobPath = isAbsolute(event.result_ref.path) ? event.result_ref.path : join(runPaths(baseDir, runId).runDir, event.result_ref.path);
+  try { return JSON.parse(await readFile(blobPath, 'utf8')) as unknown; } catch { return undefined; }
+}
+
+function routeFromResult(value: unknown): { planner: 'routine' | 'frontier'; reason: string; escalated?: string } | undefined {
+  if (!isRecord(value) || !isRecord(value.route)) return undefined;
+  const planner = value.route.planner;
+  const reason = value.route.reason;
+  if ((planner !== 'routine' && planner !== 'frontier') || typeof reason !== 'string') return undefined;
+  return { planner, reason, ...(typeof value.route.escalated === 'string' ? { escalated: value.route.escalated } : {}) };
+}
+
+async function collectRoutingTelemetry(
+  runId: string,
+  repetition: number,
+  phaseKind: 'routing_off' | 'routing_on',
+  events: readonly TrajectoryEvent[],
+  results: readonly unknown[],
+  samples: RoutingCalibrationSample[],
+  siteSteps: Map<string, number>,
+): Promise<{ routine_steps: number; escalations: number; prediction_steps: number; prediction_hits: number; prediction_confidence_sum: number; missing_route_steps: number }> {
+  let routine_steps = 0;
+  let escalations = 0;
+  let prediction_steps = 0;
+  let prediction_hits = 0;
+  let prediction_confidence_sum = 0;
+  let missing_route_steps = 0;
+  for (let index = 0; index < events.length; index += 1) {
+    const event = events[index]!;
+    const value = results[index];
+    const route = routeFromResult(value);
+    if (route?.planner === 'routine') routine_steps += 1;
+    if (route?.escalated) escalations += 1;
+    if (!route && phaseKind === 'routing_on') missing_route_steps += 1;
+    const siteKey = isRecord(value) && typeof value.page_key === 'string' && value.page_key.length > 0 ? value.page_key : 'unknown';
+    siteSteps.set(siteKey, (siteSteps.get(siteKey) ?? 0) + 1);
+    const prediction = isRecord(value) && isRecord(value.prediction) ? value.prediction : undefined;
+    if (!prediction || typeof prediction.confidence !== 'number' || typeof prediction.source !== 'string' || typeof prediction.hit !== 'boolean') continue;
+    if (prediction.confidence < 0 || prediction.confidence > 1) continue;
+    const actual = actionKeyFromEvent(event);
+    const predicted = actionKeyFromValue(prediction.predicted);
+    const hit = prediction.hit && sameAction(predicted, actual);
+    prediction_steps += 1;
+    if (hit) prediction_hits += 1;
+    prediction_confidence_sum += prediction.confidence;
+    samples.push({
+      run_id: runId, phase_kind: phaseKind, repetition, step: event.seq, site_key: siteKey,
+      source: prediction.source, confidence: prediction.confidence,
+      action_kind: actual.kind, action_target: actual.target,
+      ...(predicted ? { predicted_kind: predicted.kind, predicted_action_target: predicted.target } : {}), hit,
+    });
+  }
+  return { routine_steps, escalations, prediction_steps, prediction_hits, prediction_confidence_sum, missing_route_steps };
+}
+
+function actionKeyFromValue(value: unknown): ActionKey | undefined {
+  if (!isRecord(value) || typeof value.kind !== 'string' || typeof value.target !== 'string') return undefined;
+  return { kind: value.kind, target: value.target };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
 }
 
 async function runRecordedCommand(args: string[], env: Record<string, string>, base: string, runId: string): Promise<{ ok: boolean; runId: string; stdout: string; error?: string }> {

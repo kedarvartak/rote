@@ -30,6 +30,14 @@ export const P2CampaignRunRecordSchema = z.object({
   warm_steps: z.number().int().nonnegative().optional(),
   /** Warm steps the frontier model planned; the routing gate measures the rest. */
   frontier_steps: z.number().int().nonnegative().optional(),
+  /** Warm steps handled by the routine planner. */
+  routine_steps: z.number().int().nonnegative().optional(),
+  /** Bounded routine calls that escalated to the frontier planner. */
+  escalations: z.number().int().nonnegative().optional(),
+  /** Shadow predictions retained for routing calibration. */
+  prediction_steps: z.number().int().nonnegative().optional(),
+  prediction_hits: z.number().int().nonnegative().optional(),
+  prediction_confidence_sum: z.number().nonnegative().optional(),
   /** SPA transitions completed; required for the B4 endurance report. */
   transitions: z.number().int().nonnegative().optional(),
   /** T2 brief and matcher telemetry retained for the evidence report. */

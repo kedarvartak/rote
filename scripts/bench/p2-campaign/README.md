@@ -39,6 +39,14 @@ ROTE_LLM_PROVIDER=codex npm exec tsx scripts/bench/p2-campaign/run-provider-camp
   --out /tmp/rote-p2-t2-provider-campaign
 ```
 
+For the routing gate, the collector retains every routing-on/off step and emits
+`evidence/routing.json`. Its samples contain only value-free `action_kind` plus
+`action_target` identities, the page identity digest, predictor source,
+confidence, and hit. The report includes calibration buckets plus coverage and
+precision by predictor source and site, alongside routine/frontier/escalation
+shares. Missing route or prediction telemetry remains visible and leaves the
+gate non-certifiable; it is never counted as a zero-cost success.
+
 T2 evidence retains brief size, hinted and used stable IDs, matcher duration, and the
 selection result for each paired brief-off/brief-on run. A T2 task must remain a library
 miss; a matched playbook is retained as a protocol violation rather than treated as a
