@@ -10,6 +10,10 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Instrument B4 long-run economics: the provider collector now emits
+  `evidence/b4.json` with full cache/token buckets, priced run metrics, redacted
+  history-compaction boundaries, visible-history/action bounds, and retained
+  `recall_unavailable` observations (#189).
 - **P2**: Instrument the routing calibration campaign: paired routing-on/off
   records now retain routine/frontier/escalation and prediction counts, and
   `evidence/routing.json` reports value-free action-target calibration,

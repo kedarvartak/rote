@@ -47,6 +47,11 @@ precision by predictor source and site, alongside routine/frontier/escalation
 shares. Missing route or prediction telemetry remains visible and leaves the
 gate non-certifiable; it is never counted as a zero-cost success.
 
+The B4 selection additionally emits `evidence/b4.json` with manifest cache
+buckets, priced latency/cost, redacted compaction boundaries, visible-history
+and action bounds, and `recall_unavailable` observations. Failed runs stay in
+the retained run list and denominator.
+
 T2 evidence retains brief size, hinted and used stable IDs, matcher duration, and the
 selection result for each paired brief-off/brief-on run. A T2 task must remain a library
 miss; a matched playbook is retained as a protocol violation rather than treated as a

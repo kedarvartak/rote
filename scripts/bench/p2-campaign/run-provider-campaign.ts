@@ -10,6 +10,7 @@ import type { P2CampaignGate } from '../../../packages/bench/src/p2-campaign-pre
 import { readRecordedRun } from '../../../packages/bench/src/run-store.js';
 import { DEFAULT_PRICE_TABLE, priceForModel, runCostUsd } from '../../../packages/bench/src/pricing.js';
 import { summarizeRoutingCalibration, type RoutingCalibrationSample } from '../../../packages/bench/src/routing-calibration.js';
+import { summarizeB4Trajectory } from '../../../packages/bench/src/b4-evidence.js';
 import type { RunManifest, TrajectoryEvent } from '@rote/core';
 import { actionKeyFromEvent, sameAction, type ActionKey } from '@rote/predictor';
 import { runPaths } from '@rote/recorder';
@@ -125,6 +126,7 @@ const phaseResults: Array<Record<string, unknown>> = [];
 const routingSamples: RoutingCalibrationSample[] = [];
 const routingSiteSteps = new Map<string, number>();
 let routingTotalSteps = 0;
+const b4Evidence: Array<Record<string, unknown>> = [];
 
 for (const phase of executionPhases) {
   for (const run of phase.runs) {
@@ -164,6 +166,9 @@ for (const phase of executionPhases) {
       ? (routeTelemetryComplete ? routeEvents.filter((route) => route.planner === 'frontier').length : undefined)
       : phase.kind === 'routing_off' ? agentEvents.length : undefined;
     const transitions = phase.kind === 'endurance' ? events.filter((event) => event.tool === 'browser.click').length : undefined;
+    const b4Run = phase.gate === 'b4'
+      ? summarizeB4Trajectory(agentEvents.map((event, index) => ({ seq: event.seq, args: event.args, result: eventResults[index] })))
+      : undefined;
     records.push({
       cell_id: phase.cellId, gate: phase.gate, phase_kind: phase.kind, repetition: run.repetition,
       success: recorded.manifest.outcome === 'success', logical_input_tokens: logicalInput,
@@ -176,6 +181,14 @@ for (const phase of executionPhases) {
         prediction_hits: routingRun.prediction_hits,
         prediction_confidence_sum: routingRun.prediction_confidence_sum,
       } : {}),
+      ...(b4Run ? {
+        action_steps: b4Run.action_steps,
+        max_action_history_actions: b4Run.max_action_history_actions,
+        max_visible_history_actions: b4Run.max_visible_history_actions,
+        compaction_boundaries: b4Run.compaction_boundaries,
+        compacted_action_count: b4Run.compacted_action_count,
+        recall_unavailable_steps: b4Run.recall_unavailable_steps,
+      } : {}),
       ...(transitions !== undefined ? { transitions } : {}), pricing_table: sourceProtocol.pricing_table,
       ...(cliTelemetry.brief ? { brief_chars: cliTelemetry.brief.chars, brief_hinted: cliTelemetry.brief.hinted, brief_used: cliTelemetry.brief.used } : {}),
       ...(cliTelemetry.matcherDurationMs !== undefined ? { matcher_duration_ms: cliTelemetry.matcherDurationMs } : {}),
@@ -187,12 +200,14 @@ for (const phase of executionPhases) {
       ...(warmSteps !== undefined ? { warm_steps: warmSteps } : {}),
       ...(frontierSteps !== undefined ? { frontier_steps: frontierSteps } : {}),
       ...(routingRun ? { routing: routingRun } : {}),
+      ...(b4Run ? { b4: b4Run } : {}),
       ...(transitions !== undefined ? { transitions } : {}),
       ...(cliTelemetry.brief ? { brief: cliTelemetry.brief } : {}),
       ...(cliTelemetry.matcherDurationMs !== undefined ? { matcher_duration_ms: cliTelemetry.matcherDurationMs } : {}),
       ...(cliTelemetry.selectionMatched !== undefined ? { selection_matched: cliTelemetry.selectionMatched } : {}),
     };
     phaseResults.push(phaseResult);
+    if (b4Run) b4Evidence.push({ phase: phase.id, run: run.runId, success: recorded.manifest.outcome === 'success', ...metrics, ...b4Run });
     await appendFile(rawJsonl, `${JSON.stringify({ protocol_id: sourceProtocol.protocol_id, provider, model, ...phaseResult })}\n`, 'utf8');
     await writeFile(join(outDir, 'manifests', `${run.runId}.json`), `${JSON.stringify(recorded.manifest, null, 2)}\n`, 'utf8');
     await writeFile(join(outDir, 'receipts', `${run.runId}.json`), `${JSON.stringify(recorded.trajectory, null, 2)}\n`, 'utf8');
@@ -234,6 +249,20 @@ await writeFile(join(evidenceDir, 'routing.json'), `${JSON.stringify({
   samples: routingSamples,
   calibration: routingEvidence,
   value_free_contract: { action_target: 'kind plus stable identity, selector, or URL path; no typed values', site_key: 'page identity digest' },
+}, null, 2)}\n`, 'utf8');
+const b4Gate = gateResult.gates.find((gate) => gate.gate === 'b4');
+await writeFile(join(evidenceDir, 'b4.json'), `${JSON.stringify({
+  protocol_id: sourceProtocol.protocol_id,
+  selected_gate: selectedGate ?? 'all',
+  provider,
+  model,
+  gate: b4Gate,
+  runs: b4Evidence,
+  measurement_contract: {
+    token_buckets: 'manifest token_usage: uncached input, cache reads, cache writes, output; logical input is uncached plus cache activity',
+    retained_failures: true,
+    compaction: 'redacted boundary records only; no action arguments or typed values',
+  },
 }, null, 2)}\n`, 'utf8');
 await writeFile(join(outDir, 'summary.json'), `${JSON.stringify({ protocol: sourceProtocol, provider, model, repetitions, selected_gate: selectedGate ?? 'all', plan: executionPhases.map((phase) => ({ id: phase.id, kind: phase.kind, runs: phase.runs.length })), phaseResults, gateResult }, null, 2)}\n`, 'utf8');
 console.log(renderP2CampaignGateResult(gateResult));
