@@ -31,6 +31,19 @@ ROTE_LLM_PROVIDER=codex npm exec tsx scripts/bench/p2-campaign/run-provider-camp
   --out /tmp/rote-p2-provider-campaign
 ```
 
+To collect one gate while retaining the T0 learning prerequisite, select it explicitly:
+
+```bash
+ROTE_LLM_PROVIDER=codex npm exec tsx scripts/bench/p2-campaign/run-provider-campaign.ts \
+  --gate t2 --repetitions 15 \
+  --out /tmp/rote-p2-t2-provider-campaign
+```
+
+T2 evidence retains brief size, hinted and used stable IDs, matcher duration, and the
+selection result for each paired brief-off/brief-on run. A T2 task must remain a library
+miss; a matched playbook is retained as a protocol violation rather than treated as a
+site-memory win.
+
 Use `--provider openai --model gpt-4.1-mini` for the API-backed protocol model. With a
 subscription provider, the model is recorded as `default` and dollar cost is reported as
 unpriced unless a matching dated price entry is supplied. T0 uses a fresh parameter set

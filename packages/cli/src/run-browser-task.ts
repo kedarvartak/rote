@@ -96,6 +96,8 @@ export interface BrowserTaskResult {
   replayRepairs?: number;
   /** How the playbook (if any) was chosen: an explicit candidate, or the matcher over the library. */
   selection?: BrowserTaskSelection;
+  /** Deterministic matcher/library lookup time, excluding browser and planner work. */
+  matcherDurationMs?: number;
   /** Cold path only: the site brief's size and how much of it the planner used (docs/03 hint utility). */
   siteBrief?: { chars: number; hinted: number; used: number };
   /** Cold path only, when earlier successful runs of the same task and environment exist: shadow-predictor agreement with the planner. */
@@ -189,6 +191,7 @@ export async function runBrowserTask(
     throw new Error('browser tasks require at least one verification check for clean cold fallback');
   }
   const fingerprint = browserEnvironmentFingerprint(target);
+  const matcherStartedAt = Date.now();
   let candidate: BrowserReplayCandidate | undefined;
   let taskSelection: BrowserTaskSelection | undefined;
   if (options.replayCandidatePath) {
@@ -208,6 +211,7 @@ export async function runBrowserTask(
     }
   }
   const selection = selectBrowserExecution(fingerprint.fingerprint_hash, candidate);
+  const matcherDurationMs = Math.max(0, Date.now() - matcherStartedAt);
   const backend = dependencies.backend ?? new LaunchingCdpBrowserBackend({
     chromePath: options.chromePath,
     windowSize: options.viewport,
@@ -236,7 +240,7 @@ export async function runBrowserTask(
       const replay = dependencies.runReplay ?? runVerifiedBrowserReplay;
       try {
         const result = await replay({ candidate, page, fingerprint, options, target });
-        if (result.success) return { ...result, selection: taskSelection };
+        if (result.success) return { ...result, selection: taskSelection, matcherDurationMs };
         replayFallback = {
           fallbackReason: 'replay_failed',
           fallbackDetail: result.summary,
@@ -259,7 +263,7 @@ export async function runBrowserTask(
     const fingerprintFallback = 'fallbackReason' in selection
       ? { fallbackReason: selection.fallbackReason, fallbackCode: 'FINGERPRINT_MISMATCH' as const }
       : undefined;
-    return { ...cold, ...(replayFallback ?? fingerprintFallback), selection: taskSelection };
+    return { ...cold, ...(replayFallback ?? fingerprintFallback), selection: taskSelection, matcherDurationMs };
   } finally {
     const closeable = rawPage as (BrowserPageSession & { close?: () => void }) | undefined;
     closeable?.close?.();

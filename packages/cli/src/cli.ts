@@ -121,6 +121,7 @@ export async function main(
       `run: ${result.runId}`,
       `phase: ${result.phase}`,
       ...(result.selection ? [formatSelection(result.selection)] : []),
+      ...(result.matcherDurationMs !== undefined ? [`matcher: ${result.matcherDurationMs} ms`] : []),
       ...(result.replayRepairs !== undefined ? [`replay repairs: ${result.replayRepairs}`] : []),
       ...(fallback ? [fallback] : []),
       ...(result.siteBrief ? [`site brief: ${result.siteBrief.chars} chars, ${result.siteBrief.used}/${result.siteBrief.hinted} hints used`] : []),
