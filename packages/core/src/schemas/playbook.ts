@@ -145,8 +145,8 @@ export const PlaybookSchema = PlaybookShapeSchema.superRefine((playbook, ctx) =>
     }),
   );
   const referenced = new Set([
-    ...extractParamRefs(playbook.steps),
-    ...extractParamRefs(playbook.verify),
+    ...extractParamRefs(playbook.steps, { version: playbook.version }),
+    ...extractParamRefs(playbook.verify, { version: playbook.version }),
   ]);
   for (const name of referenced) {
     if (!declaredParams.has(name) && !computedBindings.has(name)) {

@@ -134,9 +134,9 @@ interface StepAttemptResult {
   repaired: boolean;
 }
 
-function checkExpect(expect: Expect | undefined, bindings: ParamBindings, world: WorldState): { pass: boolean; reason: string } {
+function checkExpect(expect: Expect | undefined, bindings: ParamBindings, world: WorldState, templateVersion: number): { pass: boolean; reason: string } {
   if (!expect) return { pass: true, reason: 'ok' };
-  const rendered = renderTemplate(expect, bindings) as Expect;
+  const rendered = renderTemplate(expect, bindings, { version: templateVersion }) as Expect;
   return evaluateExpect(rendered, world);
 }
 
@@ -229,7 +229,7 @@ export async function runPlaybook(
     const t0 = Date.now();
 
     if (step.kind === 'deterministic') {
-      const args = renderTemplate(step.args, bindings) as Record<string, unknown>;
+      const args = renderTemplate(step.args, bindings, { version: playbook.version }) as Record<string, unknown>;
       const outcome = await deps.toolCaller.call(step.tool, args);
       record(step.tool, args, outcome.ok ? { result: outcome.result } : { error: outcome.error }, Date.now() - t0);
       if (!outcome.ok) {
@@ -237,22 +237,22 @@ export async function runPlaybook(
       }
       const resolution = targetResolutionFromResult(outcome.result);
       const nextWorld = mergeWorldState(world, observationFromResult(outcome.result), outcome.result);
-      const checked = checkExpect(remapExpect(step.expect, resolution), bindings, nextWorld);
+      const checked = checkExpect(remapExpect(step.expect, resolution), bindings, nextWorld, playbook.version);
       return { ...checked, world: nextWorld, repaired: resolution?.repaired === true };
     }
 
     if (step.kind === 'slot') {
-      const prompt = renderTemplate(step.llm_fill.prompt, bindings) as string;
+      const prompt = renderTemplate(step.llm_fill.prompt, bindings, { version: playbook.version }) as string;
       const completion = await deps.llmClient.complete({ source: 'slot', prompt, maxTokens: step.llm_fill.max_tokens });
       tokenUsage.push({ source: 'slot', ...completion.usage });
       bindings[step.llm_fill.into] = completion.text;
       const nextWorld = mergeWorldState(world, observationFromText(completion.text), completion.text);
-      const checked = checkExpect(step.expect, bindings, nextWorld);
+      const checked = checkExpect(step.expect, bindings, nextWorld, playbook.version);
       return { ...checked, world: nextWorld, repaired: false };
     }
 
     // judgment
-    const prompt = renderTemplate(step.llm_judge.prompt, bindings) as string;
+    const prompt = renderTemplate(step.llm_judge.prompt, bindings, { version: playbook.version }) as string;
     const completion = await deps.llmClient.complete({
       source: 'judgment',
       prompt,
@@ -264,7 +264,7 @@ export async function runPlaybook(
     }
     bindings[step.id] = completion.text;
     const nextWorld = mergeWorldState(world, observationFromText(completion.text), completion.text);
-    const checked = checkExpect(step.expect, bindings, nextWorld);
+    const checked = checkExpect(step.expect, bindings, nextWorld, playbook.version);
     return { ...checked, world: nextWorld, repaired: false };
   }
 
@@ -318,7 +318,7 @@ export async function runPlaybook(
   }
 
   for (const v of playbook.verify) {
-    const result = checkExpect(v, bindings, world);
+    const result = checkExpect(v, bindings, world, playbook.version);
     if (!result.pass) {
       // No failedStepId: a verify check is a property of the run, not of a step.
       return finish('failure', { reason: result.reason, code: 'VERIFY_FAILED' });

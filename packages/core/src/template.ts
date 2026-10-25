@@ -17,6 +17,12 @@ function capturedName(match: RegExpMatchArray): string {
 
 export type ParamBindings = Record<string, string | number | boolean>;
 
+/** Versioned escape semantics for immutable playbook templates. */
+export interface TemplateOptions {
+  /** Version 1 keeps the original single-backslash escape; version 2 supports escaped backslashes. */
+  version?: number;
+}
+
 /**
  * Whether a param is genuinely bound.
  *
@@ -44,12 +50,12 @@ export class UnboundParamError extends Error {
  * A literal `{{` is written with a backslash escape — `\{{name}}` yields the
  * literal text `{{name}}` and is never counted as a reference.
  */
-export function extractParamRefs(value: unknown): string[] {
+export function extractParamRefs(value: unknown, options: TemplateOptions = {}): string[] {
   const refs = new Set<string>();
   walkStrings(value, (str) => {
     for (const match of str.matchAll(PARAM_REF_PATTERN)) {
       const start = match.index ?? 0;
-      if (start > 0 && str[start - 1] === '\\') continue; // escaped, not a real reference
+      if (isEscapedReference(str, start, options.version ?? 1)) continue;
       refs.add(capturedName(match));
     }
   });
@@ -72,24 +78,24 @@ function walkStrings(value: unknown, onString: (s: string) => void): void {
  * undeclared/unbound param is never silently rendered as an empty string
  * (docs/05-roadmap.md M0 "Templating").
  */
-export function renderTemplate(value: unknown, bindings: ParamBindings): unknown {
+export function renderTemplate(value: unknown, bindings: ParamBindings, options: TemplateOptions = {}): unknown {
   if (typeof value === 'string') {
-    return renderString(value, bindings);
+    return renderString(value, bindings, options.version ?? 1);
   }
   if (Array.isArray(value)) {
-    return value.map((item) => renderTemplate(item, bindings));
+    return value.map((item) => renderTemplate(item, bindings, options));
   }
   if (value !== null && typeof value === 'object') {
     const result: Record<string, unknown> = {};
     for (const [key, v] of Object.entries(value)) {
-      result[key] = renderTemplate(v, bindings);
+      result[key] = renderTemplate(v, bindings, options);
     }
     return result;
   }
   return value;
 }
 
-function renderString(str: string, bindings: ParamBindings): unknown {
+function renderString(str: string, bindings: ParamBindings, version: number): unknown {
   // A string that is *exactly* one param reference preserves the bound
   // value's original type (so a numeric `amount` stays a number, not "42").
   const soleMatch = str.match(SOLE_PARAM_REF_PATTERN);
@@ -103,9 +109,12 @@ function renderString(str: string, bindings: ParamBindings): unknown {
   let lastIndex = 0;
   for (const match of str.matchAll(PARAM_REF_PATTERN)) {
     const start = match.index ?? 0;
-    const escaped = start > 0 && str[start - 1] === '\\';
+    const slashCount = precedingBackslashes(str, start);
+    const escaped = isEscapedReference(str, start, version);
     const paramName = capturedName(match);
-    result += str.slice(lastIndex, escaped ? start - 1 : start);
+    const slashStart = version >= 2 ? start - slashCount : escaped ? start - 1 : start;
+    result += str.slice(lastIndex, slashStart);
+    if (version >= 2 && slashCount > 0) result += '\\'.repeat(Math.floor(slashCount / 2));
     if (escaped) {
       result += `{{${paramName}}}`;
     } else {
@@ -116,4 +125,16 @@ function renderString(str: string, bindings: ParamBindings): unknown {
   }
   result += str.slice(lastIndex);
   return result;
+}
+
+function precedingBackslashes(value: string, start: number): number {
+  let count = 0;
+  for (let index = start - 1; index >= 0 && value[index] === '\\'; index -= 1) count += 1;
+  return count;
+}
+
+function isEscapedReference(value: string, start: number, version: number): boolean {
+  const slashCount = precedingBackslashes(value, start);
+  if (version < 2) return slashCount > 0;
+  return slashCount % 2 === 1;
 }

@@ -10,6 +10,9 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **Core**: Add versioned template escape semantics: playbook version 2 can
+  encode a literal backslash immediately before a live `{{param}}` reference
+  while version 1 artifacts retain their original meaning (#211).
 - **P2**: Instrument B4 long-run economics: the provider collector now emits
   `evidence/b4.json` with full cache/token buckets, priced run metrics, redacted
   history-compaction boundaries, visible-history/action bounds, and retained
