@@ -10,6 +10,7 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P3**: Add `@rote/session` virtual-session lifecycle primitives for isolated live/shadow contexts, digest-bound epochs, atomic adapter promotion, typed stale-context rejection, and redacted cleanup evidence (#190).
 - **Core**: Add versioned template escape semantics: playbook version 2 can
   encode a literal backslash immediately before a live `{{param}}` reference
   while version 1 artifacts retain their original meaning (#211).
