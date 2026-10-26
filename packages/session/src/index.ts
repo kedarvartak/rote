@@ -62,7 +62,7 @@ export interface VirtualSessionAdapter<StorageState> {
   disposeContext(context: VirtualContext): Promise<void>;
 }
 
-interface StoredSession<StorageState> {
+interface StoredSession {
   ref: VirtualSessionRef;
   context: VirtualContext;
   base_live_id?: string;
@@ -84,7 +84,7 @@ export interface CloneOptions {
  * has no method that accepts or dispatches a predicted browser action.
  */
 export class VirtualSessionManager<StorageState> {
-  private readonly sessions = new Map<string, StoredSession<StorageState>>();
+  private readonly sessions = new Map<string, StoredSession>();
   private readonly events: SessionLifecycleEvent[] = [];
   private nextEvent = 0;
 
@@ -170,7 +170,7 @@ export class VirtualSessionManager<StorageState> {
     return this.events.map((event) => ({ ...event }));
   }
 
-  private async cleanup(sessionId: string, stored: StoredSession<StorageState>, operation: 'discard' | 'crash' | 'promotion'): Promise<SessionCleanupEvidence> {
+  private async cleanup(sessionId: string, stored: StoredSession, operation: 'discard' | 'crash' | 'promotion'): Promise<SessionCleanupEvidence> {
     try {
       await this.adapter.disposeContext(stored.context);
       stored.ref = { ...stored.ref, status: operation === 'crash' ? 'crashed' : 'discarded' };
@@ -182,7 +182,7 @@ export class VirtualSessionManager<StorageState> {
     }
   }
 
-  private requireActive(sessionId: string): StoredSession<StorageState> {
+  private requireActive(sessionId: string): StoredSession {
     const stored = this.sessions.get(sessionId);
     if (!stored) throw new VirtualSessionError(`unknown session ${sessionId}`, 'SESSION_NOT_FOUND');
     if (stored.ref.status !== 'active') throw new VirtualSessionError(`session ${sessionId} is ${stored.ref.status}`, 'INACTIVE_SESSION');
