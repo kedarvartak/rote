@@ -27,7 +27,9 @@ See `src/index.ts` for the full export list. Highlights:
   `EnvFingerprintSchema`, `EnvFingerprintPatternSchema`, `PlaybookSchema`,
   `PatchSchema`, `ExpectSchema`, `BrowserExpectSchema`, `BrowserReplayCandidateSchema` — and their inferred TS types.
 - **Digests** — `computeResultDigest`, `decideStorage`, `verifyInlineResultRef`.
-- **Templating** — `extractParamRefs` / `renderTemplate` over the `{{param}}` grammar.
+- **Templating** — `extractParamRefs` / `renderTemplate` over the `{{param}}` grammar;
+  version 2 templates use doubled backslashes to preserve a literal backslash
+  before a live reference, while version 1 keeps its immutable escape behavior.
   A reference with no *own* binding raises `UnboundParamError`, including names
   inherited from `Object.prototype` (`{{toString}}` is unbound, not a function).
   `\{{param}}` renders as the literal text `{{param}}`; a literal backslash cannot
