@@ -10,6 +10,9 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P3**: Add a bounded speculative pipeline with versioned depth, confidence,
+  concurrency, step-count, and duration budgets, dependency tracking,
+  cancellation, and automatic quiescence on unsafe or stale results (#193).
 - **P3**: Add the effect-fenced single-step speculation boundary: versioned
   safe-class policy, dispatch/concurrency/time caps, exact receipt binding, and
   atomic promotion with typed append-only discard events (#192).

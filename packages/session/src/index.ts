@@ -197,3 +197,4 @@ export class VirtualSessionManager<StorageState> {
 
 export * from './shadow-prefetch.js';
 export * from './effect-fenced-speculation.js';
+export * from './speculative-pipeline.js';
