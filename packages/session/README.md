@@ -26,3 +26,9 @@ caps, and requires an exact scope, fingerprint, action-contract, context, and
 verification-plan receipt before calling the injected atomic promotion hook.
 Unclassified actions, stale receipts, prediction misses, and promotion failures
 are typed append-only discard events.
+
+`BoundedSpeculativePipeline` composes those single-step fences with explicit
+depth, confidence, concurrency, step-count, and duration budgets. Dependencies
+must promote before a child starts; a failed or stale step, cancellation, cycle,
+or budget breach drains queued work and records a quiesced event. It never
+dispatches directly and cannot report an unverified speculative success.
