@@ -11,6 +11,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@rote/action": "*",
     "zod": "^3.23.8"
   },
   "devDependencies": {

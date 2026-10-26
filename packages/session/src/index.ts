@@ -1,14 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
+import { SessionScopeSchema, type SessionScope } from './session-scope.js';
 
-/** Opaque digest binding a session to one environment, principal, and task. */
-const DigestSchema = z.string().regex(/^[0-9a-f]{64}$/);
-export const SessionScopeSchema = z.object({
-  environment_digest: DigestSchema,
-  principal_digest: DigestSchema,
-  binding_digest: DigestSchema,
-}).strict();
-export type SessionScope = z.infer<typeof SessionScopeSchema>;
+export { DigestSchema, SessionScopeSchema } from './session-scope.js';
+export type { SessionScope } from './session-scope.js';
 
 export const VirtualSessionModeSchema = z.enum(['live', 'shadow']);
 export type VirtualSessionMode = z.infer<typeof VirtualSessionModeSchema>;
@@ -199,3 +194,5 @@ export class VirtualSessionManager<StorageState> {
     this.events.push({ seq: this.nextEvent++, ...event } as SessionLifecycleEvent);
   }
 }
+
+export * from './shadow-prefetch.js';

@@ -11,3 +11,11 @@ Storage state is passed between adapter calls and never appears in session refs,
 lifecycle events, checkpoints, or logs. Promotion failures leave the live ref
 unchanged and retain typed cleanup evidence; stale shadows are discarded before
 promotion.
+
+`ShadowPrefetchCoordinator` is the P3.2 prefetch boundary. It parses a strict
+action contract, applies the versioned action speculation fence, and calls only
+an executor that exposes `dispatchPureRead`. Unknown action kinds and every
+effect boundary are discarded before dispatch. Returned observations are
+compared by opaque digest plus scope, epoch, document, and context generation;
+only an exact match is a hit. Telemetry is append-only and value-free, and the
+coordinator has no final-verification or server-mutation path.
