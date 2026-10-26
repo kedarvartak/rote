@@ -33,7 +33,7 @@ export type SessionLifecycleEvent =
   | { seq: number; kind: 'cleanup_failed'; session_id: string; epoch: number; operation: 'discard' | 'crash' | 'promotion'; error_code: 'CLEANUP_FAILED' };
 
 export class VirtualSessionError extends Error {
-  constructor(message: string, readonly code: 'SESSION_NOT_FOUND' | 'INACTIVE_SESSION' | 'STALE_CONTEXT' | 'SCOPE_MISMATCH' | 'PROMOTION_FAILED') {
+  constructor(message: string, readonly code: 'SESSION_NOT_FOUND' | 'INACTIVE_SESSION' | 'STALE_CONTEXT' | 'SCOPE_MISMATCH' | 'PROMOTION_FAILED' | 'SESSION_LIMIT') {
     super(message);
     this.name = 'VirtualSessionError';
   }
@@ -73,6 +73,21 @@ export interface CloneOptions {
   sessionId?: string;
 }
 
+export interface VirtualSessionManagerOptions {
+  id?: () => string;
+  /** Hard cap across active and retained terminal refs; evict terminal refs to release slots. */
+  maxSessions?: number;
+}
+
+export interface VirtualSessionStats {
+  total: number;
+  active: number;
+  live: number;
+  shadow: number;
+  terminal: number;
+  max_sessions: number;
+}
+
 /**
  * Owns live/shadow context lifecycles. It is deliberately action-free: the
  * manager can clone, advance an epoch, promote, discard, and clean up, but it
@@ -85,10 +100,18 @@ export class VirtualSessionManager<StorageState> {
 
   constructor(
     private readonly adapter: VirtualSessionAdapter<StorageState>,
-    private readonly options: { id?: () => string } = {},
-  ) {}
+    options: VirtualSessionManagerOptions = {},
+  ) {
+    if (options.maxSessions !== undefined && (!Number.isInteger(options.maxSessions) || options.maxSessions < 1)) {
+      throw new VirtualSessionError('maxSessions must be a positive integer', 'SESSION_LIMIT');
+    }
+    this.options = { id: options.id, maxSessions: options.maxSessions ?? 32 };
+  }
+
+  private readonly options: { id?: () => string; maxSessions: number };
 
   async openLive(input: OpenLiveOptions<StorageState>): Promise<VirtualSessionRef> {
+    this.assertCapacity();
     const scope = SessionScopeSchema.parse(input);
     const context = await this.adapter.createContext({ mode: 'live', ...(input.storageState !== undefined ? { storageState: input.storageState } : {}) });
     const ref = this.newRef(input.sessionId ?? this.newId(), 'live', scope);
@@ -100,6 +123,7 @@ export class VirtualSessionManager<StorageState> {
   async cloneShadow(liveId: string, options: CloneOptions = {}): Promise<VirtualSessionRef> {
     const live = this.requireActive(liveId);
     if (live.ref.mode !== 'live') throw new VirtualSessionError(`${liveId} is not a live session`, 'SCOPE_MISMATCH');
+    this.assertCapacity();
     const storageState = await this.adapter.captureStorageState(live.context);
     const context = await this.adapter.createContext({ mode: 'shadow', storageState });
     const ref = this.newRef(options.sessionId ?? this.newId(), 'shadow', live.ref.scope, live.ref.epoch);
@@ -165,6 +189,41 @@ export class VirtualSessionManager<StorageState> {
     return this.events.map((event) => ({ ...event }));
   }
 
+  /**
+   * Releases terminal refs after a soak interval. Active sessions are never
+   * evicted, and the lifecycle log remains append-only for auditability.
+   */
+  evictInactive(): number {
+    let evicted = 0;
+    for (const [sessionId, stored] of this.sessions) {
+      if (stored.ref.status === 'active') continue;
+      this.sessions.delete(sessionId);
+      evicted += 1;
+    }
+    return evicted;
+  }
+
+  /** Disposes every active context in order and then releases terminal refs. */
+  async closeAll(): Promise<SessionCleanupEvidence[]> {
+    const active = [...this.sessions.values()].filter((stored) => stored.ref.status === 'active');
+    const evidence: SessionCleanupEvidence[] = [];
+    for (const stored of active) evidence.push(await this.cleanup(stored.ref.session_id, stored, 'crash'));
+    this.evictInactive();
+    return evidence;
+  }
+
+  stats(): VirtualSessionStats {
+    const refs = [...this.sessions.values()].map((stored) => stored.ref);
+    return {
+      total: refs.length,
+      active: refs.filter((ref) => ref.status === 'active').length,
+      live: refs.filter((ref) => ref.mode === 'live' && ref.status === 'active').length,
+      shadow: refs.filter((ref) => ref.mode === 'shadow' && ref.status === 'active').length,
+      terminal: refs.filter((ref) => ref.status !== 'active').length,
+      max_sessions: this.options.maxSessions,
+    };
+  }
+
   private async cleanup(sessionId: string, stored: StoredSession, operation: 'discard' | 'crash' | 'promotion'): Promise<SessionCleanupEvidence> {
     try {
       await this.adapter.disposeContext(stored.context);
@@ -182,6 +241,12 @@ export class VirtualSessionManager<StorageState> {
     if (!stored) throw new VirtualSessionError(`unknown session ${sessionId}`, 'SESSION_NOT_FOUND');
     if (stored.ref.status !== 'active') throw new VirtualSessionError(`session ${sessionId} is ${stored.ref.status}`, 'INACTIVE_SESSION');
     return stored;
+  }
+
+  private assertCapacity(): void {
+    if (this.sessions.size >= this.options.maxSessions) {
+      throw new VirtualSessionError(`session capacity ${this.options.maxSessions} reached; evict terminal refs before opening another`, 'SESSION_LIMIT');
+    }
   }
 
   private newRef(sessionId: string, mode: VirtualSessionMode, scope: SessionScope, epoch = 0): VirtualSessionRef {
