@@ -10,6 +10,10 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P3**: Add a fail-closed shadow prefetch coordinator for predicted pure-read
+  observations: strict action contracts, versioned safety classification,
+  digest/epoch/context freshness checks, and value-free hit/miss/discard
+  telemetry with no final-verification or mutation path (#191).
 - **P3**: Add `@rote/session` virtual-session lifecycle primitives for isolated live/shadow contexts, digest-bound epochs, atomic adapter promotion, typed stale-context rejection, and redacted cleanup evidence (#190).
 - **Core**: Add versioned template escape semantics: playbook version 2 can
   encode a literal backslash immediately before a live `{{param}}` reference
