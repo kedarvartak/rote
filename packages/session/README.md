@@ -19,3 +19,10 @@ effect boundary are discarded before dispatch. Returned observations are
 compared by opaque digest plus scope, epoch, document, and context generation;
 only an exact match is a hit. Telemetry is append-only and value-free, and the
 coordinator has no final-verification or server-mutation path.
+
+`EffectFencedSpeculator` is the P3.3 single-step boundary. It accepts only the
+versioned `pure_read` and `local_nav` classes, applies dispatch/concurrency/time
+caps, and requires an exact scope, fingerprint, action-contract, context, and
+verification-plan receipt before calling the injected atomic promotion hook.
+Unclassified actions, stale receipts, prediction misses, and promotion failures
+are typed append-only discard events.

@@ -10,6 +10,9 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P3**: Add the effect-fenced single-step speculation boundary: versioned
+  safe-class policy, dispatch/concurrency/time caps, exact receipt binding, and
+  atomic promotion with typed append-only discard events (#192).
 - **P3**: Add a fail-closed shadow prefetch coordinator for predicted pure-read
   observations: strict action contracts, versioned safety classification,
   digest/epoch/context freshness checks, and value-free hit/miss/discard
