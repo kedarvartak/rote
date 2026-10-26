@@ -44,6 +44,14 @@ query string.
 Not here yet: the provider-billed T2 measurement that decides whether the brief earns
 its tokens (docs/03 T2 ≥30%, retreat below 15%).
 
+`mineVerifiedSubflows` derives append-only, value-free shared prefixes from at
+least two successful trajectories with strong or authoritative verification.
+`selectVerifiedSubflow` hard-gates environment, principal, fingerprint,
+contract, context, document, and verification-plan bindings before returning a
+prefix. Any mismatch returns a grounded-agent fallback with zero subflow
+dispatch. `MemorySubflowStore` exposes append/read only, and the selected prefix
+hands off explicitly to the grounded agent at its next step.
+
 ## Tests
 
 ```bash
