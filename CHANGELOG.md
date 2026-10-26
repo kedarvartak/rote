@@ -10,6 +10,10 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P3**: Add verified shared-subflow mining and selection: strict value-free
+  prefix records, typed refusals for ambiguity/judgment/weak verification or
+  unsafe effects, hard binding gates, append-only storage, and grounded-agent
+  hand-off (#194).
 - **P3**: Add a bounded speculative pipeline with versioned depth, confidence,
   concurrency, step-count, and duration budgets, dependency tracking,
   cancellation, and automatic quiescence on unsafe or stale results (#193).
