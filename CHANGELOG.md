@@ -10,6 +10,9 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P3**: Harden the virtual-session soak boundary with a configurable session
+  cap, terminal-ref eviction, ordered shutdown cleanup, and value-free resource
+  stats; capacity failures occur before context creation (#190).
 - **P3**: Add verified shared-subflow mining and selection: strict value-free
   prefix records, typed refusals for ambiguity/judgment/weak verification or
   unsafe effects, hard binding gates, append-only storage, and grounded-agent

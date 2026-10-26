@@ -27,6 +27,11 @@ verification-plan receipt before calling the injected atomic promotion hook.
 Unclassified actions, stale receipts, prediction misses, and promotion failures
 are typed append-only discard events.
 
+The virtualizer now has an explicit session cap, terminal-ref eviction, ordered
+`closeAll()` cleanup, and `stats()` snapshots for soak monitoring. Capacity is
+checked before a browser context is created, and active sessions are never
+evicted; a failed cleanup remains visible as an active failure for the caller.
+
 `BoundedSpeculativePipeline` composes those single-step fences with explicit
 depth, confidence, concurrency, step-count, and duration budgets. Dependencies
 must promote before a child starts; a failed or stale step, cancellation, cycle,
