@@ -10,6 +10,9 @@ labeled `skip-changelog`.
 ## [Unreleased]
 
 ### Added
+- **P2**: Add a T2 site-memory evidence audit with frozen novel-task/reset/oracle
+  bindings, parity-safe token/cost/latency intervals, hint utility and harm,
+  matcher overhead, and explicit no-execution enforcement (#187).
 - **P3**: Harden the virtual-session soak boundary with a configurable session
   cap, terminal-ref eviction, ordered shutdown cleanup, and value-free resource
   stats; capacity failures occur before context creation (#190).
